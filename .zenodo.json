@@ -1,0 +1,32 @@
+{
+    "creators": [
+        {
+            "name": "Ranguelova, Elena",
+            "orcid": "0000-0002-9834-1756"
+        },
+        {
+            "name": "Bos, Patrick",
+            "orcid": "0000-0002-6033-960X"
+        },
+        {
+            "name": "Liu, Yang",
+            "orcid": "0000-0002-1966-8460"
+        },
+        {
+            "name": "Meijer, Christiaan",
+            "orcid": "0000-0002-5529-5761"
+        },
+        {
+            "name": "Oostrum, Leon",
+            "orcid": "0000-0001-8724-8372"
+        }
+    ],
+    "keywords": [
+        "XAI",
+        "machine learning"
+    ],
+    "license": {
+        "id": "Apache-2.0"
+    },
+    "title": "dianna"
+}
