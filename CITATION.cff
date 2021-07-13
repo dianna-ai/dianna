@@ -24,7 +24,8 @@ authors:
     given-names: Leon
     orcid: "https://orcid.org/0000-0001-8724-8372"
 
-date-released: 20??-MM-DD
+# date-released and DOI to be updated
+date-released: 1999-01-01
 doi: 10.0000/FIXME
 version: "0.1.0"
 repository-code: "https://github.com/dianna-ai/dianna"
