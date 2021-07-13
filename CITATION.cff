@@ -4,11 +4,28 @@ cff-version: "1.1.0"
 title: "dianna"
 authors:
   -
-    family-names: Team
-    given-names: DIANNA
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+    family-names: Ranguelova
+    given-names: Elena
+    orcid: "https://orcid.org/0000-0002-9834-1756"
+  -
+    family-names: Bos
+    given-names: Patrick
+    orcid: "https://orcid.org/0000-0002-6033-960X"
+  -
+    family-names: Liu
+    given-names: Yang
+    orcid: "https://orcid.org/0000-0002-1966-8460"
+  -
+    family-names: Meijer
+    given-names: Christiaan
+    orcid: "https://orcid.org/0000-0002-5529-5761"
+  -
+    family-names: Oostrum
+    given-names: Leon
+    orcid: "https://orcid.org/0000-0001-8724-8372"
+
 date-released: 20??-MM-DD
-doi: <insert your DOI here>
+doi: 10.0000/FIXME
 version: "0.1.0"
 repository-code: "https://github.com/dianna-ai/dianna"
 keywords:
