@@ -18,6 +18,7 @@ class RISE:
         self.n_masks = n_masks
         self.feature_res = feature_res
         self.p_keep = p_keep
+        self.masks = None
 
     def __call__(self, function, input_data, batch_size=100):
         """Run the RISE explainer.
@@ -35,6 +36,7 @@ class RISE:
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]
         masks = self.generate_masks(img_shape)
+        self.masks = masks  # Expose masks for to make user inspection possible
         return self.explain(function, input_data, masks, batch_size, img_shape)
 
     def generate_masks(self, input_size):
