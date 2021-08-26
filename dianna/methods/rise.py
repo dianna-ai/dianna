@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 from skimage.transform import resize
+from dianna.utils.onnx_runner import SimpleModelRunner
 
 
 class RISE:
@@ -20,24 +21,32 @@ class RISE:
         self.p_keep = p_keep
         self.masks = None
 
-    def __call__(self, function, input_data, batch_size=100):
+    def __call__(self, model_or_function, /, input_data, batch_size=100):
         """Run the RISE explainer.
+           The model will be called with masked images,
+           with a shape defined by `batch_size` and the shape of `input_data`
 
         Args:
-            function: The function that runs the model to be explained, will be called with masked images,
-                      with a shape defined by `batch_size` and the shape of `input_data`
+            model_or_function: The function that runs the model to be explained _or_
+                               the path to a ONNX model on disk.
             input_data (np.ndarray): Image to be explained
-            batch_size (int): Batch size to use for running the masked images through the model.
+            batch_size (int): Batch size to use for running the model.
 
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
+        if isinstance(model_or_function, str):
+            runner = SimpleModelRunner(model_or_function)
+        elif callable(model_or_function):
+            runner = model_or_function
+        else:
+            raise TypeError("model_or_function argument must be string (path to model) or function")
 
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]
         masks = self.generate_masks(img_shape)
         self.masks = masks  # Expose masks for to make user inspection possible
-        return self.explain(function, input_data, masks, batch_size, img_shape)
+        return self.explain(runner, input_data, masks, batch_size, img_shape)
 
     def generate_masks(self, input_size):
         """Generate a set of random masks to mask the input data
