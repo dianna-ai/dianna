@@ -4,6 +4,17 @@ import onnxruntime as ort
 
 class SimpleModelRunner:
     def __init__(self, filename):
+        """Generates function to run ONNX model with one set of inputs and outputs
+
+            Args:
+                filename (str): Path to ONNX model on disk
+            Returns:
+                function
+
+            Examples:
+                >>> runner = SimpleModelRunner('path_to_model.onnx')
+                >>> predictions = runner(input_data)
+        """
         self.filename = filename
 
     def __call__(self, input_data):
