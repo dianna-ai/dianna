@@ -44,9 +44,8 @@ class RISE:
 
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]
-        masks = self.generate_masks(img_shape)
-        self.masks = masks  # Expose masks for to make user inspection possible
-        return self.explain(runner, input_data, masks, batch_size, img_shape)
+        self.masks = self.generate_masks(img_shape)  # Expose masks for to make user inspection possible
+        return self.explain(runner, input_data, batch_size, img_shape)
 
     def generate_masks(self, input_size):
         """Generate a set of random masks to mask the input data
@@ -73,7 +72,7 @@ class RISE:
         masks = masks.reshape(-1, *input_size, 1)
         return masks
 
-    def explain(self, function, input_data, masks, batch_size, img_shape):
+    def explain(self, function, input_data, batch_size, img_shape):
         """Run the masked images through the model, and combine the output into a
            heatmap for each class.
 
@@ -81,7 +80,6 @@ class RISE:
             function: The function that runs the model to be explained, will be called with masked images,
                       with a shape defined by `batch_size` and the shape of `input_data`
             input_data (np.ndarray): Image to be explained
-            masks (np.ndarray): The random masks to apply to the images
             batch_size (int): Batch size to use for running the masked images through the model.
             img_shape (tuple): The shape of a single image, without the batch or channel axes.
 
@@ -90,11 +88,11 @@ class RISE:
         """
         preds = []
         # Make sure multiplication is being done for correct axes
-        masked = input_data * masks
+        masked = input_data * self.masks
 
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
             preds.append(function(masked[i:min(i+batch_size, self.n_masks)]))
         preds = np.concatenate(preds)
-        sal = preds.T.dot(masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
+        sal = preds.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
         sal = sal / self.n_masks / self.p_keep
         return sal
