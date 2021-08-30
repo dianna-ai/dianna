@@ -1,6 +1,6 @@
 import numpy as np
-from tqdm import tqdm
 from skimage.transform import resize
+from tqdm import tqdm
 from dianna.utils.onnx_runner import SimpleModelRunner
 
 
