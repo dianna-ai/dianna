@@ -16,7 +16,7 @@ def plot_image(heatmap, original_data=None, heatmap_cmap=None, data_cmap=None):
     """
     # default cmap depends on shape: grayscale or colour
 
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     alpha = 1
     if original_data is not None:
         if len(original_data.shape) == 2 and data_cmap is None:
