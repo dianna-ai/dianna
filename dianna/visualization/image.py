@@ -12,16 +12,18 @@ def determine_vmax(max_data_value):
 
 def plot_image(heatmap, original_data=None, heatmap_cmap=None, data_cmap=None, show_plot=True, output_filename=None):
     """
-    Example image figure
-    :param heatmap:
-    :param original_data:
-    :param heatmap_cmap:
-    :param data_cmap:
-    :param show_plot: Shows plot if true (for testing or writing plots to disk instead)
-    :param output_filename: Name of the file to save the plot to (optional).
-    :return:
-    """
+    Plots a heatmap image
+    Args:
+        heatmap:
+        original_data:
+        heatmap_cmap:
+        data_cmap:
+        show_plot: Shows plot if true (for testing or writing plots to disk instead)
+        output_filename: Name of the file to save the plot to (optional).
 
+    Returns:
+        None
+    """
     # default cmap depends on shape: grayscale or colour
 
     _, ax = plt.subplots()
