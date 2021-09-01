@@ -21,7 +21,7 @@ class RISE:
         self.p_keep = p_keep
         self.masks = None
 
-    def __call__(self, model_or_function, /, input_data, batch_size=100):
+    def __call__(self, model_or_function, input_data, batch_size=100):
         """Run the RISE explainer.
            The model will be called with masked images,
            with a shape defined by `batch_size` and the shape of `input_data`

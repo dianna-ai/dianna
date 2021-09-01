@@ -10,7 +10,7 @@ __email__ = "dianna-ai@esciencecenter.nl"
 __version__ = "0.1.0"
 
 
-def explain(model_or_function, /, input_data, *, method, **kwargs):
+def explain(model_or_function, input_data, method, **kwargs):
     """
     Exampler explainer wrapper
     """
