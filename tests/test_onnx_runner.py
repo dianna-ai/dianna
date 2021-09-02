@@ -1,5 +1,4 @@
 import numpy as np
-
 from dianna.utils.onnx_runner import SimpleModelRunner
 
 

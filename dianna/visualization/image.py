@@ -10,7 +10,7 @@ def determine_vmax(max_data_value):
     return vmax
 
 
-def plot_image(heatmap, original_data=None, heatmap_cmap=None, data_cmap=None, show_plot=True, output_filename=None):
+def plot_image(heatmap, original_data=None, heatmap_cmap=None, data_cmap=None, show_plot=True, output_filename=None):  # pylint: disable=too-many-arguments
     """
     Plots a heatmap image
     Args:

@@ -9,7 +9,7 @@ class RISE:
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
     def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5):
-        """RISE constructor.
+        """RISE initializer.
 
         Args:
             n_masks (int): Number of masks to generate.

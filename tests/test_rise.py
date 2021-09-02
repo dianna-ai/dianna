@@ -1,5 +1,4 @@
 import numpy as np
-
 import dianna
 import dianna.visualization
 from .test_onnx_runner import generate_data
