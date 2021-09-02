@@ -5,11 +5,14 @@ from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
 import dianna
 import dianna.visualization
+import spacy
 
 
 class ModelRunner():
     def __init__(self, model_path, word_vector_file, max_filter_size):
         self.filename = model_path
+        # ensure the spacy english is downloaded
+        spacy.cli.download('en_core_web_sm')
         self.tokenizer = get_tokenizer('spacy', 'en_core_web_sm')
         self.vocab = Vectors(word_vector_file, cache='.')
 
