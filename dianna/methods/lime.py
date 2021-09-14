@@ -13,7 +13,7 @@ class LIME:
                  class_names=None,
                  feature_selection='auto',
                  split_expression=r'\W+',
-                 bow=True,
+                 bow=False,
                  mask_string=None,
                  random_state=None,
                  char_level=False,
@@ -47,7 +47,7 @@ class LIME:
     def __call__(self,
                  model_or_function,
                  input_data,
-                 labels=(1, ),
+                 label=1,
                  top_labels=None,
                  num_features=10,
                  num_samples=5000,
@@ -60,7 +60,7 @@ class LIME:
             model_or_function (callable or str): The function that runs the model to be explained _or_
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained
-            labels (tuple, optional):
+            label (int): Index of class to be explained
             top_labels ([type], optional):
             num_features (int, optional):
             num_samples (int, optional):
@@ -68,16 +68,20 @@ class LIME:
             model_regressor ([type], optional):
 
         Returns:
-            list of (word, importance for target class) tuples
+            list of (word, index of word in raw text, importance for target class) tuples
         """
         runner = get_function(model_or_function)
         explanation = self.explainer.explain_instance(input_data,
                                                       runner,
-                                                      labels,
+                                                      (label, ),
                                                       top_labels,
                                                       num_features,
                                                       num_samples,
                                                       distance_metric,
                                                       model_regressor,
                                                       )
-        return explanation.as_list()
+
+        local_explanation = explanation.local_exp[label]
+        string_map = explanation.domain_mapper.indexed_string
+        return [(string_map.word(index), int(string_map.string_position(index)), importance)
+                for index, importance in local_explanation]
