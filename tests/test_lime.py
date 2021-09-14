@@ -63,7 +63,7 @@ def test_lime_text():
 
     expected_words = ['bad', 'such', 'movie', 'a']
     expected_word_indices = [7, 0, 11, 5]
-    expected_scores = [-.492, .046, .036, .008]
+    expected_scores = [-.492, .046, -.036, .008]
     assert words == expected_words
     assert word_indices == expected_word_indices
     assert np.allclose(scores, expected_scores, atol=.01)
