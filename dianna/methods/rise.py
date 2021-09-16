@@ -20,6 +20,7 @@ class RISE:
         self.feature_res = feature_res
         self.p_keep = p_keep
         self.masks = None
+        self.predictions = None
 
     def __call__(self, model_or_function, input_data, batch_size=100):
         """Run the RISE explainer.
@@ -27,8 +28,8 @@ class RISE:
            with a shape defined by `batch_size` and the shape of `input_data`
 
         Args:
-            model_or_function: The function that runs the model to be explained _or_
-                               the path to a ONNX model on disk.
+            model_or_function (callable or str): The function that runs the model to be explained _or_
+                                                 the path to a ONNX model on disk.
             input_data (np.ndarray): Image to be explained
             batch_size (int): Batch size to use for running the model.
 
@@ -93,6 +94,7 @@ class RISE:
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
             preds.append(function(masked[i:min(i+batch_size, self.n_masks)]))
         preds = np.concatenate(preds)
+        self.predictions = preds
         sal = preds.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
         sal = sal / self.n_masks / self.p_keep
         return sal
