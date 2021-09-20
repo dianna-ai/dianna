@@ -3,7 +3,6 @@ import re
 import shutil
 import unittest
 from pathlib import Path
-
 from dianna.visualization.text import highlight_text
 
 
