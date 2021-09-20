@@ -22,8 +22,9 @@ class Example1:
 
 
 class Example2:
-    expected_html = '<html><body><span style="background:rgba(0, 0, 255, 0.08)">such</span> <span style="background:rgba(0, 0, 255, 0.01)">a</span> ' \
-                    '<span style="background:rgba(255, 0, 0, 0.800000)">bad</span> <span style="background:rgba(255, 0, 0, 0.059287)">movie</span></body></html>\n'
+    expected_html = '<html><body><span style="background:rgba(0, 0, 255, 0.08)">such</span> ' \
+                    '<span style="background:rgba(0, 0, 255, 0.01)">a</span> <span style="background:rgba(255, 0, 0, 0.800000)">' \
+                    'bad</span> <span style="background:rgba(255, 0, 0, 0.059287)">movie</span></body></html>\n'
     original_text = 'Such a bad movie.'
     explanation = [('bad', 7, -0.4922624307995777),
                    ('such', 0, 0.04637815000309109),
@@ -52,7 +53,7 @@ class MyTestCase(unittest.TestCase):
 
         assert Path(self.html_file_path).exists()
 
-        with open(self.html_file_path) as result_file:
+        with open(self.html_file_path, encoding='utf-8') as result_file:
             result = result_file.read()
         # regex taken from https://stackoverflow.com/questions/12683201/python-re-split-to-split-by-spaces-commas-and-periods-but-not-in-cases-like
         # explanation: split by \s (whitespace), and only split by commas and periods if they are not followed (?!\d) or preceded (?<!\d) by a digit.
@@ -65,7 +66,7 @@ class MyTestCase(unittest.TestCase):
 
         assert Path(self.html_file_path).exists()
 
-        with open(self.html_file_path) as result_file:
+        with open(self.html_file_path, encoding='utf-8') as result_file:
             result = result_file.read()
         assert result == Example2.expected_html
 
