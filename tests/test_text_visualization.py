@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 import unittest
 from pathlib import Path
@@ -53,7 +54,9 @@ class MyTestCase(unittest.TestCase):
 
         with open(self.html_file_path) as result_file:
             result = result_file.read()
-        for word in Example1.original_text.split(' '):
+        # regex taken from https://stackoverflow.com/questions/12683201/python-re-split-to-split-by-spaces-commas-and-periods-but-not-in-cases-like
+        # explanation: split by \s (whitespace), and only split by commas and periods if they are not followed (?!\d) or preceded (?<!\d) by a digit.
+        for word in re.split('\s|(?<!\d)[,.](?!\d)', Example1.original_text):
             assert word in result
 
     def test_text_visualization_html_output_is_correct(self):
