@@ -25,11 +25,14 @@ def highlight_text(explanation, original_data, show_plot=True, output_img_filena
 
         opacity = max_opacity * abs(importance) / max_importance
         if importance > 0:
-            color = f'rgba(0, 0, 255, {opacity:.2f})'
+            color = f'rgba(255, 0, 0, {opacity:.2f})'
         else:
-            color = f'rgba(255, 0, 0, {opacity:2f})'
+            color = f'rgba(0, 0, 255, {opacity:2f})'
         output = output + f'<span style="background:{color}">{word}</span>'
         current_char = word_start + len(word)
+
+    if current_char < len(original_data):
+        output += original_data[current_char:]
 
     output = output + '</body></html>'
 
