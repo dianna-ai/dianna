@@ -1,3 +1,25 @@
+# DIANNA: Deep Insight And Neural Network Analysis
+
+## How to use dianna
+
+The project setup is documented in [project_setup.md](project_setup.md). Feel free to remove this document (and/or the link to this document) if you don't need it.
+
+## Installation
+
+To install dianna directly from the GitHub repository, do:
+
+```console
+python3 -m pip install git+https://github.com/dianna-ai/dianna.git
+```
+
+For development purposes, when you first clone the repository locally, it may be more convenient to install in editable mode using pip's `-e` flag:
+
+```console
+git clone https://github.com/dianna-ai/dianna.git
+cd dianna
+python3 -m pip install -e .
+```
+
 ## Badges
 
 (Customize these badges with your own links, and check https://shields.io/ or https://badgen.net/ to see which other badges are available.)
@@ -19,22 +41,6 @@
 | Citation data consistency               | [![cffconvert](https://github.com/dianna-ai/dianna/actions/workflows/cffconvert.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/cffconvert.yml) |
 | SonarCloud                         | [![sonarcloud](https://github.com/dianna-ai/dianna/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/sonarcloud.yml) |
 | MarkDown link checker              | [![markdown-link-check](https://github.com/dianna-ai/dianna/actions/workflows/markdown-link-check.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/markdown-link-check.yml) |
-
-## How to use dianna
-
-Deep Insight And Neural Network Analysis
-
-The project setup is documented in [project_setup.md](project_setup.md). Feel free to remove this document (and/or the link to this document) if you don't need it.
-
-## Installation
-
-To install dianna from GitHub repository, do:
-
-```console
-git clone https://github.com/dianna-ai/dianna.git
-cd dianna
-python3 -m pip install .
-```
 
 ## Documentation
 
