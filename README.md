@@ -6,7 +6,7 @@ The project setup is documented in [project_setup.md](project_setup.md). Feel fr
 
 ## Installation
 
-To install dianna directly from GitHub repository, do:
+To install dianna directly from the GitHub repository, do:
 
 ```console
 python3 -m pip install git+https://github.com/dianna-ai/dianna.git
