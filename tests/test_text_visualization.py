@@ -22,9 +22,9 @@ class Example1:
 
 
 class Example2:
-    expected_html = '<html><body><span style="background:rgba(0, 0, 255, 0.08)">such</span> ' \
-                    '<span style="background:rgba(0, 0, 255, 0.01)">a</span> <span style="background:rgba(255, 0, 0, 0.800000)">' \
-                    'bad</span> <span style="background:rgba(255, 0, 0, 0.059287)">movie</span></body></html>\n'
+    expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.08)">such</span> ' \
+                    '<span style="background:rgba(255, 0, 0, 0.01)">a</span> <span style="background:rgba(0, 0, 255, 0.800000)">' \
+                    'bad</span> <span style="background:rgba(0, 0, 255, 0.059287)">movie</span>.</body></html>\n'
     original_text = 'Such a bad movie.'
     explanation = [('bad', 7, -0.4922624307995777),
                    ('such', 0, 0.04637815000309109),
