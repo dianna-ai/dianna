@@ -15,8 +15,7 @@ def highlight_text(explanation,  # pylint: disable=too-many-arguments
     Returns:
         None
     """
-    body = _create_html_body(original_text, explanation, max_opacity)
-    output = '<html><body>' + body + '</body></html>'
+    output = _create_html(original_text, explanation, max_opacity)
 
     if output_html_filename:
         with open(output_html_filename, 'w', encoding='utf-8') as output_html_file:
@@ -26,15 +25,15 @@ def highlight_text(explanation,  # pylint: disable=too-many-arguments
         pass
 
 
-def _create_html_body(original_text, explanation, max_opacity):
+def _create_html(original_text, explanation, max_opacity):
     max_importance = max([abs(item[2]) for item in explanation])
-    body = str(original_text)
+    body = original_text
     words_in_reverse_order = sorted(explanation, key=lambda item: item[1], reverse=True)
     for word, word_start, importance in words_in_reverse_order:
         word_end = word_start + len(word)
         highlighted_word = _highlight_word(word, importance, max_importance, max_opacity)
         body = body[:word_start] + highlighted_word + body[word_end:]
-    return body
+    return '<html><body>' + body + '</body></html>'
 
 
 def _highlight_word(word, importance, max_importance, max_opacity):
