@@ -38,18 +38,18 @@ class MyTestCase(unittest.TestCase):
     html_file_path = str(Path(temp_folder) / 'output.html')
 
     def test_text_visualization_no_output(self):
-        highlight_text(Example1.explanation, original_data=Example1.original_text)
+        highlight_text(Example1.explanation, original_text=Example1.original_text)
 
         assert not Path(self.html_file_path).exists()
 
     def test_text_visualization_html_output_exists(self):
-        highlight_text(Example1.explanation, original_data=Example1.original_text,
+        highlight_text(Example1.explanation, original_text=Example1.original_text,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
 
     def test_text_visualization_html_output_contains_text(self):
-        highlight_text(Example1.explanation, original_data=Example1.original_text,
+        highlight_text(Example1.explanation, original_text=Example1.original_text,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
@@ -59,7 +59,7 @@ class MyTestCase(unittest.TestCase):
             assert word in result
 
     def test_text_visualization_html_output_is_correct(self):
-        highlight_text(Example2.explanation, original_data=Example2.original_text,
+        highlight_text(Example2.explanation, original_text=Example2.original_text,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
