@@ -68,6 +68,10 @@ class MyTestCase(unittest.TestCase):
             result = result_file.read()
         assert result == Example2.expected_html
 
+    def test_text_visualization_show_plot(self):
+        highlight_text(Example1.explanation, original_text=Example1.original_text,
+                       show_plot=True)
+
     def setUp(self) -> None:
         os.mkdir(self.temp_folder)
 
