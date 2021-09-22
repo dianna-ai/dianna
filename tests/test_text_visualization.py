@@ -3,6 +3,7 @@ import re
 import shutil
 import unittest
 from pathlib import Path
+
 from dianna.visualization.text import highlight_text
 
 
@@ -52,12 +53,9 @@ class MyTestCase(unittest.TestCase):
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
-
         with open(self.html_file_path, encoding='utf-8') as result_file:
             result = result_file.read()
-        # regex taken from https://stackoverflow.com/questions/12683201/python-re-split-to-split-by-spaces-commas-and-periods-but-not-in-cases-like
-        # explanation: split by \s (whitespace), and only split by commas and periods if they are not followed (?!\d) or preceded (?<!\d) by a digit.
-        for word in re.split(r'\s|(?<!\d)[,.](?!\d)', Example1.original_text):
+        for word in _split_text_into_words(Example1.original_text):
             assert word in result
 
     def test_text_visualization_html_output_is_correct(self):
@@ -75,3 +73,12 @@ class MyTestCase(unittest.TestCase):
 
     def tearDown(self) -> None:
         shutil.rmtree(self.temp_folder, ignore_errors=True)
+
+
+def _split_text_into_words(text):
+    # regex taken from
+    # https://stackoverflow.com/questions/12683201/python-re-split-to-split-by-spaces-commas-and-periods-but-not-in-cases-like
+    # explanation: split by \s (whitespace), and only split by commas and
+    # periods if they are not followed (?!\d) or preceded (?<!\d) by a digit.
+    regex = r'\s|(?<!\d)[,.](?!\d)'
+    return re.split(regex, text)

@@ -1,9 +1,11 @@
-def highlight_text(explanation, original_data, show_plot=True, output_img_filename=None,    # pylint: disable=too-many-arguments
-                   output_html_filename=None, max_opacity=.8):
+def highlight_text(explanation,  # pylint: disable=too-many-arguments
+                   original_data,
+                   show_plot=True,
+                   output_html_filename=None,
+                   max_opacity=.8):
     """
     Highlights text
     Args:
-        output_img_filename:
         output_html_filename:
         explanation: list of tuples of (word, index of word in original data, importance)
         original_data: original text
@@ -39,9 +41,6 @@ def highlight_text(explanation, original_data, show_plot=True, output_img_filena
     if output_html_filename:
         with open(output_html_filename, 'w', encoding='utf-8') as output_html_file:
             print(output, file=output_html_file)
-
-    if output_img_filename:
-        pass
 
     if show_plot:
         pass
