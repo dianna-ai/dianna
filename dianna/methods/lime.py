@@ -6,6 +6,7 @@ class LIME:
     """
     LIME implementation as wrapper around https://github.com/marcotcr/lime
     """
+
     def __init__(self,
                  kernel_width=25,
                  kernel=None,
@@ -44,16 +45,16 @@ class LIME:
                                            char_level,
                                            )
 
-    def __call__(self,
-                 model_or_function,
-                 input_data,
-                 label=1,
-                 top_labels=None,
-                 num_features=10,
-                 num_samples=5000,
-                 distance_metric='cosine',
-                 model_regressor=None,
-                 ):  # pylint: disable=too-many-arguments
+    def explain_text(self,
+                     model_or_function,
+                     input_data,
+                     label=1,
+                     top_labels=None,
+                     num_features=10,
+                     num_samples=5000,
+                     distance_metric='cosine',
+                     model_regressor=None,
+                     ):  # pylint: disable=too-many-arguments
         """Run the LIME explainer.
 
         Args:
@@ -73,7 +74,7 @@ class LIME:
         runner = get_function(model_or_function)
         explanation = self.explainer.explain_instance(input_data,
                                                       runner,
-                                                      (label, ),
+                                                      (label,),
                                                       top_labels,
                                                       num_features,
                                                       num_samples,

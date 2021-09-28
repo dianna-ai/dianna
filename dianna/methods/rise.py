@@ -1,6 +1,8 @@
 import numpy as np
 from skimage.transform import resize
 from tqdm import tqdm
+
+from dianna.utils import get_function
 from dianna.utils.onnx_runner import SimpleModelRunner
 
 
@@ -22,7 +24,15 @@ class RISE:
         self.masks = None
         self.predictions = None
 
-    def __call__(self, model_or_function, input_data, batch_size=100):
+    def explain_text(self, model_or_function, input_text, batch_size=100):
+        runner = get_function(model_or_function)
+
+        tokens = model_or_function.tokenizer(input_text)
+        text_shape = tokens.shape
+        self.masks = self.generate_masks_for_text(text_shape)  # Expose masks for to make user inspection possible
+        return self.explain(runner, input_text, batch_size, text_shape)
+
+    def explain_image(self, model_or_function, input_data, batch_size=100):
         """Run the RISE explainer.
            The model will be called with masked images,
            with a shape defined by `batch_size` and the shape of `input_data`
@@ -36,19 +46,24 @@ class RISE:
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
-        if isinstance(model_or_function, str):
-            runner = SimpleModelRunner(model_or_function)
-        elif callable(model_or_function):
-            runner = model_or_function
-        else:
-            raise TypeError("model_or_function argument must be string (path to model) or function")
+        runner = get_function(model_or_function)
 
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]
-        self.masks = self.generate_masks(img_shape)  # Expose masks for to make user inspection possible
+        self.masks = self.generate_masks_for_images(img_shape)  # Expose masks for to make user inspection possible
         return self.explain(runner, input_data, batch_size, img_shape)
 
-    def generate_masks(self, input_size):
+    def generate_masks_for_text(self, input_size):
+        instance_length = input_size[1]
+
+        masks = np.random.choice(a=[True, False], size=input_size, p=[self.p_keep, 1 - self.p_keep])
+
+
+
+        masks = masks.reshape(-1, *input_size, 1)
+        return masks
+
+    def generate_masks_for_images(self, input_size):
         """Generate a set of random masks to mask the input data
 
         Args:
@@ -60,6 +75,7 @@ class RISE:
         up_size = (self.feature_res + 1) * cell_size
 
         grid = np.random.rand(self.n_masks, self.feature_res, self.feature_res) < self.p_keep
+        # grid = np.random.choice(a=[True, False], size=[self.n_masks] + input_size, p=[self.p_keep, 1 - self.p_keep])
         grid = grid.astype('float32')
 
         masks = np.empty((self.n_masks, *input_size))
