@@ -28,7 +28,7 @@ class RISE:
         runner = get_function(model_or_function)
 
         tokens = model_or_function.tokenizer(input_text)
-        text_shape = tokens.shape
+        text_shape = len(tokens)
         self.masks = self.generate_masks_for_text(text_shape)  # Expose masks for to make user inspection possible
         return self.explain(runner, input_text, batch_size, text_shape)
 
@@ -54,12 +54,12 @@ class RISE:
         return self.explain(runner, input_data, batch_size, img_shape)
 
     def generate_masks_for_text(self, input_size):
-        instance_length = input_size[1]
+        instance_length = input_size # only one dimension for text
+
+        cell_size = np.ceil(np.array(input_size) / self.feature_res)
+        up_size = (self.feature_res + 1) * cell_size        
 
         masks = np.random.choice(a=[True, False], size=input_size, p=[self.p_keep, 1 - self.p_keep])
-
-
-
         masks = masks.reshape(-1, *input_size, 1)
         return masks
 
