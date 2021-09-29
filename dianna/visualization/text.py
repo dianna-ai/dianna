@@ -1,4 +1,4 @@
-from IPython.core.display import display, HTML
+import ipywidgets
 
 
 def highlight_text(explanation,  # pylint: disable=too-many-arguments
@@ -25,7 +25,7 @@ def highlight_text(explanation,  # pylint: disable=too-many-arguments
             print(output, file=output_html_file)
 
     if show_plot:
-        display(HTML, output)
+        return ipywidgets.HTML(output)
 
 
 def _create_html(original_text, explanation, max_opacity):
