@@ -28,9 +28,13 @@ class RISE:
         runner = get_function(model_or_function)
 
         tokens = model_or_function.tokenizer(input_text)
-        text_shape = len(tokens)
+        if len(tokens) < model_or_function.max_filter_size:
+            tokens += ['<pad>'] * (model_or_function.max_filter_size - len(tokens))
+        # numericalize
+        word_vectors = [model_or_function.vocab.stoi[token] if token in model_or_function.vocab.stoi else model_or_function.vocab.stoi['<unk>'] for token in tokens]        
+        text_shape = len(word_vectors)
         self.masks = self.generate_masks_for_text(text_shape)  # Expose masks for to make user inspection possible
-        return self.explain(runner, input_text, batch_size, text_shape)
+        return self.explain(runner, word_vectors, batch_size, text_shape)
 
     def explain_image(self, model_or_function, input_data, batch_size=100):
         """Run the RISE explainer.
@@ -54,13 +58,9 @@ class RISE:
         return self.explain(runner, input_data, batch_size, img_shape)
 
     def generate_masks_for_text(self, input_size):
-        instance_length = input_size # only one dimension for text
-
-        cell_size = np.ceil(np.array(input_size) / self.feature_res)
-        up_size = (self.feature_res + 1) * cell_size        
-
-        masks = np.random.choice(a=[True, False], size=input_size, p=[self.p_keep, 1 - self.p_keep])
-        masks = masks.reshape(-1, *input_size, 1)
+        masks = np.random.choice(a=(True, False), size=(self.n_masks, input_size), p=(self.p_keep, 1 - self.p_keep))
+        masks = masks.astype('float32')
+        masks = masks.reshape(-1, input_size, 1)
         return masks
 
     def generate_masks_for_images(self, input_size):
@@ -74,8 +74,8 @@ class RISE:
         cell_size = np.ceil(np.array(input_size) / self.feature_res)
         up_size = (self.feature_res + 1) * cell_size
 
-        grid = np.random.rand(self.n_masks, self.feature_res, self.feature_res) < self.p_keep
-        # grid = np.random.choice(a=[True, False], size=[self.n_masks] + input_size, p=[self.p_keep, 1 - self.p_keep])
+        grid = np.random.choice(a=(True, False), size=(self.n_masks, self.feature_res, self.feature_res),
+                                p=(self.p_keep, 1 - self.p_keep))
         grid = grid.astype('float32')
 
         masks = np.empty((self.n_masks, *input_size))
@@ -105,6 +105,7 @@ class RISE:
         """
         preds = []
         # Make sure multiplication is being done for correct axes
+        
         masked = input_data * self.masks
 
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
