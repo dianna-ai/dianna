@@ -25,7 +25,7 @@ def highlight_text(explanation,  # pylint: disable=too-many-arguments
             print(output, file=output_html_file)
 
     if show_plot:
-        return ipywidgets.HTML(output)
+        print(ipywidgets.HTML(output))
 
 
 def _create_html(original_text, explanation, max_opacity):
