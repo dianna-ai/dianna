@@ -1,7 +1,7 @@
 import ipywidgets
 
 
-def highlight_text(explanation,  # pylint: disable=too-many-arguments
+def highlight_text(explanation,
                    original_text,
                    show_plot=True,
                    output_html_filename=None,
