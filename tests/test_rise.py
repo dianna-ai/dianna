@@ -35,6 +35,9 @@ class rise_on_images(TestCase):
 
 class rise_on_text(TestCase):
     def test_rise_text(self):
+        # fix the seed for testing
+        np.random.seed(42)
+
         model_path = 'tests/test_data/movie_review_model.onnx'
         word_vector_file = 'tests/test_data/word_vectors.txt'
         runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)
@@ -44,11 +47,15 @@ class rise_on_text(TestCase):
         explanation = dianna.explain_text(runner, review, method='RISE')
         words = [element[0] for element in explanation]
         word_indices = [element[1] for element in explanation]
-        scores = [element[2] for element in explanation]
+        negative_scores = [element[2] for element in explanation]
+        positive_scores = [element[3] for element in explanation]
 
-        expected_words = ['bad', 'such', 'movie', 'a']
-        expected_word_indices = [7, 0, 11, 5]
-        expected_scores = [-.492, .046, -.036, .008]
+        expected_words = ['such', 'a', 'bad', 'movie']
+        expected_word_indices = [0, 5, 7, 11]
+        expected_negative_scores = [0.6504735, 0.6498708, 1.0003519, 0.65321875]
+        expected_positive_scores = [0.3295266, 0.3521292, 0.023648001, 0.3347813]
+
         assert words == expected_words
         assert word_indices == expected_word_indices
-        assert np.allclose(scores, expected_scores, atol=.01)
+        assert np.allclose(positive_scores, expected_positive_scores)
+        assert np.allclose(negative_scores, expected_negative_scores)
