@@ -14,7 +14,7 @@ def run_model(input_data):
     return np.random.random((batch_size, n_class))
 
 
-class rise_on_images(TestCase):
+class RiseOnImages(TestCase):
 
     def test_rise_function(self):
         # shape is batch, y, x, channel
@@ -33,7 +33,7 @@ class rise_on_images(TestCase):
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
 
-class rise_on_text(TestCase):
+class RiseOnText(TestCase):
     def test_rise_text(self):
         # fix the seed for testing
         np.random.seed(42)

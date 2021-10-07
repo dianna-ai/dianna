@@ -3,13 +3,13 @@ from skimage.transform import resize
 from tqdm import tqdm
 
 from dianna.utils import get_function
-from dianna.utils.onnx_runner import SimpleModelRunner
 
 
 class RISE:
     """
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
+
     def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5):
         """RISE initializer.
 
@@ -28,12 +28,9 @@ class RISE:
         runner = get_function(model_or_function)
 
         tokens = model_or_function.tokenizer(input_text)
-        # if len(tokens) < model_or_function.max_filter_size:
-        #    tokens += ['<pad>'] * (model_or_function.max_filter_size - len(tokens))
-        # numericalize
-        #word_vectors = [model_or_function.vocab.stoi[token] if token in model_or_function.vocab.stoi else model_or_function.vocab.stoi['<unk>'] for token in tokens]        
         text_shape = len(tokens)
         self.masks = self.generate_masks_for_text(text_shape)  # Expose masks for to make user inspection possible
+
         # generate sentences with mask
         tokens = np.asarray(tokens)
         tokens_masked = []
@@ -44,19 +41,17 @@ class RISE:
         preds = []
 
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            preds.append(runner(sentences[i:i+batch_size]))
+            preds.append(runner(sentences[i:i + batch_size]))
         preds = np.concatenate(preds)
         self.predictions = preds
-        sal = preds.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_shape)
-        sal = sal / self.n_masks / self.p_keep
+        saliency = preds.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_shape)
+        saliency = saliency / self.n_masks / self.p_keep
 
         # create word and word indices dimension for return values
         word_lengths = [len(t) for t in tokens]
-        word_indices = [sum(word_lengths[:i])+i for i in range(len(tokens))]
-        # zip all dimenions
-        sal = list(zip(tokens, word_indices, sal[0],sal[1]))
+        word_indices = [sum(word_lengths[:i]) + i for i in range(len(tokens))]
 
-        return sal
+        return list(zip(tokens, word_indices, saliency[0], saliency[1]))
 
     def explain_image(self, model_or_function, input_data, batch_size=100):
         """Run the RISE explainer.
@@ -77,24 +72,23 @@ class RISE:
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]
         self.masks = self.generate_masks_for_images(img_shape)  # Expose masks for to make user inspection possible
-        
-        preds = []
+
+        predictions = []
+
         # Make sure multiplication is being done for correct axes
-        
         masked = input_data * self.masks
 
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            preds.append(runner(masked[i:i+batch_size]))
-        preds = np.concatenate(preds)
-        self.predictions = preds
-        sal = preds.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
-        sal = sal / self.n_masks / self.p_keep
-        return sal
+            predictions.append(runner(masked[i:i + batch_size]))
+        predictions = np.concatenate(predictions)
+        self.predictions = predictions
+        saliency = predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
+        saliency = saliency / self.n_masks / self.p_keep
+        return saliency
 
     def generate_masks_for_text(self, input_size):
 
         masks = np.random.choice(a=(True, False), size=(self.n_masks, input_size), p=(self.p_keep, 1 - self.p_keep))
-        #masks = masks.reshape(-1, input_size, 1)
         return masks
 
     def generate_masks_for_images(self, input_size):
@@ -119,22 +113,7 @@ class RISE:
             y = np.random.randint(0, cell_size[0])
             x = np.random.randint(0, cell_size[1])
             # Linear upsampling and cropping
-            masks[i, :, :] = resize(grid[i], up_size, order=1, mode='reflect', anti_aliasing=False)[y:y + input_size[0], x:x + input_size[1]]
+            masks[i, :, :] = resize(grid[i], up_size, order=1, mode='reflect', anti_aliasing=False)[y:y + input_size[0],
+                                                                                                    x:x + input_size[1]]
         masks = masks.reshape(-1, *input_size, 1)
         return masks
-
-    # def explain(self, function, input_data, batch_size, img_shape):
-    #     """Run the masked images through the model, and combine the output into a
-    #        heatmap for each class.
-
-    #     Args:
-    #         function: The function that runs the model to be explained, will be called with masked images,
-    #                   with a shape defined by `batch_size` and the shape of `input_data`
-    #         input_data (np.ndarray): Image to be explained
-    #         batch_size (int): Batch size to use for running the masked images through the model.
-    #         img_shape (tuple): The shape of a single image, without the batch or channel axes.
-
-    #     Returns:
-    #         Explanation heatmap for each class (np.ndarray).
-    #     """
-

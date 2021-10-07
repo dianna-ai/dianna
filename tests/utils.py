@@ -33,7 +33,8 @@ class ModelRunner():
                 tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
 
             # numericalize
-            tokens = [self.vocab.stoi[token] if token in self.vocab.stoi else self.vocab.stoi['<unk>'] for token in tokens]
+            tokens = [self.vocab.stoi[token] if token in self.vocab.stoi else self.vocab.stoi['<unk>'] for token in
+                      tokens]
             # feed to model
             onnx_input = {input_name: [tokens]}
             pred = expit(sess.run([output_name], onnx_input)[0])
