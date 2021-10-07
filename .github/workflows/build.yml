@@ -27,10 +27,6 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip setuptools
           python3 -m pip install .[dev,publishing]
-      - name: Check style against standards using prospector
-        run: prospector
-      - name: Check import order
-        run: isort --recursive --check-only dianna
       - name: Run unit tests
         run: pytest -v
       - name: Verify that we can build the package
