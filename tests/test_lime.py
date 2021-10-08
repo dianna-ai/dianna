@@ -1,6 +1,5 @@
 from unittest import TestCase
 
-import numpy
 import numpy as np
 import dianna
 import dianna.visualization
@@ -21,9 +20,9 @@ class LimeOnImages(TestCase):
         # shape is batch, y, x, channel
         input_data = np.random.random((1, 224, 224, 3))
 
-        heatmaps = dianna.explain_image(run_model, input_data, method="LIME")
+        heatmap = dianna.explain_image(run_model, input_data, method="LIME")
 
-        assert heatmaps[0].shape == input_data[0].shape[:2]
+        assert heatmap.shape == input_data[0].shape[:2]
 
     def test_lime_filename(self):
         model_filename = 'tests/test_data/mnist_model.onnx'

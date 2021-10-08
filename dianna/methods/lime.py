@@ -100,6 +100,7 @@ class LIME:
                       model_or_function,
                       input_data,
                       label=1,
+                      hide_color=None,
                       top_labels=None,
                       num_features=10,
                       num_samples=5000,
@@ -114,7 +115,8 @@ class LIME:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained
             label (int): Index of class to be explained
-            top_labels ([type], optional):
+            hide_color (float, optional):
+            top_labels (int, optional):
             num_features (int, optional):
             num_samples (int, optional):
             distance_metric (str, optional):
@@ -124,19 +126,20 @@ class LIME:
             list of (word, index of word in raw text, importance for target class) tuples
         """
         runner = get_function(model_or_function)
+        # remove batch axis from input data; this is only here for a consistent API
+        # but LIME wants data without batch axis
+        if not len(input_data) == 1:
+            raise ValueError("Length of batch axis must be one.")
+        input_data = input_data[0]
         explanation = self.image_explainer.explain_instance(input_data,
                                                             runner,
                                                             (label,),
+                                                            hide_color,
                                                             top_labels,
                                                             num_features,
                                                             num_samples,
                                                             distance_metric,
                                                             model_regressor,
                                                             )
-
-        local_explanation = explanation.local_exp[label]
-        return None
-        #Code below was copied from explain_text
-        # string_map = explanation.domain_mapper.indexed_string
-        # return [(string_map.word(index), int(string_map.string_position(index)), importance)
-        #         for index, importance in local_explanation]
+        image, mask = explanation.get_image_and_mask(label, positive_only=False, hide_rest=False, num_features=num_features)
+        return mask
