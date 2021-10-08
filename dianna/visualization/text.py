@@ -1,4 +1,5 @@
-from IPython.core.display import display, HTML
+from IPython.core.display import HTML
+from IPython.core.display import display
 
 
 def highlight_text(explanation,

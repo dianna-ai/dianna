@@ -1,9 +1,9 @@
 import numpy as np
 import onnxruntime as ort
+import spacy
 from scipy.special import expit
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
-import spacy
 
 
 class ModelRunner():
