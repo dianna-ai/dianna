@@ -3,6 +3,7 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
+from dianna.methods import LIME
 from tests.utils import ModelRunner
 
 
@@ -21,7 +22,8 @@ class LimeOnImages(TestCase):
         np.random.seed(42)
         input_data = np.random.random((1, 224, 224, 3))
 
-        heatmap = dianna.explain_image(run_model, input_data, method="LIME", random_state=42)
+        explainer = LIME(random_state=42)
+        heatmap = explainer.explain_image(run_model, input_data, num_samples=100)
 
         assert heatmap.shape == input_data[0].shape[:2]
         heatmap_expected = np.load('tests/test_data/heatmap_lime_function.npy')
