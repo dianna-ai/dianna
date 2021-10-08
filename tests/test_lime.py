@@ -3,7 +3,6 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
-from tests.test_onnx_runner import generate_data
 from tests.utils import ModelRunner
 
 
@@ -23,16 +22,6 @@ class LimeOnImages(TestCase):
         heatmap = dianna.explain_image(run_model, input_data, method="LIME")
 
         assert heatmap.shape == input_data[0].shape[:2]
-
-    def test_lime_filename(self):
-        model_filename = 'tests/test_data/mnist_model.onnx'
-        black_and_white = generate_data(batch_size=1).transpose((0, 3, 2, 1))
-        input_data = np.zeros(list(black_and_white.shape[:-1]) + [3]) + black_and_white
-        print('shape', input_data.shape)
-
-        heatmaps = dianna.explain_image(model_filename, input_data, method="LIME")
-
-        assert heatmaps[0].shape == input_data[0].shape[:2]
 
 
 def test_lime_text():
