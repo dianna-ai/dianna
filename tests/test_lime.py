@@ -10,6 +10,7 @@ def run_model(input_data):
     n_class = 2
     batch_size = input_data.shape[0]
 
+    np.random.seed(42)
     return np.random.random((batch_size, n_class))
 
 
@@ -17,11 +18,14 @@ class LimeOnImages(TestCase):
 
     def test_lime_function(self):
         # shape is batch, y, x, channel
+        np.random.seed(42)
         input_data = np.random.random((1, 224, 224, 3))
 
-        heatmap = dianna.explain_image(run_model, input_data, method="LIME")
+        heatmap = dianna.explain_image(run_model, input_data, method="LIME", random_state=42)
 
         assert heatmap.shape == input_data[0].shape[:2]
+        heatmap_expected = np.load('tests/test_data/heatmap_lime_function.npy')
+        assert np.allclose(heatmap, heatmap_expected, atol=.01)
 
 
 def test_lime_text():
