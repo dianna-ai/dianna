@@ -9,22 +9,24 @@ class RISE:
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5):
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5, preprocess_function=None,):
         """RISE initializer.
 
         Args:
             n_masks (int): Number of masks to generate.
             feature_res (int): Resolution of features in masks.
             p_keep (float): Fraction of image to keep in each mask
+            preprocess_function (callable, optional): Function to preprocess input data with
         """
         self.n_masks = n_masks
         self.feature_res = feature_res
         self.p_keep = p_keep
+        self.preprocess_function = preprocess_function
         self.masks = None
         self.predictions = None
 
     def explain_text(self, model_or_function, input_text, batch_size=100):
-        runner = get_function(model_or_function)
+        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
 
         tokens = model_or_function.tokenizer(input_text)
         text_shape = len(tokens)
@@ -66,7 +68,7 @@ class RISE:
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
-        runner = get_function(model_or_function)
+        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
 
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]

@@ -19,6 +19,7 @@ class LIME:
                  mask_string=None,
                  random_state=None,
                  char_level=False,
+                 preprocess_function=None,
                  ):  # pylint: disable=too-many-arguments
         """LIME initializer.
 
@@ -33,6 +34,7 @@ class LIME:
             mask_string (str, optional):
             random_state (int or np.RandomState, optional):
             char_level (bool, optional):
+            preprocess_function (callable, optional): Function to preprocess input data with
         """
         self.text_explainer = LimeTextExplainer(kernel_width,
                                                 kernel,
@@ -52,6 +54,8 @@ class LIME:
                                                   feature_selection,
                                                   random_state,
                                                   )
+
+        self.preprocess_function = preprocess_function
 
     def explain_text(self,
                      model_or_function,
@@ -80,7 +84,7 @@ class LIME:
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
         """
-        runner = get_function(model_or_function)
+        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
         explanation = self.text_explainer.explain_instance(input_data,
                                                            runner,
                                                            (label,),
@@ -125,7 +129,7 @@ class LIME:
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
         """
-        runner = get_function(model_or_function)
+        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
         # remove batch axis from input data; this is only here for a consistent API
         # but LIME wants data without batch axis
         if not len(input_data) == 1:
