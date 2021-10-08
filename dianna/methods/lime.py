@@ -141,5 +141,6 @@ class LIME:
                                                             distance_metric,
                                                             model_regressor,
                                                             )
-        image, mask = explanation.get_image_and_mask(label, positive_only=False, hide_rest=False, num_features=num_features)
+
+        mask = explanation.get_image_and_mask(label, positive_only=False, hide_rest=False, num_features=num_features)[1]
         return mask
