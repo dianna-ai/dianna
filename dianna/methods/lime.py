@@ -113,7 +113,6 @@ class LIME:
                       distance_metric='cosine',
                       model_regressor=None,
                       random_seed=None,
-                      progress_bar=True,
                       ):  # pylint: disable=too-many-arguments,too-many-locals
         """
         Run the LIME explainer.
@@ -127,8 +126,11 @@ class LIME:
             top_labels (int, optional):
             num_features (int, optional):
             num_samples (int, optional):
+            batch_size (int, optional):
+            segmentation_fn (callable, optional):
             distance_metric (str, optional):
             model_regressor ([type], optional):
+            random_seed (int, optional):
 
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
@@ -139,19 +141,18 @@ class LIME:
         if not len(input_data) == 1:
             raise ValueError("Length of batch axis must be one.")
         input_data = input_data[0]
-        explanation = self.image_explainer.explain_instance(input_data,  # pylint: disable=too-many-function-args
+        explanation = self.image_explainer.explain_instance(input_data,
                                                             runner,
-                                                            (label,),
-                                                            hide_color,
-                                                            top_labels,
-                                                            num_features,
-                                                            num_samples,
-                                                            batch_size,
-                                                            segmentation_fn,
-                                                            distance_metric,
-                                                            model_regressor,
-                                                            random_seed,
-                                                            progress_bar
+                                                            labels=(label,),
+                                                            hide_color=hide_color,
+                                                            top_labels=top_labels,
+                                                            num_features=num_features,
+                                                            num_samples=num_samples,
+                                                            batch_size=batch_size,
+                                                            segmentation_fn=segmentation_fn,
+                                                            distance_metric=distance_metric,
+                                                            model_regressor=model_regressor,
+                                                            random_seed=random_seed
                                                             )
 
         mask = explanation.get_image_and_mask(label, positive_only=False, hide_rest=True, num_features=num_features)[1]
