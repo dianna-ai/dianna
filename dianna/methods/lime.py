@@ -108,9 +108,13 @@ class LIME:
                       top_labels=None,
                       num_features=10,
                       num_samples=5000,
+                      batch_size=10,
+                      segmentation_fn=None,
                       distance_metric='cosine',
                       model_regressor=None,
-                      ):  # pylint: disable=too-many-arguments
+                      random_seed=None,
+                      progress_bar=True,
+                      ):  # pylint: disable=too-many-arguments,too-many-locals
         """
         Run the LIME explainer.
 
@@ -135,16 +139,20 @@ class LIME:
         if not len(input_data) == 1:
             raise ValueError("Length of batch axis must be one.")
         input_data = input_data[0]
-        explanation = self.image_explainer.explain_instance(input_data,
+        explanation = self.image_explainer.explain_instance(input_data,  # pylint: disable=too-many-function-args
                                                             runner,
                                                             (label,),
                                                             hide_color,
                                                             top_labels,
                                                             num_features,
                                                             num_samples,
+                                                            batch_size,
+                                                            segmentation_fn,
                                                             distance_metric,
                                                             model_regressor,
+                                                            random_seed,
+                                                            progress_bar
                                                             )
 
-        mask = explanation.get_image_and_mask(label, positive_only=False, hide_rest=False, num_features=num_features)[1]
+        mask = explanation.get_image_and_mask(label, positive_only=False, hide_rest=True, num_features=num_features)[1]
         return mask
