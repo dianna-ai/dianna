@@ -12,7 +12,7 @@ class SHAP:
         self.shap_arg_1 = shap_arg_1
         self.shap_arg_2 = shap_arg_2
 
-    def __call__(self, model, input_data):
+    def explain_image(self, model, input_data):
         """
         Example call function.
         """
