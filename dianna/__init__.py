@@ -2,6 +2,7 @@
 import logging
 from . import methods
 
+
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = "DIANNA Team"
