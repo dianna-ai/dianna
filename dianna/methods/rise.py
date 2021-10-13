@@ -13,7 +13,7 @@ class RISE:
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5, preprocess_function=None,):
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5, preprocess_function=None, ):
         """RISE initializer.
 
         Args:
@@ -42,14 +42,12 @@ class RISE:
     def _reshape_result(input_tokens, labels, saliencies):
         word_lengths = [len(t) for t in input_tokens]
         word_indices = [sum(word_lengths[:i]) + i for i in range(len(input_tokens))]
-        saliencies = zip(*[saliencies[label] for label in labels])
-        return list(zip(input_tokens, word_indices, saliencies))
+        return [list(zip(input_tokens, word_indices, saliencies[label])) for label in labels]
 
     def _get_saliencies(self, runner, sentences, text_length, batch_size):
         self.predictions = self._get_predictions(sentences, runner, batch_size)
         unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_length)
-        saliency = normalize(unnormalized_saliency, self.n_masks, self.p_keep)
-        return saliency
+        return normalize(unnormalized_saliency, self.n_masks, self.p_keep)
 
     def _get_predictions(self, sentences, runner, batch_size):
         predictions = []
@@ -100,7 +98,7 @@ class RISE:
         predictions = np.concatenate(predictions)
         self.predictions = predictions
         saliency = predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
-        return normalize(saliency,                         self.n_masks, self.p_keep)
+        return normalize(saliency, self.n_masks, self.p_keep)
 
     def generate_masks_for_images(self, input_size):
         """Generate a set of random masks to mask the input data
@@ -120,11 +118,12 @@ class RISE:
         masks = np.empty((self.n_masks, *input_size))
 
         for i in tqdm(range(self.n_masks), desc='Generating masks'):
-            # Random shifts
             y = np.random.randint(0, cell_size[0])
             x = np.random.randint(0, cell_size[1])
             # Linear upsampling and cropping
-            masks[i, :, :] = resize(grid[i], up_size, order=1, mode='reflect', anti_aliasing=False)[y:y + input_size[0],
-                                                                                                    x:x + input_size[1]]
+            masks[i, :, :] = self._upscale(grid[i], up_size)[y:y + input_size[0], x:x + input_size[1]]
         masks = masks.reshape(-1, *input_size, 1)
         return masks
+
+    def _upscale(self, grid_i, up_size):
+        return resize(grid_i, up_size, order=1, mode='reflect', anti_aliasing=False)

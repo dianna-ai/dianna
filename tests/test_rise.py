@@ -38,18 +38,16 @@ class RiseOnText(TestCase):
 
         review = 'such a bad movie'
 
-        explanation = dianna.explain_text(runner, review, labels=(1, 0), method='RISE')
-        words = [element[0] for element in explanation]
-        word_indices = [element[1] for element in explanation]
-        positive_scores = [element[2][0] for element in explanation]
-        negative_scores = [element[2][1] for element in explanation]
+        positive_explanation = dianna.explain_text(runner, review, labels=(1, 0), method='RISE')[0]
+        print(positive_explanation)
+        words = [element[0] for element in positive_explanation]
+        word_indices = [element[1] for element in positive_explanation]
+        positive_scores = [element[2] for element in positive_explanation]
 
         expected_words = ['such', 'a', 'bad', 'movie']
         expected_word_indices = [0, 5, 7, 11]
-        expected_negative_scores = [0.6504735, 0.6498708, 1.0003519, 0.65321875]
         expected_positive_scores = [0.3295266, 0.3521292, 0.023648001, 0.3347813]
 
         assert words == expected_words
         assert word_indices == expected_word_indices
         assert np.allclose(positive_scores, expected_positive_scores)
-        assert np.allclose(negative_scores, expected_negative_scores)

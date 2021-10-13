@@ -96,7 +96,6 @@ class LIME:
                                                            )
 
         local_explanations = explanation.local_exp
-        print('local_explanations:', local_explanations)
         string_map = explanation.domain_mapper.indexed_string
         return [self._get_results_for_single_label(local_explanations[label], string_map) for label in labels]
 

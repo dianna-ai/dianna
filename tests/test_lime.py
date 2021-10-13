@@ -45,7 +45,7 @@ def test_lime_text():
 
     review = 'such a bad movie'
 
-    explanation = dianna.explain_text(runner, review, method='LIME', random_state=42)[0]
+    explanation = dianna.explain_text(runner, review, labels=[0], method='LIME', random_state=42)[0]
     words = [element[0] for element in explanation]
     word_indices = [element[1] for element in explanation]
     scores = [element[2] for element in explanation]
