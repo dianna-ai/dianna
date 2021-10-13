@@ -4,6 +4,10 @@ from tqdm import tqdm
 from dianna.utils import get_function
 
 
+def normalize(saliency, n_masks, p_keep):
+    return saliency / n_masks / p_keep
+
+
 class RISE:
     """
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
@@ -25,34 +29,46 @@ class RISE:
         self.masks = None
         self.predictions = None
 
-    def explain_text(self, model_or_function, input_text, batch_size=100):
+    def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
         runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+        input_tokens = np.asarray(model_or_function.tokenizer(input_text))
+        text_length = len(input_tokens)
+        self.masks = self._generate_masks_for_text(text_length)  # Expose masks for to make user inspection possible
+        sentences = self._create_masked_sentences(input_tokens)
+        saliencies = self._get_saliencies(runner, sentences, text_length, batch_size)
+        return self._reshape_result(input_tokens, labels, saliencies)
 
-        tokens = model_or_function.tokenizer(input_text)
-        text_shape = len(tokens)
-        self.masks = self.generate_masks_for_text(text_shape)  # Expose masks for to make user inspection possible
+    @staticmethod
+    def _reshape_result(input_tokens, labels, saliencies):
+        word_lengths = [len(t) for t in input_tokens]
+        word_indices = [sum(word_lengths[:i]) + i for i in range(len(input_tokens))]
+        saliencies = zip(*[saliencies[label] for label in labels])
+        return list(zip(input_tokens, word_indices, saliencies))
 
-        # generate sentences with mask
-        tokens = np.asarray(tokens)
+    def _get_saliencies(self, runner, sentences, text_length, batch_size):
+        self.predictions = self._get_predictions(sentences, runner, batch_size)
+        unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_length)
+        saliency = normalize(unnormalized_saliency, self.n_masks, self.p_keep)
+        return saliency
+
+    def _get_predictions(self, sentences, runner, batch_size):
+        predictions = []
+        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
+            predictions.append(runner(sentences[i:i + batch_size]))
+        predictions = np.concatenate(predictions)
+        return predictions
+
+    def _create_masked_sentences(self, tokens):
         tokens_masked = []
         for mask in self.masks:
             tokens_masked.append(tokens[mask])
         sentences = [" ".join(t) for t in tokens_masked]
+        return sentences
 
-        preds = []
+    def _generate_masks_for_text(self, input_size):
 
-        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            preds.append(runner(sentences[i:i + batch_size]))
-        preds = np.concatenate(preds)
-        self.predictions = preds
-        saliency = preds.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_shape)
-        saliency = saliency / self.n_masks / self.p_keep
-
-        # create word and word indices dimension for return values
-        word_lengths = [len(t) for t in tokens]
-        word_indices = [sum(word_lengths[:i]) + i for i in range(len(tokens))]
-
-        return list(zip(tokens, word_indices, saliency[0], saliency[1]))
+        masks = np.random.choice(a=(True, False), size=(self.n_masks, input_size), p=(self.p_keep, 1 - self.p_keep))
+        return masks
 
     def explain_image(self, model_or_function, input_data, batch_size=100):
         """Run the RISE explainer.
@@ -84,13 +100,7 @@ class RISE:
         predictions = np.concatenate(predictions)
         self.predictions = predictions
         saliency = predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
-        saliency = saliency / self.n_masks / self.p_keep
-        return saliency
-
-    def generate_masks_for_text(self, input_size):
-
-        masks = np.random.choice(a=(True, False), size=(self.n_masks, input_size), p=(self.p_keep, 1 - self.p_keep))
-        return masks
+        return normalize(saliency,                         self.n_masks, self.p_keep)
 
     def generate_masks_for_images(self, input_size):
         """Generate a set of random masks to mask the input data

@@ -34,7 +34,6 @@ class RiseOnImages(TestCase):
 
 class RiseOnText(TestCase):
     def test_rise_text(self):
-        # fix the seed for testing
         np.random.seed(42)
 
         model_path = 'tests/test_data/movie_review_model.onnx'
@@ -43,11 +42,11 @@ class RiseOnText(TestCase):
 
         review = 'such a bad movie'
 
-        explanation = dianna.explain_text(runner, review, method='RISE')
+        explanation = dianna.explain_text(runner, review, labels=(1, 0), method='RISE')
         words = [element[0] for element in explanation]
         word_indices = [element[1] for element in explanation]
-        negative_scores = [element[2] for element in explanation]
-        positive_scores = [element[3] for element in explanation]
+        positive_scores = [element[2][0] for element in explanation]
+        negative_scores = [element[2][1] for element in explanation]
 
         expected_words = ['such', 'a', 'bad', 'movie']
         expected_word_indices = [0, 5, 7, 11]
