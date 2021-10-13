@@ -2,15 +2,11 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
-from tests.utils import ModelRunner
+from tests.utils import ModelRunner, run_model
 from .test_onnx_runner import generate_data
 
 
-def run_model(input_data):
-    n_class = 2
-    batch_size = input_data.shape[0]
 
-    return np.random.random((batch_size, n_class))
 
 
 class RiseOnImages(TestCase):

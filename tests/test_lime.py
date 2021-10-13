@@ -4,15 +4,7 @@ import dianna
 import dianna.visualization
 from dianna.methods import LIME
 from tests.test_onnx_runner import generate_data
-from tests.utils import ModelRunner
-
-
-def run_model(input_data):
-    n_class = 2
-    batch_size = input_data.shape[0]
-
-    np.random.seed(42)
-    return np.random.random((batch_size, n_class))
+from tests.utils import ModelRunner, run_model
 
 
 class LimeOnImages(TestCase):
