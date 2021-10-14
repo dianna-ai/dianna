@@ -6,9 +6,6 @@ from tests.utils import ModelRunner, run_model
 from .test_onnx_runner import generate_data
 
 
-
-
-
 class RiseOnImages(TestCase):
 
     def test_rise_function(self):

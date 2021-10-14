@@ -7,7 +7,7 @@ def highlight_text(explanation,
                    label=0,
                    show_plot=True,
                    output_html_filename=None,
-                   max_opacity=.8):
+                   max_opacity=.8):  # pylint: disable=too-many-arguments
     """
     Highlights text
     Args:

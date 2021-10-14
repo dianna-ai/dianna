@@ -21,6 +21,7 @@ def run_model(input_data):
     np.random.seed(42)
     return np.random.random((batch_size, n_class))
 
+
 class ModelRunner():
     def __init__(self, model_path, word_vector_file, max_filter_size):
         self.filename = model_path
