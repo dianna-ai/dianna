@@ -2,3 +2,4 @@
 from .lime import LIME
 from .rise import RISE
 from .shap import SHAP
+from .deeplift import DeepLift
