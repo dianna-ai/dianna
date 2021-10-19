@@ -21,6 +21,14 @@ def run_model(input_data):
     np.random.seed(42)
     return np.random.random((batch_size, n_class))
 
+def torch_model(path_to_model):
+    """
+    Load pytorch model
+    Args:
+        path_to_model
+    Returns:
+        pytorh model
+    """
 
 class ModelRunner():
     def __init__(self, model_path, word_vector_file, max_filter_size):
