@@ -6,6 +6,22 @@ from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
 
 
+def run_model(input_data):
+    """
+    Simulate a model that outputs 2-classes.
+    Args:
+        input_data:
+
+    Returns:
+
+    """
+    n_class = 2
+    batch_size = input_data.shape[0]
+
+    np.random.seed(42)
+    return np.random.random((batch_size, n_class))
+
+
 class ModelRunner():
     def __init__(self, model_path, word_vector_file, max_filter_size):
         self.filename = model_path
