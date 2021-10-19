@@ -2,7 +2,7 @@ from IPython.core.display import HTML
 from IPython.core.display import display
 
 
-def highlight_text(explanation,  # pylint: disable=too-many-arguments
+def highlight_text(explanation,
                    original_text,
                    show_plot=True,
                    output_html_filename=None,
@@ -12,7 +12,6 @@ def highlight_text(explanation,  # pylint: disable=too-many-arguments
     Args:
         explanation: list of tuples of (word, index of word in original data, importance)
         original_text: original text
-        label: index of the label that needs highlighting
         show_plot: Shows plot if true (for testing or writing plots to disk instead)
         output_html_filename: Name of the file to save the plot to (optional).
         max_opacity: Maximum opacity (0-1)
