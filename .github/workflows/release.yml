@@ -18,6 +18,11 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Upgrade pip and install dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools
+          python3 -m pip install .[publishing]
+
       - name: Build wheel
         run: python setup.py bdist_wheel
 
@@ -35,6 +40,11 @@ jobs:
         name: Install Python
         with:
           python-version: '3.9'
+
+      - name: Upgrade pip and install dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools
+          python3 -m pip install .[publishing]
 
       - name: Build sdist
         run: python setup.py sdist
