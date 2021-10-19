@@ -26,7 +26,7 @@ class DeepLift:
                       additional_forward_args=None,
                       return_convergence_delta=False,
                       custom_attribution_func=None
-                      ):
+                      ):  # pylint: disable=too-many-arguments
         """
         Run the DeepLift explainer.
 

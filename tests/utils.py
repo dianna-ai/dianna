@@ -3,7 +3,6 @@ import onnxruntime as ort
 import spacy
 import torch
 from torch import nn
-import torch.nn.functional as F
 from scipy.special import expit
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
@@ -73,12 +72,13 @@ class MnistNet(nn.Module):
     function for testing deeplift in dianna.
     """
 
-    def __init__(self, kernels=[16, 32], dropout=0.1, classes=2):
+    def __init__(self, kernels=(16, 32), dropout=0.1, classes=2):
         '''
         Two layer CNN model with max pooling.
         '''
-        super(MnistNet, self).__init__()
+        super().__init__()
         self.kernels = kernels
+        self.dropout = dropout
         # 1st layer
         self.layer1 = nn.Sequential(
             nn.Conv2d(1, kernels[0], kernel_size=5, stride=1, padding=2),
@@ -105,7 +105,7 @@ class MnistNet(nn.Module):
         x = self.fc1(x)
         x = self.fc2(x)
 
-        return F.log_softmax(x, dim=1)
+        return nn.functional.log_softmax(x, dim=1)
 
 
 def load_torch_model(path_to_model):
