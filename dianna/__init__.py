@@ -17,11 +17,11 @@ def explain_image(model_or_function, input_data, method, **kwargs):
     return get_explainer(method, kwargs).explain_image(model_or_function, input_data)
 
 
-def explain_text(model_or_function, input_data, method, **kwargs):
+def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
     """
     Exampler explainer wrapper
     """
-    return get_explainer(method, kwargs).explain_text(model_or_function, input_data)
+    return get_explainer(method, kwargs).explain_text(model_or_function, input_data, labels)
 
 
 def get_explainer(method, kwargs):
