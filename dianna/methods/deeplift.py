@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from captum.attr import DeepLift
+from captum.attr import DeepLift as DeepLift_captum
 
 
 class DeepLift:
@@ -43,20 +43,16 @@ class DeepLift:
             list of (word, index of word in raw text, importance for target class) tuples        
         """
         # call the deeplift class
-        deeplift = DeepLift(model)
+        deeplift = DeepLift_captum(model)
         # convert input data from numpy array to torch.tensor
-        input_data = torch.from_numpy(input_data)
-        baselines = torch.from_numpy(baselines)
-        # 
+        input_data = torch.from_numpy(input_data).type(torch.FloatTensor)
+        baselines = torch.from_numpy(baselines).type(torch.FloatTensor)
+        # call the attributions
         attributions = deeplift.attribute(input_data,
-                                             baselines,
-                                             target=label,
-                                             additional_forward_args=additional_forward_args,
-                                             return_convergence_delta=return_convergence_delta,
-                                             custom_attribution_func=custom_attribution_func
-                                             )
+                                          baselines,
+                                          target=label,
+                                          additional_forward_args=additional_forward_args,
+                                          return_convergence_delta=return_convergence_delta,
+                                          custom_attribution_func=custom_attribution_func
+                                          )
         return attributions.cpu().detach().numpy()
-
-
-
-

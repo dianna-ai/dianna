@@ -1,6 +1,9 @@
 import numpy as np
 import onnxruntime as ort
 import spacy
+import torch
+from torch import nn
+import torch.nn.functional as F
 from scipy.special import expit
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
@@ -21,14 +24,6 @@ def run_model(input_data):
     np.random.seed(42)
     return np.random.random((batch_size, n_class))
 
-def torch_model(path_to_model):
-    """
-    Load pytorch model
-    Args:
-        path_to_model
-    Returns:
-        pytorh model
-    """
 
 class ModelRunner():
     def __init__(self, model_path, word_vector_file, max_filter_size):
@@ -70,3 +65,68 @@ class ModelRunner():
             output.append(np.transpose([negativity, positivity])[0])
 
         return np.array(output)
+
+
+class MnistNet(nn.Module):
+    """
+    Model designed for mnist. This class works with the load_torch_model
+    function for testing deeplift in dianna.
+    """
+
+    def __init__(self, kernels=[16, 32], dropout=0.1, classes=2):
+        '''
+        Two layer CNN model with max pooling.
+        '''
+        super(MnistNet, self).__init__()
+        self.kernels = kernels
+        # 1st layer
+        self.layer1 = nn.Sequential(
+            nn.Conv2d(1, kernels[0], kernel_size=5, stride=1, padding=2),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.ReLU(),
+            nn.Dropout()
+        )
+        # 2nd layer
+        self.layer2 = nn.Sequential(
+            nn.Conv2d(kernels[0], kernels[1],
+                      kernel_size=5, stride=1, padding=2),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.ReLU(),
+            nn.Dropout()
+        )
+        # pixel 28 / maxpooling 2 * 2 = 7
+        self.fc1 = nn.Linear(7 * 7 * kernels[-1], kernels[-1])
+        self.fc2 = nn.Linear(kernels[-1], classes)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0), -1)
+        x = self.fc1(x)
+        x = self.fc2(x)
+
+        return F.log_softmax(x, dim=1)
+
+
+def load_torch_model(path_to_model):
+    """
+    Load pytorch model
+    Args:
+        path_to_model (str):
+    Returns:
+        pytorch model
+    """
+    # create the structure of the model
+    # hyper-parameters
+    kernels = [16, 32]
+    dropout = 0.5
+    classes = 2
+    # create model
+    model = MnistNet(kernels, dropout, classes)
+    # load whole model state
+    checkpoint = torch.load(path_to_model)
+    # load model
+    model.load_state_dict(checkpoint['model_state_dict'])
+    model.eval()
+
+    return model
