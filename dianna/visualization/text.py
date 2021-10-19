@@ -4,10 +4,9 @@ from IPython.core.display import display
 
 def highlight_text(explanation,
                    original_text,
-                   label=0,
                    show_plot=True,
                    output_html_filename=None,
-                   max_opacity=.8):  # pylint: disable=too-many-arguments
+                   max_opacity=.8):
     """
     Highlights text
     Args:
@@ -20,7 +19,7 @@ def highlight_text(explanation,
     Returns:
         None
     """
-    output = _create_html(original_text, explanation[label], max_opacity)
+    output = _create_html(original_text, explanation, max_opacity)
 
     if output_html_filename:
         with open(output_html_filename, 'w', encoding='utf-8') as output_html_file:

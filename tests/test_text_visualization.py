@@ -9,7 +9,7 @@ from dianna.visualization.text import highlight_text
 class Example1:
     original_text = 'Doloremque aliquam totam ut. Aspernatur repellendus autem quia deleniti. Natus accusamus ' \
                     'doloribus et in quam officiis veniam et. '
-    explanation = [[('ut', 25, -0.06405025896517044),
+    explanation = [('ut', 25, -0.06405025896517044),
                    ('in', 102, -0.05127647027074053),
                    ('et', 99, 0.02254588506724936),
                    ('quia', 58, -0.0008216335740370412),
@@ -18,7 +18,7 @@ class Example1:
                    ('totam', 19, -0.0005126140261410219),
                    ('veniam', 119, -0.0005058379023790869),
                    ('quam', 105, -0.0004573258796550468),
-                   ('repellendus', 40, -0.0003253862469633824)]]
+                   ('repellendus', 40, -0.0003253862469633824)]
 
 
 class Example2:
@@ -26,10 +26,10 @@ class Example2:
                     '<span style="background:rgba(255, 0, 0, 0.01)">a</span> <span style="background:rgba(0, 0, 255, 0.800000)">' \
                     'bad</span> <span style="background:rgba(0, 0, 255, 0.059287)">movie</span>.</body></html>\n'
     original_text = 'Such a bad movie.'
-    explanation = [[('bad', 7, -0.4922624307995777),
+    explanation = [('bad', 7, -0.4922624307995777),
                    ('such', 0, 0.04637815000309109),
                    ('movie', 11, -0.03648111256069627),
-                   ('a', 5, 0.008377155657765745)]]
+                   ('a', 5, 0.008377155657765745)]
 
 
 class MyTestCase(unittest.TestCase):
