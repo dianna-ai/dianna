@@ -46,6 +46,7 @@ class DeepLift:
         deeplift = DeepLift_captum(model)
         # convert input data from numpy array to torch.tensor
         input_data = torch.from_numpy(input_data).type(torch.FloatTensor)
+        input_data.requires_grad = True
         if baselines is None:
             baselines = np.zeros_like(input_data)
         baselines = torch.from_numpy(baselines).type(torch.FloatTensor)
