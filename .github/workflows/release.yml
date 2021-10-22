@@ -7,27 +7,28 @@ on:
       - published
 
 jobs:
-  build_wheels:
-    name: Build wheels for (${{ matrix.python-version }}, ${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: ['ubuntu-lastet', 'macos-latest', 'windows-latest']
-        python-version: ['3.6', '3.7', '3.8', '3.9']
-
+  build_wheel:
+    name: Build universal wheel
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        name: Set up Python ${{ matrix.python-version }}
-        with:
-          python-version: ${{ matrix.python-version }}
 
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2
+      - uses: actions/setup-python@v2
+        name: Install Python
+        with:
+          python-version: '3.9'
+
+      - name: Upgrade pip and install dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools
+          python3 -m pip install .[publishing]
+
+      - name: Build wheel
+        run: python setup.py bdist_wheel
 
       - uses: actions/upload-artifact@v2
         with:
-          path: ./wheelhouse/*.whl
+          path: dist/*.whl
 
   build_sdist:
     name: Build source distribution
@@ -40,6 +41,11 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Upgrade pip and install dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools
+          python3 -m pip install .[publishing]
+
       - name: Build sdist
         run: python setup.py sdist
 
@@ -49,7 +55,7 @@ jobs:
 
 
   upload_test_pypi:
-    needs: [build_wheels, build_sdist]
+    needs: [build_wheel, build_sdist]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v2
@@ -57,7 +63,7 @@ jobs:
           name: artifact
           path: dist
 
-      - uses: pypa/gh-action-pypi-publish@v1
+      - uses: pypa/gh-action-pypi-publish@v1.4.2
         with:
           user: __token__
           password: ${{ secrets.TEST_PYPI_TOKEN }}
@@ -65,7 +71,7 @@ jobs:
 
 
   upload_pypi:
-    needs: [build_wheels, build_sdist]
+    needs: [build_wheel, build_sdist]
     runs-on: ubuntu-latest
     if: github.event_name == 'release' && github.event.action == 'published'
     steps:
@@ -74,7 +80,7 @@ jobs:
           name: artifact
           path: dist
 
-      - uses: pypa/gh-action-pypi-publish@v1
+      - uses: pypa/gh-action-pypi-publish@v1.4.2
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
