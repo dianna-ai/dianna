@@ -3,7 +3,7 @@ import numpy as np
 
 class SHAP:
     """
-    Dummy class for testing.
+    SHAP implementation based on captum https://github.com/pytorch/captum
     """
     def __init__(self, shap_arg_1=0, shap_arg_2=0):
         """

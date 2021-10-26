@@ -2,7 +2,6 @@
 *.egg-info
 *.eggs
 .ipynb_checkpoints
-*.pt
 
 build
 dist
