@@ -24,7 +24,7 @@ class RiseOnImages(TestCase):
 
         heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 
-        assert heatmaps[0].shape == input_data[0].shape[:2]
+        assert heatmaps[0].shape == input_data[0].shape[1:]
 
 
 class RiseOnText(TestCase):
