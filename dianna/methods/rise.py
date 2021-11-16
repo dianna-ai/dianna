@@ -1,7 +1,9 @@
 import numpy as np
+from numpy.lib.financial import ipmt
+from numpy.testing._private.utils import requires_memory
 from skimage.transform import resize
 from tqdm import tqdm
-from dianna.utils import get_function
+from dianna.utils import get_function, to_xarray
 
 
 def normalize(saliency, n_masks, p_keep):
@@ -13,13 +15,15 @@ class RISE:
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5, preprocess_function=None, ):
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5, axes_labels=None, preprocess_function=None,):
         """RISE initializer.
 
         Args:
             n_masks (int): Number of masks to generate.
             feature_res (int): Resolution of features in masks.
             p_keep (float): Fraction of image to keep in each mask
+            axes_labels (dict/list): If a dict, key,value pairs of axis index, name.
+                                     If a list, the name of each axis where the index in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
         """
         self.n_masks = n_masks
@@ -28,6 +32,8 @@ class RISE:
         self.preprocess_function = preprocess_function
         self.masks = None
         self.predictions = None
+        self.axes_labels = axes_labels if axes_labels is not None else []
+        self.required_labels = ('batch', 'channels')
 
     def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
         runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
@@ -83,6 +89,12 @@ class RISE:
             Explanation heatmap for each class (np.ndarray).
         """
         runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+        # convert data to xarray
+        input_data = to_xarray(input_data, self.axes_labels, required_labels=self.required_labels)
+        # ensure channels axis is last and keep track of where it was so we can move it back if needed
+        channels_axis_index = input_data.dims.index('channels')
+        assert channels_axis_index in (1, input_data.ndim - 1), f'Channels axis should be 2nd or last axis'
+        input_data = input_data.transpose('batch', ..., 'channels')
 
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]
@@ -91,7 +103,12 @@ class RISE:
         predictions = []
 
         # Make sure multiplication is being done for correct axes
-        masked = input_data * self.masks
+        masked = (input_data * self.masks)
+        # transpose channels axis if indeed
+        if channels_axis_index == 1:
+            masked = masked.transpose('batch', 'channels', ...)
+        # convert to numpy for onnx
+        masked = masked.values
 
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
             predictions.append(runner(masked[i:i + batch_size]))

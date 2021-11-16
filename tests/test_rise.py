@@ -11,16 +11,18 @@ class RiseOnImages(TestCase):
     def test_rise_function(self):
         # shape is batch, y, x, channel
         input_data = np.random.random((1, 224, 224, 3))
+        axes_labels = {0: 'batch', -1: 'channels'}
 
-        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", n_masks=200)
+        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
     def test_rise_filename(self):
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1)
+        axes_labels = {0: 'batch', 1: 'channels'}
 
-        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", n_masks=200)
+        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
