@@ -1,8 +1,6 @@
 import numpy as np
 import onnxruntime as ort
 import spacy
-import torch
-from torch import nn
 from scipy.special import expit
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
@@ -64,4 +62,3 @@ class ModelRunner():
             output.append(np.transpose([negativity, positivity])[0])
 
         return np.array(output)
-
