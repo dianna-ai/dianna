@@ -13,7 +13,7 @@ class RISE:
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5, preprocess_function=None, ):
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=None, preprocess_function=None, ):
         """RISE initializer.
 
         Args:
@@ -33,9 +33,10 @@ class RISE:
         runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
         input_tokens = np.asarray(model_or_function.tokenizer(input_text))
         text_length = len(input_tokens)
-        self.masks = self._generate_masks_for_text(text_length)  # Expose masks for to make user inspection possible
+        p_keep = self._determine_p_keep()
+        self.masks = self._generate_masks_for_text(text_length, p_keep)  # Expose masks for to make user inspection possible
         sentences = self._create_masked_sentences(input_tokens)
-        saliencies = self._get_saliencies(runner, sentences, text_length, batch_size)
+        saliencies = self._get_saliencies(runner, sentences, text_length, batch_size, p_keep)
         return self._reshape_result(input_tokens, labels, saliencies)
 
     @staticmethod
@@ -44,10 +45,10 @@ class RISE:
         word_indices = [sum(word_lengths[:i]) + i for i in range(len(input_tokens))]
         return [list(zip(input_tokens, word_indices, saliencies[label])) for label in labels]
 
-    def _get_saliencies(self, runner, sentences, text_length, batch_size):
+    def _get_saliencies(self, runner, sentences, text_length, batch_size, p_keep):
         self.predictions = self._get_predictions(sentences, runner, batch_size)
         unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_length)
-        return normalize(unnormalized_saliency, self.n_masks, self.p_keep)
+        return normalize(unnormalized_saliency, self.n_masks, p_keep)
 
     def _get_predictions(self, sentences, runner, batch_size):
         predictions = []
@@ -63,9 +64,9 @@ class RISE:
         sentences = [" ".join(t) for t in tokens_masked]
         return sentences
 
-    def _generate_masks_for_text(self, input_size):
+    def _generate_masks_for_text(self, input_size, p_keep):
 
-        masks = np.random.choice(a=(True, False), size=(self.n_masks, input_size), p=(self.p_keep, 1 - self.p_keep))
+        masks = np.random.choice(a=(True, False), size=(self.n_masks, input_size), p=(p_keep, 1 - p_keep))
         return masks
 
     def explain_image(self, model_or_function, input_data, batch_size=100):
@@ -86,21 +87,22 @@ class RISE:
 
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]
-        self.masks = self.generate_masks_for_images(img_shape)  # Expose masks for to make user inspection possible
-
-        predictions = []
-
-        # Make sure multiplication is being done for correct axes
+        p_keep = self._determine_p_keep()
+        self.masks = self.generate_masks_for_images(img_shape, p_keep)  # Expose masks for to make user inspection possible
         masked = input_data * self.masks
 
+        predictions = []
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
             predictions.append(runner(masked[i:i + batch_size]))
         predictions = np.concatenate(predictions)
         self.predictions = predictions
         saliency = predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
-        return normalize(saliency, self.n_masks, self.p_keep)
+        return normalize(saliency, self.n_masks, p_keep)
 
-    def generate_masks_for_images(self, input_size):
+    def _determine_p_keep(self):
+        return self.p_keep if self.p_keep is None else 0.5
+
+    def generate_masks_for_images(self, input_size, p_keep):
         """Generate a set of random masks to mask the input data
 
         Args:
@@ -112,7 +114,7 @@ class RISE:
         up_size = (self.feature_res + 1) * cell_size
 
         grid = np.random.choice(a=(True, False), size=(self.n_masks, self.feature_res, self.feature_res),
-                                p=(self.p_keep, 1 - self.p_keep))
+                                p=(p_keep, 1 - p_keep))
         grid = grid.astype('float32')
 
         masks = np.empty((self.n_masks, *input_size))
