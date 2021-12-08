@@ -100,7 +100,7 @@ class RISE:
         return normalize(saliency, self.n_masks, p_keep)
 
     def _determine_p_keep(self):
-        return self.p_keep if self.p_keep is None else 0.5
+        return self.p_keep if not self.p_keep is None else 0.5
 
     def generate_masks_for_images(self, input_size, p_keep):
         """Generate a set of random masks to mask the input data
