@@ -1,6 +1,6 @@
 from lime.lime_image import LimeImageExplainer
 from lime.lime_text import LimeTextExplainer
-from dianna.utils import get_function
+from dianna import utils
 
 
 class LIME:
@@ -64,8 +64,7 @@ class LIME:
                      top_labels=None,
                      num_features=10,
                      num_samples=5000,
-                     distance_metric='cosine',
-                     model_regressor=None,
+                     **kwargs,
                      ):  # pylint: disable=too-many-arguments
         """
         Run the LIME explainer.
@@ -75,24 +74,20 @@ class LIME:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained
             labels ([int], optional): Iterable of indices of class to be explained
-            top_labels ([type], optional):
-            num_features (int, optional):
-            num_samples (int, optional):
-            distance_metric (str, optional):
-            model_regressor ([type], optional):
+        Other keyword arguments: see the LIME documentation for LimeTextExplainer.explain_instance.
 
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
         """
-        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
+        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.text_explainer.explain_instance, kwargs)
         explanation = self.text_explainer.explain_instance(input_data,
                                                            runner,
-                                                           labels,
-                                                           top_labels,
-                                                           num_features,
-                                                           num_samples,
-                                                           distance_metric,
-                                                           model_regressor,
+                                                           labels=labels,
+                                                           top_labels=top_labels,
+                                                           num_features=num_features,
+                                                           num_samples=num_samples,
+                                                           **explain_instance_kwargs
                                                            )
 
         local_explanations = explanation.local_exp
@@ -108,16 +103,13 @@ class LIME:
                       model_or_function,
                       input_data,
                       label=1,
-                      hide_color=None,
                       top_labels=None,
                       num_features=10,
                       num_samples=5000,
-                      batch_size=10,
-                      segmentation_fn=None,
-                      distance_metric='cosine',
-                      model_regressor=None,
-                      random_seed=None,
-                      ):  # pylint: disable=too-many-arguments,too-many-locals
+                      positive_only=False,
+                      hide_rest=True,
+                      **kwargs,
+                      ):  # pylint: disable=too-many-arguments
         """
         Run the LIME explainer.
 
@@ -126,38 +118,29 @@ class LIME:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained
             label (int): Index of class to be explained
-            hide_color (float, optional):
-            top_labels (int, optional):
-            num_features (int, optional):
-            num_samples (int, optional):
-            batch_size (int, optional):
-            segmentation_fn (callable, optional):
-            distance_metric (str, optional):
-            model_regressor ([type], optional):
-            random_seed (int, optional):
+        Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance and
+        ImageExplanation.get_image_and_mask.
 
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
         """
-        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         # remove batch axis from input data; this is only here for a consistent API
         # but LIME wants data without batch axis
         if not len(input_data) == 1:
             raise ValueError("Length of batch axis must be one.")
         input_data = input_data[0]
+        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.image_explainer.explain_instance, kwargs)
         explanation = self.image_explainer.explain_instance(input_data,
                                                             runner,
                                                             labels=(label,),
-                                                            hide_color=hide_color,
                                                             top_labels=top_labels,
                                                             num_features=num_features,
                                                             num_samples=num_samples,
-                                                            batch_size=batch_size,
-                                                            segmentation_fn=segmentation_fn,
-                                                            distance_metric=distance_metric,
-                                                            model_regressor=model_regressor,
-                                                            random_seed=random_seed
+                                                            **explain_instance_kwargs,
                                                             )
 
-        mask = explanation.get_image_and_mask(label, positive_only=False, hide_rest=True, num_features=num_features)[1]
+        get_image_and_mask_kwargs = utils.get_kwargs_applicable_to_function(explanation.get_image_and_mask, kwargs)
+        mask = explanation.get_image_and_mask(label, positive_only=positive_only, hide_rest=hide_rest,
+                                              num_features=num_features, **get_image_and_mask_kwargs)[1]
         return mask
