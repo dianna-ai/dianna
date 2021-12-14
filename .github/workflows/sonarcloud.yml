@@ -32,7 +32,7 @@ jobs:
       - name: Check style against standards using prospector
         run: prospector --zero-exit --output-format grouped --output-format pylint:pylint-report.txt
       - name: Run unit tests with coverage
-        run: pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml tests/
+        run: pytest --cov --cov-report term --cov-report xml --cov-report html --junitxml=xunit-result.xml tests/
       - name: Correct coverage paths
         run: sed -i "s+$PWD/++g" coverage.xml
       - name: SonarCloud Scan
