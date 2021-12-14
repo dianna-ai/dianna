@@ -2,7 +2,10 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
-from tests.utils import ModelRunner, run_model
+from dianna.methods import rise
+from dianna.utils import get_function
+from dianna.utils.onnx_runner import SimpleModelRunner
+from tests.utils import ModelRunner, run_model, get_mnist_1_data
 from .test_onnx_runner import generate_data
 
 
@@ -24,6 +27,17 @@ class RiseOnImages(TestCase):
 
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
+
+    def test_rise_determine_p_keep_for_images(self):
+        model_filename = 'tests/test_data/mnist_model.onnx'
+
+        # explainer = rise.RISE()
+        data = get_mnist_1_data()
+        heatmaps = dianna.explain_image(model_filename, data, method="RISE", n_masks=200)
+        # p_keep = explainer._determine_p_keep_for_images(data, 50, get_function(model_filename))
+
+        # print(p_keep)
+        # assert False
 
 class RiseOnText(TestCase):
     def test_rise_text(self):

@@ -87,7 +87,7 @@ class RISE:
 
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]
-        p_keep = self._determine_p_keep()
+        p_keep = self._determine_p_keep_for_images(input_data, batch_size, runner)
         self.masks = self.generate_masks_for_images(img_shape, p_keep)  # Expose masks for to make user inspection possible
         masked = input_data * self.masks
 
@@ -98,6 +98,34 @@ class RISE:
         self.predictions = predictions
         saliency = predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
         return normalize(saliency, self.n_masks, p_keep)
+
+    def _determine_p_keep_for_images(self, input_data, batch_size, runner):
+        runner = get_function(runner, preprocess_function=self.preprocess_function)
+
+        # data shape without batch axis and (optional) channel axis
+        img_shape = input_data.shape[1:3]
+        p_keep = 0.5  # self._determine_p_keep_for_images(input_data, batch_size, runner)
+        self.masks = self.generate_masks_for_images(img_shape, p_keep)  # Expose masks for to make user inspection possible
+        masked = input_data * self.masks
+
+        predictions = []
+        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
+            predictions.append(runner(masked[i:i + batch_size]))
+        predictions = np.concatenate(predictions)
+        self.predictions = predictions
+        saliency = predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
+        return normalize(saliency, self.n_masks, p_keep)
+        # p_keep = 0.5
+        # img_shape = input_data.shape[1:3]
+        # masks = self.generate_masks_for_images(img_shape, p_keep)
+        # masked = input_data * masks
+        #
+        # predictions = []
+        # for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
+        #     predictions.append(runner(masked[i:i + batch_size]))
+        # predictions = np.concatenate(predictions)
+        # return 0.5
+
 
     def _determine_p_keep(self):
         return self.p_keep if not self.p_keep is None else 0.5
