@@ -31,13 +31,14 @@ class RiseOnImages(TestCase):
     def test_rise_determine_p_keep_for_images(self):
         model_filename = 'tests/test_data/mnist_model.onnx'
 
-        # explainer = rise.RISE()
-        data = get_mnist_1_data()
-        heatmaps = dianna.explain_image(model_filename, data, method="RISE", n_masks=200)
-        # p_keep = explainer._determine_p_keep_for_images(data, 50, get_function(model_filename))
+        explainer = rise.RISE()
+        # data = get_mnist_1_data()
+        data = generate_data(batch_size=1)
 
-        # print(p_keep)
-        # assert False
+        p_keep = explainer._determine_p_keep_for_images(data, 50, get_function(model_filename))
+
+        print(p_keep)
+        assert False  # assert some sensible p_keep value (or range)
 
 class RiseOnText(TestCase):
     def test_rise_text(self):
