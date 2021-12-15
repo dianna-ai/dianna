@@ -33,4 +33,4 @@ jobs:
       - name: Check style against standards using prospector
         run: prospector --doc-warnings
       - name: Check import order
-        run: isort --check-only dianna
+        run: isort --check-only dianna --diff
