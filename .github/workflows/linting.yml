@@ -31,6 +31,6 @@ jobs:
           python3 -m pip install --upgrade pip setuptools
           python3 -m pip install .[dev,publishing]
       - name: Check style against standards using prospector
-        run: prospector
+        run: prospector --doc-warnings
       - name: Check import order
-        run: isort --recursive --check-only dianna
+        run: isort --check-only dianna
