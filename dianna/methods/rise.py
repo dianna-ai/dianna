@@ -1,7 +1,7 @@
 import numpy as np
 from skimage.transform import resize
 from tqdm import tqdm
-from dianna.utils import get_function, to_xarray, move_axis
+from dianna import utils
 
 
 def normalize(saliency, n_masks, p_keep):
@@ -35,7 +35,7 @@ class RISE:
         self.required_labels = ('batch', 'channels')
 
     def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
-        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         input_tokens = np.asarray(model_or_function.tokenizer(input_text))
         text_length = len(input_tokens)
         self.masks = self._generate_masks_for_text(text_length)  # Expose masks for to make user inspection possible
@@ -87,14 +87,14 @@ class RISE:
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
-        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         # convert data to xarray
-        input_data = to_xarray(input_data, self.axes_labels, required_labels=self.required_labels)
+        input_data = utils.to_xarray(input_data, self.axes_labels, required_labels=self.required_labels)
         # batch axis should always be first
-        input_data = move_axis(input_data, 'batch', 0)
+        input_data = utils.move_axis(input_data, 'batch', 0)
         # ensure channels axis is last and keep track of where it was so we can move it back
         channels_axis_index = input_data.dims.index('channels')
-        input_data = move_axis(input_data, 'channels', -1)
+        input_data = utils.move_axis(input_data, 'channels', -1)
 
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
@@ -105,7 +105,7 @@ class RISE:
         # Make sure multiplication is being done for correct axes
         masked = (input_data * self.masks)
         # ensure channels axis is in original location again
-        masked = move_axis(masked, 'channels', channels_axis_index)
+        masked = utils.move_axis(masked, 'channels', channels_axis_index)
         # convert to numpy for onnx
         masked = masked.values.astype(input_data.dtype)
 
