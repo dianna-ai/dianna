@@ -45,3 +45,32 @@ def to_xarray(data, axes_labels, required_labels=None):
             assert label in labels, f'Required label missing: {label}'
 
     return xr.DataArray(data, dims=labels)
+
+
+def move_axis(data, label, new_position):
+    """Moves a named axis to a new position in an xarray DataArray object.
+
+    Args:
+        data (DataArray): Object with named axes
+        label (str): Name of the axis to move
+        new_position (int): Numerical new position of the axis.
+                            Negative indices are accepted.
+
+    Returns:
+        data with axis in new position
+    """
+    # find current position of axis
+    try:
+        pos = data.dims.index(label)
+    except ValueError:
+        raise ValueError(f"Axis name {label} does not exist in input data")
+
+    # create list of labels with new ordering
+    axis_labels = list(data.dims)
+    # the new position will be _before_ the given index, so will fail with a negative index
+    # convert to a positive index in that case
+    if new_position < 0:
+        new_position += len(axis_labels)
+    axis_labels.insert(new_position, axis_labels.pop(pos))
+    # do the move
+    return data.transpose(*axis_labels)

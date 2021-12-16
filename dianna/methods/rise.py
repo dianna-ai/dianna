@@ -1,9 +1,7 @@
 import numpy as np
-from numpy.lib.financial import ipmt
-from numpy.testing._private.utils import requires_memory
 from skimage.transform import resize
 from tqdm import tqdm
-from dianna.utils import get_function, to_xarray
+from dianna.utils import get_function, to_xarray, move_axis
 
 
 def normalize(saliency, n_masks, p_keep):
@@ -15,7 +13,8 @@ class RISE:
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5, axes_labels=None, preprocess_function=None,):
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,  # pylint: disable=too-many-arguments
+                 axes_labels=None, preprocess_function=None):
         """RISE initializer.
 
         Args:
@@ -91,12 +90,13 @@ class RISE:
         runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
         # convert data to xarray
         input_data = to_xarray(input_data, self.axes_labels, required_labels=self.required_labels)
-        # ensure channels axis is last and keep track of where it was so we can move it back if needed
+        # batch axis should always be first
+        input_data = move_axis(input_data, 'batch', 0)
+        # ensure channels axis is last and keep track of where it was so we can move it back
         channels_axis_index = input_data.dims.index('channels')
-        assert channels_axis_index in (1, input_data.ndim - 1), f'Channels axis should be 2nd or last axis'
-        input_data = input_data.transpose('batch', ..., 'channels')
+        input_data = move_axis(input_data, 'channels', -1)
 
-        # data shape without batch axis and (optional) channel axis
+        # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
         self.masks = self.generate_masks_for_images(img_shape)  # Expose masks for to make user inspection possible
 
@@ -104,9 +104,8 @@ class RISE:
 
         # Make sure multiplication is being done for correct axes
         masked = (input_data * self.masks)
-        # transpose channels axis if indeed
-        if channels_axis_index == 1:
-            masked = masked.transpose('batch', 'channels', ...)
+        # ensure channels axis is in original location again
+        masked = move_axis(masked, 'channels', channels_axis_index)
         # convert to numpy for onnx
         masked = masked.values.astype(input_data.dtype)
 
