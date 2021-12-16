@@ -74,7 +74,9 @@ class LIME:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained
             labels ([int], optional): Iterable of indices of class to be explained
-        Other keyword arguments: see the LIME documentation for LimeTextExplainer.explain_instance.
+
+        Other keyword arguments: see the LIME documentation for LimeTextExplainer.explain_instance:
+        https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_text.LimeTextExplainer.explain_instance.
 
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
@@ -119,7 +121,10 @@ class LIME:
             input_data (np.ndarray): Data to be explained
             label (int): Index of class to be explained
         Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance and
-        ImageExplanation.get_image_and_mask.
+        ImageExplanation.get_image_and_mask:
+
+        - https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_image.LimeImageExplainer.explain_instance
+        - https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_image.ImageExplanation.get_image_and_mask
 
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
