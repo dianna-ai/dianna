@@ -91,7 +91,7 @@ class RISE:
         predictions = []
 
         # Make sure multiplication is being done for correct axes
-        masked = input_data * self.masks
+        masked = (input_data * self.masks).astype(input_data.dtype)
 
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
             predictions.append(runner(masked[i:i + batch_size]))
