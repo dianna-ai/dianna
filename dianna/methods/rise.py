@@ -108,7 +108,7 @@ class RISE:
         if channels_axis_index == 1:
             masked = masked.transpose('batch', 'channels', ...)
         # convert to numpy for onnx
-        masked = masked.values
+        masked = masked.values.astype(input_data.dtype)
 
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
             predictions.append(runner(masked[i:i + batch_size]))
