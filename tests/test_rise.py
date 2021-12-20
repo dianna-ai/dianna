@@ -6,6 +6,10 @@ from tests.utils import ModelRunner, run_model
 from .test_onnx_runner import generate_data
 
 
+def make_channels_first(data):
+    return data.transpose((0, 3, 1, 2))
+
+
 class RiseOnImages(TestCase):
 
     def test_rise_function(self):
@@ -18,10 +22,11 @@ class RiseOnImages(TestCase):
 
     def test_rise_filename(self):
         model_filename = 'tests/test_data/mnist_model.onnx'
-        input_data = generate_data(batch_size=1).astype(np.float32)
+        # original shape is batch, channel, y, x
+        input_data = generate_data(batch_size=1).transpose((0, 2, 3, 1)).astype(np.float32)
 
-        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", n_masks=200)
-
+        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", n_masks=200,
+                                        preprocess_function=make_channels_first)
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
 
