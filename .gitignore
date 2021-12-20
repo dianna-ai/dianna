@@ -8,10 +8,13 @@ dist
 .cache
 __pycache__
 
+# testing
 htmlcov
 .coverage
 coverage.xml
 .pytest_cache
+.tox
+word_vectors.txt.pt
 
 docs/_build
 

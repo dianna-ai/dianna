@@ -2,3 +2,4 @@
 from .misc import get_function
 from .misc import move_axis
 from .misc import to_xarray
+from .misc import get_kwargs_applicable_to_function

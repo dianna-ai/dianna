@@ -6,6 +6,10 @@ from tests.utils import ModelRunner, run_model
 from .test_onnx_runner import generate_data
 
 
+def make_channels_first(data):
+    return data.transpose((0, 3, 1, 2))
+
+
 class RiseOnImages(TestCase):
 
     def test_rise_function(self):

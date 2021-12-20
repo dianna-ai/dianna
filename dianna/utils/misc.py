@@ -23,6 +23,17 @@ def get_function(model_or_function, preprocess_function=None):
     return runner
 
 
+def get_kwargs_applicable_to_function(function, kwargs):
+    """
+    Returns a dict that is the subset of `kwargs` for which the keys are
+    keyword arguments of `function`. Note that if `function` has a `**kwargs`
+    argument, this function should not be necessary (provided the function
+    handles `**kwargs` robustly).
+    """
+    return {key: value for key, value in kwargs.items()
+            if key in function.__code__.co_varnames}
+
+
 def to_xarray(data, axes_labels, required_labels=None):
     """Converts numpy data and axes labels to an xarray object
     """
