@@ -62,8 +62,8 @@ def move_axis(data, label, new_position):
     # find current position of axis
     try:
         pos = data.dims.index(label)
-    except ValueError:
-        raise ValueError(f"Axis name {label} does not exist in input data")
+    except ValueError as e:
+        raise ValueError(f"Axis name {label} does not exist in input data") from e
 
     # create list of labels with new ordering
     axis_labels = list(data.dims)

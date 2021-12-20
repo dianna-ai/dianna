@@ -40,3 +40,10 @@ def test_xarray_move_axis():
     data_moved = utils.move_axis(data, 'channels', -1)
     assert data_moved.dims == expected_labels
     assert data_moved.shape == expected_shape
+
+
+def test_xarray_move_axis_nonexistent():
+    data = xr.DataArray(np.zeros((4, 1, 28, 28)), dims=('batch', 'channels', 'y', 'x'))
+    nonexistent_label = 'foo'
+    with pytest.raises(ValueError):
+        utils.move_axis(data, nonexistent_label, 0)
