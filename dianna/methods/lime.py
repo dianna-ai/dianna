@@ -1,7 +1,7 @@
+import numpy as np
 from lime.lime_image import LimeImageExplainer
 from lime.lime_text import LimeTextExplainer
 from dianna import utils
-import numpy as np
 
 
 class LIME:
