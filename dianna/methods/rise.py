@@ -21,8 +21,9 @@ class RISE:
             n_masks (int): Number of masks to generate.
             feature_res (int): Resolution of features in masks.
             p_keep (float): Fraction of image to keep in each mask
-            axes_labels (dict/list): If a dict, key,value pairs of axis index, name.
-                                     If a list, the name of each axis where the index in the list is the axis index
+            axes_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
+                                               If a list, the name of each axis where the index
+                                               in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
         """
         self.n_masks = n_masks
@@ -89,7 +90,7 @@ class RISE:
         """
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         # convert data to xarray
-        input_data = utils.to_xarray(input_data, self.axes_labels, required_labels=self.required_labels)
+        input_data = utils.to_xarray(input_data, self.axes_labels, self.required_labels)
         # batch axis should always be first
         input_data = utils.move_axis(input_data, 'batch', 0)
         # ensure channels axis is last and keep track of where it was so we can move it back
