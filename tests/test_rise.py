@@ -23,7 +23,7 @@ class RiseOnImages(TestCase):
 
     def test_rise_filename(self):
         model_filename = 'tests/test_data/mnist_model.onnx'
-        input_data = generate_data(batch_size=1)
+        input_data = generate_data(batch_size=1).astype(np.float32)
         axes_labels = {0: 'batch', 1: 'channels'}
 
         heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)

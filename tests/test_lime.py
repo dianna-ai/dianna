@@ -29,7 +29,7 @@ class LimeOnImages(TestCase):
 
         def preprocess(data):
             data = data[..., 0][..., None]
-            return np.moveaxis(data, -1, 1)
+            return np.moveaxis(data, -1, 1).astype(np.float32)
 
         heatmap = dianna.explain_image(model_filename, input_data, method="LIME", preprocess_function=preprocess, random_state=42)
 
