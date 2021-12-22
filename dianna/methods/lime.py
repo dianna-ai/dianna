@@ -198,7 +198,7 @@ class LIME:
         # axis in the right place
         # one is added to the channels axis index because there is an extra first axis: the batch axis
         def moveaxis_function(data):
-            return np.moveaxis(data, -1, channel_axis_index+1).astype(dtype)
+            return np.moveaxis(data, -1, channel_axis_index + 1).astype(dtype)
 
         if self.preprocess_function is None:
             return moveaxis_function
