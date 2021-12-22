@@ -12,6 +12,8 @@ class RISE:
     """
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
+    # axis labels required to be present in input image data
+    required_labels = ('batch', 'channels')
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,  # pylint: disable=too-many-arguments
                  axes_labels=None, preprocess_function=None):
@@ -33,7 +35,6 @@ class RISE:
         self.masks = None
         self.predictions = None
         self.axes_labels = axes_labels if axes_labels is not None else []
-        self.required_labels = ('batch', 'channels')
 
     def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
@@ -90,7 +91,7 @@ class RISE:
         """
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         # convert data to xarray
-        input_data = utils.to_xarray(input_data, self.axes_labels, self.required_labels)
+        input_data = utils.to_xarray(input_data, self.axes_labels, RISE.required_labels)
         # batch axis should always be first
         input_data = utils.move_axis(input_data, 'batch', 0)
         # ensure channels axis is last and keep track of where it was so we can move it back

@@ -8,6 +8,8 @@ class LIME:
     """
     LIME implementation as wrapper around https://github.com/marcotcr/lime
     """
+    # axis labels required to be present in input image data
+    required_labels = ('batch', 'channels')
 
     def __init__(self,
                  kernel_width=25,
@@ -62,7 +64,6 @@ class LIME:
 
         self.preprocess_function = preprocess_function
         self.axes_labels = axes_labels if axes_labels is not None else []
-        self.required_labels = ('batch', 'channels')
 
     def explain_text(self,
                      model_or_function,
@@ -160,12 +161,12 @@ class LIME:
         Transforms the data to be of the shape and type LIME expects
 
         Args:
-            input_data (np.array): Data to be explained
+            input_data (NumPy-compatible array): Data to be explained
 
         Returns:
             transformed input data, preprocessing function to use with utils.get_function()
         """
-        input_data = utils.to_xarray(input_data, self.axes_labels, self.required_labels)
+        input_data = utils.to_xarray(input_data, self.axes_labels, LIME.required_labels)
         # remove batch axis from input data; this is only here for a consistent API
         # but LIME wants data without batch axis
         if not len(input_data['batch']) == 1:
