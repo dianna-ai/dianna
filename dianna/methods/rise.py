@@ -33,22 +33,53 @@ class RISE:
         runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
         input_tokens = np.asarray(model_or_function.tokenizer(input_text))
         text_length = len(input_tokens)
-        p_keep = self._determine_p_keep()
-        self.masks = self._generate_masks_for_text(text_length, p_keep)  # Expose masks for to make user inspection possible
-        sentences = self._create_masked_sentences(input_tokens)
+        # p_keep = self._determine_p_keep_for_text(input_tokens, runner) if self.p_keep == None else self.p_keep
+        p_keep = 0.5
+        input_shape = (text_length,)
+        self.masks = self._generate_masks_for_text(input_shape, p_keep, self.n_masks)  # Expose masks for to make user inspection possible
+        sentences = self._create_masked_sentences(input_tokens, self.masks)
         saliencies = self._get_saliencies(runner, sentences, text_length, batch_size, p_keep)
         return self._reshape_result(input_tokens, labels, saliencies)
+
+    def _determine_p_keep_for_text(self, input_data, runner, n_masks=100):
+        p_keeps = np.arange(0.1, 1.0, 0.1)
+        stds = []
+        for p_keep in p_keeps:
+            std = self._calculate_mean_class_std_for_text(p_keep, runner, input_data, n_masks=n_masks)
+            stds += [std]
+        best_i = np.argmax(stds)
+        best_p_keep = p_keeps[best_i]
+        print('Rise parameter p_keep was automatically determined at {}'.format(best_p_keep))
+        return best_p_keep
+
+    def _calculate_mean_class_std_for_text(self, p_keep, runner, input_data, n_masks):
+        batch_size = 50
+        img_shape = input_data.shape
+        masks = self._generate_masks_for_text(img_shape, p_keep, n_masks)
+        masked = self._create_masked_sentences(input_data, masks)
+        predictions = []
+        for i in range(0, n_masks, batch_size):
+            current_input = masked[i:i + batch_size]
+            current_predictions = runner(current_input)
+            predictions.append(current_predictions)
+        predictions = np.concatenate(predictions)
+        std_per_class = predictions.std(axis=0)
+        return np.mean(std_per_class)
+
+    def _generate_masks_for_text(self, input_shape, p_keep, n_masks):
+        masks = np.random.choice(a=(True, False), size=(n_masks,) + input_shape, p=(p_keep, 1 - p_keep))
+        return masks
+
+    def _get_saliencies(self, runner, sentences, text_length, batch_size, p_keep):
+        self.predictions = self._get_predictions(sentences, runner, batch_size)
+        unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_length)
+        return normalize(unnormalized_saliency, self.n_masks, p_keep)
 
     @staticmethod
     def _reshape_result(input_tokens, labels, saliencies):
         word_lengths = [len(t) for t in input_tokens]
         word_indices = [sum(word_lengths[:i]) + i for i in range(len(input_tokens))]
         return [list(zip(input_tokens, word_indices, saliencies[label])) for label in labels]
-
-    def _get_saliencies(self, runner, sentences, text_length, batch_size, p_keep):
-        self.predictions = self._get_predictions(sentences, runner, batch_size)
-        unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_length)
-        return normalize(unnormalized_saliency, self.n_masks, p_keep)
 
     def _get_predictions(self, sentences, runner, batch_size):
         predictions = []
@@ -57,17 +88,12 @@ class RISE:
         predictions = np.concatenate(predictions)
         return predictions
 
-    def _create_masked_sentences(self, tokens):
+    def _create_masked_sentences(self, tokens, masks):
         tokens_masked = []
-        for mask in self.masks:
+        for mask in masks:
             tokens_masked.append(tokens[mask])
         sentences = [" ".join(t) for t in tokens_masked]
         return sentences
-
-    def _generate_masks_for_text(self, input_size, p_keep):
-
-        masks = np.random.choice(a=(True, False), size=(self.n_masks, input_size), p=(p_keep, 1 - p_keep))
-        return masks
 
     def explain_image(self, model_or_function, input_data, batch_size=100):
         """Run the RISE explainer.
@@ -101,17 +127,17 @@ class RISE:
         return normalize(saliency, self.n_masks, p_keep)
 
     def _determine_p_keep_for_images(self, input_data, runner, n_masks=100):
-        p_keeps = np.arange(0.1, 0.9, 0.1)
+        p_keeps = np.arange(0.1, 1.0, 0.1)
         stds = []
         for p_keep in p_keeps:
-            std = self._calculate_mean_class_std(p_keep, runner, input_data, n_masks=n_masks)
+            std = self._calculate_mean_class_std_for_images(p_keep, runner, input_data, n_masks=n_masks)
             stds += [std]
         best_i = np.argmax(stds)
         best_p_keep = p_keeps[best_i]
         print('Rise parameter p_keep was automatically determined at {}'.format(best_p_keep))
         return best_p_keep
 
-    def _calculate_mean_class_std(self, p_keep, runner, input_data, n_masks):
+    def _calculate_mean_class_std_for_images(self, p_keep, runner, input_data, n_masks):
         batch_size = 50
         img_shape = input_data.shape[1:3]
         masks = self.generate_masks_for_images(img_shape, p_keep, n_masks, use_progress_bar=False)
@@ -124,9 +150,6 @@ class RISE:
         predictions = np.concatenate(predictions)
         std_per_class = predictions.std(axis=0)
         return np.mean(std_per_class)
-
-    def _determine_p_keep(self):
-        return self.p_keep if not self.p_keep is None else 0.5
 
     def generate_masks_for_images(self, input_size, p_keep, n_masks, use_progress_bar=True):
         """Generate a set of random masks to mask the input data
