@@ -8,14 +8,16 @@ def normalize(saliency, n_masks, p_keep):
     return saliency / n_masks / p_keep
 
 
+def _upscale(grid_i, up_size):
+    return resize(grid_i, up_size, order=1, mode='reflect', anti_aliasing=False)
+
+
 class RISE:
     """
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
     # axis labels required to be present in input image data
     required_labels = ('batch', 'channels')
-
-
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,  # pylint: disable=too-many-arguments
                  axes_labels=None, preprocess_function=None):
@@ -46,7 +48,8 @@ class RISE:
         # p_keep = self._determine_p_keep_for_text(input_tokens, runner) if self.p_keep == None else self.p_keep
         p_keep = 0.5
         input_shape = (text_length,)
-        self.masks = self._generate_masks_for_text(input_shape, p_keep, self.n_masks)  # Expose masks for to make user inspection possible
+        self.masks = self._generate_masks_for_text(input_shape, p_keep,
+                                                   self.n_masks)  # Expose masks for to make user inspection possible
         sentences = self._create_masked_sentences(input_tokens, self.masks)
         saliencies = self._get_saliencies(runner, sentences, text_length, batch_size, p_keep)
         return self._reshape_result(input_tokens, labels, saliencies)
@@ -59,13 +62,12 @@ class RISE:
             stds += [std]
         best_i = np.argmax(stds)
         best_p_keep = p_keeps[best_i]
-        print('Rise parameter p_keep was automatically determined at {}'.format(best_p_keep))
+        print(f'Rise parameter p_keep was automatically determined at {best_p_keep}')
         return best_p_keep
 
     def _calculate_mean_class_std_for_text(self, p_keep, runner, input_data, n_masks):
         batch_size = 50
-        img_shape = input_data.shape
-        masks = self._generate_masks_for_text(img_shape, p_keep, n_masks)
+        masks = self._generate_masks_for_text(input_data.shape, p_keep, n_masks)
         masked = self._create_masked_sentences(input_data, masks)
         predictions = []
         for i in range(0, n_masks, batch_size):
@@ -129,14 +131,12 @@ class RISE:
         channels_axis_index = input_data.dims.index('channels')
         input_data = utils.move_axis(input_data, 'channels', -1)
 
-        p_keep = self._determine_p_keep_for_images(input_data,runner) if self.p_keep == None else self.p_keep
+        p_keep = self._determine_p_keep_for_images(input_data, runner) if self.p_keep is None else self.p_keep
 
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
         # Expose masks for to make user inspection possible
         self.masks = self.generate_masks_for_images(img_shape, p_keep, self.n_masks)
-
-        predictions = []
 
         # Make sure multiplication is being done for correct axes
         masked = (input_data * self.masks)
@@ -144,7 +144,6 @@ class RISE:
         masked = utils.move_axis(masked, 'channels', channels_axis_index)
         # convert to numpy for onnx
         masked = masked.values.astype(input_data.dtype)
-
 
         batch_predictions = []
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
@@ -162,26 +161,24 @@ class RISE:
             stds += [std]
         best_i = np.argmax(stds)
         best_p_keep = p_keeps[best_i]
-        print('Rise parameter p_keep was automatically determined at {}'.format(best_p_keep))
+        print(f'Rise parameter p_keep was automatically determined at {best_p_keep}')
         return best_p_keep
 
     def _calculate_mean_class_std_for_images(self, p_keep, runner, input_data, n_masks):
         batch_size = 50
         img_shape = input_data.shape[1:3]
-        masks = self.generate_masks_for_images(img_shape, p_keep, n_masks, use_progress_bar=False)
+        masks = self.generate_masks_for_images(img_shape, p_keep, n_masks)
         masked = input_data * masks
         predictions = []
         for i in range(0, n_masks, batch_size):
             current_input = masked[i:i + batch_size]
-            print(current_input, current_input.shape, type(current_input))
-            print(current_input.dtype)
             current_predictions = runner(current_input)
             predictions.append(current_predictions)
         predictions = np.concatenate(predictions)
         std_per_class = predictions.std(axis=0)
         return np.mean(std_per_class)
 
-    def generate_masks_for_images(self, input_size, p_keep, n_masks, use_progress_bar=True):
+    def generate_masks_for_images(self, input_size, p_keep, n_masks):
         """Generate a set of random masks to mask the input data
 
         Args:
@@ -198,14 +195,10 @@ class RISE:
 
         masks = np.empty((n_masks, *input_size))
 
-        i_iterable = tqdm(range(n_masks), desc='Generating masks') if use_progress_bar else range(n_masks)
-        for i in i_iterable:
+        for i in range(n_masks):
             y = np.random.randint(0, cell_size[0])
             x = np.random.randint(0, cell_size[1])
             # Linear upsampling and cropping
-            masks[i, :, :] = self._upscale(grid[i], up_size)[y:y + input_size[0], x:x + input_size[1]]
+            masks[i, :, :] = _upscale(grid[i], up_size)[y:y + input_size[0], x:x + input_size[1]]
         masks = masks.reshape(-1, *input_size, 1)
         return masks
-
-    def _upscale(self, grid_i, up_size):
-        return resize(grid_i, up_size, order=1, mode='reflect', anti_aliasing=False)

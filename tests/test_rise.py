@@ -1,12 +1,12 @@
 from unittest import TestCase
-import numpy as np
+
 import dianna
 import dianna.visualization
-import pytest
+import numpy as np
 from dianna.methods import rise
 from dianna.utils import get_function
-from dianna.utils.onnx_runner import SimpleModelRunner
 from tests.utils import ModelRunner, run_model, get_mnist_1_data
+
 from .test_onnx_runner import generate_data
 
 
@@ -35,7 +35,6 @@ class RiseOnImages(TestCase):
 
         assert heatmaps[0].shape == input_data[0].shape[1:]
 
-
     def test_rise_determine_p_keep_for_images(self):
         '''
         When using the large sample size of 10000, the mean STD for each class for the following p_keeps
@@ -49,7 +48,9 @@ class RiseOnImages(TestCase):
         When using 50 n_masks we got this p_keep bincount: [ 0  3 16 35 28 14  4]
         When using 100 n_masks we got this p_keep bincount: [ 0  3 14 37 23 21  2]
         When using 200 n_masks we got this p_keep bincount: [ 0  0 16 37 32 15]
-        It seems 20 is not enough to have a good chance of getting a good p_keep. For 200 every sample returns a reasonable p_keep but is a bit much to be practicle. I think we should use 100 to be on the save side.
+
+        It seems 20 is not enough to have a good chance of getting a good p_keep. For 200 every sample returns a
+        reasonable p_keep but is a bit much to be practicle. I think we should use 100 to be on the save side.
 
 
         '''
@@ -63,6 +64,7 @@ class RiseOnImages(TestCase):
 
         assert p_keep in expected_p_keeps  # Sanity check: is the outcome in the acceptable range?
         assert p_keep == expected_p_exact_keep  # Exact test: is the outcome the same as before?
+
 
 class RiseOnText(TestCase):
     def test_rise_text(self):
