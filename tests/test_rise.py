@@ -58,7 +58,6 @@ class RiseOnImages(TestCase):
 
         assert p_keep in expected_p_keeps  # Sanity check: is the outcome in the acceptable range?
         assert p_keep == expected_p_exact_keep  ## Exact test: is the outcome the same as before?
-        assert False  # assert some sensible p_keep value (or range)
 
 class RiseOnText(TestCase):
     @pytest.mark.skip
