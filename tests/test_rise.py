@@ -60,7 +60,8 @@ class RiseOnImages(TestCase):
         model_filename = 'tests/test_data/mnist_model.onnx'
         data = get_mnist_1_data()
 
-        p_keep = rise.RISE()._determine_p_keep_for_images(data, get_function(model_filename))
+        p_keep = rise.RISE()._determine_p_keep_for_images(  # pylint: disable=protected-access
+            data, get_function(model_filename))
 
         assert p_keep in expected_p_keeps  # Sanity check: is the outcome in the acceptable range?
         assert p_keep == expected_p_exact_keep  # Exact test: is the outcome the same as before?
@@ -114,7 +115,7 @@ class RiseOnText(TestCase):
         runner = get_function(runner)
         input_tokens = np.asarray(runner.tokenizer(input_text))
 
-        p_keep = rise.RISE()._determine_p_keep_for_text(input_tokens, runner)
+        p_keep = rise.RISE()._determine_p_keep_for_text(input_tokens, runner)  # pylint: disable=protected-access
 
         assert p_keep in expected_p_keeps  # Sanity check: is the outcome in the acceptable range?
         assert p_keep == expected_p_exact_keep  # Exact test: is the outcome the same as before?

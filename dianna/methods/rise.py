@@ -82,7 +82,7 @@ class RISE:
         masks = np.random.choice(a=(True, False), size=(n_masks,) + input_shape, p=(p_keep, 1 - p_keep))
         return masks
 
-    def _get_saliencies(self, runner, sentences, text_length, batch_size, p_keep):
+    def _get_saliencies(self, runner, sentences, text_length, batch_size, p_keep):  # pylint: disable=too-many-arguments
         self.predictions = self._get_predictions(sentences, runner, batch_size)
         unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_length)
         return normalize(unnormalized_saliency, self.n_masks, p_keep)
