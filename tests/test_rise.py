@@ -2,7 +2,8 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
-from tests.utils import ModelRunner, run_model
+from tests.utils import ModelRunner
+from tests.utils import run_model
 from .test_onnx_runner import generate_data
 
 
@@ -13,21 +14,23 @@ def make_channels_first(data):
 class RiseOnImages(TestCase):
 
     def test_rise_function(self):
-        # shape is batch, y, x, channel
         input_data = np.random.random((1, 224, 224, 3))
+        # y and x axis labels are not actually mandatory for this test
+        axes_labels = ['batch', 'y', 'x', 'channels']
 
-        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", n_masks=200)
+        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
     def test_rise_filename(self):
         model_filename = 'tests/test_data/mnist_model.onnx'
-        # original shape is batch, channel, y, x
-        input_data = generate_data(batch_size=1).transpose((0, 2, 3, 1)).astype(np.float32)
+        input_data = generate_data(batch_size=1).astype(np.float32)
+        # y and x axis labels are not actually mandatory for this test
+        axes_labels = ['batch', 'channels', 'y', 'x']
 
-        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", n_masks=200,
-                                        preprocess_function=make_channels_first)
-        assert heatmaps[0].shape == input_data[0].shape[:2]
+        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
+
+        assert heatmaps[0].shape == input_data[0].shape[1:]
 
 
 class RiseOnText(TestCase):
