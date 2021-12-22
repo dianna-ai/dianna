@@ -13,9 +13,9 @@ def make_channels_first(data):
 class RiseOnImages(TestCase):
 
     def test_rise_function(self):
-        # shape is batch, y, x, channel
         input_data = np.random.random((1, 224, 224, 3))
-        axes_labels = {0: 'batch', -1: 'channels'}
+        # y and x axis labels are not actually mandatory for this test
+        axes_labels = ['batch', 'y', 'x', 'channels']
 
         heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 
@@ -24,7 +24,8 @@ class RiseOnImages(TestCase):
     def test_rise_filename(self):
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1).astype(np.float32)
-        axes_labels = {0: 'batch', 1: 'channels'}
+        # y and x axis labels are not actually mandatory for this test
+        axes_labels = ['batch', 'channels', 'y', 'x']
 
         heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 

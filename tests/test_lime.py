@@ -24,7 +24,6 @@ class LimeOnImages(TestCase):
         np.random.seed(42)
         model_filename = 'tests/test_data/mnist_model.onnx'
 
-        # batch channel y x
         black_and_white = generate_data(batch_size=1)
         # Make data 3-channel instead of 1-channel
         input_data = np.zeros([1, 3] + list(black_and_white.shape[2:])) + black_and_white

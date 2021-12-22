@@ -197,6 +197,8 @@ class LIME:
         # LIME generates numpy arrays, so it is easiest here to use np.transpose to put the channels
         # axis in the right place
         # one is added to the channels axis index because there is an extra first axis: the batch axis
+        moveaxis_function = lambda data: np.moveaxis(data, -1, channel_axis_index+1).astype(dtype)
+
         if self.preprocess_function is None:
-            return lambda data: np.moveaxis(data, -1, channel_axis_index + 1).astype(dtype)
-        return lambda data: self.preprocess_function(np.moveaxis(data, -1, channel_axis_index + 1).astype(dtype))
+            return moveaxis_function
+        return lambda data: self.preprocess_function(moveaxis_function(data))
