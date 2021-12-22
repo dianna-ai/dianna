@@ -3,6 +3,7 @@ import dianna
 import dianna.visualization
 from tests.utils import run_model
 
+
 input_data = np.random.random((1, 224, 224, 3))
 axes_labels = {0: 'batch', -1: 'channels'}
 

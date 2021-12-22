@@ -2,7 +2,8 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
-from tests.utils import ModelRunner, run_model
+from tests.utils import ModelRunner
+from tests.utils import run_model
 from .test_onnx_runner import generate_data
 
 
