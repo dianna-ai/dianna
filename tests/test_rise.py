@@ -2,6 +2,7 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
+import pytest
 from dianna.methods import rise
 from dianna.utils import get_function
 from dianna.utils.onnx_runner import SimpleModelRunner
@@ -29,18 +30,38 @@ class RiseOnImages(TestCase):
 
 
     def test_rise_determine_p_keep_for_images(self):
+        '''
+        When using the large sample size of 10000, the mean STD for each class for the following p_keeps
+        [     0.1,       0.2,      0.3,       0.4,       0.5,       0.6,       0.7,       0.8]
+        is as follows:
+        [2.071084, 2.6516771, 2.896659, 2.9460478, 2.9888847, 2.8803914, 2.6940017, 2.3410206]
+        So best p_keep should be .4 or .5 ( or at least between .3 and .6).
+
+        When using 20 n_masks we got this p_keep histogram: [ 1  7 19 24 21 18  8  2]
+        When using 30 n_masks we got this p_keep histogram: [ 0  4 11 30 23 23  9]
+        When using 50 n_masks we got this p_keep histogram: [ 0  3 16 35 28 14  4]
+        When using 100 n_masks we got this p_keep histogram: [ 0  3 14 37 23 21  2]
+        When using 200 n_masks we got this p_keep histogram: [ 0  0 16 37 32 15]
+        It seems 20 is not enough to have a good chance of getting a good p_keep. For 200 every sample returns a reasonable p_keep but is a bit much to be practicle. I think we should use 100 to be on the save side.
+
+        Returns:
+
+        '''
+        np.random.seed(0)
+        expected_p_keeps = [.3, .4, .5, .6]
+        expected_p_exact_keep = .4
         model_filename = 'tests/test_data/mnist_model.onnx'
+        data = get_mnist_1_data()
 
         explainer = rise.RISE()
-        # data = get_mnist_1_data()
-        data = generate_data(batch_size=1)
+        p_keep = explainer._determine_p_keep_for_images(data, get_function(model_filename))
 
-        p_keep = explainer._determine_p_keep_for_images(data, 50, get_function(model_filename))
-
-        print(p_keep)
+        assert p_keep in expected_p_keeps  # Sanity check: is the outcome in the acceptable range?
+        assert p_keep == expected_p_exact_keep  ## Exact test: is the outcome the same as before?
         assert False  # assert some sensible p_keep value (or range)
 
 class RiseOnText(TestCase):
+    @pytest.mark.skip
     def test_rise_text(self):
         np.random.seed(42)
 

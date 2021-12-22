@@ -84,57 +84,51 @@ class RISE:
             Explanation heatmap for each class (np.ndarray).
         """
         runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+        p_keep = self._determine_p_keep_for_images(input_data,runner) if self.p_keep == None else self.p_keep
 
         # data shape without batch axis and (optional) channel axis
         img_shape = input_data.shape[1:3]
-        p_keep = self._determine_p_keep_for_images(input_data, batch_size, runner)
-
         # Expose masks for to make user inspection possible
         self.masks = self.generate_masks_for_images(img_shape, p_keep, self.n_masks)
-
         masked = input_data * self.masks
 
-        predictions = []
+        batch_predictions = []
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            predictions.append(runner(masked[i:i + batch_size]))
-        predictions = np.concatenate(predictions)
-        self.predictions = predictions
-        saliency = predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
+            batch_predictions.append(runner(masked[i:i + batch_size]))
+        self.predictions = np.concatenate(batch_predictions)
+
+        saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
         return normalize(saliency, self.n_masks, p_keep)
 
-    def _determine_p_keep_for_images(self, input_data, batch_size, runner):
-        p_keep = 0.5
+    def _determine_p_keep_for_images(self, input_data, runner, n_masks=100):
+        p_keeps = np.arange(0.1, 0.9, 0.1)
+        stds = []
+        for p_keep in p_keeps:
+            std = self._calculate_mean_class_std(p_keep, runner, input_data, n_masks=n_masks)
+            stds += [std]
+        best_i = np.argmax(stds)
+        best_p_keep = p_keeps[best_i]
+        print('Rise parameter p_keep was automatically determined at {}'.format(best_p_keep))
+        return best_p_keep
+
+    def _calculate_mean_class_std(self, p_keep, runner, input_data, n_masks):
+        batch_size = 50
         img_shape = input_data.shape[1:3]
-        masks = self.generate_masks_for_images(img_shape, p_keep, self.n_masks)
+        masks = self.generate_masks_for_images(img_shape, p_keep, n_masks, use_progress_bar=False)
         masked = input_data * masks
-
         predictions = []
-        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            predictions.append(runner(masked[i:i + batch_size]))
+        for i in range(0, n_masks, batch_size):
+            current_input = masked[i:i + batch_size]
+            current_predictions = runner(current_input)
+            predictions.append(current_predictions)
         predictions = np.concatenate(predictions)
-        print('predictions.shape', predictions.shape, 'std', predictions.std(axis=0))
-        return 0.5
-
-        # p_keeps = [0.5]
-        # n_masks = 50
-        # img_shape = input_data.shape[1:3]
-        #
-        # for p_keep in p_keeps:
-        #     masks = self.generate_masks_for_images(img_shape, p_keep, n_masks)
-        #     masked = input_data * masks
-        #
-        #     predictions = []
-        #     for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-        #         predictions.append(runner(masked[i:i + batch_size]))
-        #     predictions = np.concatenate(predictions)
-        #     print('predictions.shape', predictions.shape, 'std', predictions.std(axis=0))
-        # return 0.5
-
+        std_per_class = predictions.std(axis=0)
+        return np.mean(std_per_class)
 
     def _determine_p_keep(self):
         return self.p_keep if not self.p_keep is None else 0.5
 
-    def generate_masks_for_images(self, input_size, p_keep, n_masks):
+    def generate_masks_for_images(self, input_size, p_keep, n_masks, use_progress_bar=True):
         """Generate a set of random masks to mask the input data
 
         Args:
@@ -145,13 +139,14 @@ class RISE:
         cell_size = np.ceil(np.array(input_size) / self.feature_res)
         up_size = (self.feature_res + 1) * cell_size
 
-        grid = np.random.choice(a=(True, False), size=(self.n_masks, self.feature_res, self.feature_res),
+        grid = np.random.choice(a=(True, False), size=(n_masks, self.feature_res, self.feature_res),
                                 p=(p_keep, 1 - p_keep))
         grid = grid.astype('float32')
 
         masks = np.empty((n_masks, *input_size))
 
-        for i in tqdm(range(n_masks), desc='Generating masks'):
+        i_iterable = tqdm(range(n_masks), desc='Generating masks') if use_progress_bar else range(n_masks)
+        for i in i_iterable:
             y = np.random.randint(0, cell_size[0])
             x = np.random.randint(0, cell_size[1])
             # Linear upsampling and cropping
