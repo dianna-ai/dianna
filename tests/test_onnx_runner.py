@@ -12,6 +12,6 @@ def test_onnx_runner():
     batch_size = 3
 
     runner = SimpleModelRunner(filename)
-    pred_onnx = runner(generate_data(batch_size))
+    pred_onnx = runner(generate_data(batch_size).astype(np.float32))
 
     assert pred_onnx.shape == (batch_size, n_classes)

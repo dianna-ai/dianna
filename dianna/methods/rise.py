@@ -1,7 +1,7 @@
 import numpy as np
 from skimage.transform import resize
 from tqdm import tqdm
-from dianna.utils import get_function
+from dianna import utils
 
 
 def normalize(saliency, n_masks, p_keep):
@@ -12,14 +12,23 @@ class RISE:
     """
     RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
     """
+    # axis labels required to be present in input image data
+    required_labels = ('batch', 'channels')
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=None, preprocess_function=None, ):
+
+
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,  # pylint: disable=too-many-arguments
+                 axes_labels=None, preprocess_function=None):
+
         """RISE initializer.
 
         Args:
             n_masks (int): Number of masks to generate.
             feature_res (int): Resolution of features in masks.
             p_keep (float): Fraction of image to keep in each mask
+            axes_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
+                                               If a list, the name of each axis where the index
+                                               in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
         """
         self.n_masks = n_masks
@@ -28,9 +37,10 @@ class RISE:
         self.preprocess_function = preprocess_function
         self.masks = None
         self.predictions = None
+        self.axes_labels = axes_labels if axes_labels is not None else []
 
     def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
-        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         input_tokens = np.asarray(model_or_function.tokenizer(input_text))
         text_length = len(input_tokens)
         # p_keep = self._determine_p_keep_for_text(input_tokens, runner) if self.p_keep == None else self.p_keep
@@ -109,14 +119,32 @@ class RISE:
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
-        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
+        # convert data to xarray
+        input_data = utils.to_xarray(input_data, self.axes_labels, RISE.required_labels)
+        # batch axis should always be first
+        input_data = utils.move_axis(input_data, 'batch', 0)
+        # ensure channels axis is last and keep track of where it was so we can move it back
+        channels_axis_index = input_data.dims.index('channels')
+        input_data = utils.move_axis(input_data, 'channels', -1)
+
         p_keep = self._determine_p_keep_for_images(input_data,runner) if self.p_keep == None else self.p_keep
 
-        # data shape without batch axis and (optional) channel axis
+        # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
         # Expose masks for to make user inspection possible
         self.masks = self.generate_masks_for_images(img_shape, p_keep, self.n_masks)
-        masked = input_data * self.masks
+
+        predictions = []
+
+        # Make sure multiplication is being done for correct axes
+        masked = (input_data * self.masks)
+        # ensure channels axis is in original location again
+        masked = utils.move_axis(masked, 'channels', channels_axis_index)
+        # convert to numpy for onnx
+        masked = masked.values.astype(input_data.dtype)
+
 
         batch_predictions = []
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
@@ -145,6 +173,8 @@ class RISE:
         predictions = []
         for i in range(0, n_masks, batch_size):
             current_input = masked[i:i + batch_size]
+            print(current_input, current_input.shape, type(current_input))
+            print(current_input.dtype)
             current_predictions = runner(current_input)
             predictions.append(current_predictions)
         predictions = np.concatenate(predictions)

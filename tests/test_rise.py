@@ -10,23 +10,30 @@ from tests.utils import ModelRunner, run_model, get_mnist_1_data
 from .test_onnx_runner import generate_data
 
 
+def make_channels_first(data):
+    return data.transpose((0, 3, 1, 2))
+
+
 class RiseOnImages(TestCase):
 
     def test_rise_function(self):
-        # shape is batch, y, x, channel
         input_data = np.random.random((1, 224, 224, 3))
+        # y and x axis labels are not actually mandatory for this test
+        axes_labels = ['batch', 'y', 'x', 'channels']
 
-        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", n_masks=200)
+        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
     def test_rise_filename(self):
         model_filename = 'tests/test_data/mnist_model.onnx'
-        input_data = generate_data(batch_size=1)
+        input_data = generate_data(batch_size=1).astype(np.float32)
+        # y and x axis labels are not actually mandatory for this test
+        axes_labels = ['batch', 'channels', 'y', 'x']
 
-        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", n_masks=200)
+        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 
-        assert heatmaps[0].shape == input_data[0].shape[:2]
+        assert heatmaps[0].shape == input_data[0].shape[1:]
 
 
     def test_rise_determine_p_keep_for_images(self):
