@@ -36,29 +36,18 @@ class RiseOnImages(TestCase):
         assert heatmaps[0].shape == input_data[0].shape[1:]
 
     def test_rise_determine_p_keep_for_images(self):
-        '''
+        """
         When using the large sample size of 10000, the mean STD for each class for the following p_keeps
         [     0.1,       0.2,      0.3,       0.4,       0.5,       0.6,       0.7,      0.8,      0.9]
         is as follows:
         [2.069784, 2.600222, 2.8940516, 2.9950087, 2.9579144, 2.8919978, 2.6288269, 2.319147, 1.763127]
         So best p_keep should be .4 or .5 ( or at least between .3 and .6).
-
-        When using 20 n_masks we got this p_keep bincount: [ 1  7 19 24 21 18  8  2]
-        When using 30 n_masks we got this p_keep bincount: [ 0  4 11 30 23 23  9]
-        When using 50 n_masks we got this p_keep bincount: [ 0  3 16 35 28 14  4]
-        When using 100 n_masks we got this p_keep bincount: [ 0  3 14 37 23 21  2]
-        When using 200 n_masks we got this p_keep bincount: [ 0  0 16 37 32 15]
-
-        It seems 20 is not enough to have a good chance of getting a good p_keep. For 200 every sample returns a
-        reasonable p_keep but is a bit much to be practicle. I think we should use 100 to be on the save side.
-
-
-        '''
+        """
         np.random.seed(0)
         expected_p_keeps = [.3, .4, .5, .6]
         expected_p_exact_keep = .4
         model_filename = 'tests/test_data/mnist_model.onnx'
-        data = get_mnist_1_data()
+        data = get_mnist_1_data().astype(np.float32)
 
         p_keep = rise.RISE()._determine_p_keep_for_images(  # pylint: disable=protected-access
             data, get_function(model_filename))
@@ -76,7 +65,6 @@ class RiseOnText(TestCase):
         review = 'such a bad movie'
 
         positive_explanation = dianna.explain_text(runner, review, labels=(1, 0), method='RISE')[0]
-        print(positive_explanation)
         words = [element[0] for element in positive_explanation]
         word_indices = [element[1] for element in positive_explanation]
         positive_scores = [element[2] for element in positive_explanation]
@@ -96,14 +84,6 @@ class RiseOnText(TestCase):
         is as follows:
         [0.18085817, 0.239386, 0.27801532, 0.30555934, 0.31592548, 0.31345606, 0.2901688, 0.2539522, 0.19383237]
         So best p_keep should be .4 or .5 ( or at least between .4 and .7).
-
-        When using 20 n_masks we got this p_keep bincount: [ 0  0  2 11 37 41  7  2]
-        When using 30 n_masks we got this p_keep bincount: [ 0  0  1  9 33 42 14  1]
-        When using 50 n_masks we got this p_keep bincount: [ 0  0  0  5 50 42  3]
-        When using 100 n_masks we got this p_keep bincount: [ 0  0  0  7 61 31  1]
-
-        It seems 20 is not enough to have a good chance of getting a good p_keep. It seems 50 n_masks is enough here.
-        To be on the safe side we go for 100 anyway.
         '''
         np.random.seed(0)
         expected_p_keeps = [.3, .4, .5, .6]

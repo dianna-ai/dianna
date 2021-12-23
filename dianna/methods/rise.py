@@ -45,8 +45,7 @@ class RISE:
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         input_tokens = np.asarray(model_or_function.tokenizer(input_text))
         text_length = len(input_tokens)
-        # p_keep = self._determine_p_keep_for_text(input_tokens, runner) if self.p_keep == None else self.p_keep
-        p_keep = 0.5
+        p_keep = self._determine_p_keep_for_text(input_tokens, runner) if self.p_keep is None else self.p_keep
         input_shape = (text_length,)
         self.masks = self._generate_masks_for_text(input_shape, p_keep,
                                                    self.n_masks)  # Expose masks for to make user inspection possible
@@ -168,7 +167,7 @@ class RISE:
         batch_size = 50
         img_shape = input_data.shape[1:3]
         masks = self.generate_masks_for_images(img_shape, p_keep, n_masks)
-        masked = input_data * masks
+        masked = (input_data * masks).astype(input_data.dtype)
         predictions = []
         for i in range(0, n_masks, batch_size):
             current_input = masked[i:i + batch_size]
