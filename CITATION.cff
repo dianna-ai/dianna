@@ -27,7 +27,7 @@ authors:
 # date-released and DOI to be updated
 date-released: 1999-01-01
 doi: 10.0000/FIXME
-version: "0.1.0"
+version: "0.2.0"
 repository-code: "https://github.com/dianna-ai/dianna"
 keywords:
   - XAI
