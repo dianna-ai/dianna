@@ -54,6 +54,9 @@ class RISE:
         return self._reshape_result(input_tokens, labels, saliencies)
 
     def _determine_p_keep_for_text(self, input_data, runner, n_masks=100):
+        """
+        See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233
+        """
         p_keeps = np.arange(0.1, 1.0, 0.1)
         stds = []
         for p_keep in p_keeps:
@@ -153,6 +156,9 @@ class RISE:
         return normalize(saliency, self.n_masks, p_keep)
 
     def _determine_p_keep_for_images(self, input_data, runner, n_masks=100):
+        """
+        See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233
+        """
         p_keeps = np.arange(0.1, 1.0, 0.1)
         stds = []
         for p_keep in p_keeps:
