@@ -4,10 +4,11 @@
 
 output-format: grouped
 
-strictness: medium
-doc-warnings: false
+strictness: veryhigh
+doc-warnings: true
 test-warnings: true
-member-warnings: false
+member-warnings: true
+max-line-length: 127
 
 ignore-paths:
   - docs
