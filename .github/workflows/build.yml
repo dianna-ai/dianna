@@ -35,6 +35,8 @@ jobs:
           python3 -m pip install .[dev,publishing]
       - name: Run unit tests
         run: pytest -v
+      - name: Run tutorial notebooks
+        run: pytest --nbmake tutorials
       - name: Verify that we can build the package
         run: python3 setup.py sdist bdist_wheel
       - name: Build documentation
