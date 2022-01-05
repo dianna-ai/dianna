@@ -23,4 +23,6 @@ class ShapOnImages(TestCase):
         assert (np.unique(image_segments) == np.arange(1, n_segments)).all
         # check image shape after segmentation (1st dimension)
         assert image_segments.shape == input_data[:,:,0].shape
+    
+    
         
