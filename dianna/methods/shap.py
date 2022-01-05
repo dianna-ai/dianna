@@ -14,10 +14,10 @@ class KernelSHAP:
 
         """
         
-    def _segment_image(image, n_segments, compactness, max_num_iter, sigma,
+    def _segment_image(self, image, n_segments, compactness, max_num_iter, sigma,
                        spacing, multichannel, convert2lab, enforce_connectivity,
-                       min_size_factor, max_size_factor, slic_zero, start_label, 
-                       mask, channel_axis):
+                       min_size_factor, max_size_factor, slic_zero, start_label,
+                       mask):
         """Create segmentation to explain by segment, not every pixel
 
         This could help speed-up the calculation when the input size is very large.
@@ -34,7 +34,7 @@ class KernelSHAP:
         image_segments = slic(image, n_segments, compactness, max_num_iter, sigma,
                               spacing, multichannel, convert2lab, enforce_connectivity,
                               min_size_factor, max_size_factor, slic_zero, start_label, 
-                              mask, channel_axis)
+                              mask)
         
         return image_segments
 
@@ -69,7 +69,9 @@ class KernelSHAP:
         Other keyword arguments: see the documentation of kernel explainer of SHAP
                                  (also in function "shap_values") via:
         https://github.com/slundberg/shap/blob/master/shap/explainers/_kernel.py
-
+                                 and the documentation of image segmentation via:
+        https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
+                                 
         Returns:
             Explanation heatmap of shapley values for each class (np.ndarray).
         """
@@ -91,16 +93,14 @@ class KernelSHAP:
         self.slic_zero = kwargs.get("slic_zero", False)
         self.start_label = kwargs.get("start_label", 1)
         self.mask = kwargs.get("mask", None)
-        self.channel_axis = kwargs.get("channel_axis", -1)
 
         # call the segment method to create segmentation of input image
         self.image_segments = self._segment_image(self.input_data, self.n_segments,
-                                                  self.compactness,self.max_num_iter,
+                                                  self.compactness, self.max_num_iter,
                                                   self.sigma, self.spacing, self.multichannel,
                                                   self.convert2lab, self.enforce_connectivity,
                                                   self.min_size_factor, self.max_size_factor,
-                                                  self.slic_zero, self.start_label, self.mask,
-                                                  self.channel_axis)
+                                                  self.slic_zero, self.start_label, self.mask)
 
         #return np.zeros(input_data.shape, dtype=float)
 
