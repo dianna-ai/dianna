@@ -16,9 +16,10 @@ class ShapOnImages(TestCase):
         n_segments=50
         compactness=10.0
         sigma=0
+        channel_axis = -1
         image_segments = explainer._segment_image(input_data, n_segments, compactness,
                                                   10, sigma, None, True, None, True,
-                                                  0.5, 3, False, 1, None)
+                                                  0.5, 3, False, 1, None, channel_axis)
         # check segments index
         assert (np.unique(image_segments) == np.arange(1, n_segments)).all
         # check image shape after segmentation
@@ -30,7 +31,7 @@ class ShapOnImages(TestCase):
         n_segments=50
         segments_slic = explainer._segment_image(input_data, n_segments, 10.0,
                                                  10, 0, None, True, None, True,
-                                                 0.5, 3, False, 1, None)
+                                                 0.5, 3, False, 1, None, -1)
         masked_image = explainer._mask_image(np.zeros((1,n_segments)), segments_slic, input_data, 0)
         # check if all points are masked
         assert (masked_image[0] == np.zeros(input_data.shape)).all
