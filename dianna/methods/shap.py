@@ -56,8 +56,8 @@ class KernelSHAP:
                                      interpretability, training a separate interpretable
                                      model to explain a model’s prediction on each individual
                                      example. The input dimension must be
-                                     [batch, height, width, color_channels] or
-                                     [batch, color_channels, height, width] (see channel_axis)
+                                     [height, width, color_channels] or
+                                     [color_channels, height, width] (see channel_axis)
             nsamples ("auto" or int): Number of times to re-evaluate the model when
                                       explaining each prediction. More samples lead
                                       to lower variance estimates of the SHAP values.
@@ -85,8 +85,8 @@ class KernelSHAP:
             Explanation heatmap of shapley values for each class (np.ndarray).
         """
         # first check the dimension of input_data
-        if self.var.ndim != 4:
-            raise IOError("The input image must follow the required shape [batch, height, width, color_channels] or [batch, color_channels, height, width]")
+        if self.var.ndim != 3:
+            raise IOError("The input image must follow the required shape [height, width, color_channels] or [color_channels, height, width]")
         
         self.model = onnx.load(model)  # load onnx model
         self.input_data = input_data
@@ -127,7 +127,7 @@ class KernelSHAP:
 
         return shap_values
 
-    def _mask_image(self, features, segmentation, image, background=None):
+    def _mask_image(self, features, segmentation, image, background=None, channel_axis=-1):
         """Define a function that depends on a binary mask representing
            if an image region is hidden.
 
@@ -138,8 +138,11 @@ class KernelSHAP:
                                        the function _segment_image
             image (np.ndarray): Image to be explained
             background (int): Background color for the masked image
-
+            channel_axis (int): See the function explain_image
         """
+        # if the image shape is [color_channels, height, width]
+        if channel_axis != -1:
+            image = np.transpose(image,(1,2,0))
         if background is None:
             background = image.mean((0, 1))
         
@@ -154,6 +157,9 @@ class KernelSHAP:
             for j in range(features.shape[1]):
                 if features[i, j] == 0:
                     out[i][segmentation == j, :] = background
+        if channel_axis != -1:
+            out = np.transpose(out,(0,3,1,2))
+
         return out.astype(np.float32)
 
     def _runner(self, features):
@@ -165,4 +171,5 @@ class KernelSHAP:
         """
         return prepare(self.model).run(
             self._mask_image(features, self.image_segments,
-                             self.input_data, self.background)).dense_1 # better replace "dense_1" with some generic entry
+                             self.input_data, self.background,
+                             self.channel_axis)).dense_1 # better replace "dense_1" with some generic entry
