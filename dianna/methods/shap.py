@@ -119,13 +119,6 @@ class KernelSHAP:
         Returns:
             Explanation heatmap of shapley values for each class (np.ndarray).
         """
-
-        # first check the dimension of input_data
-        if self.var.ndim != 3:
-            raise IOError(
-                "The input image must follow the required shape [height, width, color_channels] or [color_channels, height, width]"
-            )
-
         self.model = onnx.load(model)  # load onnx model
         self.output_node = prepare(self.model, gen_tensor_dict=True).outputs[0]
         self.input_data = input_data
@@ -145,6 +138,12 @@ class KernelSHAP:
         self.slic_zero = kwargs.get("slic_zero", False)
         self.start_label = kwargs.get("start_label", 1)
         self.mask = kwargs.get("mask", None)
+
+        # first check the dimension of input_data
+        if self.input_data.ndim != 3:
+            raise IOError(
+                "The input image must follow the required shape [height, width, color_channels] or [color_channels, height, width]"
+            )
 
         # call the segment method to create segmentation of input image
         self.image_segments = self._segment_image(
@@ -193,6 +192,7 @@ class KernelSHAP:
         # if the image shape is [color_channels, height, width]
         if channel_axis != -1:
             image = np.transpose(image, (1, 2, 0))
+        # check the background color
         if background is None:
             background = image.mean((0, 1))
 
