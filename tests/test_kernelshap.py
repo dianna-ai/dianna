@@ -2,8 +2,7 @@ from unittest import TestCase
 
 import dianna
 import numpy as np
-from dianna.methods import shap
-from tests.utils import run_model
+from dianna.methods import KernelSHAP
 
 
 class ShapOnImages(TestCase):
@@ -89,5 +88,20 @@ class ShapOnImages(TestCase):
         assert np.array_equal(masked_image[0], np.zeros(input_data.shape))
 
     def test_shap_explain_image(self):
-        input_data = np.random.random((1, 28, 28, 1))
+        input_data = np.random.random((1, 28, 28))
+        onnx_model_path = "./tests/test_data/mnist_model.onnx"
+        n_segments = 50
+        explainer = KernelSHAP()
+        shap_values, segments_slic = explainer.explain_image(
+            onnx_model_path,
+            input_data,
+            nsamples=1000,
+            background=0,
+            n_segments=n_segments,
+            compactness=10.0,
+            sigma=0,
+            channel_axis_first=True,
+        )
+
+        assert shap_values[0].shape == np.zeros((1, n_segments)).shape
 
