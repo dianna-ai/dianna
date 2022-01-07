@@ -1,8 +1,6 @@
 import numpy as np
 import shap
 import onnx
-
-# skimage
 from skimage.segmentation import slic
 from onnx_tf.backend import prepare  # onnx to tf model converter&runner
 import warnings
@@ -168,7 +166,7 @@ class KernelSHAP:
                 np.ones((1, n_segments)), nsamples=nsamples
             )
 
-        return shap_values
+        return shap_values, self.image_segments
 
     def _mask_image(
         self, features, segmentation, image, background=None, channel_axis_first=False
