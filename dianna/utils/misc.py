@@ -1,4 +1,5 @@
-
+import onnx
+from onnx_tf.backend import prepare
 import xarray as xr
 from dianna.utils.onnx_runner import SimpleModelRunner
 
@@ -85,3 +86,17 @@ def move_axis(data, label, new_position):
     axis_labels.insert(new_position, axis_labels.pop(pos))
     # do the move
     return data.transpose(*axis_labels)
+
+def onnx_model_node_loader(model_path):
+    """Load onnx model and return the label of its output node.
+
+    Args:
+        model_path (str): The path to a ONNX model on disk.
+
+    Returns:
+        loaded onnx model and the label of output node.
+    """
+    onnx_model = onnx.load(model_path)  # load onnx model
+    label_output_node = prepare(onnx_model,
+                                gen_tensor_dict=True).outputs[0]
+    return onnx_model, label_output_node
