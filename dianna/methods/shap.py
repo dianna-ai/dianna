@@ -1,9 +1,10 @@
 import numpy as np
 import shap
 import onnx
-from skimage.segmentation import slic
+import skimage.segmentation
 from onnx_tf.backend import prepare  # onnx to tf model converter&runner
 import warnings
+from dianna import utils
 
 
 class KernelSHAP:
@@ -15,23 +16,15 @@ class KernelSHAP:
         """KernelSHAP initializer.
 
         """
-
+        
+    @staticmethod
     def _segment_image(
-        self,
         image,
         n_segments,
         compactness,
-        max_num_iter,
         sigma,
-        spacing,
-        convert2lab,
-        enforce_connectivity,
-        min_size_factor,
-        max_size_factor,
-        slic_zero,
-        start_label,
-        mask,
         channel_axis_first,
+        **kwargs
     ):
         """Create segmentation to explain by segment, not every pixel
 
@@ -49,20 +42,12 @@ class KernelSHAP:
         if channel_axis_first:
             image = np.transpose(image, (1, 2, 0))
 
-        image_segments = slic(
+        image_segments = skimage.segmentation.slic(
             image=image,
             n_segments=n_segments,
             compactness=compactness,
-            max_num_iter=max_num_iter,
             sigma=sigma,
-            spacing=spacing,
-            convert2lab=convert2lab,
-            enforce_connectivity=enforce_connectivity,
-            min_size_factor=min_size_factor,
-            max_size_factor=max_size_factor,
-            slic_zero=slic_zero,
-            start_label=start_label,
-            mask=mask,
+            **kwargs
         )
 
         return image_segments
@@ -116,21 +101,13 @@ class KernelSHAP:
         Returns:
             Explanation heatmap of shapley values for each class (np.ndarray).
         """
-        self.onnx_model = onnx.load(model)  # load onnx model
-        self.output_node = prepare(self.onnx_model, gen_tensor_dict=True).outputs[0]
+        self.onnx_model, self.output_node = utils.onnx_model_node_loader(model)
         self.input_data = input_data
         self.channel_axis_first = channel_axis_first
         self.background = background
+
         # other keyword arguments for the method segment_image
-        max_num_iter = kwargs.get("max_num_iter", 10)
-        spacing = kwargs.get("spacing", None)
-        convert2lab = kwargs.get("convert2lab", None)
-        enforce_connectivity = kwargs.get("enforce_connectivity", True)
-        min_size_factor = kwargs.get("min_size_factor", 0.5)
-        max_size_factor = kwargs.get("max_size_factor", 3)
-        slic_zero = kwargs.get("slic_zero", False)
-        start_label = kwargs.get("start_label", 1)
-        mask = kwargs.get("mask", None)
+        slic_kwargs = utils.get_kwargs_applicable_to_function(skimage.segmentation.slic, kwargs)
 
         # first check the dimension of input_data
         if input_data.ndim != 3:
@@ -143,17 +120,9 @@ class KernelSHAP:
             input_data,
             n_segments,
             compactness,
-            max_num_iter,
             sigma,
-            spacing,
-            convert2lab,
-            enforce_connectivity,
-            min_size_factor,
-            max_size_factor,
-            slic_zero,
-            start_label,
-            mask,
             channel_axis_first,
+            **slic_kwargs
         )
 
         # call the Kernel SHAP explainer

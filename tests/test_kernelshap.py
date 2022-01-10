@@ -15,21 +15,13 @@ class ShapOnImages(TestCase):
         n_segments = 50
         compactness = 10.0
         sigma = 0
+        channel_axis_first = False
         image_segments = explainer._segment_image(
             input_data,
             n_segments,
             compactness,
-            10,
             sigma,
-            None,
-            None,
-            True,
-            0.5,
-            3,
-            False,
-            1,
-            None,
-            channel_axis_first=False,
+            channel_axis_first
         )
         # check segments index
         assert np.amax(image_segments) <= n_segments
@@ -41,21 +33,15 @@ class ShapOnImages(TestCase):
         input_data = np.random.random((28, 28, 1))
         explainer = dianna.methods.KernelSHAP()
         n_segments = 50
+        compactness = 10.0
+        sigma = 0
+        channel_axis_first = False
         segments_slic = explainer._segment_image(
             input_data,
             n_segments,
-            10.0,
-            10,
-            0,
-            None,
-            None,
-            True,
-            0.5,
-            3,
-            False,
-            1,
-            None,
-            False,
+            compactness,
+            sigma,
+            channel_axis_first
         )
         masked_image = explainer._mask_image(
             np.zeros((1, n_segments)), segments_slic, input_data, 0, False
@@ -65,21 +51,13 @@ class ShapOnImages(TestCase):
 
         # check image with channel axis = 0
         input_data = np.random.random((1, 28, 28))
+        channel_axis_first = True
         segments_slic = explainer._segment_image(
             input_data,
             n_segments,
-            10.0,
-            10,
-            0,
-            None,
-            None,
-            True,
-            0.5,
-            3,
-            False,
-            1,
-            None,
-            True,
+            compactness,
+            sigma,
+            channel_axis_first
         )
         masked_image = explainer._mask_image(
             np.zeros((1, n_segments)), segments_slic, input_data, 0, True
