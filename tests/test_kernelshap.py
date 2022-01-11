@@ -1,9 +1,13 @@
 from unittest import TestCase
 
+import sys
+import pytest
 import dianna
 import numpy as np
 from dianna.methods import KernelSHAP
 
+if sys.platform.startswith("win"):
+    pytest.skip("skipping tests on Windows due to onnx-tf incompatibility", allow_module_level=True)
 
 class ShapOnImages(TestCase):
     def test_shap_segment_image(self):
