@@ -25,8 +25,8 @@ authors:
     orcid: "https://orcid.org/0000-0001-8724-8372"
 
 # date-released and DOI to be updated
-date-released: 1999-01-01
-doi: 10.0000/FIXME
+date-released: 2021-12-23
+doi: 10.5281/zenodo.5801485
 version: "0.2.1"
 repository-code: "https://github.com/dianna-ai/dianna"
 keywords:
