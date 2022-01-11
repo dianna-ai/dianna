@@ -9,6 +9,7 @@ from dianna.methods import KernelSHAP
 if sys.platform.startswith("win"):
     pytest.skip("skipping tests on Windows due to onnx-tf incompatibility", allow_module_level=True)
 
+
 class ShapOnImages(TestCase):
     def test_shap_segment_image(self):
         input_data = np.random.random((28, 28, 1))
@@ -36,7 +37,7 @@ class ShapOnImages(TestCase):
         n_segments = 50
         compactness = 10.0
         sigma = 0
-        background=0,
+        background = 0
         segments_slic = explainer._segment_image(
             input_data,
             n_segments,
@@ -44,7 +45,7 @@ class ShapOnImages(TestCase):
             sigma,
         )
         masked_image = explainer._mask_image(
-            np.zeros((1, n_segments)), segments_slic, input_data, background=0,
+            np.zeros((1, n_segments)), segments_slic, input_data, background,
         )
         # check if all points are masked
         assert np.array_equal(masked_image[0], np.zeros(input_data.shape))
@@ -67,4 +68,3 @@ class ShapOnImages(TestCase):
         )
 
         assert shap_values[0].shape == np.zeros((1, n_segments)).shape
-

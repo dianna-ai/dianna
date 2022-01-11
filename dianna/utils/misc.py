@@ -87,6 +87,7 @@ def move_axis(data, label, new_position):
     # do the move
     return data.transpose(*axis_labels)
 
+
 def onnx_model_node_loader(model_path):
     """Load onnx model and return the label of its output node and
        the data type of input node.

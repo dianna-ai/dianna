@@ -1,6 +1,5 @@
 import numpy as np
 import shap
-import onnx
 import skimage.segmentation
 from onnx_tf.backend import prepare  # onnx to tf model converter&runner
 import warnings
@@ -18,7 +17,7 @@ class KernelSHAP:
         """KernelSHAP initializer.
 
         """
-        
+
     @staticmethod
     def _segment_image(
         image,
@@ -60,7 +59,7 @@ class KernelSHAP:
         sigma=0,
         axes_labels=None,
         **kwargs,
-    ):
+    ): # pylint: disable=too-many-arguments
         """Run the KernelSHAP explainer.
            The model will be called with the function of image segmentation.
 
@@ -100,7 +99,7 @@ class KernelSHAP:
             Explanation heatmap of shapley values for each class (np.ndarray).
         """
         self.onnx_model, self.input_node_dtype,\
-        self.output_node = utils.onnx_model_node_loader(model)
+            self.output_node = utils.onnx_model_node_loader(model)
         self.axes_labels = axes_labels if axes_labels is not None else []
         self.input_data = self._prepare_image_data(input_data)
         self.background = background
@@ -151,8 +150,8 @@ class KernelSHAP:
 
     def _mask_image(
         self, features, segmentation, image, background=None,
-        channels_axis_index=2, datatype = np.float32
-    ):
+        channels_axis_index=2, datatype=np.float32
+    ): # pylint: disable=too-many-arguments
         """Define a function that depends on a binary mask representing
            if an image region is hidden.
 
@@ -179,7 +178,7 @@ class KernelSHAP:
             for j in range(features.shape[1]):
                 if features[i, j] == 0:
                     out[i][segmentation == j, :] = background
-        
+
         # the output shape should satisfy the requirement from onnx model input shape
         if channels_axis_index != 2:
             out = np.transpose(out, (0, 3, 1, 2))
