@@ -59,7 +59,7 @@ class KernelSHAP:
         sigma=0,
         axes_labels=None,
         **kwargs,
-    ): # pylint: disable=too-many-arguments
+    ):  # pylint: disable=too-many-arguments
         """Run the KernelSHAP explainer.
            The model will be called with the function of image segmentation.
 
@@ -151,7 +151,7 @@ class KernelSHAP:
     def _mask_image(
         self, features, segmentation, image, background=None,
         channels_axis_index=2, datatype=np.float32
-    ): # pylint: disable=too-many-arguments
+    ):  # pylint: disable=too-many-arguments
         """Define a function that depends on a binary mask representing
            if an image region is hidden.
 

@@ -25,7 +25,7 @@ class ShapOnImages(TestCase):
             n_segments,
             compactness,
             sigma,
-        )
+        )  # pylint: disable=protected-access
         # check segments index
         assert np.amax(image_segments) <= n_segments
         # check image shape after segmentation
@@ -43,10 +43,10 @@ class ShapOnImages(TestCase):
             n_segments,
             compactness,
             sigma,
-        )
+        )  # pylint: disable=protected-access
         masked_image = explainer._mask_image(
             np.zeros((1, n_segments)), segments_slic, input_data, background,
-        )
+        )  # pylint: disable=protected-access
         # check if all points are masked
         assert np.array_equal(masked_image[0], np.zeros(input_data.shape))
 
