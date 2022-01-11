@@ -5,7 +5,7 @@
 output-format: grouped
 
 strictness: medium
-doc-warnings: false
+doc-warnings: true
 test-warnings: true
 member-warnings: false
 
@@ -17,6 +17,11 @@ pyroma:
 
 pep8:
     full: true
+
+pylint:
+    disable: [
+        C0114, # we don't check for module docstrings, because we have many separate files for single classes
+    ]
 
 pep257:
     disable: [
