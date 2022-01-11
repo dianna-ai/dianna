@@ -175,7 +175,7 @@ class KernelSHAP:
         )
 
         for i in range(features.shape[0]):
-            out[i, :, :, :] = image
+            out[i] = image
             for j in range(features.shape[1]):
                 if features[i, j] == 0:
                     out[i][segmentation == j, :] = background
