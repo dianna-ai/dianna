@@ -88,7 +88,8 @@ def move_axis(data, label, new_position):
     return data.transpose(*axis_labels)
 
 def onnx_model_node_loader(model_path):
-    """Load onnx model and return the label of its output node.
+    """Load onnx model and return the label of its output node and
+       the data type of input node.
 
     Args:
         model_path (str): The path to a ONNX model on disk.
@@ -97,6 +98,9 @@ def onnx_model_node_loader(model_path):
         loaded onnx model and the label of output node.
     """
     onnx_model = onnx.load(model_path)  # load onnx model
-    label_output_node = prepare(onnx_model,
-                                gen_tensor_dict=True).outputs[0]
-    return onnx_model, label_output_node
+    tf_model_rep = prepare(onnx_model, gen_tensor_dict=True)
+    label_input_node = tf_model_rep.inputs[0]
+    label_output_node = tf_model_rep.outputs[0]
+    dtype_input_node = tf_model_rep.tensor_dict[f'{label_input_node}'].dtype
+
+    return onnx_model, dtype_input_node, label_output_node

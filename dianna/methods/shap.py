@@ -101,7 +101,8 @@ class KernelSHAP:
         Returns:
             Explanation heatmap of shapley values for each class (np.ndarray).
         """
-        self.onnx_model, self.output_node = utils.onnx_model_node_loader(model)
+        self.onnx_model, self.input_node_dtype,\
+        self.output_node = utils.onnx_model_node_loader(model)
         self.input_data = input_data
         self.channel_axis_first = channel_axis_first
         self.background = background
@@ -138,7 +139,8 @@ class KernelSHAP:
         return shap_values, self.image_segments
 
     def _mask_image(
-        self, features, segmentation, image, background=None, channel_axis_first=False
+        self, features, segmentation, image, background=None,
+        channel_axis_first=False, datatype = np.float32
     ):
         """Define a function that depends on a binary mask representing
            if an image region is hidden.
@@ -172,7 +174,7 @@ class KernelSHAP:
         if channel_axis_first:
             out = np.transpose(out, (0, 3, 1, 2))
 
-        return out.astype(np.float32)
+        return out.astype(datatype)
 
     def _runner(self, features):
         """Define a runner/wrapper to load models and values
@@ -188,5 +190,6 @@ class KernelSHAP:
                 self.input_data,
                 self.background,
                 self.channel_axis_first,
+                self.input_node_dtype.as_numpy_dtype
             )
         )[f"{self.output_node}"]
