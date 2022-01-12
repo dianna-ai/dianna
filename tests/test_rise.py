@@ -1,42 +1,57 @@
 from unittest import TestCase
-import numpy as np
+
 import dianna
 import dianna.visualization
-from tests.utils import ModelRunner, run_model
+import numpy as np
+from dianna.methods import rise
+from dianna.utils import get_function
+from tests.utils import ModelRunner, run_model, get_mnist_1_data
+
 from .test_onnx_runner import generate_data
 
 
 class RiseOnImages(TestCase):
 
     def test_rise_function(self):
-        # shape is batch, y, x, channel
         input_data = np.random.random((1, 224, 224, 3))
+        # y and x axis labels are not actually mandatory for this test
+        axes_labels = ['batch', 'y', 'x', 'channels']
 
-        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", n_masks=200)
+        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
     def test_rise_filename(self):
         model_filename = 'tests/test_data/mnist_model.onnx'
-        input_data = generate_data(batch_size=1)
+        input_data = generate_data(batch_size=1).astype(np.float32)
+        # y and x axis labels are not actually mandatory for this test
+        axes_labels = ['batch', 'channels', 'y', 'x']
 
-        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", n_masks=200)
+        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
 
-        assert heatmaps[0].shape == input_data[0].shape[:2]
+        assert heatmaps[0].shape == input_data[0].shape[1:]
+
+    def test_rise_determine_p_keep_for_images(self):
+        np.random.seed(0)
+        expected_p_exact_keep = .1
+        model_filename = 'tests/test_data/mnist_model.onnx'
+        data = get_mnist_1_data().astype(np.float32)
+
+        p_keep = rise.RISE()._determine_p_keep_for_images(  # pylint: disable=protected-access
+            data, get_function(model_filename))
+
+        assert np.isclose(p_keep, expected_p_exact_keep)
 
 
 class RiseOnText(TestCase):
     def test_rise_text(self):
         np.random.seed(42)
-
         model_path = 'tests/test_data/movie_review_model.onnx'
         word_vector_file = 'tests/test_data/word_vectors.txt'
         runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)
-
         review = 'such a bad movie'
 
         positive_explanation = dianna.explain_text(runner, review, labels=(1, 0), method='RISE')[0]
-        print(positive_explanation)
         words = [element[0] for element in positive_explanation]
         word_indices = [element[1] for element in positive_explanation]
         positive_scores = [element[2] for element in positive_explanation]
@@ -48,3 +63,17 @@ class RiseOnText(TestCase):
         assert words == expected_words
         assert word_indices == expected_word_indices
         assert np.allclose(positive_scores, expected_positive_scores)
+
+    def test_rise_determine_p_keep_for_text(self):
+        np.random.seed(0)
+        expected_p_exact_keep = .3
+        model_path = 'tests/test_data/movie_review_model.onnx'
+        word_vector_file = 'tests/test_data/word_vectors.txt'
+        runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)
+        input_text = 'such a bad movie'
+        runner = get_function(runner)
+        input_tokens = np.asarray(runner.tokenizer(input_text))
+
+        p_keep = rise.RISE()._determine_p_keep_for_text(input_tokens, runner)  # pylint: disable=protected-access
+
+        assert np.isclose(p_keep, expected_p_exact_keep)

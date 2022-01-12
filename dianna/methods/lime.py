@@ -1,12 +1,15 @@
+import numpy as np
 from lime.lime_image import LimeImageExplainer
 from lime.lime_text import LimeTextExplainer
-from dianna.utils import get_function
+from dianna import utils
 
 
 class LIME:
     """
     LIME implementation as wrapper around https://github.com/marcotcr/lime
     """
+    # axis labels required to be present in input image data
+    required_labels = ('batch', 'channels')
 
     def __init__(self,
                  kernel_width=25,
@@ -19,6 +22,7 @@ class LIME:
                  mask_string=None,
                  random_state=None,
                  char_level=False,
+                 axes_labels=None,
                  preprocess_function=None,
                  ):  # pylint: disable=too-many-arguments
         """LIME initializer.
@@ -34,6 +38,9 @@ class LIME:
             mask_string (str, optional):
             random_state (int or np.RandomState, optional):
             char_level (bool, optional):
+            axes_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
+                                               If a list, the name of each axis where the index
+                                               in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
         """
         self.text_explainer = LimeTextExplainer(kernel_width,
@@ -56,6 +63,7 @@ class LIME:
                                                   )
 
         self.preprocess_function = preprocess_function
+        self.axes_labels = axes_labels if axes_labels is not None else []
 
     def explain_text(self,
                      model_or_function,
@@ -64,8 +72,7 @@ class LIME:
                      top_labels=None,
                      num_features=10,
                      num_samples=5000,
-                     distance_metric='cosine',
-                     model_regressor=None,
+                     **kwargs,
                      ):  # pylint: disable=too-many-arguments
         """
         Run the LIME explainer.
@@ -75,24 +82,22 @@ class LIME:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained
             labels ([int], optional): Iterable of indices of class to be explained
-            top_labels ([type], optional):
-            num_features (int, optional):
-            num_samples (int, optional):
-            distance_metric (str, optional):
-            model_regressor ([type], optional):
+
+        Other keyword arguments: see the LIME documentation for LimeTextExplainer.explain_instance:
+        https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_text.LimeTextExplainer.explain_instance.
 
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
         """
-        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
+        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.text_explainer.explain_instance, kwargs)
         explanation = self.text_explainer.explain_instance(input_data,
                                                            runner,
-                                                           labels,
-                                                           top_labels,
-                                                           num_features,
-                                                           num_samples,
-                                                           distance_metric,
-                                                           model_regressor,
+                                                           labels=labels,
+                                                           top_labels=top_labels,
+                                                           num_features=num_features,
+                                                           num_samples=num_samples,
+                                                           **explain_instance_kwargs
                                                            )
 
         local_explanations = explanation.local_exp
@@ -108,15 +113,12 @@ class LIME:
                       model_or_function,
                       input_data,
                       label=1,
-                      hide_color=None,
                       top_labels=None,
                       num_features=10,
                       num_samples=5000,
-                      batch_size=10,
-                      segmentation_fn=None,
-                      distance_metric='cosine',
-                      model_regressor=None,
-                      random_seed=None,
+                      positive_only=False,
+                      hide_rest=True,
+                      **kwargs,
                       ):  # pylint: disable=too-many-arguments,too-many-locals
         """
         Run the LIME explainer.
@@ -126,38 +128,78 @@ class LIME:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained
             label (int): Index of class to be explained
-            hide_color (float, optional):
-            top_labels (int, optional):
-            num_features (int, optional):
-            num_samples (int, optional):
-            batch_size (int, optional):
-            segmentation_fn (callable, optional):
-            distance_metric (str, optional):
-            model_regressor ([type], optional):
-            random_seed (int, optional):
+        Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance and
+        ImageExplanation.get_image_and_mask:
+
+        - https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_image.LimeImageExplainer.explain_instance
+        - https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_image.ImageExplanation.get_image_and_mask
 
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
         """
-        runner = get_function(model_or_function, preprocess_function=self.preprocess_function)
-        # remove batch axis from input data; this is only here for a consistent API
-        # but LIME wants data without batch axis
-        if not len(input_data) == 1:
-            raise ValueError("Length of batch axis must be one.")
-        input_data = input_data[0]
+        input_data, full_preprocess_function = self._prepare_image_data(input_data)
+        runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
+
+        # run the explanation.
+        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.image_explainer.explain_instance, kwargs)
         explanation = self.image_explainer.explain_instance(input_data,
                                                             runner,
                                                             labels=(label,),
-                                                            hide_color=hide_color,
                                                             top_labels=top_labels,
                                                             num_features=num_features,
                                                             num_samples=num_samples,
-                                                            batch_size=batch_size,
-                                                            segmentation_fn=segmentation_fn,
-                                                            distance_metric=distance_metric,
-                                                            model_regressor=model_regressor,
-                                                            random_seed=random_seed
+                                                            **explain_instance_kwargs,
                                                             )
 
-        mask = explanation.get_image_and_mask(label, positive_only=False, hide_rest=True, num_features=num_features)[1]
+        get_image_and_mask_kwargs = utils.get_kwargs_applicable_to_function(explanation.get_image_and_mask, kwargs)
+        mask = explanation.get_image_and_mask(label, positive_only=positive_only, hide_rest=hide_rest,
+                                              num_features=num_features, **get_image_and_mask_kwargs)[1]
         return mask
+
+    def _prepare_image_data(self, input_data):
+        """
+        Transforms the data to be of the shape and type LIME expects
+
+        Args:
+            input_data (NumPy-compatible array): Data to be explained
+
+        Returns:
+            transformed input data, preprocessing function to use with utils.get_function()
+        """
+        input_data = utils.to_xarray(input_data, self.axes_labels, LIME.required_labels)
+        # remove batch axis from input data; this is only here for a consistent API
+        # but LIME wants data without batch axis
+        if not len(input_data['batch']) == 1:
+            raise ValueError("Length of batch axis must be one.")
+        input_data = input_data.sel(batch=0)
+        # ensure channels axis is last and keep track of where it was so we can move it back
+        channels_axis_index = input_data.dims.index('channels')
+        input_data = utils.move_axis(input_data, 'channels', -1)
+        # create preprocessing function that puts model input generated by LIME into the right shape and dtype,
+        # followed by running the user's preprocessing function
+        full_preprocess_function = self._get_full_preprocess_function(channels_axis_index, input_data.dtype)
+        # LIME requires float64 numpy data
+        return input_data.values.astype(np.float64), full_preprocess_function
+
+    def _get_full_preprocess_function(self, channel_axis_index, dtype):
+        """
+        Create a preprocessing function that incorporates both the (optional) user's
+        preprocessing function, as well as any needed dtype and shape conversions
+
+        Args:
+            channel_axis_index (int): Axis index of the channels in the input data
+            dtype (type): Data type of the input data (e.g. np.float32)
+
+        Returns:
+            Function that first ensures the data has the same shape and type as the input data,
+            then runs the users' preprocessing function
+        """
+        # LIME generates numpy arrays, so it is easiest here to use np.transpose to put the channels
+        # axis in the right place
+        # one is added to the channels axis index because there is an extra first axis: the batch axis
+        def moveaxis_function(data):
+            return np.moveaxis(data, -1, channel_axis_index + 1).astype(dtype)
+
+        if self.preprocess_function is None:
+            return moveaxis_function
+        return lambda data: self.preprocess_function(moveaxis_function(data))
