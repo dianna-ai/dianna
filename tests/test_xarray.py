@@ -10,6 +10,7 @@ def test_xarray_conversion_list():
     labels = ('batch', 'y', 'x', 'channels')
 
     data_x = utils.to_xarray(data, labels)
+
     assert data_x.shape == data.shape
     assert data_x.dims == labels
 
@@ -21,6 +22,7 @@ def test_xarray_conversion_dict():
     expected_labels = ('batch', 'dim_1', 'dim_2', 'channels')
 
     data_x = utils.to_xarray(data, labels)
+
     assert data_x.shape == data.shape
     assert data_x.dims == expected_labels
 
@@ -51,5 +53,6 @@ def test_xarray_move_axis_nonexistent():
     """Tests if error is raised when trying to move some nonexistent axis."""
     data = xr.DataArray(np.zeros((4, 1, 28, 28)), dims=('batch', 'channels', 'y', 'x'))
     nonexistent_label = 'foo'
+
     with pytest.raises(ValueError):
         utils.move_axis(data, nonexistent_label, 0)
