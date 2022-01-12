@@ -8,7 +8,8 @@ def highlight_text(explanation,
                    output_html_filename=None,
                    max_opacity=.8):
     """
-    Highlights text
+    Highlights a given text based on values in a given explanation object.
+
     Args:
         explanation: list of tuples of (word, index of word in original data, importance)
         original_text: original text
