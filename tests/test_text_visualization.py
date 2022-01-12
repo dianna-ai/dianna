@@ -7,6 +7,7 @@ from dianna.visualization.text import highlight_text
 
 
 class Example1:
+    """Text and explanation for running visualizing tests."""
     original_text = 'Doloremque aliquam totam ut. Aspernatur repellendus autem quia deleniti. Natus accusamus ' \
                     'doloribus et in quam officiis veniam et. '
     explanation = [('ut', 25, -0.06405025896517044),
@@ -22,6 +23,7 @@ class Example1:
 
 
 class Example2:
+    """Short text and explanation and its expected html output after visualizing."""
     expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.08)">such</span> ' \
                     '<span style="background:rgba(255, 0, 0, 0.01)">a</span> <span style="background:rgba(0, 0, 255, 0.800000)">' \
                     'bad</span> <span style="background:rgba(0, 0, 255, 0.059287)">movie</span>.</body></html>\n'
@@ -32,22 +34,20 @@ class Example2:
                    ('a', 5, 0.008377155657765745)]
 
 
-class MyTestCase(unittest.TestCase):
+class TextVisualizationTestCase(unittest.TestCase):
+    """Suite of tests for visualizing text given text and explanation data."""
     temp_folder = 'temp_text_visualization_test'
     html_file_path = str(Path(temp_folder) / 'output.html')
 
-    def test_text_visualization_no_output(self):
-        highlight_text(Example1.explanation, original_text=Example1.original_text)
-
-        assert not Path(self.html_file_path).exists()
-
     def test_text_visualization_html_output_exists(self):
+        """Test if any output is generated at all."""
         highlight_text(Example1.explanation, original_text=Example1.original_text,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
 
     def test_text_visualization_html_output_contains_text(self):
+        """Test if all words in the input are present in the output html."""
         highlight_text(Example1.explanation, original_text=Example1.original_text,
                        output_html_filename=self.html_file_path)
 
@@ -58,6 +58,7 @@ class MyTestCase(unittest.TestCase):
             assert word in result
 
     def test_text_visualization_html_output_is_correct(self):
+        """Test if exact html output of visualization is correct."""
         highlight_text(Example2.explanation, original_text=Example2.original_text,
                        output_html_filename=self.html_file_path)
 
@@ -68,6 +69,7 @@ class MyTestCase(unittest.TestCase):
         assert result == Example2.expected_html
 
     def test_text_visualization_show_plot(self):
+        """Test if it runs while showing the plot."""
         highlight_text(Example1.explanation, original_text=Example1.original_text,
                        show_plot=True)
 
