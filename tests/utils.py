@@ -11,7 +11,7 @@ def run_model(input_data):
     Simulate a model that outputs 2-classes.
 
     Args:
-        input_data:
+        input_data: input data for the dummy model
 
     Returns:
         semi random output
