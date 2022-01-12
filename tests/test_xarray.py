@@ -42,6 +42,7 @@ def test_xarray_move_axis():
     expected_shape = (4, 28, 28, 1)
 
     data_moved = utils.move_axis(data, 'channels', -1)
+
     assert data_moved.dims == expected_labels
     assert data_moved.shape == expected_shape
 
