@@ -6,7 +6,7 @@ from pathlib import Path
 from dianna.visualization.text import highlight_text
 
 
-class Example1:
+class TextExample:
     """Text and explanation for running visualizing tests."""
     original_text = 'Doloremque aliquam totam ut. Aspernatur repellendus autem quia deleniti. Natus accusamus ' \
                     'doloribus et in quam officiis veniam et. '
@@ -22,7 +22,7 @@ class Example1:
                    ('repellendus', 40, -0.0003253862469633824)]
 
 
-class Example2:
+class TextExampleWithExpectedHtml:
     """Short text and explanation and its expected html output after visualizing."""
     expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.08)">such</span> ' \
                     '<span style="background:rgba(255, 0, 0, 0.01)">a</span> <span style="background:rgba(0, 0, 255, 0.800000)">' \
@@ -41,36 +41,36 @@ class TextVisualizationTestCase(unittest.TestCase):
 
     def test_text_visualization_html_output_exists(self):
         """Test if any output is generated at all."""
-        highlight_text(Example1.explanation, original_text=Example1.original_text,
+        highlight_text(TextExample.explanation, original_text=TextExample.original_text,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
 
     def test_text_visualization_html_output_contains_text(self):
         """Test if all words in the input are present in the output html."""
-        highlight_text(Example1.explanation, original_text=Example1.original_text,
+        highlight_text(TextExample.explanation, original_text=TextExample.original_text,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
         with open(self.html_file_path, encoding='utf-8') as result_file:
             result = result_file.read()
-        for word in _split_text_into_words(Example1.original_text):
+        for word in _split_text_into_words(TextExample.original_text):
             assert word in result
 
     def test_text_visualization_html_output_is_correct(self):
         """Test if exact html output of visualization is correct."""
-        highlight_text(Example2.explanation, original_text=Example2.original_text,
+        highlight_text(TextExampleWithExpectedHtml.explanation, original_text=TextExampleWithExpectedHtml.original_text,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
 
         with open(self.html_file_path, encoding='utf-8') as result_file:
             result = result_file.read()
-        assert result == Example2.expected_html
+        assert result == TextExampleWithExpectedHtml.expected_html
 
     def test_text_visualization_show_plot(self):
         """Test if it runs while showing the plot."""
-        highlight_text(Example1.explanation, original_text=Example1.original_text,
+        highlight_text(TextExample.explanation, original_text=TextExample.original_text,
                        show_plot=True)
 
     def setUp(self) -> None:
