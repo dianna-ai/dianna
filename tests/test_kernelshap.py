@@ -1,13 +1,9 @@
 from unittest import TestCase
 
-import sys
-import pytest
+from onnx_tf.backend import prepare  # pylint: disable=unused-import
 import dianna
 import numpy as np
 from dianna.methods import KernelSHAP
-
-if sys.platform.startswith("win"):
-    pytest.skip("skipping tests on Windows due to onnx-tf incompatibility", allow_module_level=True)
 
 
 class ShapOnImages(TestCase):
@@ -20,12 +16,12 @@ class ShapOnImages(TestCase):
         n_segments = 50
         compactness = 10.0
         sigma = 0
-        image_segments = explainer._segment_image(
+        image_segments = explainer._segment_image(  # pylint: disable=protected-access
             input_data,
             n_segments,
             compactness,
             sigma,
-        )  # pylint: disable=protected-access
+        )
         # check segments index
         assert np.amax(image_segments) <= n_segments
         # check image shape after segmentation
@@ -38,15 +34,15 @@ class ShapOnImages(TestCase):
         compactness = 10.0
         sigma = 0
         background = 0
-        segments_slic = explainer._segment_image(
+        segments_slic = explainer._segment_image(  # pylint: disable=protected-access
             input_data,
             n_segments,
             compactness,
             sigma,
-        )  # pylint: disable=protected-access
-        masked_image = explainer._mask_image(
+        )
+        masked_image = explainer._mask_image(  # pylint: disable=protected-access
             np.zeros((1, n_segments)), segments_slic, input_data, background,
-        )  # pylint: disable=protected-access
+        )
         # check if all points are masked
         assert np.array_equal(masked_image[0], np.zeros(input_data.shape))
 
