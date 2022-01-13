@@ -14,12 +14,21 @@ def plot_image(heatmap, original_data=None, heatmap_cmap=None, data_cmap=None, s
     """
     Plots a heatmap image.
 
+    Optionally, the heatmap (typically a saliency map of an explainer) can be
+    plotted on top of the original data. In that case both images are plotted
+    transparantly with alpha = 0.5.
+
     Args:
-        heatmap:
-        original_data:
-        heatmap_cmap:
-        data_cmap:
-        show_plot: Shows plot if true (for testing or writing plots to disk instead)
+        heatmap: the saliency map or other heatmap to be plotted.
+        original_data: the data to plot together with the heatmap, both with
+                       alpha = 0.5 (optional).
+        heatmap_cmap: color map for the heatmap plot (see mpl.Axes.imshow
+                      documentation for options).
+        data_cmap: color map for the (optional) data image (see mpl.Axes.imshow
+                   documentation for options). By default, if the image is two
+                   dimensional, the color map is set to 'gray'.
+        show_plot: Shows plot if true (for testing or writing plots to disk
+                   instead).
         output_filename: Name of the file to save the plot to (optional).
 
     Returns:
