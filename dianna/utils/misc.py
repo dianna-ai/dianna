@@ -5,10 +5,13 @@ from dianna.utils.onnx_runner import SimpleModelRunner
 
 def get_function(model_or_function, preprocess_function=None):
     """Converts input to callable function.
-       Input can be either model path or function.
-       If input is a function, the function is returned unchanged.
 
-       Any keyword arguments are given to the ModelRunner class if the input is a model path.
+    Any keyword arguments are given to the ModelRunner class if the input is a model path.
+
+    Args:
+        model_or_function: Can be either model path or function.
+            If input is a function, the function is returned unchanged.
+        preprocess_function: function to be run to preprocess the data
     """
     if isinstance(model_or_function, str):
         runner = SimpleModelRunner(model_or_function, preprocess_function=preprocess_function)
@@ -24,9 +27,9 @@ def get_function(model_or_function, preprocess_function=None):
 
 
 def get_kwargs_applicable_to_function(function, kwargs):
-    """
-    Returns a dict that is the subset of `kwargs` for which the keys are
-    keyword arguments of `function`. Note that if `function` has a `**kwargs`
+    """Returns a subset of `kwargs` of only keyword arguments of `function`.
+
+    Note that if `function` has a `**kwargs`
     argument, this function should not be necessary (provided the function
     handles `**kwargs` robustly).
     """
@@ -35,8 +38,7 @@ def get_kwargs_applicable_to_function(function, kwargs):
 
 
 def to_xarray(data, axes_labels, required_labels=None):
-    """Converts numpy data and axes labels to an xarray object
-    """
+    """Converts numpy data and axes labels to an xarray object."""
     if isinstance(axes_labels, dict):
         # key = axis index, value = label
         # not all axes have to be present in the input, but we need to provide

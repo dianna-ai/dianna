@@ -5,9 +5,7 @@ from dianna import utils
 
 
 class LIME:
-    """
-    LIME implementation as wrapper around https://github.com/marcotcr/lime
-    """
+    """LIME implementation as wrapper around https://github.com/marcotcr/lime."""
     # axis labels required to be present in input image data
     required_labels = ('batch', 'channels')
 
@@ -25,19 +23,20 @@ class LIME:
                  axes_labels=None,
                  preprocess_function=None,
                  ):  # pylint: disable=too-many-arguments
-        """LIME initializer.
+        """
+        Initializes Lime explainer.
 
         Args:
-            kernel_width (int, optional):
-            kernel (callable, optional):
-            verbose (bool, optional):
-            class_names (list, optional):
-            feature_selection (str, optional):
-            split_expression (regexp, optional):
-            bow (bool, optional):
-            mask_string (str, optional):
-            random_state (int or np.RandomState, optional):
-            char_level (bool, optional):
+            kernel_width (int, optional): kernel width
+            kernel (callable, optional): kernel
+            verbose (bool, optional): verbose
+            class_names (list, optional): names of the classes
+            feature_selection (str, optional): feature selection
+            split_expression (regexp, optional): split expression
+            bow (bool, optional): bow
+            mask_string (str, optional): mask string
+            random_state (int or np.RandomState, optional): seed or random state
+            char_level (bool, optional): char level
             axes_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
@@ -158,7 +157,7 @@ class LIME:
 
     def _prepare_image_data(self, input_data):
         """
-        Transforms the data to be of the shape and type LIME expects
+        Transforms the data to be of the shape and type LIME expects.
 
         Args:
             input_data (NumPy-compatible array): Data to be explained
@@ -183,7 +182,9 @@ class LIME:
 
     def _get_full_preprocess_function(self, channel_axis_index, dtype):
         """
-        Create a preprocessing function that incorporates both the (optional) user's
+        Creates a full preprocessing function.
+
+        Creates a preprocessing function that incorporates both the (optional) user's
         preprocessing function, as well as any needed dtype and shape conversions
 
         Args:

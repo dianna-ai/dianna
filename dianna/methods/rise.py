@@ -5,6 +5,7 @@ from dianna import utils
 
 
 def normalize(saliency, n_masks, p_keep):
+    """Normalizes salience by number of masks and keep probability."""
     return saliency / n_masks / p_keep
 
 
@@ -13,15 +14,12 @@ def _upscale(grid_i, up_size):
 
 
 class RISE:
-    """
-    RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb
-    """
+    """RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
     # axis labels required to be present in input image data
     required_labels = ('batch', 'channels')
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,  # pylint: disable=too-many-arguments
                  axes_labels=None, preprocess_function=None):
-
         """RISE initializer.
 
         Args:
@@ -42,6 +40,20 @@ class RISE:
         self.axes_labels = axes_labels if axes_labels is not None else []
 
     def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
+        """Runs the RISE explainer on text.
+
+           The model will be called with masked versions of the input text.
+
+        Args:
+            model_or_function (callable or str): The function that runs the model to be explained _or_
+                                                 the path to a ONNX model on disk.
+            input_text (np.ndarray): Text to be explained
+            labels (list(int)): Labels to be explained
+            batch_size (int): Batch size to use for running the model.
+
+        Returns:
+            Explanation heatmap for each class (np.ndarray).
+        """
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         input_tokens = np.asarray(model_or_function.tokenizer(input_text))
         text_length = len(input_tokens)
@@ -54,9 +66,7 @@ class RISE:
         return self._reshape_result(input_tokens, labels, saliencies)
 
     def _determine_p_keep_for_text(self, input_data, runner, n_masks=100):
-        """
-        See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233
-        """
+        """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""
         p_keeps = np.arange(0.1, 1.0, 0.1)
         stds = []
         for p_keep in p_keeps:
@@ -110,9 +120,10 @@ class RISE:
         return sentences
 
     def explain_image(self, model_or_function, input_data, batch_size=100):
-        """Run the RISE explainer.
+        """Runs the RISE explainer on images.
+
            The model will be called with masked images,
-           with a shape defined by `batch_size` and the shape of `input_data`
+           with a shape defined by `batch_size` and the shape of `input_data`.
 
         Args:
             model_or_function (callable or str): The function that runs the model to be explained _or_
@@ -149,9 +160,7 @@ class RISE:
         return normalize(saliency, self.n_masks, p_keep)
 
     def _determine_p_keep_for_images(self, input_data, runner, n_masks=100):
-        """
-        See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233
-        """
+        """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""
         p_keeps = np.arange(0.1, 1.0, 0.1)
         stds = []
         for p_keep in p_keeps:
@@ -177,10 +186,11 @@ class RISE:
         return np.mean(std_per_class)
 
     def generate_masks_for_images(self, input_size, p_keep, n_masks):
-        """Generate a set of random masks to mask the input data
+        """Generates a set of random masks to mask the input data.
 
         Args:
             input_size (int): Size of a single sample of input data, for images without the channel axis.
+
         Returns:
             The generated masks (np.ndarray)
         """
@@ -202,8 +212,7 @@ class RISE:
         return masks
 
     def _prepare_image_data(self, input_data):
-        """
-        Transforms the data to be of the shape and type RISE expects
+        """Transforms the data to be of the shape and type RISE expects.
 
         Args:
             input_data (xarray): Data to be explained
@@ -220,8 +229,9 @@ class RISE:
         return input_data, full_preprocess_function
 
     def _get_full_preprocess_function(self, channel_axis_index, dtype):
-        """
-        Create a preprocessing function that incorporates both the (optional) user's
+        """Creates a full preprocessing function.
+
+        Creates a preprocessing function that incorporates both the (optional) user's
         preprocessing function, as well as any needed dtype and shape conversions
 
         Args:

@@ -5,7 +5,7 @@
 output-format: grouped
 
 strictness: medium
-doc-warnings: false
+doc-warnings: true
 test-warnings: true
 member-warnings: false
 
@@ -18,6 +18,11 @@ pyroma:
 pep8:
     full: true
 
+pylint:
+    disable: [
+        C0114, # we don't check for module docstrings, because we have many separate files for single classes
+    ]
+
 pep257:
     disable: [
         # Disable because not part of PEP257 official convention:
@@ -26,4 +31,6 @@ pep257:
         D212,  # Multi-line docstring summary should start at the first line
         D213,  # Multi-line docstring summary should start at the second line
         D404,  # First word of the docstring should not be This
+        # The following list excludes things that are irrelevant to the Google style
+        D203, D204, D213, D215, D400, D401, D404, D406, D407, D408, D409, D413,
     ]
