@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from onnx_tf.backend import prepare  # pylint: disable=unused-import
+from onnx_tf.backend import prepare  # To avoid cryptic Access Violation on Windows; pylint: disable=unused-import
 import dianna
 import numpy as np
 from dianna.methods import KernelSHAP
