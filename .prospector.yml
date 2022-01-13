@@ -27,3 +27,8 @@ pep257:
         D213,  # Multi-line docstring summary should start at the second line
         D404,  # First word of the docstring should not be This
     ]
+
+pyflakes:
+    disable: [
+        F401,  # unused import: already checked by pylint
+    ]
