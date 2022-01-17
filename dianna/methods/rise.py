@@ -19,14 +19,14 @@ class RISE:
     required_labels = ('batch', 'channels')
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,  # pylint: disable=too-many-arguments
-                 axes_labels=None, preprocess_function=None):
+                 axis_labels=None, preprocess_function=None):
         """RISE initializer.
 
         Args:
             n_masks (int): Number of masks to generate.
             feature_res (int): Resolution of features in masks.
             p_keep (float): Fraction of image to keep in each mask
-            axes_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
+            axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
@@ -37,7 +37,7 @@ class RISE:
         self.preprocess_function = preprocess_function
         self.masks = None
         self.predictions = None
-        self.axes_labels = axes_labels if axes_labels is not None else []
+        self.axis_labels = axis_labels if axis_labels is not None else []
 
     def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
         """Runs the RISE explainer on text.
@@ -135,7 +135,7 @@ class RISE:
             Explanation heatmap for each class (np.ndarray).
         """
         # convert data to xarray
-        input_data = utils.to_xarray(input_data, self.axes_labels, RISE.required_labels)
+        input_data = utils.to_xarray(input_data, self.axis_labels, RISE.required_labels)
         # batch axis should always be first
         input_data = utils.move_axis(input_data, 'batch', 0)
         input_data, full_preprocess_function = self._prepare_image_data(input_data)

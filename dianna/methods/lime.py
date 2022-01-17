@@ -20,7 +20,7 @@ class LIME:
                  mask_string=None,
                  random_state=None,
                  char_level=False,
-                 axes_labels=None,
+                 axis_labels=None,
                  preprocess_function=None,
                  ):  # pylint: disable=too-many-arguments
         """
@@ -37,7 +37,7 @@ class LIME:
             mask_string (str, optional): mask string
             random_state (int or np.RandomState, optional): seed or random state
             char_level (bool, optional): char level
-            axes_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
+            axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
@@ -62,7 +62,7 @@ class LIME:
                                                   )
 
         self.preprocess_function = preprocess_function
-        self.axes_labels = axes_labels if axes_labels is not None else []
+        self.axis_labels = axis_labels if axis_labels is not None else []
 
     def explain_text(self,
                      model_or_function,
@@ -165,7 +165,7 @@ class LIME:
         Returns:
             transformed input data, preprocessing function to use with utils.get_function()
         """
-        input_data = utils.to_xarray(input_data, self.axes_labels, LIME.required_labels)
+        input_data = utils.to_xarray(input_data, self.axis_labels, LIME.required_labels)
         # remove batch axis from input data; this is only here for a consistent API
         # but LIME wants data without batch axis
         if not len(input_data['batch']) == 1:
