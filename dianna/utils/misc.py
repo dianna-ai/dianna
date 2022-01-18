@@ -1,6 +1,6 @@
 import onnx
-from onnx_tf.backend import prepare
 import xarray as xr
+from onnx_tf.backend import prepare
 from dianna.utils.onnx_runner import SimpleModelRunner
 
 

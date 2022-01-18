@@ -1,8 +1,8 @@
+import warnings
 import numpy as np
 import shap
 import skimage.segmentation
 from onnx_tf.backend import prepare  # onnx to tf model converter&runner
-import warnings
 from dianna import utils
 
 
