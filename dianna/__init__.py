@@ -32,7 +32,7 @@ __email__ = "dianna-ai@esciencecenter.nl"
 __version__ = "0.2.1"
 
 
-def explain_image(model_or_function, input_data, method, **kwargs):
+def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
     """
     Explain an image (input_data) given a model and a chosen method.
 
@@ -41,12 +41,13 @@ def explain_image(model_or_function, input_data, method, **kwargs):
                                              the path to a ONNX model on disk.
         input_data (np.ndarray): Image data to be explained
         method (string): One of the supported methods: RISE, LIME or KernelSHAP
+        labels (tuple): Labels to be explained
 
     Returns:
         One heatmap (2D array) per class.
 
     """
-    return _get_explainer(method, kwargs).explain_image(model_or_function, input_data)
+    return _get_explainer(method, kwargs).explain_image(model_or_function, input_data, labels)
 
 
 def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
@@ -58,6 +59,7 @@ def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
                                              the path to a ONNX model on disk.
         input_data (string): Text to be explained
         method (string): One of the supported methods: RISE or LIME
+        labels (tuple): Labels to be explained
 
     Returns:
         List of (word, index of word in raw text, importance for target class) tuples.
