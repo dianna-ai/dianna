@@ -33,6 +33,12 @@ python3 -m pip install -e .
 
 ## Documentation [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
 
+|domain|RISE|Lime|Shap|
+|-|-|-|-|
+|Images|||
+|Text|||
+|Timeseries|||
+|Embedding|||
 
 ## Contributing
 
