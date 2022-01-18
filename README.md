@@ -34,19 +34,41 @@ python3 -m pip install -e .
 
 ## Documentation [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
 
-## Benchmark datasets
-(TODO: add a sentence and/or image for each and the Zenodo and/or original links, code for creating the Binary MNIST?)
+### Benchmark datasets
+(TODO: add a sentence and/or image for each and the Zenodo and/or original links and links to notebooks for creating them)
+
 DIANNA offers to use simple benchamrk datasets for evaluating and comparing the XAI methods:
 
-### Images
+#### Images
 * Binary (2-class) MNIST
-* Simple Geometric
+* Simple Geometric (triangles and circles)
 * Simple Scientific (LeafSnap30)
 
-### Text
+#### Text
 * Movie reviews treebank
 
-## Tutorials
+### ONNX models
+(TODO: Add all links) 
+
+**We work with ONNX!** ONNX is a great unified oen NN standard which can be used to boost reproducible science. Your ONXX model also gives you boost in performance! In case your models are still in another popular DNN format, here are the simple recipies on to convert them:
+* pytorch
+* tensorflow
+* keras
+* scikit-learn
+
+And here are how we created our models on the benchmark datasets:
+
+#### Images
+* Binary MNIST model
+* Simple Geometric model
+* Simple Scientific model
+
+#### Text
+* Movie reviews model
+
+**_We envision the birth of the ONNX Scientific models zoo soon..._**
+
+### Tutorials
 DIANNA supports the following data modalities and XAI methods:
 (TODO: add links to tutorials in table?)
 
