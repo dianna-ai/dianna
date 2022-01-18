@@ -8,7 +8,7 @@ from dianna.methods import KernelSHAP
 class ShapOnImages(TestCase):
     """Suite of Kernelshap tests for the image case."""
     def test_shap_segment_image(self):
-        """Test if the segmentation of images are correct given some data"""
+        """Test if the segmentation of images are correct given some data."""
         input_data = np.random.random((28, 28, 1))
 
         explainer = dianna.methods.KernelSHAP()
@@ -29,7 +29,7 @@ class ShapOnImages(TestCase):
         assert image_segments.shape == input_data[:, :, 0].shape
 
     def test_shap_mask_image(self):
-        """Test if the images masks are correct given some data"""
+        """Test if the images masks are correct given some data."""
         input_data = np.random.random((28, 28, 1))
         explainer = dianna.methods.KernelSHAP()
         n_segments = 50
