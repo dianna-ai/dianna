@@ -7,6 +7,7 @@ from torchtext.vocab import Vectors
 
 
 def get_mnist_1_data():
+    """Gets a single instance (label=1) from the mnist dataset."""
     return np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -41,11 +42,12 @@ def get_mnist_1_data():
 def run_model(input_data):
     """
     Simulate a model that outputs 2-classes.
+
     Args:
-        input_data:
+        input_data: input data for the dummy model
 
     Returns:
-
+        semi random output
     """
     n_class = 2
     batch_size = input_data.shape[0]
@@ -54,8 +56,18 @@ def run_model(input_data):
     return np.random.random((batch_size, n_class))
 
 
-class ModelRunner():
+class ModelRunner:
+    """Example model runner for text models used for automated testing."""
+
     def __init__(self, model_path, word_vector_file, max_filter_size):
+        """
+        Initializes the model runner.
+
+        Args:
+            model_path: path to the model file
+            word_vector_file: path to the vector file
+            max_filter_size: maximum filter size of the model
+        """
         self.filename = model_path
         # ensure the spacy english is downloaded
         spacy.cli.download('en_core_web_sm')

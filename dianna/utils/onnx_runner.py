@@ -2,19 +2,21 @@ import onnxruntime as ort
 
 
 class SimpleModelRunner:
+    """Runs an onnx model with a set of inputs and outputs."""
     def __init__(self, filename, preprocess_function=None):
-        """Generates function to run ONNX model with one set of inputs and outputs
+        """
+        Generates function to run ONNX model with one set of inputs and outputs.
 
-            Args:
-                filename (str): Path to ONNX model on disk
-                preprocess_function (callable, optional): Function to preprocess input data with
+        Args:
+            filename (str): Path to ONNX model on disk
+            preprocess_function (callable, optional): Function to preprocess input data with
 
-            Returns:
-                function
+        Returns:
+            function
 
-            Examples:
-                >>> runner = SimpleModelRunner('path_to_model.onnx')
-                >>> predictions = runner(input_data)
+        Examples:
+            >>> runner = SimpleModelRunner('path_to_model.onnx')
+            >>> predictions = runner(input_data)
         """
         self.filename = filename
         self.preprocess_function = preprocess_function
