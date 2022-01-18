@@ -23,6 +23,7 @@ See https://github.com/dianna-ai/dianna
 """
 import logging
 from . import methods
+from . import utils
 
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -47,7 +48,9 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
         One heatmap (2D array) per class.
 
     """
-    return _get_explainer(method, kwargs).explain_image(model_or_function, input_data, labels)
+    explainer = _get_explainer(method, kwargs)
+    explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_image, kwargs)
+    return explainer.explain_image(model_or_function, input_data, labels, **explain_image_kwargs)
 
 
 def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
@@ -65,9 +68,12 @@ def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
         List of (word, index of word in raw text, importance for target class) tuples.
 
     """
-    return _get_explainer(method, kwargs).explain_text(model_or_function, input_data, labels)
+    explainer = _get_explainer(method, kwargs)
+    explain_text_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_text, kwargs)
+    return explainer.explain_text(model_or_function, input_data, labels, **explain_text_kwargs)
 
 
 def _get_explainer(method, kwargs):
     method_class = getattr(methods, method)
-    return method_class(**kwargs)
+    method_kwargs = utils.get_kwargs_applicable_to_function(method_class.__init__, kwargs)
+    return method_class(**method_kwargs)
