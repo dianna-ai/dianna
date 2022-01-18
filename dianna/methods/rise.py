@@ -119,7 +119,7 @@ class RISE:
         sentences = [" ".join(t) for t in tokens_masked]
         return sentences
 
-    def explain_image(self, model_or_function, input_data, batch_size=100):
+    def explain_image(self, model_or_function, input_data, labels=None, batch_size=100):
         """Runs the RISE explainer on images.
 
            The model will be called with masked images,
@@ -130,6 +130,7 @@ class RISE:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Image to be explained
             batch_size (int): Batch size to use for running the model.
+            labels (tuple): Labels to be explained
 
         Returns:
             Explanation heatmap for each class (np.ndarray).
@@ -157,7 +158,10 @@ class RISE:
         self.predictions = np.concatenate(batch_predictions)
 
         saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
-        return normalize(saliency, self.n_masks, p_keep)
+        result = normalize(saliency, self.n_masks, p_keep)
+        if labels is not None:
+            result = result[list(labels)]
+        return result
 
     def _determine_p_keep_for_images(self, input_data, runner, n_masks=100):
         """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""
