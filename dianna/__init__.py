@@ -1,5 +1,6 @@
 """Documentation about dianna"""
 import logging
+from onnx_tf.backend import prepare  # To avoid Access Violation on Windows with SHAP; pylint: disable=unused-import
 from . import methods
 
 
