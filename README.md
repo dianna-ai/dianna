@@ -32,13 +32,14 @@ python3 -m pip install -e .
 ```
 
 ## Documentation [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
-
-|domain|RISE|Lime|Shap|
+Dianna supports the following data domains and XAI methods:
+|domain|RISE|LIME|KernelSHAP|
 |-|-|-|-|
-|Images|||
-|Text|||
-|Timeseries|||
-|Embedding|||
+|Images|V|V|V|
+|Text|V|V|planned|
+|Embedding|planned|planned|planned|
+|Timeseries||||
+
 
 ## Contributing
 
