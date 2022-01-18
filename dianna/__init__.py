@@ -22,7 +22,7 @@ become a source of (scientific) insights.
 See https://github.com/dianna-ai/dianna
 """
 import logging
-from onnx_tf.backend import prepare  # To avoid Access Violation on Windows with SHAP; pylint: disable=unused-import
+from onnx_tf.backend import prepare  # To avoid Access Violation on Windows with SHAP
 from . import methods
 from . import utils
 

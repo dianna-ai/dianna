@@ -7,16 +7,12 @@ from dianna import utils
 
 
 class KernelSHAP:
-    """
-    Kernel SHAP implementation based on shap https://github.com/slundberg/shap
-    """
+    """Kernel SHAP implementation based on shap https://github.com/slundberg/shap."""
     # axis labels required to be present in input image data
     required_labels = ('batch', 'channels')
 
     def __init__(self):
-        """KernelSHAP initializer.
-
-        """
+        """Kernelshap initializer."""
 
     @staticmethod
     def _segment_image(
@@ -26,7 +22,7 @@ class KernelSHAP:
         sigma,
         **kwargs
     ):
-        """Create segmentation to explain by segment, not every pixel
+        """Create segmentation to explain by segment, not every pixel.
 
         This could help speed-up the calculation when the input size is very large.
 
@@ -34,6 +30,11 @@ class KernelSHAP:
         scikit-image.
 
         Args:
+            image (np.ndarray): Input image to be segmented.
+            n_segments (int): The (approximate) number of labels in the segmented output image
+            compactness (int): Balances color proximity and space proximity.
+            sigma (float): Width of Gaussian smoothing kernel
+
             Check keyword arguments for the skimage.segmentation.slic function
             via the following link:
             https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
@@ -61,7 +62,8 @@ class KernelSHAP:
         **kwargs,
     ):  # pylint: disable=too-many-arguments
         """Run the KernelSHAP explainer.
-           The model will be called with the function of image segmentation.
+
+        The model will be called with the function of image segmentation.
 
         Args:
             model (str): The path to a ONNX model on disk.
@@ -69,7 +71,7 @@ class KernelSHAP:
                                      provide a single example as input. This is because
                                      KernelShap is generally used for sample-based
                                      interpretability, training a separate interpretable
-                                     model to explain a model’s prediction on each individual
+                                     model to explain a model prediction on each individual
                                      example. The input dimension must be
                                      [batch, height, width, color_channels] or
                                      [batch, color_channels, height, width] (see axes_labels)
@@ -83,7 +85,7 @@ class KernelSHAP:
             compactness (int): Balances color proximity and space proximity. Higher values give
                                more weight to space proximity, making superpixel shapes more
                                square/cubic.
-            sigma (float): Wid th of Gaussian smoothing kernel for pre-processing for
+            sigma (float): Width of Gaussian smoothing kernel for pre-processing for
                            each dimension of the image. Zero means no smoothing.
             axes_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
                                                If a list, the name of each axis where the index
@@ -105,7 +107,8 @@ class KernelSHAP:
         self.background = background
 
         # other keyword arguments for the method segment_image
-        slic_kwargs = utils.get_kwargs_applicable_to_function(skimage.segmentation.slic, kwargs)
+        slic_kwargs = utils.get_kwargs_applicable_to_function(
+            skimage.segmentation.slic, kwargs)
 
         # call the segment method to create segmentation of input image
         self.image_segments = self._segment_image(
@@ -117,7 +120,8 @@ class KernelSHAP:
         )
 
         # call the Kernel SHAP explainer
-        explainer = shap.KernelExplainer(self._runner, np.zeros((1, n_segments)))
+        explainer = shap.KernelExplainer(
+            self._runner, np.zeros((1, n_segments)))
 
         with warnings.catch_warnings():
             # avoid warnings due to version conflicts
@@ -129,14 +133,15 @@ class KernelSHAP:
         return shap_values, self.image_segments
 
     def _prepare_image_data(self, input_data):
-        """
-        Transforms the data to be of the shape and type KernelSHAP expects
+        """Transforms the data to be of the shape and type KernelSHAP expects.
+
         Args:
             input_data (NumPy-compatible array): Data to be explained
         Returns:
             transformed input data
         """
-        input_data = utils.to_xarray(input_data, self.axes_labels, KernelSHAP.required_labels)
+        input_data = utils.to_xarray(
+            input_data, self.axes_labels, KernelSHAP.required_labels)
         # remove batch axis from input data; this is only here for a consistent API
         # but KernelSHAP wants data without batch axis
         if not len(input_data['batch']) == 1:
@@ -152,8 +157,7 @@ class KernelSHAP:
         self, features, segmentation, image, background=None,
         channels_axis_index=2, datatype=np.float32
     ):  # pylint: disable=too-many-arguments
-        """Define a function that depends on a binary mask representing
-           if an image region is hidden.
+        """Define a function that depends on a binary mask representing if an image region is hidden.
 
         Args:
             features (np.ndarray): A matrix of samples (# samples x # features)
@@ -162,7 +166,8 @@ class KernelSHAP:
                                        the function _segment_image
             image (np.ndarray): Image to be explained
             background (int): Background color for the masked image
-            channel_axis_index (int): See the function _prepare_image_data
+            channels_axis_index (int): See the function _prepare_image_data
+            datatype (np.dtype): Datatype for the returned value
         """
         # check the background color
         if background is None:
@@ -186,7 +191,7 @@ class KernelSHAP:
         return out.astype(datatype)
 
     def _runner(self, features):
-        """Define a runner/wrapper to load models and values
+        """Define a runner/wrapper to load models and values.
 
         Args:
             features (np.ndarray): A matrix of samples (# samples x # features)

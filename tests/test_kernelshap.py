@@ -6,7 +6,9 @@ from dianna.methods import KernelSHAP
 
 
 class ShapOnImages(TestCase):
+    """Suite of Kernelshap tests for the image case."""
     def test_shap_segment_image(self):
+        """Test if the segmentation of images are correct given some data"""
         input_data = np.random.random((28, 28, 1))
 
         explainer = dianna.methods.KernelSHAP()
@@ -27,6 +29,7 @@ class ShapOnImages(TestCase):
         assert image_segments.shape == input_data[:, :, 0].shape
 
     def test_shap_mask_image(self):
+        """Test if the images masks are correct given some data"""
         input_data = np.random.random((28, 28, 1))
         explainer = dianna.methods.KernelSHAP()
         n_segments = 50
@@ -46,6 +49,7 @@ class ShapOnImages(TestCase):
         assert np.array_equal(masked_image[0], np.zeros(input_data.shape))
 
     def test_shap_explain_image(self):
+        """Tests exact expected output given an image and model for Kernelshap."""
         input_data = np.random.random((1, 1, 28, 28))
         onnx_model_path = "./tests/test_data/mnist_model.onnx"
         n_segments = 50

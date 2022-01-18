@@ -91,8 +91,9 @@ def move_axis(data, label, new_position):
 
 
 def onnx_model_node_loader(model_path):
-    """Load onnx model and return the label of its output node and
-       the data type of input node.
+    """Onnx model and node labels loader.
+    
+    Load onnx model and return the label of its output node and the data type of input node.
 
     Args:
         model_path (str): The path to a ONNX model on disk.
