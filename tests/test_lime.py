@@ -20,7 +20,7 @@ class LimeOnImages(TestCase):
         explainer = LIME(random_state=42, axes_labels=labels)
         heatmap = explainer.explain_image(run_model, input_data, num_samples=100)
 
-        assert heatmap.shape == input_data[0].shape[:2]
+        assert heatmap[0].shape == input_data[0].shape[:2]
         assert np.allclose(heatmap, heatmap_expected, atol=.01)
 
     def test_lime_filename(self):
@@ -41,7 +41,7 @@ class LimeOnImages(TestCase):
                                        axes_labels=labels)
 
         heatmap_expected = np.load('tests/test_data/heatmap_lime_filename.npy')
-        assert heatmap.shape == input_data[0, 0].shape
+        assert heatmap[0].shape == input_data[0, 0].shape
         assert np.allclose(heatmap, heatmap_expected, atol=.01)
 
 

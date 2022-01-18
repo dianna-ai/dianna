@@ -111,7 +111,7 @@ class LIME:
     def explain_image(self,
                       model_or_function,
                       input_data,
-                      label=1,
+                      labels=(1,),
                       top_labels=None,
                       num_features=10,
                       num_samples=5000,
@@ -126,7 +126,7 @@ class LIME:
             model_or_function (callable or str): The function that runs the model to be explained _or_
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained
-            label (int): Index of class to be explained
+            labels (tuple): Indices of classes to be explained
         Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance and
         ImageExplanation.get_image_and_mask:
 
@@ -134,7 +134,7 @@ class LIME:
         - https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_image.ImageExplanation.get_image_and_mask
 
         Returns:
-            list of (word, index of word in raw text, importance for target class) tuples
+            list of heatmaps for each label
         """
         input_data, full_preprocess_function = self._prepare_image_data(input_data)
         runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
@@ -143,7 +143,7 @@ class LIME:
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.image_explainer.explain_instance, kwargs)
         explanation = self.image_explainer.explain_instance(input_data,
                                                             runner,
-                                                            labels=(label,),
+                                                            labels=labels,
                                                             top_labels=top_labels,
                                                             num_features=num_features,
                                                             num_samples=num_samples,
@@ -151,9 +151,10 @@ class LIME:
                                                             )
 
         get_image_and_mask_kwargs = utils.get_kwargs_applicable_to_function(explanation.get_image_and_mask, kwargs)
-        mask = explanation.get_image_and_mask(label, positive_only=positive_only, hide_rest=hide_rest,
-                                              num_features=num_features, **get_image_and_mask_kwargs)[1]
-        return mask
+        masks = [explanation.get_image_and_mask(label, positive_only=positive_only, hide_rest=hide_rest,
+                                                num_features=num_features, **get_image_and_mask_kwargs)[1]
+                 for label in labels]
+        return masks
 
     def _prepare_image_data(self, input_data):
         """
