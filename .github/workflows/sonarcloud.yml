@@ -18,17 +18,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Python info
-        shell: bash -l {0}
-        run: |
-          which python3
-          python3 --version
-      - name: Install dependencies
-        run: python3 -m pip install .[dev]
+      - uses: ./.github/actions/install-python-and-package
       - name: Check style against standards using prospector
         run: prospector --zero-exit --output-format grouped --output-format pylint:pylint-report.txt
       - name: Run unit tests with coverage
