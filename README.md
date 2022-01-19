@@ -50,7 +50,7 @@ DIANNA offers to use simple benchmark datasets for evaluating and comparing the 
 ### ONNX models
 (TODO: Add all links) 
 
-**We work with ONNX!** ONNX is a great unified oen NN standard which can be used to boost reproducible science. Your ONXX model also gives you boost in performance! In case your models are still in another popular DNN format, here are the simple recipies on to convert them:
+**We work with ONNX!** ONNX is a great unified NN standard which can be used to boost reproducible science. Using ONXX for your model also gives you a boost in performance! In case your models are still in another popular DNN format, here are some simple recipes to convert them:
 * pytorch
 * tensorflow
 * keras
