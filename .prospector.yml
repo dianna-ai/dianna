@@ -34,3 +34,8 @@ pep257:
         # The following list excludes things that are irrelevant to the Google style
         D203, D204, D213, D215, D400, D401, D404, D406, D407, D408, D409, D413,
     ]
+
+pyflakes:
+    disable: [
+        F401,  # unused import: already checked by pylint
+    ]
