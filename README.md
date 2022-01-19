@@ -37,7 +37,7 @@ python3 -m pip install -e .
 ### Benchmark datasets
 (TODO: add a sentence and/or image for each and the Zenodo and/or original links and links to notebooks for creating them)
 
-DIANNA offers to use simple benchamrk datasets for evaluating and comparing the XAI methods:
+DIANNA offers to use simple benchmark datasets for evaluating and comparing the XAI methods:
 
 #### Images
 * Binary (2-class) MNIST
