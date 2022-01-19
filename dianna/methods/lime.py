@@ -5,7 +5,7 @@ from dianna import utils
 
 
 class LIME:
-    """LIME implementation as wrapper around https://github.com/marcotcr/lime."""
+    """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
     # axis labels required to be present in input image data
     required_labels = ('batch', 'channels')
 
