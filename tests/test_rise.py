@@ -16,9 +16,9 @@ class RiseOnImages(TestCase):
         """Test if rise runs and outputs the correct shape given some data and a model function."""
         input_data = np.random.random((1, 224, 224, 3))
         # y and x axis labels are not actually mandatory for this test
-        axes_labels = ['batch', 'y', 'x', 'channels']
+        axis_labels = ['batch', 'y', 'x', 'channels']
 
-        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
+        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axis_labels=axis_labels, n_masks=200)
 
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
@@ -27,9 +27,9 @@ class RiseOnImages(TestCase):
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1).astype(np.float32)
         # y and x axis labels are not actually mandatory for this test
-        axes_labels = ['batch', 'channels', 'y', 'x']
+        axis_labels = ['batch', 'channels', 'y', 'x']
 
-        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axes_labels=axes_labels, n_masks=200)
+        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axis_labels=axis_labels, n_masks=200)
 
         assert heatmaps[0].shape == input_data[0].shape[1:]
 
