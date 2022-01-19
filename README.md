@@ -74,8 +74,8 @@ DIANNA supports the following data modalities and XAI methods:
 
 |Data \ XAI|RISE|LIME|KernelSHAP|
 |-----|---|---|---|
-|Images|V|V|V|
-|Text|V|V|planned|
+|Images|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+|Text|:white_check_mark:|:white_check_mark:|planned|
 |Embedding|coming soon|coming soon|coming soon|
 |Timeseries|planned|planned|planned|
 
