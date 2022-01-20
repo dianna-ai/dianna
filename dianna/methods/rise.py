@@ -19,14 +19,14 @@ class RISE:
     required_labels = ('batch', 'channels')
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,  # pylint: disable=too-many-arguments
-                 axes_labels=None, preprocess_function=None):
+                 axis_labels=None, preprocess_function=None):
         """RISE initializer.
 
         Args:
             n_masks (int): Number of masks to generate.
             feature_res (int): Resolution of features in masks.
             p_keep (float): Fraction of image to keep in each mask
-            axes_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
+            axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
@@ -37,7 +37,7 @@ class RISE:
         self.preprocess_function = preprocess_function
         self.masks = None
         self.predictions = None
-        self.axes_labels = axes_labels if axes_labels is not None else []
+        self.axis_labels = axis_labels if axis_labels is not None else []
 
     def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
         """Runs the RISE explainer on text.
@@ -119,7 +119,7 @@ class RISE:
         sentences = [" ".join(t) for t in tokens_masked]
         return sentences
 
-    def explain_image(self, model_or_function, input_data, batch_size=100):
+    def explain_image(self, model_or_function, input_data, labels=None, batch_size=100):
         """Runs the RISE explainer on images.
 
            The model will be called with masked images,
@@ -130,12 +130,13 @@ class RISE:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Image to be explained
             batch_size (int): Batch size to use for running the model.
+            labels (tuple): Labels to be explained
 
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
         # convert data to xarray
-        input_data = utils.to_xarray(input_data, self.axes_labels, RISE.required_labels)
+        input_data = utils.to_xarray(input_data, self.axis_labels, RISE.required_labels)
         # batch axis should always be first
         input_data = utils.move_axis(input_data, 'batch', 0)
         input_data, full_preprocess_function = self._prepare_image_data(input_data)
@@ -157,7 +158,10 @@ class RISE:
         self.predictions = np.concatenate(batch_predictions)
 
         saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
-        return normalize(saliency, self.n_masks, p_keep)
+        result = normalize(saliency, self.n_masks, p_keep)
+        if labels is not None:
+            result = result[list(labels)]
+        return result
 
     def _determine_p_keep_for_images(self, input_data, runner, n_masks=100):
         """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""

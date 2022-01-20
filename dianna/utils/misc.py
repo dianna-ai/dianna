@@ -1,5 +1,6 @@
-
+import onnx
 import xarray as xr
+from onnx_tf.backend import prepare
 from dianna.utils.onnx_runner import SimpleModelRunner
 
 
@@ -37,20 +38,20 @@ def get_kwargs_applicable_to_function(function, kwargs):
             if key in function.__code__.co_varnames}
 
 
-def to_xarray(data, axes_labels, required_labels=None):
+def to_xarray(data, axis_labels, required_labels=None):
     """Converts numpy data and axes labels to an xarray object."""
-    if isinstance(axes_labels, dict):
+    if isinstance(axis_labels, dict):
         # key = axis index, value = label
         # not all axes have to be present in the input, but we need to provide
         # a name for each axis
         # first ensure negative indices are converted to positive ones
-        indices = list(axes_labels.keys())
+        indices = list(axis_labels.keys())
         for index in indices:
             if index < 0:
-                axes_labels[data.ndim + index] = axes_labels.pop(index)
-        labels = [axes_labels[index] if index in axes_labels else f'dim_{index}' for index in range(data.ndim)]
+                axis_labels[data.ndim + index] = axis_labels.pop(index)
+        labels = [axis_labels[index] if index in axis_labels else f'dim_{index}' for index in range(data.ndim)]
     else:
-        labels = list(axes_labels)
+        labels = list(axis_labels)
 
     # check if the required labels are present
     if required_labels is not None:
@@ -87,3 +88,23 @@ def move_axis(data, label, new_position):
     axis_labels.insert(new_position, axis_labels.pop(pos))
     # do the move
     return data.transpose(*axis_labels)
+
+
+def onnx_model_node_loader(model_path):
+    """Onnx model and node labels loader.
+
+    Load onnx model and return the label of its output node and the data type of input node.
+
+    Args:
+        model_path (str): The path to a ONNX model on disk.
+
+    Returns:
+        loaded onnx model and the label of output node.
+    """
+    onnx_model = onnx.load(model_path)  # load onnx model
+    tf_model_rep = prepare(onnx_model, gen_tensor_dict=True)
+    label_input_node = tf_model_rep.inputs[0]
+    label_output_node = tf_model_rep.outputs[0]
+    dtype_input_node = tf_model_rep.tensor_dict[f'{label_input_node}'].dtype
+
+    return onnx_model, dtype_input_node, label_output_node
