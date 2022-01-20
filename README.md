@@ -93,6 +93,11 @@ have a look at the [contribution guidelines](https://github.com/dianna-ai/dianna
 
 ## How to cite us [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592606.svg)](https://doi.org/10.5281/zenodo.5592606)
 
+If you use this package for your scientific work, please consider citing it as:
+
+    Ranguelova, Elena, Bos, Patrick, Liu, Yang, Meijer, Christiaan, & Oostrum, Leon. (2021). dianna (*[VERSION YOU USED]*). Zenodo. https://doi.org/10.5281/zenodo.5592606
+
+See also the [Zenodo page to export citation info to bibtex and many other formats](https://doi.org/10.5281/zenodo.5592606).
 
 ## Credits
 
