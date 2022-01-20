@@ -7,7 +7,6 @@
 | **Other best practices**           | &nbsp; |
 | Static analysis                    | [![workflow scq badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=alert_status)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna) |
 | Coverage                           | [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna) |
-| Documentation                      | [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest) |
 | **GitHub Actions**                 | &nbsp; |
 | Build                              | [![build](https://github.com/dianna-ai/dianna/actions/workflows/build.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/build.yml) |
 | Citation data consistency               | [![cffconvert](https://github.com/dianna-ai/dianna/actions/workflows/cffconvert.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/cffconvert.yml) |
