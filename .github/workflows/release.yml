@@ -13,15 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-python@v2
-        name: Install Python
-        with:
-          python-version: '3.9'
-
-      - name: Upgrade pip and install dependencies
-        run: |
-          python3 -m pip install --upgrade pip setuptools
-          python3 -m pip install .[publishing]
+      - uses: ./.github/actions/install-python-and-package
 
       - name: Build wheel
         run: python setup.py bdist_wheel
@@ -36,15 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-python@v2
-        name: Install Python
-        with:
-          python-version: '3.9'
-
-      - name: Upgrade pip and install dependencies
-        run: |
-          python3 -m pip install --upgrade pip setuptools
-          python3 -m pip install .[publishing]
+      - uses: ./.github/actions/install-python-and-package
 
       - name: Build sdist
         run: python setup.py sdist

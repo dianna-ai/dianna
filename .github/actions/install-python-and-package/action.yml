@@ -1,0 +1,26 @@
+name: "Install Python and DIANNA"
+description: "Installs Python, updates pip and installs DIANNA together with its dependencies."
+inputs:
+  python-version:
+    required: false
+    description: "The Python version to use. Specify major and minor version, e.g. '3.9'."
+    default: "3.9"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: 'pip'
+        cache-dependency-path: setup.cfg
+    - name: Python info
+      shell: bash {0}
+      run: |
+        which python3
+        python3 --version
+    - name: Upgrade pip and install dependencies
+      shell: bash {0}
+      run: |
+        python3 -m pip install --upgrade pip setuptools
+        python3 -m pip install .[dev,publishing]
