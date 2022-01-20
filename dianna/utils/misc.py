@@ -1,3 +1,4 @@
+import inspect
 import onnx
 import xarray as xr
 from onnx_tf.backend import prepare
@@ -28,14 +29,14 @@ def get_function(model_or_function, preprocess_function=None):
 
 
 def get_kwargs_applicable_to_function(function, kwargs):
-    """Returns a subset of `kwargs` of only keyword arguments of `function`.
+    """Returns a subset of `kwargs` of only arguments and keyword arguments of `function`.
 
     Note that if `function` has a `**kwargs`
     argument, this function should not be necessary (provided the function
     handles `**kwargs` robustly).
     """
     return {key: value for key, value in kwargs.items()
-            if key in function.__code__.co_varnames}
+            if key in inspect.getfullargspec(function).args}
 
 
 def to_xarray(data, axis_labels, required_labels=None):
