@@ -71,14 +71,14 @@ And here are how we created our models on the benchmark datasets:
 
 ## Tutorials
 DIANNA supports the following data modalities and XAI methods (the table contains links to the relevant tutorials or plans):
-(TODO: fix links to tutorials in table then ready; add link to roadmap.md)
+(TODO: fix links to tutorials in table then ready; check link to roadmap.md after merging)
 
 |Data \ XAI|RISE|LIME|KernelSHAP|
-|-----|---|---|---|
+|:-----|:---|:---|:---|
 |Images|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|
-|Text|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|planned|
-|Embedding|coming soon|coming soon|coming soon|
-|Timeseries|planned|planned|planned|
+|Text|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|
+|Embedding|[coming soon](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[coming soon](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[coming soon](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|
+|Timeseries|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|
 
 LRP and PatternAttribution also feature in the top 5 of our thoroughly evaluated using objective critera XAI methods (details in coming blog-post). Contributing by adding these and more (new) post-hoc explaianbility methods on ONNX models is very welcome!
 
