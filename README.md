@@ -1,9 +1,12 @@
 [![build](https://github.com/dianna-ai/dianna/actions/workflows/build.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/build.yml)
-[![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
+[![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
+[![supported python versions](https://img.shields.io/pypi/pyversions/dianna)](https://pypi.python.org/project/dianna/)
+
 
 [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592606.svg)](https://doi.org/10.5281/zenodo.5592606)
 [![more badges badge](https://img.shields.io/badge/more-badges-lightgrey)](badges.md)
 
 # DIANNA: Deep Insight And Neural Network Analysis
@@ -14,7 +17,7 @@ Meanwhile, the eXplainable AI (XAI) methods offer some post-hoc interpretability
 
 There are many Open Source Software (OSS) implementations of these methods, alas, supporting a single DNN format and the libraries are known mostly by the AI experts. The DIANNA library supports the best XAI methods in the context of scientific usage providing their OSS implementation based on the ONNX standard and demonstrations on benchmark datasets. Representing visually the captured knowledge by the AI system can become a source of (scientific) insights. 
 
-## Installation [![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/) [![supported python versions](https://img.shields.io/pypi/pyversions/dianna)](https://pypi.python.org/project/dianna/)
+## Installation 
 
 To install DIANNA directly from the GitHub repository, do:
 
@@ -78,22 +81,22 @@ DIANNA supports the following data modalities and XAI methods (the table contain
 
 LRP and PatternAttribution also feature in the top 5 of our thoroughly evaluated using objective critera XAI methods (details in coming blog-post). Contributing by adding these and more (new) post-hoc explaianbility methods on ONNX models is very welcome!
 
-## Reference documentation [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
+## Reference documentation 
 
-For detailed information on using specific functions in DIANNA, please visit the [Sphinx documentation page hosted at Readthedocs](https://dianna.readthedocs.io/en/latest).
+For detailed information on using specific DIANNA functions, please visit the [Sphinx documentation page hosted at Readthedocs](https://dianna.readthedocs.io/en/latest).
 
 ## Contributing
 
 If you want to contribute to the development of DIANNA,
 have a look at the [contribution guidelines](https://github.com/dianna-ai/dianna/blob/main/CONTRIBUTING.md).
 
-## How to cite us [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592606.svg)](https://doi.org/10.5281/zenodo.5592606)
+## How to cite us 
 
 If you use this package for your scientific work, please consider citing it as:
 
     Ranguelova, Elena, Bos, Patrick, Liu, Yang, Meijer, Christiaan, & Oostrum, Leon. (2021). dianna (*[VERSION YOU USED]*). Zenodo. https://doi.org/10.5281/zenodo.5592606
 
-See also the [Zenodo page] (https://doi.org/10.5281/zenodo.5592606) for exporting the citation to BibTteX and other formats.
+See also the [Zenodo page](https://doi.org/10.5281/zenodo.5592606) for exporting the citation to BibTteX and other formats.
 
 ## Credits
 
