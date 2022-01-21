@@ -97,7 +97,7 @@ If you use this package for your scientific work, please consider citing it as:
 
     Ranguelova, Elena, Bos, Patrick, Liu, Yang, Meijer, Christiaan, & Oostrum, Leon. (2021). dianna (*[VERSION YOU USED]*). Zenodo. https://doi.org/10.5281/zenodo.5592606
 
-See also the [Zenodo page to export citation info to bibtex and many other formats](https://doi.org/10.5281/zenodo.5592606).
+See also the [Zenodo page] (https://doi.org/10.5281/zenodo.5592606) for exporting the citation to BibTteX and other formats.
 
 ## Credits
 
