@@ -70,13 +70,13 @@ And here are how we created our models on the benchmark datasets:
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
 
 ## Tutorials
-DIANNA supports the following data modalities and XAI methods:
-(TODO: add links to tutorials in table?)
+DIANNA supports the following data modalities and XAI methods (the table contains links to the relevant tutorials or plans):
+(TODO: fix links to tutorials in table then ready; add link to roadmap.md)
 
 |Data \ XAI|RISE|LIME|KernelSHAP|
 |-----|---|---|---|
-|Images|:white_check_mark:|:white_check_mark:|:white_check_mark:|
-|Text|:white_check_mark:|:white_check_mark:|planned|
+|Images|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|
+|Text|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|planned|
 |Embedding|coming soon|coming soon|coming soon|
 |Timeseries|planned|planned|planned|
 
