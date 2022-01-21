@@ -6,7 +6,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5801485.svg)](https://zenodo.org/record/5801485)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592607.svg)](https://zenodo.org/record/5592607)
 [![more badges badge](https://img.shields.io/badge/more-badges-lightgrey)](badges.md)
 
 # DIANNA: Deep Insight And Neural Network Analysis
@@ -94,9 +94,9 @@ have a look at the [contribution guidelines](https://github.com/dianna-ai/dianna
 
 If you use this package for your scientific work, please consider citing it as:
 
-    Ranguelova, Elena, Bos, Patrick, Liu, Yang, Meijer, Christiaan, & Oostrum, Leon. (2021). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5801485
+    Ranguelova, Elena, Bos, Patrick, Liu, Yang, Meijer, Christiaan, & Oostrum, Leon. (2021). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592607
 
-See also the [Zenodo page](https://zenodo.org/record/5801485) for exporting the citation to BibTteX and other formats.
+See also the [Zenodo page](https://zenodo.org/record/5592607) for exporting the citation to BibTteX and other formats.
 
 ## Credits
 
