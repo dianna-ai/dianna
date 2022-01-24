@@ -23,4 +23,4 @@ runs:
       shell: bash {0}
       run: |
         python3 -m pip install --upgrade pip setuptools
-        python3 -m pip install .[dev,publishing]
+        python3 -m pip install .[dev,publishing,notebooks]
