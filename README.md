@@ -10,12 +10,21 @@
 [![more badges badge](https://img.shields.io/badge/more-badges-lightgrey)](badges.md)
 
 # DIANNA: Deep Insight And Neural Network Analysis
+(TO DO: main points and then expand)
 
-Modern scientific challenges are often tackled with (Deep) Neural Networks (DNN). Despite their high predictive accuracy, DNNs lack inherent explainability. Many DNN users, especially scientists, do not harvest DNNs power because of lack of trust and understanding of their working. 
+## Why DIANNA? 
+(TO DO: edit the proposal text into something clear and simpler)
+Issues:
+1.	The properties of the heatmaps are not studied and the human interpretation is intertwined with the XAI’s. Suitable datasets are lacking: the popular MNIST benchmark is too complex for the task (10 classes and no structural content variation). The XAI literature does not consider simple scientific “benchmarks”.
+2.	Which is the “best” explainability method? There is no agreement in the XAI community [23]. The libraries offer different subset of XAI methods not chosen systematically.
+3.	The available OSS (not for all methods) implementations support a single DNN format/framework, e.g. iNNvestigate supports only Keras, while Captum supports PyTorch. 
+4.	Not many demonstrators of XAI exist, except from LRP and RISE
 
-Meanwhile, the eXplainable AI (XAI) methods offer some post-hoc interpretability and insight into the DNN reasoning. This is done by quantifying the relevance of individual features (image pixels, words in text, etc.) with respect to the prediction. These "relevance heatmaps" indicate how the network has reached its decision directly in the input modality (images, text, speech etc.) of the data. 
-
-There are many Open Source Software (OSS) implementations of these methods, alas, supporting a single DNN format and the libraries are known mostly by the AI experts. The DIANNA library supports the best XAI methods in the context of scientific usage providing their OSS implementation based on the ONNX standard and demonstrations on benchmark datasets. Representing visually the captured knowledge by the AI system can become a source of (scientific) insights. 
+Solutions:
+1.	To demonstrate the usefulness and properties of the heatmaps on an intuitive level we propose: simple geometrical, e.g. Triangles and Squares Rotation and Scaling (Figure 4, Left) [I] and simple scientific– subset of LeafSnap (Figure 4, Right) datasets. Tree species classification on the LeafSnap data is a good example of problem tackled with both classical Computer Vision [24] and the superior DL method [25].
+2.	Recently, several systematically defined criteria for evaluation of the XAI approaches have been proposed with LIME analyzed as example [12]. Analysis of the state-of-the-art XAI methods will highlight the best.
+3.	DIANNA will be a library conforming with the ONNX standard [11]. There are many ONNX tools available as OSS including the ONNX model zoo and ONNX converters from Keras and TensorFlow. PyTorch also offers built-in PyTorch to ONNX export.
+4.	A web demonstrator will be created in a next phase of the project (due to current budget cuts). 
 
 ## Installation 
 
@@ -34,15 +43,15 @@ python3 -m pip install -e .
 ```
 
 
-## Benchmark datasets
-(TODO: add a sentence and/or image for each and the Zenodo and/or original links and links to notebooks for creating them)
-
-DIANNA offers to use simple benchmark datasets for evaluating and comparing the XAI methods:
+## Datasets
+DIANNA comes with simple datasets. Their main goal is to provide intuitive insight to the working of the XAI methods. They can be used as benchmakrs for evaluation and comparision of exsisting and new XAI methods:
 
 ### Images
-* Binary (2-class) MNIST
-* Simple Geometric (triangles and circles)
-* Simple Scientific (LeafSnap30)
+|Dataset|Description|Examples|Generation|
+|:-----|:----|:---|:----|
+|Binary MNIST <img width="20" alt="BinaryMNIST Logo" src="https://user-images.githubusercontent.com/3244249/150810986-8e94f1f7-0647-4ce4-ab0e-474b092480a5.png">| Greyscale images of the digits "1" and "0" - a 2 class subset from the famous [MNIST dataset](http://yann.lecun.com/exdb/mnist/) for handwritten digit classification. |<img width="120" alt="BinaryMNIST" src="https://user-images.githubusercontent.com/3244249/150808267-3d27eae0-78f2-45f8-8569-cb2561f2c2e9.png">| [Binary MNIST dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/MNIST)|
+|[Simple Geometric (circles and triangles)](https://doi.org/10.5281/zenodo.5012824) <img width="20" alt="Simple Geometric Logo" src="https://user-images.githubusercontent.com/3244249/150808842-d35d741e-294a-4ede-bbe9-58e859483589.png"> | Images of circules and triangles for 2 class geometric shape classificaiton. The shapes of varying size and orientation and the background have varying uniform gray levels.  | <img width="130" alt="SimpleGeometric" src="https://user-images.githubusercontent.com/3244249/150808125-e1576237-47fa-4e51-b01e-180904b7c7f6.png">| [Simple geometric shapes dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/geometric_shapes) | 
+|[Simple Scientific (LeafSnap30)](10.5281/zenodo.5061352)<img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/150815639-2da560d4-8b26-4eeb-9ab4-dabf221a264a.png"> | Color images of tree leaves - a 30 class post-processed subset from the LeafSnap dataset for automatic identification of North American tree species.|<img width="600" alt="LeafSnap" src="https://user-images.githubusercontent.com/3244249/150804246-f714e517-641d-48b2-af26-2f04166870d6.png">| [LeafSnap30 dataset generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/dataset_preparation/LeafSnap/)|
 
 ### Text
 * Movie reviews treebank
