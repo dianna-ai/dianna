@@ -1,4 +1,4 @@
----
+<!--
 title: 'DIANNA: Deep Insight And Neural Network Analysis'
 tags:
   - Python
@@ -25,7 +25,7 @@ authors:
 affiliations:
  - name: Netherlands eScience Center, Amsterdam, the Netherlands
    index: 1
----
+-->
 
 [![build](https://github.com/dianna-ai/dianna/actions/workflows/build.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/build.yml)
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
