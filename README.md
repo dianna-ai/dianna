@@ -121,7 +121,7 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 |Timeseries|[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|
 |Tabular |[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|
 
-LRP and PatternAttribution also feature in the top 5 of our thoroughly evaluated XAI methods using objective critera (details in coming blog-post). Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!
+[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective critera (details in coming blog-post). Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!
 
 ## Reference documentation 
 
