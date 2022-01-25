@@ -28,25 +28,37 @@ affiliations:
 ---
 
 [![build](https://github.com/dianna-ai/dianna/actions/workflows/build.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/build.yml)
-[![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
+[![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
+[![supported python versions](https://img.shields.io/pypi/pyversions/dianna)](https://pypi.python.org/project/dianna/)
+
+
+[![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592607.svg)](https://zenodo.org/record/5592607)
 [![more badges badge](https://img.shields.io/badge/more-badges-lightgrey)](badges.md)
 
 # DIANNA: Deep Insight And Neural Network Analysis
+<!-- TODO: add main points and then expand, see issue https://github.com/dianna-ai/dianna/issues/137 -->
 
-Modern scientific challenges are often tackled with (Deep) Neural Networks (DNN). Despite their high predictive accuracy, DNNs lack inherent explainability. Many DNN users, especially scientists, do not harvest DNNs power because of lack of trust and understanding of their working. 
+## Why DIANNA? 
+<!-- TO DO: edit the proposal text into something clear and simpler -->
 
-Meanwhile, the eXplainable AI (XAI) methods offer some post-hoc interpretability and insight into the DNN reasoning. This is done by quantifying the relevance of individual features (image pixels, words in text, etc.) with respect to the prediction. These "relevance heatmaps" indicate how the network has reached its decision directly in the input modality (images, text, speech etc.) of the data. 
+Issues:
+1.	The properties of the heatmaps are not studied and the human interpretation is intertwined with the XAI’s. Suitable datasets are lacking: the popular MNIST benchmark is too complex for the task (10 classes and no structural content variation). The XAI literature does not consider simple scientific “benchmarks”.
+2.	Which is the “best” explainability method? There is no agreement in the XAI community [23]. The libraries offer different subsets of XAI methods not chosen systematically.
+3.	The available OSS (not for all methods) implementations support a single DNN format/framework, e.g. iNNvestigate supports only Keras, while Captum supports PyTorch. 
+4.	Not many demonstrators of XAI exist, except from LRP and RISE.
 
-There are many Open Source Software (OSS) implementations of these methods, alas, supporting a single DNN format and the libraries are known mostly by the AI experts. The DIANNA library supports the best XAI methods in the context of scientific usage providing their OSS implementation based on the ONNX standard and demonstrations on benchmark datasets. Representing visually the captured knowledge by the AI system can become a source of (scientific) insights. 
+Solutions:
+1.	To demonstrate the usefulness and properties of the heatmaps on an intuitive level we propose: simple geometrical, e.g. Triangles and Squares Rotation and Scaling (Figure 4, Left) [I] and simple scientific– subset of LeafSnap (Figure 4, Right) datasets. Tree species classification on the LeafSnap data is a good example of problem tackled with both classical Computer Vision [24] and the superior DL method [25].
+2.	Recently, several systematically defined criteria for evaluation of the XAI approaches have been proposed with LIME analyzed as example [12]. Analysis of the state-of-the-art XAI methods will highlight the best.
+3.	DIANNA will be a library conforming with the ONNX standard [11]. There are many ONNX tools available as OSS including the ONNX model zoo and ONNX converters from Keras and TensorFlow. PyTorch also offers built-in PyTorch to ONNX export.
+4.	A web demonstrator will be created in a next phase of the project (due to current budget cuts). 
 
-## How to use dianna
+## Installation 
 
-The project setup is documented in [project_setup.md](https://github.com/dianna-ai/dianna/blob/main/project_setup.md). Feel free to remove this document (and/or the link to this document) if you don't need it.
-
-## Installation [![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
-
-To install dianna directly from the GitHub repository, do:
+To install DIANNA directly from the GitHub repository, do:
 
 ```console
 python3 -m pip install git+https://github.com/dianna-ai/dianna.git
@@ -60,16 +72,72 @@ cd dianna
 python3 -m pip install -e .
 ```
 
-## Documentation [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
 
+## Datasets
+DIANNA comes with simple datasets. Their main goal is to provide intuitive insight into the working of the XAI methods. They can be used as benchmarks for evaluation and comparison of existing and new XAI methods.
+
+### Images
+|Dataset|Description|Examples|Generation|
+|:-----|:----|:---|:----|
+|Binary MNIST | Greyscale images of the digits "1" and "0" - a 2-class subset from the famous [MNIST dataset](http://yann.lecun.com/exdb/mnist/) for handwritten digit classification. |<img width="120" alt="BinaryMNIST" src="https://user-images.githubusercontent.com/3244249/150808267-3d27eae0-78f2-45f8-8569-cb2561f2c2e9.png">| [Binary MNIST dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/MNIST)|
+|[Simple Geometric (circles and triangles)](https://doi.org/10.5281/zenodo.5012824) <img width="20" alt="Simple Geometric Logo" src="https://user-images.githubusercontent.com/3244249/150808842-d35d741e-294a-4ede-bbe9-58e859483589.png"> | Images of circles and triangles for 2-class geometric shape classificaiton. The shapes of varying size and orientation and the background have varying uniform gray levels.  | <img width="130" alt="SimpleGeometric" src="https://user-images.githubusercontent.com/3244249/150808125-e1576237-47fa-4e51-b01e-180904b7c7f6.png">| [Simple geometric shapes dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/geometric_shapes) | 
+|[Simple Scientific (LeafSnap30)](https://zenodo.org/record/5061353/)<img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/150815639-2da560d4-8b26-4eeb-9ab4-dabf221a264a.png"> | Color images of tree leaves - a 30-class post-processed subset from the LeafSnap dataset for automatic identification of North American tree species.|<img width="600" alt="LeafSnap" src="https://user-images.githubusercontent.com/3244249/150804246-f714e517-641d-48b2-af26-2f04166870d6.png">| [LeafSnap30 dataset generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/dataset_preparation/LeafSnap/)|
+
+### Text
+|Dataset|Description|Examples|Generation|
+|:-----|:----|:---|:----|
+| [Stanford sentiment treebank](https://nlp.stanford.edu/sentiment/index.html)|Dataset for predicting the sentiment, positive or negative, of movie reviews. | _This movie was actually neither that funny, nor super witty._|[Sentiment treebank](https://nlp.stanford.edu/sentiment/treebank.html)|
+
+## ONNX models
+<!-- TODO: Add all links, see issue https://github.com/dianna-ai/dianna/issues/135 -->
+
+**We work with ONNX!** ONNX is a great unified neural network standard which can be used to boost reproducible science. Using ONXX for your model also gives you a boost in performance! In case your models are still in another popular DNN (deep neural network) format, here are some simple recipes to convert them:
+* pytorch
+* tensorflow
+* keras
+* scikit-learn
+
+And here are links to notebooks showing how we created our models on the benchmark datasets:
+
+### Images
+* Binary MNIST model
+* Simple Geometric model
+* Simple Scientific model
+
+### Text
+* Movie reviews model
+
+**_We envision the birth of the ONNX Scientific models zoo soon..._**
+
+## Tutorials
+DIANNA supports the following data modalities and XAI methods (the table contains links to the relevant tutorials or plans):
+<!-- TODO: fix links to tutorials in table then ready; check link to roadmap.md after merging; see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
+
+|Data \ XAI|RISE|LIME|KernelSHAP|
+|:-----|:---|:---|:---|
+|Images|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|
+|Text|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|
+|Embedding|[coming soon](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[coming soon](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[coming soon](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|
+|Timeseries|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|
+
+LRP and PatternAttribution also feature in the top 5 of our thoroughly evaluated XAI methods using objective critera (details in coming blog-post). Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!
+
+## Reference documentation 
+
+For detailed information on using specific DIANNA functions, please visit the [Sphinx documentation page hosted at Readthedocs](https://dianna.readthedocs.io/en/latest).
 
 ## Contributing
 
-If you want to contribute to the development of dianna,
+If you want to contribute to the development of DIANNA,
 have a look at the [contribution guidelines](https://github.com/dianna-ai/dianna/blob/main/CONTRIBUTING.md).
 
-## How to cite us [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592606.svg)](https://doi.org/10.5281/zenodo.5592606)
+## How to cite us 
 
+If you use this package for your scientific work, please consider citing it as:
+
+    Ranguelova, Elena, Bos, Patrick, Liu, Yang, Meijer, Christiaan, & Oostrum, Leon. (2021). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592607
+
+See also the [Zenodo page](https://zenodo.org/record/5592607) for exporting the citation to BibTteX and other formats.
 
 ## Credits
 
