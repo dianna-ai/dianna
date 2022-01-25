@@ -46,15 +46,15 @@ affiliations:
 
 Issues:
 1.	The properties of the heatmaps are not studied and the human interpretation is intertwined with the XAI’s. Suitable datasets are lacking: the popular MNIST benchmark is too complex for the task (10 classes and no structural content variation). The XAI literature does not consider simple scientific “benchmarks”.
-2.	Which is the “best” explainability method? There is no agreement in the XAI community [23]. The libraries offer different subsets of XAI methods not chosen systematically.
+2.	Which is the “best” explainability method? There is no agreement in the XAI community. The libraries offer different subsets of XAI methods not chosen systematically.
 3.	The available OSS (not for all methods) implementations support a single DNN format/framework, e.g. iNNvestigate supports only Keras, while Captum supports PyTorch. 
 4.	Not many demonstrators of XAI exist, except from LRP and RISE.
 
 Solutions:
-1.	To demonstrate the usefulness and properties of the heatmaps on an intuitive level we propose: simple geometrical, e.g. Triangles and Squares Rotation and Scaling (Figure 4, Left) [I] and simple scientific– subset of LeafSnap (Figure 4, Right) datasets. Tree species classification on the LeafSnap data is a good example of problem tackled with both classical Computer Vision [24] and the superior DL method [25].
-2.	Recently, several systematically defined criteria for evaluation of the XAI approaches have been proposed with LIME analyzed as example [12]. Analysis of the state-of-the-art XAI methods will highlight the best.
-3.	DIANNA will be a library conforming with the ONNX standard [11]. There are many ONNX tools available as OSS including the ONNX model zoo and ONNX converters from Keras and TensorFlow. PyTorch also offers built-in PyTorch to ONNX export.
-4.	A web demonstrator will be created in a next phase of the project (due to current budget cuts). 
+1.	To demonstrate the usefulness and properties of the heatmaps on an intuitive level we propose: simple geometrical and simple scientific– subset of LeafSnap datasets. Tree species classification on the LeafSnap data is a good example of problem tackled with both classical Computer Vision and the superior DL method.
+2.	Recently, several systematically defined criteria for evaluation of the XAI approaches have been proposed with LIME analyzed as example. Analysis of the state-of-the-art XAI methods will highlight the best.
+3.	DIANNA is a library conforming with the ONNX standard. There are many ONNX tools available as OSS including the ONNX model zoo and ONNX converters from Keras and TensorFlow. PyTorch also offers built-in PyTorch to ONNX export.
+4.	A web demonstrator will be created in a next phase of the project. 
 
 ## Installation 
 
