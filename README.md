@@ -116,9 +116,9 @@ DIANNA supports the following data modalities and XAI methods (the table contain
 |Data \ XAI|RISE|LIME|KernelSHAP|
 |:-----|:---|:---|:---|
 |Images|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|
-|Text|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|
-|Embedding|[coming soon](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[coming soon](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[coming soon](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|
-|Timeseries|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/94-improve-readme/ROADMAP.md)|
+|Text|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|
+|Embedding|[coming soon](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|[coming soon](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|[coming soon](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|
+|Timeseries|[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|[planned](https://github.com/dianna-ai/dianna/blob/main/ROADMAP.md)|
 
 LRP and PatternAttribution also feature in the top 5 of our thoroughly evaluated XAI methods using objective critera (details in coming blog-post). Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!
 
