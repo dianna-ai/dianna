@@ -10,10 +10,11 @@
 [![more badges badge](https://img.shields.io/badge/more-badges-lightgrey)](badges.md)
 
 # DIANNA: Deep Insight And Neural Network Analysis
-(TO DO: main points and then expand)
+<!-- TODO: add main points and then expand, see issue https://github.com/dianna-ai/dianna/issues/137 -->
 
 ## Why DIANNA? 
-(TO DO: edit the proposal text into something clear and simpler)
+<!-- TO DO: edit the proposal text into something clear and simpler -->
+
 Issues:
 1.	The properties of the heatmaps are not studied and the human interpretation is intertwined with the XAI’s. Suitable datasets are lacking: the popular MNIST benchmark is too complex for the task (10 classes and no structural content variation). The XAI literature does not consider simple scientific “benchmarks”.
 2.	Which is the “best” explainability method? There is no agreement in the XAI community [23]. The libraries offer different subset of XAI methods not chosen systematically.
@@ -57,7 +58,7 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 * Movie reviews treebank
 
 ## ONNX models
-(TODO: Add all links) 
+<!-- TODO: Add all links, see issue https://github.com/dianna-ai/dianna/issues/135 -->
 
 **We work with ONNX!** ONNX is a great unified NN standard which can be used to boost reproducible science. Using ONXX for your model also gives you a boost in performance! In case your models are still in another popular DNN format, here are some simple recipes to convert them:
 * pytorch
@@ -79,7 +80,7 @@ And here are how we created our models on the benchmark datasets:
 
 ## Tutorials
 DIANNA supports the following data modalities and XAI methods (the table contains links to the relevant tutorials or plans):
-(TODO: fix links to tutorials in table then ready; check link to roadmap.md after merging)
+<!-- TODO: fix links to tutorials in table then ready; check link to roadmap.md after merging; see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
 
 |Data \ XAI|RISE|LIME|KernelSHAP|
 |:-----|:---|:---|:---|
