@@ -11,8 +11,15 @@ class KernelSHAP:
     # axis labels required to be present in input image data
     required_labels = ('batch', 'channels')
 
-    def __init__(self):
-        """Kernelshap initializer."""
+    def __init__(self, axis_labels=None):
+        """Kernelshap initializer.
+
+        Arguments:
+            axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
+                                               If a list, the name of each axis where the index
+                                               in the list is the axis index
+        """
+        self.axis_labels = axis_labels if axis_labels is not None else []
 
     @staticmethod
     def _segment_image(
@@ -87,9 +94,6 @@ class KernelSHAP:
                                square/cubic.
             sigma (float): Width of Gaussian smoothing kernel for pre-processing for
                            each dimension of the image. Zero means no smoothing.
-            axes_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
-                                               If a list, the name of each axis where the index
-                                               in the list is the axis index
 
         Other keyword arguments: see the documentation of kernel explainer of SHAP
                                  (also in function "shap_values") via:

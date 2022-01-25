@@ -18,14 +18,14 @@ class RISE:
     # axis labels required to be present in input image data
     required_labels = ('batch', 'channels')
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,  # pylint: disable=too-many-arguments
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=None,  # pylint: disable=too-many-arguments
                  axis_labels=None, preprocess_function=None):
         """RISE initializer.
 
         Args:
             n_masks (int): Number of masks to generate.
             feature_res (int): Resolution of features in masks.
-            p_keep (float): Fraction of image to keep in each mask
+            p_keep (float): Fraction of image to keep in each mask (Default: auto-tune this value).
             axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
