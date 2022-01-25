@@ -1,3 +1,32 @@
+---
+title: 'DIANNA: Deep Insight And Neural Network Analysis'
+tags:
+  - Python
+  - explainable AI
+  - deep neural networks
+  - ONNX
+  - benchmark sets
+authors:
+  - name: Elena Ranguelova^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-9834-1756
+    affiliation: 1
+  - name: Patrick Bos^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-6033-960X
+    affiliation: 1
+  - name: Yang Liu^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-1966-8460
+    affiliation: 1
+  - name: Christiaan Meijer^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-5529-5761
+    affiliation: 1
+  - name: Leon Oostrum^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0001-8724-8372
+    affiliation: 1
+affiliations:
+ - name: Netherlands eScience Center, Amsterdam, the Netherlands
+   index: 1
+---
+
 [![build](https://github.com/dianna-ai/dianna/actions/workflows/build.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/build.yml)
 [![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
