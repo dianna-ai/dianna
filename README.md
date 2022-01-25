@@ -55,7 +55,9 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 |[Simple Scientific (LeafSnap30)](10.5281/zenodo.5061352)<img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/150815639-2da560d4-8b26-4eeb-9ab4-dabf221a264a.png"> | Color images of tree leaves - a 30 class post-processed subset from the LeafSnap dataset for automatic identification of North American tree species.|<img width="600" alt="LeafSnap" src="https://user-images.githubusercontent.com/3244249/150804246-f714e517-641d-48b2-af26-2f04166870d6.png">| [LeafSnap30 dataset generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/dataset_preparation/LeafSnap/)|
 
 ### Text
-* Movie reviews treebank
+|Dataset|Description|Examples|Generation|
+|:-----|:----|:---|:----|
+| [Stanford sentiment treebank](https://nlp.stanford.edu/sentiment/index.html)|Dataset for predicting the sentiment, positive or negative, of movie reviews. | _This movie was actually neither that funny, nor super witty._|[Sentiment treebank](https://nlp.stanford.edu/sentiment/treebank.html)|
 
 ## ONNX models
 <!-- TODO: Add all links, see issue https://github.com/dianna-ai/dianna/issues/135 -->
