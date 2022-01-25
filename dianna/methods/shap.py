@@ -14,10 +14,10 @@ class KernelSHAP:
     def __init__(self, axis_labels=None):
         """Kernelshap initializer.
 
-           Arguments:
-           axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
-                                              If a list, the name of each axis where the index
-                                              in the list is the axis index
+        Arguments:
+            axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
+                                               If a list, the name of each axis where the index
+                                               in the list is the axis index
         """
         self.axis_labels = axis_labels if axis_labels is not None else []
 
