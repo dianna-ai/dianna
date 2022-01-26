@@ -60,6 +60,7 @@ class KernelSHAP:
         self,
         model,
         input_data,
+        labels=(0,),
         nsamples="auto",
         background=None,
         n_segments=100,
@@ -82,6 +83,7 @@ class KernelSHAP:
                                      example. The input dimension must be
                                      [batch, height, width, color_channels] or
                                      [batch, color_channels, height, width] (see axes_labels)
+            labels (tuple): Indices of classes to be explained
             nsamples ("auto" or int): Number of times to re-evaluate the model when
                                       explaining each prediction. More samples lead
                                       to lower variance estimates of the SHAP values.
@@ -106,6 +108,7 @@ class KernelSHAP:
         """
         self.onnx_model, self.input_node_dtype,\
             self.output_node = utils.onnx_model_node_loader(model)
+        self.labels = labels
         self.axes_labels = axes_labels if axes_labels is not None else []
         self.input_data = self._prepare_image_data(input_data)
         self.background = background
@@ -125,13 +128,13 @@ class KernelSHAP:
 
         # call the Kernel SHAP explainer
         explainer = shap.KernelExplainer(
-            self._runner, np.zeros((1, n_segments)))
+            self._runner, np.zeros((len(self.labels), n_segments)))
 
         with warnings.catch_warnings():
             # avoid warnings due to version conflicts
             warnings.simplefilter("ignore")
             shap_values = explainer.shap_values(
-                np.ones((1, n_segments)), nsamples=nsamples
+                np.ones((len(self.labels), n_segments)), nsamples=nsamples
             )
 
         return shap_values, self.image_segments
