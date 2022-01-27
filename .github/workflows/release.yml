@@ -14,6 +14,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - uses: ./.github/actions/install-python-and-package
+        with:
+          extras-require: publishing
 
       - name: Build wheel
         run: python setup.py bdist_wheel
@@ -29,6 +31,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - uses: ./.github/actions/install-python-and-package
+        with:
+          extras-require: publishing
 
       - name: Build sdist
         run: python setup.py sdist
