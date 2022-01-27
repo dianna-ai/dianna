@@ -18,14 +18,14 @@ class RISE:
     # axis labels required to be present in input image data
     required_labels = ('batch', 'channels')
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,  # pylint: disable=too-many-arguments
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=None,  # pylint: disable=too-many-arguments
                  axis_labels=None, preprocess_function=None):
         """RISE initializer.
 
         Args:
             n_masks (int): Number of masks to generate.
             feature_res (int): Resolution of features in masks.
-            p_keep (float): Fraction of image to keep in each mask
+            p_keep (float): Fraction of image to keep in each mask (Default: auto-tune this value).
             axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
@@ -57,12 +57,12 @@ class RISE:
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         input_tokens = np.asarray(model_or_function.tokenizer(input_text))
         text_length = len(input_tokens)
-        p_keep = self._determine_p_keep_for_text(input_tokens, runner) if self.p_keep is None else self.p_keep
+        active_p_keep = self._determine_p_keep_for_text(input_tokens, runner) if self.p_keep is None else self.p_keep
         input_shape = (text_length,)
-        self.masks = self._generate_masks_for_text(input_shape, p_keep,
+        self.masks = self._generate_masks_for_text(input_shape, active_p_keep,
                                                    self.n_masks)  # Expose masks for to make user inspection possible
         sentences = self._create_masked_sentences(input_tokens, self.masks)
-        saliencies = self._get_saliencies(runner, sentences, text_length, batch_size, p_keep)
+        saliencies = self._get_saliencies(runner, sentences, text_length, batch_size, active_p_keep)
         return self._reshape_result(input_tokens, labels, saliencies)
 
     def _determine_p_keep_for_text(self, input_data, runner, n_masks=100):
@@ -142,12 +142,12 @@ class RISE:
         input_data, full_preprocess_function = self._prepare_image_data(input_data)
         runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
 
-        p_keep = self._determine_p_keep_for_images(input_data, runner) if self.p_keep is None else self.p_keep
+        active_p_keep = self._determine_p_keep_for_images(input_data, runner) if self.p_keep is None else self.p_keep
 
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
         # Expose masks for to make user inspection possible
-        self.masks = self.generate_masks_for_images(img_shape, p_keep, self.n_masks)
+        self.masks = self.generate_masks_for_images(img_shape, active_p_keep, self.n_masks)
 
         # Make sure multiplication is being done for correct axes
         masked = input_data * self.masks
@@ -158,7 +158,7 @@ class RISE:
         self.predictions = np.concatenate(batch_predictions)
 
         saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
-        result = normalize(saliency, self.n_masks, p_keep)
+        result = normalize(saliency, self.n_masks, active_p_keep)
         if labels is not None:
             result = result[list(labels)]
         return result

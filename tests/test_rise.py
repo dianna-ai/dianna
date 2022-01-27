@@ -18,7 +18,7 @@ class RiseOnImages(TestCase):
         # y and x axis labels are not actually mandatory for this test
         axis_labels = ['batch', 'y', 'x', 'channels']
 
-        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axis_labels=axis_labels, n_masks=200)
+        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axis_labels=axis_labels, n_masks=200, p_keep=.5)
 
         assert heatmaps[0].shape == input_data[0].shape[:2]
 
@@ -29,7 +29,7 @@ class RiseOnImages(TestCase):
         # y and x axis labels are not actually mandatory for this test
         axis_labels = ['batch', 'channels', 'y', 'x']
 
-        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axis_labels=axis_labels, n_masks=200)
+        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axis_labels=axis_labels, n_masks=200, p_keep=.5)
 
         assert heatmaps[0].shape == input_data[0].shape[1:]
 
@@ -59,7 +59,7 @@ class RiseOnText(TestCase):
         expected_word_indices = [0, 5, 7, 11]
         expected_positive_scores = [0.3295266, 0.3521292, 0.023648001, 0.3347813]
 
-        positive_explanation = dianna.explain_text(runner, review, labels=(1, 0), method='RISE')[0]
+        positive_explanation = dianna.explain_text(runner, review, labels=(1, 0), method='RISE', p_keep=.5)[0]
 
         words = [element[0] for element in positive_explanation]
         word_indices = [element[1] for element in positive_explanation]
