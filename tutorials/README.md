@@ -6,4 +6,4 @@ Click one of the links in the table to directly go to a notebook:
 |Data \ XAI|RISE|LIME|KernelSHAP|
 |:-----|:---|:---|:---|
 |Images|[]()|[link](lime_images.ipynb)|[]()|
-|Text|[]()|[]()|[]()|
+|Text|[]()|[link](lime_text.ipynb)|[]()|
