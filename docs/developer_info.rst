@@ -28,10 +28,50 @@ Development install
    python3 -m pip install --no-cache-dir --editable .[dev]
 
 Afterwards check that the install directory is present in the ``PATH`` environment variable.
-It's also possible to use `conda` for maintaining virtual environments; in that case you can still install DIANNA and dependencies with `pip`.
+It's also possible to use ``conda`` for maintaining virtual environments; in that case you can still install DIANNA and dependencies with ``pip``.
+
+Dependencies and Package management
+-----------------------------------
+
+DIANNA aims to support all Python 3 minor versions that are still
+actively maintained, currently:
+
+-  3.7
+-  3.8
+-  3.9
+-  3.10 is still missing pending the availibility of onnx-tf in 3.10.
+
+Add or remove Python versions based on availability of dependencies in
+all versions. See `the
+guide <https://guide.esciencecenter.nl/#/best_practices/language_guides/python>`__
+for more information about Python versions.
+
+When adding new dependencies, make sure to do so as follows:
+
+-  Runtime dependencies should be added to ``setup.cfg`` in the
+   ``install_requires`` list under ``[options]``.
+-  Development dependencies should be added to ``setup.cfg`` in one of
+   the lists under ``[options.extras_require]``.
+
+Testing and code coverage
+-------------------------
+
+-  Tests should be put in the ``tests`` folder.
+-  Take a look at the existing tests and add your own meaningful tests
+   (file: ``test_my_module.py``) when you add a feature.
+-  The testing framework used is `PyTest <https://pytest.org>`__
+-  The project uses `GitHub action
+   workflows <https://docs.github.com/en/actions>`__ to automatically
+   run tests on GitHub infrastructure against multiple Python versions
+
+   -  Workflows can be found in
+      `.github/workflows <https:://github.com/dianna-ai/dianna/.github/workflows/>`__
+
+-  `Relevant section in the
+   guide <https://guide.esciencecenter.nl/#/best_practices/language_guides/python?id=testing>`__
 
 Running the tests
------------------
+~~~~~~~~~~~~~~~~~
 
 There are two ways to run tests.
 
@@ -42,14 +82,14 @@ development tools installed:
 
    pytest -v
 
-The second is to use `tox`, which must be installed separately (e.g. with `pip install tox`), but then builds the necessary virtual environments itself by simply running:
+The second is to use ``tox``, which must be installed separately (e.g. with ``pip install tox``), but then builds the necessary virtual environments itself by simply running:
 
 .. code:: shell
 
    tox
 
-Testing with `tox` allows for keeping the testing environment separate from your development environment.
-The development environment will typically accumulate (old) packages during development that interfere with testing; this problem is avoided by testing with `tox`.
+Testing with ``tox`` allows for keeping the testing environment separate from your development environment.
+The development environment will typically accumulate (old) packages during development that interfere with testing; this problem is avoided by testing with ``tox``.
 
 Running linters locally
 -----------------------
@@ -84,8 +124,33 @@ commit by enabling the git hook from ``.githooks/pre-commit``, like so:
 
 We also check linting errors in a GitHub Actions CI workflow.
 
-Generating the API docs
------------------------
+Documentation
+-------------
+
+-  Documentation should be put in the ``docs/`` directory in the repository.
+-  We use Restructured Text (reST) and Google style docstrings.
+
+   -  `Restructured Text (reST)
+      primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`__
+   -  `Google style docstring
+      examples <http://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html>`__.
+
+-  The documentation is set up with the ReadTheDocs Sphinx theme.
+
+   -  Check out its `configuration
+      options <https://sphinx-rtd-theme.readthedocs.io/en/latest/>`__.
+
+-  `AutoAPI <https://sphinx-autoapi.readthedocs.io/>`__ is used to
+   generate documentation for the package Python objects.
+-  ``.readthedocs.yaml`` is the ReadTheDocs configuration file. When
+   ReadTheDocs is building the documentation this package and its
+   development dependencies are installed so the API reference can be
+   rendered.
+-  `Relevant section in the
+   guide <https://guide.esciencecenter.nl/#/best_practices/language_guides/python?id=writingdocumentation>`__
+
+Generating documentation
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: shell
 
@@ -134,91 +199,15 @@ Bumping the version across all files is done with
 Making a release
 ----------------
 
-This section describes how to make a release in 3 parts:
-
-1. preparation
-2. making a release on PyPI
-3. making a release on GitHub
-
-(1/3) Preparation
-~~~~~~~~~~~~~~~~~
+This section describes how to make a release in 4 steps:
 
 1. Verify that the information in ``CITATION.cff`` is correct.
 2. Make sure the `version has been updated <#versioning>`__.
 3. Run the unit tests with ``pytest -v`` or ``tox``.
+4. *If applicable:* list non-Python files that should be included in the distribution in ``MANIFEST.in``.
+5. Make a `release on GitHub <https://github.com/dianna-ai/dianna/releases/new>`__.
+   This will trigger the release workflow, which will build and upload DIANNA as a package to PyPI.
+   It will also trigger Zenodo into making a snapshot of the repository and sticking a DOI on it.
 
-(2/3) PyPI
-~~~~~~~~~~
-
-In a new terminal, without an activated virtual environment or an env
-directory:
-
-.. code:: shell
-
-   # prepare a new directory
-   cd $(mktemp -d --tmpdir dianna.XXXXXX)
-
-   # fresh git clone ensures the release has the state of origin/main branch
-   git clone https://github.com/dianna-ai/dianna .
-
-   # prepare a clean virtual environment and activate it
-   python3 -m venv env
-   source env/bin/activate
-
-   # make sure to have a recent version of pip and setuptools
-   python3 -m pip install --upgrade pip setuptools
-
-   # install runtime dependencies and publishing dependencies
-   python3 -m pip install --no-cache-dir .
-   python3 -m pip install --no-cache-dir .[publishing]
-
-   # clean up any previously generated artefacts
-   rm -rf dianna.egg-info
-   rm -rf dist
-
-   # create the source distribution and the wheel
-   python3 setup.py sdist bdist_wheel
-
-   # upload to test pypi instance (requires credentials)
-   twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-
-Visit https://test.pypi.org/project/dianna and verify that your package
-was uploaded successfully. Keep the terminal open, we’ll need it later.
-
-In a new terminal, without an activated virtual environment or an env
-directory:
-
-.. code:: shell
-
-   cd $(mktemp -d --tmpdir dianna-test.XXXXXX)
-
-   # prepare a clean virtual environment and activate it
-   python3 -m venv env
-   source env/bin/activate
-
-   # make sure to have a recent version of pip and setuptools
-   pip install --upgrade pip setuptools
-
-   # install from test pypi instance:
-   python3 -m pip -v install --no-cache-dir \
-   --index-url https://test.pypi.org/simple/ \
-   --extra-index-url https://pypi.org/simple dianna
-
-Check that the package works as it should when installed from pypitest.
-
-Then upload to pypi.org with:
-
-.. code:: shell
-
-   # Back to the first terminal,
-   # FINAL STEP: upload to PyPI (requires credentials)
-   twine upload dist/*
-
-(3/3) GitHub
-~~~~~~~~~~~~
-
-Don’t forget to also make a `release on
-GitHub <https://github.com/dianna-ai/dianna/releases/new>`__. If your
-repository uses the GitHub-Zenodo integration this will also trigger
-Zenodo into making a snapshot of your repository and sticking a DOI on
-it.
+Note that the build is uploaded to both pypi and test-pypi.
+If you trigger the workflow manually, it's only uploaded to test-pypi, which can be useful for testing.
