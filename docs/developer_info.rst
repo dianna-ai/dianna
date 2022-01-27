@@ -22,12 +22,9 @@ Development install
    python3 -m pip install --upgrade pip setuptools
 
    # (from the project root directory)
-   # install dianna as an editable package
-   python3 -m pip install --no-cache-dir --editable .
-   # install development dependencies
+   # install dianna as an editable package and install development dependencies
    python3 -m pip install --no-cache-dir --editable .[dev]
 
-Afterwards check that the install directory is present in the ``PATH`` environment variable.
 It's also possible to use ``conda`` for maintaining virtual environments; in that case you can still install DIANNA and dependencies with ``pip``.
 
 Dependencies and Package management
@@ -39,7 +36,7 @@ actively maintained, currently:
 -  3.7
 -  3.8
 -  3.9
--  3.10 is still missing pending the availibility of onnx-tf in 3.10.
+-  3.10 is still missing pending the availibility of `onnxruntime` in 3.10.
 
 Add or remove Python versions based on availability of dependencies in
 all versions. See `the
