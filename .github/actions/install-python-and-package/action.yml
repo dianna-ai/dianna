@@ -5,6 +5,10 @@ inputs:
     required: false
     description: "The Python version to use. Specify major and minor version, e.g. '3.9'."
     default: "3.9"
+  extras-require:
+    required: false
+    description: "The extras dependencies packages to be installed, for instance 'dev' or 'dev,publishing,notebooks'."
+    default: "dev"
 runs:
   using: "composite"
   steps:
@@ -22,5 +26,5 @@ runs:
     - name: Upgrade pip and install dependencies
       shell: bash {0}
       run: |
-        python3 -m pip install --upgrade pip setuptools
-        python3 -m pip install .[dev,publishing,notebooks]
+        python3 -m pip install --upgrade pip setuptools wheel
+        python3 -m pip install .[${{ inputs.extras-require }}]
