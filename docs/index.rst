@@ -10,6 +10,8 @@ Welcome to dianna's documentation!
   :maxdepth: 2
   :caption: Contents:
 
+  developer_info.rst
+
 Indices and tables
 ==================
 
