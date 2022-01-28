@@ -110,17 +110,19 @@ And here are links to notebooks showing how we created our models on the benchma
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
 
 ## Tutorials
-DIANNA supports the following data modalities and XAI methods (the table contains links to the relevant tutorials or plans):
-<!-- TODO: fix links to tutorials in table then ready; check link to roadmap.md after merging; see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
+DIANNA supports different data modalities and XAI methods. The table contains links to the relevant XAI method's papers. There are DIANNA [tutorials](./tutorials) covering each supported method and data modality on a least one dataset. Our future plans to expand DIANNA with more data modalities and XAI methods are given at the [ROADMAP.md](./ROADMAP.md).
 
-|Data \ XAI|RISE|LIME|KernelSHAP|
+<!-- see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
+
+|Data \ XAI|[RISE](http://bmvc2018.org/contents/papers/1064.pdf)|[LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf)|[KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf)|
 |:-----|:---|:---|:---|
-|Images|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|
-|Text|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[planned](ROADMAP.md)|
-|Embedding|[coming soon](ROADMAP.md)|[coming soon](ROADMAP.md)|[coming soon](ROADMAP.md)|
-|Timeseries|[planned](ROADMAP.md)|[planned](ROADMAP.md)|[planned](ROADMAP.md)|
+|Images|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+|Text|:white_check_mark:|:white_check_mark:|planned|
+|Embedding|coming soon|coming soon|coming soon|
+|Timeseries|planned|planned|planned|
+|Tabular|planned|planned|planned|
 
-LRP and PatternAttribution also feature in the top 5 of our thoroughly evaluated XAI methods using objective critera (details in coming blog-post). Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!
+[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective critera (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
 
 ## Reference documentation 
 
