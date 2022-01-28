@@ -21,5 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/install-python-and-package
+        with:
+          extras-require: dev,notebooks
       - name: Run tutorial notebooks
         run: pytest --nbmake tutorials

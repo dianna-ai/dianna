@@ -1,5 +1,5 @@
-from IPython.core.display import HTML
-from IPython.core.display import display
+from IPython.display import HTML
+from IPython.display import display
 
 
 def highlight_text(explanation,
@@ -27,7 +27,7 @@ def highlight_text(explanation,
             print(output, file=output_html_file)
 
     if show_plot:
-        display(HTML, output)
+        display(HTML(output))
 
 
 def _create_html(original_text, explanation, max_opacity):
