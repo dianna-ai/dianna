@@ -24,6 +24,8 @@ jobs:
       - uses: ./.github/actions/install-python-and-package
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install pandoc using apt
+        run: apt install pandoc        
       - name: Build documentation
         run: make coverage doctest html
         working-directory: docs
