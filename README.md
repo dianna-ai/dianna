@@ -39,7 +39,13 @@ affiliations:
 [![more badges badge](https://img.shields.io/badge/more-badges-lightgrey)](badges.md)
 
 # DIANNA: Deep Insight And Neural Network Analysis
-<!-- TODO: add main points and then expand, see issue https://github.com/dianna-ai/dianna/issues/137 -->
+
+DIANNA is a Python package that brings explainable AI (XAI) to your research project.
+
+- Wraps carefully selected XAI methods in a simple, uniform interface.
+- Uses [ONNX](https://onnx.ai/) model format: interoperable with all the big ML frameworks (e.g. PyTorch, TensorFlow).
+- Comes with a benchmark set of models and datasets: compare and gain quick insight into different XAI methods.
+- Built by, with and for (academic) researchers and research software engineers working on machine learning projects.
 
 ## Why DIANNA? 
 <!-- TO DO: edit the proposal text into something clear and simpler -->
