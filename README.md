@@ -48,9 +48,9 @@ DIANNA software is addressing needs of both (X)AI reseachers and mostly the vari
 
 * Provides an easy-to-use interface for non (X)AI experts
 * Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
-* Supports the de-facto standard of neural network models - ONNX
+* Supports the de-facto standart of neural network models - ONNX.
 * Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and skikit-learn to ONNX.
-* Supports both images and text data modalities, time series, tabular data and even embeddings are planned
+* Supports both images and text data modalities. Time series, tabular data and even embeddings support is planned.
 * Comes with simple intuitive image and text benchmarks 
 * Easily extendable to other XAI methods 
 
