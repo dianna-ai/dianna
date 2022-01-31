@@ -1,4 +1,4 @@
-name: build
+name: documentation
 
 on:
   workflow_dispatch:
@@ -25,7 +25,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install pandoc using apt
-        run: apt install pandoc        
+        run: sudo apt install pandoc        
       - name: Build documentation
         run: make coverage doctest html
         working-directory: docs
