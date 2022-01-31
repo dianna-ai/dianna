@@ -1,7 +1,7 @@
 ## Tutorials
 This folder contains DIANNA tutorial notebooks.
 
-Tutorials are avaiable for several combinations of data modality, dataset and explanability method.
+Tutorials are available for several combinations of data modality, dataset and explanability method.
 
 Use the links in the tables below to directly go to a tutorial notebook:
 
