@@ -1,0 +1,29 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+
+  build:
+    name: Documentation for (${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-latest']
+        python-version: ['3.9']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install-python-and-package
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build documentation
+        run: make coverage doctest html
+        working-directory: docs
