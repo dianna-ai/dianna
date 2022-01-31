@@ -1,11 +1,19 @@
 name: fair-software
 
-on: push
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
 
 jobs:
-  verify:
+  verify_main:
     name: "fair-software"
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: fair-software/howfairis-github-action@0.2.0
         name: Measure compliance with fair-software.eu recommendations
@@ -13,3 +21,14 @@ jobs:
           PYCHARM_HOSTED: "Trick colorama into displaying colored output" 
         with:
           MY_REPO_URL: "https://github.com/${{ github.repository }}"
+  verify_pull_request:
+    name: "fair-software"
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - uses: fair-software/howfairis-github-action@0.2.0
+        name: Measure compliance with fair-software.eu recommendations
+        env:
+          PYCHARM_HOSTED: "Trick colorama into displaying colored output" 
+        with:
+          MY_REPO_URL: "https://github.com/${{ github.repository }}/refs/remotes/pull/${{ github.event.pull_request.number }}/merge"
