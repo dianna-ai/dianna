@@ -17,7 +17,7 @@ These libraries currently have serious limitaitons in respect to the usage by th
 
 * **A single XAI method or single data modality is implemented**
 
-While SHAP, LIME, Pytorch-grad-cam, DeepLIFT, etc. enjoy enourmous popularity, the spesific methods are not always suitable for the research task and/or data modality (e.g. Grad cam is applicable only for images). Most importantly, different methods approach the AI explainability differently and so a single method provides limited explaianbility capacity. Which is the best method to use?
+While SHAP, LIME, Pytorch-grad-cam, DeepLIFT, etc. enjoy enormous popularity, the specific methods are not always suitable for the research task and/or data modality (e.g. Grad cam is applicable only for images). Most importantly, different methods approach the AI explainability differently and so a single method provides limited explainability capacity. Which is the best method to use?
 
 * **A single DNN format/framework/architecture is supported**
 
