@@ -42,19 +42,19 @@ affiliations:
 <!-- TODO: add main points and then expand, see issue https://github.com/dianna-ai/dianna/issues/137 -->
 
 ## Why DIANNA? 
-<!-- TO DO: edit the proposal text into something clear and simpler -->
+<!-- TO DO: edit the proposal text into something much shorter and point to CONTEXT.md -->
 
-Issues:
-1.	The properties of the heatmaps are not studied and the human interpretation is intertwined with the XAI’s. Suitable datasets are lacking: the popular MNIST benchmark is too complex for the task (10 classes and no structural content variation). The XAI literature does not consider simple scientific “benchmarks”.
-2.	Which is the “best” explainability method? There is no agreement in the XAI community. The libraries offer different subsets of XAI methods not chosen systematically.
-3.	The available OSS (not for all methods) implementations support a single DNN format/framework, e.g. iNNvestigate supports only Keras, while Captum supports PyTorch. 
-4.	Not many demonstrators of XAI exist, except from LRP and RISE.
+DIANNA software is addressing needs of both (X)AI reseachers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: the only XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
 
-Solutions:
-1.	To demonstrate the usefulness and properties of the heatmaps on an intuitive level we propose: simple geometrical and simple scientific– subset of LeafSnap datasets. Tree species classification on the LeafSnap data is a good example of problem tackled with both classical Computer Vision and the superior DL method.
-2.	Recently, several systematically defined criteria for evaluation of the XAI approaches have been proposed with LIME analyzed as example. Analysis of the state-of-the-art XAI methods will highlight the best.
-3.	DIANNA is a library conforming with the ONNX standard. There are many ONNX tools available as OSS including the ONNX model zoo and ONNX converters from Keras and TensorFlow. PyTorch also offers built-in PyTorch to ONNX export.
-4.	A web demonstrator will be created in a next phase of the project. 
+* Provides an easy-to-use interface for non (X)AI experts
+* Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
+* Supports the de-facto standard format for neural network models - ONNX.
+* Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and skikit-learn to ONNX.
+* Supports both images and text data modalities. Time series, tabular data and even embeddings support is planned.
+* Comes with simple intuitive image and text benchmarks 
+* Easily extendable to other XAI methods 
+
+For more information on the unique stengths of DIANNA with comparision to other tools, please see the [context landscape](CONTEXT.md).
 
 ## Installation 
 
