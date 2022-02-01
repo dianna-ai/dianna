@@ -34,7 +34,9 @@ affiliations:
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 
 # DIANNA: Deep Insight And Neural Network Analysis
-<!-- TODO: add main points and then expand, see issue https://github.com/dianna-ai/dianna/issues/137 -->
+
+DIANNA is a Python package that brings explainable AI (XAI) to your research project. It wraps carefully selected XAI methods in a simple, uniform interface.
+It's built by, with and for (academic) researchers and research software engineers working on machine learning projects.
 
 ## Why DIANNA? 
 <!-- TO DO: edit the proposal text into something much shorter and point to CONTEXT.md -->
