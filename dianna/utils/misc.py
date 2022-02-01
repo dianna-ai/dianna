@@ -1,7 +1,6 @@
 import inspect
 import onnx
 import xarray as xr
-from onnx_tf.backend import prepare
 from dianna.utils.onnx_runner import SimpleModelRunner
 
 
@@ -102,6 +101,7 @@ def onnx_model_node_loader(model_path):
     Returns:
         loaded onnx model and the label of output node.
     """
+    from onnx_tf.backend import prepare  # this import is done in the function because it is slow
     onnx_model = onnx.load(model_path)  # load onnx model
     tf_model_rep = prepare(onnx_model, gen_tensor_dict=True)
     label_input_node = tf_model_rep.inputs[0]

@@ -22,7 +22,6 @@ become a source of (scientific) insights.
 See https://github.com/dianna-ai/dianna
 """
 import logging
-from onnx_tf.backend import prepare  # To avoid Access Violation on Windows with SHAP
 from . import methods
 from . import utils
 
@@ -49,6 +48,8 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
         One heatmap (2D array) per class.
 
     """
+    if method == "SHAP":
+        from onnx_tf.backend import prepare  # To avoid Access Violation on Windows with SHAP
     explainer = _get_explainer(method, kwargs)
     explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_image, kwargs)
     return explainer.explain_image(model_or_function, input_data, labels, **explain_image_kwargs)
