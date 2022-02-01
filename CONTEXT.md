@@ -30,7 +30,7 @@ ELI5, for example, supports multiple frameworks/formats and XAI methods, but is 
 * **Requires (X)AI expertise**
 For example the DeepVis Toolbox requires DNN knowledge and is used only by AI experts mostly within the computer vision community (which is large and can explain the number of stars). 
 
-All of the above issues have a common reason: _the libraries have been developed by (X)AI reseachers for the (X)AI reseachrs_.
+All of the above issues have a common reason: _the libraries have been developed by (X)AI researchers for the (X)AI researchers_.
  
 Even for the purpose of advancing (X)AI research, systematic study of the properties of the relevance "heatmaps" is lacking and currently in the XAI literature often the human interpretation is intertwined with the one of the exlainer. Suitable datasets for such a study are lacking: the popular and simplest dataset used in publicaitons,  MNIST, is too complex for such a prurpose with 10 classes and no structural content variation. The XAI community does not publish work on simple scientific datasets, which would make the technology understandable and trustworthy by non-expert scientists on intuitive level. Another important show-stopper for reproducible AI-enabled science is the plethora of current formats and the speed in which they become obsolete. Some libraries are also becoming obsolete for the lack of support of the research projects which have sponsored their creation (e.g. iNNvestigate).
 
