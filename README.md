@@ -55,11 +55,6 @@ For more information on the unique stengths of DIANNA with comparision to other 
 [![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
 [![supported python versions](https://img.shields.io/pypi/pyversions/dianna)](https://pypi.python.org/project/dianna/)
 
-The easiest way to install DIANNA is using `pip` on one of the supported Python versions:
-```console
-pip install dianna
-```
-
 DIANNA can be installed from PyPI using [pip](https://pip.pypa.io/en/stable/installation/) on any of the supported Python versions (see badge):
 
 ```console
