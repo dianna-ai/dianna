@@ -45,7 +45,7 @@ To demonstrate the usefulness and enable studying the properties of the "heatmap
 
 DIANNA includes few XAI approaches which have been evaluated using [systematically defined criteria](https://arxiv.org/ftp/arxiv/papers/1912/1912.05100.pdf). Using a relevant subset of these criteria, we have included complementary state-of-the-art XAI methods: [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf), [RISE](http://bmvc2018.org/contents/papers/1064.pdf) and [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf). These methods are model architecture agnostic.
 
-*	**Standart DNN format**
+*	**Standard DNN format**
 
 DIANNA is future-proof, the library is conforming with the [Open Neural Network eXchange (ONNX) standart](https://onnx.ai/). Using ONNX is not only very beneficial for interoperability, hence enabling reproducible-science, but ONNX-compatible runtimes and libraries are designed to maximize performance across hardware. 
 
