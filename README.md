@@ -28,15 +28,10 @@ affiliations:
 -->
 
 [![build](https://github.com/dianna-ai/dianna/actions/workflows/build.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/build.yml)
-[![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
-[![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
-[![supported python versions](https://img.shields.io/pypi/pyversions/dianna)](https://pypi.python.org/project/dianna/)
-
-
 [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
+[![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592607.svg)](https://zenodo.org/record/5592607)
-[![more badges badge](https://img.shields.io/badge/more-badges-lightgrey)](badges.md)
+[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 
 # DIANNA: Deep Insight And Neural Network Analysis
 <!-- TODO: add main points and then expand, see issue https://github.com/dianna-ai/dianna/issues/137 -->
@@ -57,6 +52,13 @@ DIANNA software is addressing needs of both (X)AI reseachers and mostly the vari
 For more information on the unique stengths of DIANNA with comparision to other tools, please see the [context landscape](CONTEXT.md).
 
 ## Installation 
+[![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
+[![supported python versions](https://img.shields.io/pypi/pyversions/dianna)](https://pypi.python.org/project/dianna/)
+
+The easiest way to install DIANNA is using `pip` on one of the supported Python versions:
+```console
+pip install dianna
+```
 
 DIANNA can be installed from PyPI using [pip](https://pip.pypa.io/en/stable/installation/) on any of the supported Python versions (see badge):
 
@@ -124,7 +126,7 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 
 ## Reference documentation 
 
-For detailed information on using specific DIANNA functions, please visit the [Sphinx documentation page hosted at Readthedocs](https://dianna.readthedocs.io/en/latest).
+For detailed information on using specific DIANNA functions, please visit the [documentation page hosted at Readthedocs](https://dianna.readthedocs.io/en/latest).
 
 ## Contributing
 
@@ -132,6 +134,8 @@ If you want to contribute to the development of DIANNA,
 have a look at the [contribution guidelines](https://github.com/dianna-ai/dianna/blob/main/CONTRIBUTING.md).
 
 ## How to cite us 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592607.svg)](https://zenodo.org/record/5592607)
+[![RSD](https://img.shields.io/badge/rsd-dianna-00a3e3.svg)](https://www.research-software.nl/software/dianna)
 
 If you use this package for your scientific work, please consider citing it as:
 
