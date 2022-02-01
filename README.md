@@ -58,18 +58,16 @@ Solutions:
 
 ## Installation 
 
-To install DIANNA directly from the GitHub repository, do:
+DIANNA can be installed from PyPI using [pip](https://pip.pypa.io/en/stable/installation/) on any of the supported Python versions (see badge):
+
+```console
+python3 -m pip install dianna
+```
+
+To install the most recent development version directly from the GitHub repository run:
 
 ```console
 python3 -m pip install git+https://github.com/dianna-ai/dianna.git
-```
-
-For development purposes, when you first clone the repository locally, it may be more convenient to install in editable mode using pip's `-e` flag:
-
-```console
-git clone https://github.com/dianna-ai/dianna.git
-cd dianna
-python3 -m pip install -e .
 ```
 
 
