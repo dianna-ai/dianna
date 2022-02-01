@@ -13,7 +13,7 @@ There are numerous other python OSS [eXplainable AI (XAI) libraries](https://git
 [Captum](https://github.com/pytorch/captum) ![](https://img.shields.io/github/stars/pytorch/captum.svg?style=social), 
 [ELI5](https://github.com/TeamHG-Memex/eli5) ![](https://img.shields.io/github/stars/TeamHG-Memex/eli5.svg?style=social), etc.
 
-These libraries currently have serious limitaitons in respect to the usage by the varoius scientific communities:
+These libraries currently have serious limitations in respect to the usage by the various scientific communities:
 
 * **A single XAI method or single data modality is implemented**
 
