@@ -9,7 +9,7 @@ from dianna import utils
 class KernelSHAP:
     """Kernel SHAP implementation based on shap https://github.com/slundberg/shap."""
     # axis labels required to be present in input image data
-    required_labels = ('batch', 'channels')
+    required_labels = ('channels', )
 
     def __init__(self, axis_labels=None):
         """Kernelshap initializer.
@@ -149,11 +149,6 @@ class KernelSHAP:
         """
         input_data = utils.to_xarray(
             input_data, self.axes_labels, KernelSHAP.required_labels)
-        # remove batch axis from input data; this is only here for a consistent API
-        # but KernelSHAP wants data without batch axis
-        if not len(input_data['batch']) == 1:
-            raise ValueError("Length of batch axis must be one.")
-        input_data = input_data.sel(batch=0)
         # ensure channels axis is last and keep track of where it was so we can move it back
         self.channels_axis_index = input_data.dims.index('channels')
         input_data = utils.move_axis(input_data, 'channels', -1)

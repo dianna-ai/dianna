@@ -16,7 +16,7 @@ def _upscale(grid_i, up_size):
 class RISE:
     """RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
     # axis labels required to be present in input image data
-    required_labels = ('batch', 'channels')
+    required_labels = ('channels', )
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=None,  # pylint: disable=too-many-arguments
                  axis_labels=None, preprocess_function=None):
@@ -137,8 +137,8 @@ class RISE:
         """
         # convert data to xarray
         input_data = utils.to_xarray(input_data, self.axis_labels, RISE.required_labels)
-        # batch axis should always be first
-        input_data = utils.move_axis(input_data, 'batch', 0)
+        # add batch axis as first axis
+        input_data = input_data.expand_dims('batch', 0)
         input_data, full_preprocess_function = self._prepare_image_data(input_data)
         runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
 

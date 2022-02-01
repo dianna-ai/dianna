@@ -13,14 +13,14 @@ class LimeOnImages(TestCase):
     def test_lime_function(self):
         """Test if lime runs and outputs are correct given some data and a model function."""
         np.random.seed(42)
-        input_data = np.random.random((1, 224, 224, 3))
-        labels = ('batch', 'y', 'x', 'channels')
+        input_data = np.random.random((224, 224, 3))
+        labels = ('y', 'x', 'channels')
         heatmap_expected = np.load('tests/test_data/heatmap_lime_function.npy')
 
         explainer = LIME(random_state=42, axis_labels=labels)
         heatmap = explainer.explain_image(run_model, input_data, num_samples=100)
 
-        assert heatmap[0].shape == input_data[0].shape[:2]
+        assert heatmap[0].shape == input_data.shape[:2]
         assert np.allclose(heatmap, heatmap_expected, atol=.01)
 
     def test_lime_filename(self):
@@ -31,17 +31,17 @@ class LimeOnImages(TestCase):
 
         np.random.seed(42)
         model_filename = 'tests/test_data/mnist_model.onnx'
-        black_and_white = generate_data(batch_size=1)
+        black_and_white = generate_data(batch_size=1)[0]
         # Make data 3-channel instead of 1-channel
-        input_data = np.zeros([1, 3] + list(black_and_white.shape[2:])) + black_and_white
+        input_data = np.zeros([3] + list(black_and_white.shape[1:])) + black_and_white
         input_data = input_data.astype(np.float32)
-        labels = ('batch', 'channels', 'y', 'x')
+        labels = ('channels', 'y', 'x')
 
         heatmap = dianna.explain_image(model_filename, input_data, method="LIME", preprocess_function=preprocess, random_state=42,
                                        axis_labels=labels)
 
         heatmap_expected = np.load('tests/test_data/heatmap_lime_filename.npy')
-        assert heatmap[0].shape == input_data[0, 0].shape
+        assert heatmap[0].shape == input_data[0].shape
         assert np.allclose(heatmap, heatmap_expected, atol=.01)
 
 
