@@ -18,4 +18,6 @@ jobs:
     - uses: actions/checkout@main
     - uses: gaurav-nelson/github-action-markdown-link-check@v1
       with:
+        check-modified-files-only: 'yes'
+        base-branch: 'main'
         config-file: '.github/workflows/mlc-config.json'
