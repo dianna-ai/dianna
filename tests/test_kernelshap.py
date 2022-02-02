@@ -50,11 +50,11 @@ class ShapOnImages(TestCase):
 
     def test_shap_explain_image(self):
         """Tests exact expected output given an image and model for Kernelshap."""
-        input_data = np.random.random((1, 1, 28, 28))
+        input_data = np.random.random((1, 28, 28))
         onnx_model_path = "./tests/test_data/mnist_model.onnx"
         n_segments = 50
         explainer = KernelSHAP()
-        axes_labels = ('batch', 'channels', 'height', 'width')
+        axes_labels = ('channels', 'height', 'width')
         shap_values, _ = explainer.explain_image(
             onnx_model_path,
             input_data,
