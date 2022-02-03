@@ -90,13 +90,17 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 ## ONNX models
 <!-- TODO: Add all links, see issue https://github.com/dianna-ai/dianna/issues/135 -->
 
-**We work with ONNX!** ONNX is a great unified neural network standard which can be used to boost reproducible science. Using ONXX for your model also gives you a boost in performance! In case your models are still in another popular DNN (deep neural network) format, here are some simple recipes to convert them:
-* pytorch
-* tensorflow
-* keras
-* scikit-learn
+**We work with ONNX!** ONNX is a great unified neural network standard which can be used to boost reproducible science. Using ONNX for your model also gives you a boost in performance! In case your models are still in another popular DNN (deep neural network) format, here are some simple recipes to convert them:
+* pytorch - use the built-in [`torch.onnx.export`](https://pytorch.org/docs/stable/onnx.html) function to convert pytorch models to onnx.
+* tensorflow - use the [`tf2onnx`](https://github.com/onnx/tensorflow-onnx) package to convert tensorflow models to onnx.
+* keras - same as the conversion from tensorflow to onnx, the [`tf2onnx`](https://github.com/onnx/tensorflow-onnx) package also supports keras.
+* scikit-learn - use the [`skl2onnx`](https://github.com/onnx/sklearn-onnx) package to scikit-learn models to onnx.
 
 And here are links to notebooks showing how we created our models on the benchmark datasets:
+* [pytorch2onnx](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/pytorch2onnx.ipynb)
+* [tensorflow2onnx](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/tensorflow2onnx.ipynb)
+* [keras2onnx](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/keras2onnx.ipynb)
+* [skl2onnx](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/skl2onnx.ipynb)
 
 ### Images
 * Binary MNIST model
