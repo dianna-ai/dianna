@@ -4,8 +4,8 @@ import dianna.visualization
 from tests.utils import run_model
 
 
-input_data = np.random.random((1, 224, 224, 3))
-axis_labels = {0: 'batch', -1: 'channels'}
+input_data = np.random.random((224, 224, 3))
+axis_labels = {-1: 'channels'}
 
 
 def test_common_RISE_pipeline():  # noqa: N802 ignore case

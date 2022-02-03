@@ -7,7 +7,7 @@ from dianna import utils
 class LIME:
     """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
     # axis labels required to be present in input image data
-    required_labels = ('batch', 'channels')
+    required_labels = ('channels', )
 
     def __init__(self,
                  kernel_width=25,
@@ -167,11 +167,6 @@ class LIME:
             transformed input data, preprocessing function to use with utils.get_function()
         """
         input_data = utils.to_xarray(input_data, self.axis_labels, LIME.required_labels)
-        # remove batch axis from input data; this is only here for a consistent API
-        # but LIME wants data without batch axis
-        if not len(input_data['batch']) == 1:
-            raise ValueError("Length of batch axis must be one.")
-        input_data = input_data.sel(batch=0)
         # ensure channels axis is last and keep track of where it was so we can move it back
         channels_axis_index = input_data.dims.index('channels')
         input_data = utils.move_axis(input_data, 'channels', -1)

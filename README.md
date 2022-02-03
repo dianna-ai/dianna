@@ -28,48 +28,47 @@ affiliations:
 -->
 
 [![build](https://github.com/dianna-ai/dianna/actions/workflows/build.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/build.yml)
+[![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
+[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
+
+<img width="150" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
+
+# Deep Insight And Neural Network Analysis
+
+DIANNA is a Python package that brings explainable AI (XAI) to your research project. It wraps carefully selected XAI methods in a simple, uniform interface.
+It's built by, with and for (academic) researchers and research software engineers working on machine learning projects.
+
+## Why DIANNA? 
+<!-- TO DO: edit the proposal text into something much shorter and point to CONTEXT.md -->
+
+DIANNA software is addressing needs of both (X)AI reseachers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: the only XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
+
+* Provides an easy-to-use interface for non (X)AI experts
+* Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
+* Supports the de-facto standard format for neural network models - ONNX.
+* Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and skikit-learn to ONNX.
+* Supports both images and text data modalities. Time series, tabular data and even embeddings support is planned.
+* Comes with simple intuitive image and text benchmarks 
+* Easily extendable to other XAI methods 
+
+For more information on the unique stengths of DIANNA with comparision to other tools, please see the [context landscape](CONTEXT.md).
+
+## Installation 
 [![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
 [![supported python versions](https://img.shields.io/pypi/pyversions/dianna)](https://pypi.python.org/project/dianna/)
 
+DIANNA can be installed from PyPI using [pip](https://pip.pypa.io/en/stable/installation/) on any of the supported Python versions (see badge):
 
-[![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592607.svg)](https://zenodo.org/record/5592607)
-[![more badges badge](https://img.shields.io/badge/more-badges-lightgrey)](badges.md)
+```console
+python3 -m pip install dianna
+```
 
-# DIANNA: Deep Insight And Neural Network Analysis
-<!-- TODO: add main points and then expand, see issue https://github.com/dianna-ai/dianna/issues/137 -->
-
-## Why DIANNA? 
-<!-- TO DO: edit the proposal text into something clear and simpler -->
-
-Issues:
-1.	The properties of the heatmaps are not studied and the human interpretation is intertwined with the XAI’s. Suitable datasets are lacking: the popular MNIST benchmark is too complex for the task (10 classes and no structural content variation). The XAI literature does not consider simple scientific “benchmarks”.
-2.	Which is the “best” explainability method? There is no agreement in the XAI community. The libraries offer different subsets of XAI methods not chosen systematically.
-3.	The available OSS (not for all methods) implementations support a single DNN format/framework, e.g. iNNvestigate supports only Keras, while Captum supports PyTorch. 
-4.	Not many demonstrators of XAI exist, except from LRP and RISE.
-
-Solutions:
-1.	To demonstrate the usefulness and properties of the heatmaps on an intuitive level we propose: simple geometrical and simple scientific– subset of LeafSnap datasets. Tree species classification on the LeafSnap data is a good example of problem tackled with both classical Computer Vision and the superior DL method.
-2.	Recently, several systematically defined criteria for evaluation of the XAI approaches have been proposed with LIME analyzed as example. Analysis of the state-of-the-art XAI methods will highlight the best.
-3.	DIANNA is a library conforming with the ONNX standard. There are many ONNX tools available as OSS including the ONNX model zoo and ONNX converters from Keras and TensorFlow. PyTorch also offers built-in PyTorch to ONNX export.
-4.	A web demonstrator will be created in a next phase of the project. 
-
-## Installation 
-
-To install DIANNA directly from the GitHub repository, do:
+To install the most recent development version directly from the GitHub repository run:
 
 ```console
 python3 -m pip install git+https://github.com/dianna-ai/dianna.git
-```
-
-For development purposes, when you first clone the repository locally, it may be more convenient to install in editable mode using pip's `-e` flag:
-
-```console
-git clone https://github.com/dianna-ai/dianna.git
-cd dianna
-python3 -m pip install -e .
 ```
 
 
@@ -110,21 +109,23 @@ And here are links to notebooks showing how we created our models on the benchma
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
 
 ## Tutorials
-DIANNA supports the following data modalities and XAI methods (the table contains links to the relevant tutorials or plans):
-<!-- TODO: fix links to tutorials in table then ready; check link to roadmap.md after merging; see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
+DIANNA supports different data modalities and XAI methods. The table contains links to the relevant XAI method's papers. There are DIANNA [tutorials](./tutorials) covering each supported method and data modality on a least one dataset. Our future plans to expand DIANNA with more data modalities and XAI methods are given at the [ROADMAP.md](./ROADMAP.md).
 
-|Data \ XAI|RISE|LIME|KernelSHAP|
+<!-- see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
+
+|Data \ XAI|[RISE](http://bmvc2018.org/contents/papers/1064.pdf)|[LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf)|[KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf)|
 |:-----|:---|:---|:---|
-|Images|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|
-|Text|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[:white_check_mark:](https://github.com/dianna-ai/dianna/tree/main/tutorials)|[planned](ROADMAP.md)|
-|Embedding|[coming soon](ROADMAP.md)|[coming soon](ROADMAP.md)|[coming soon](ROADMAP.md)|
-|Timeseries|[planned](ROADMAP.md)|[planned](ROADMAP.md)|[planned](ROADMAP.md)|
+|Images|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+|Text|:white_check_mark:|:white_check_mark:|planned|
+|Embedding|coming soon|coming soon|coming soon|
+|Timeseries|planned|planned|planned|
+|Tabular|planned|planned|planned|
 
-LRP and PatternAttribution also feature in the top 5 of our thoroughly evaluated XAI methods using objective critera (details in coming blog-post). Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!
+[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective critera (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
 
 ## Reference documentation 
 
-For detailed information on using specific DIANNA functions, please visit the [Sphinx documentation page hosted at Readthedocs](https://dianna.readthedocs.io/en/latest).
+For detailed information on using specific DIANNA functions, please visit the [documentation page hosted at Readthedocs](https://dianna.readthedocs.io/en/latest).
 
 ## Contributing
 
@@ -132,6 +133,8 @@ If you want to contribute to the development of DIANNA,
 have a look at the [contribution guidelines](https://github.com/dianna-ai/dianna/blob/main/CONTRIBUTING.md).
 
 ## How to cite us 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592607.svg)](https://zenodo.org/record/5592607)
+[![RSD](https://img.shields.io/badge/rsd-dianna-00a3e3.svg)](https://www.research-software.nl/software/dianna)
 
 If you use this package for your scientific work, please consider citing it as:
 

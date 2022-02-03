@@ -19,4 +19,5 @@ Use the links in the tables below to directly go to a tutorial notebook:
 ### Text
 |Data \ XAI|RISE|LIME|KernelSHAP|
 |:-----|:---|:---|:---|
-|Stanford sentiment treebank|[]()|[link](lime_text.ipynb)|[]()|
+|Images|[]()|[link](lime_images.ipynb)|[]()|
+|Text|[link](rise_text.ipynb)|[link](lime_text.ipynb)|[]()|
