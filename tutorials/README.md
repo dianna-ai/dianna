@@ -1,7 +1,7 @@
 ## Tutorials
 This folder contains DIANNA tutorial notebooks.
 
-Use the clicable logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset:
+Use the clickable logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset:
 
 |Data \ XAI|RISE|LIME|KernelSHAP|
 |:-----|:---|:---|:---|
