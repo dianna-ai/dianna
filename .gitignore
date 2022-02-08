@@ -15,7 +15,7 @@ htmlcov
 coverage.xml
 .pytest_cache
 .tox
-word_vectors.txt.pt
+*word_vectors.txt.pt
 
 docs/_build
 

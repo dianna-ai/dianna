@@ -57,7 +57,7 @@ class RiseOnText(TestCase):
         review = 'such a bad movie'
         expected_words = ['such', 'a', 'bad', 'movie']
         expected_word_indices = [0, 5, 7, 11]
-        expected_positive_scores = [0.3295266, 0.3521292, 0.023648001, 0.3347813]
+        expected_positive_scores = [0.3044678, 0.28736606, 0.03623142, 0.23650846]
 
         positive_explanation = dianna.explain_text(runner, review, labels=(1, 0), method='RISE', p_keep=.5)[0]
 
@@ -71,7 +71,7 @@ class RiseOnText(TestCase):
     def test_rise_determine_p_keep_for_text(self):
         """Tests exact expected p_keep given a text and model."""
         np.random.seed(0)
-        expected_p_exact_keep = .3
+        expected_p_exact_keep = .5
         model_path = 'tests/test_data/movie_review_model.onnx'
         word_vector_file = 'tests/test_data/word_vectors.txt'
         runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)

@@ -19,7 +19,7 @@ class RISE:
     required_labels = ('channels', )
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=None,  # pylint: disable=too-many-arguments
-                 axis_labels=None, preprocess_function=None):
+                 axis_labels=None, preprocess_function=None, mask_string="UNKWORDZ"):
         """RISE initializer.
 
         Args:
@@ -30,6 +30,7 @@ class RISE:
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
+            mask_string (str, optional): String to replace masked tokens with (text only)
         """
         self.n_masks = n_masks
         self.feature_res = feature_res
@@ -38,6 +39,7 @@ class RISE:
         self.masks = None
         self.predictions = None
         self.axis_labels = axis_labels if axis_labels is not None else []
+        self.mask_string = mask_string
 
     def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
         """Runs the RISE explainer on text.
@@ -115,7 +117,7 @@ class RISE:
     def _create_masked_sentences(self, tokens, masks):
         tokens_masked = []
         for mask in masks:
-            tokens_masked.append(tokens[mask])
+            tokens_masked.append([token if keep else self.mask_string for token, keep in zip(tokens, mask)])
         sentences = [" ".join(t) for t in tokens_masked]
         return sentences
 
