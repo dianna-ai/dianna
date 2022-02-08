@@ -48,7 +48,7 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
         One heatmap (2D array) per class.
 
     """
-    if method == "SHAP":
+    if method == "KernelSHAP":
         # To avoid Access Violation on Windows with SHAP:
         from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel,unused-import
     explainer = _get_explainer(method, kwargs)
