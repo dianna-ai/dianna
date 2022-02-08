@@ -11,14 +11,16 @@ class KernelSHAP:
     # axis labels required to be present in input image data
     required_labels = ('channels', )
 
-    def __init__(self, axis_labels=None):
+    def __init__(self, axis_labels=None, preprocess_function=None):
         """Kernelshap initializer.
 
         Arguments:
             axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
+            preprocess_function (callable, optional): Function to preprocess input data with
         """
+        self.preprocess_function = preprocess_function
         self.axis_labels = axis_labels if axis_labels is not None else []
 
     @staticmethod
@@ -199,13 +201,13 @@ class KernelSHAP:
             features (np.ndarray): A matrix of samples (# samples x # features)
                                    on which to explain the model's output.
         """
-        return prepare(self.onnx_model).run(
-            self._mask_image(
-                features,
-                self.image_segments,
-                self.input_data,
-                self.background,
-                self.channels_axis_index,
-                self.input_node_dtype.as_numpy_dtype
-            )
-        )[f"{self.output_node}"]
+        model_input = self._mask_image(features,
+                                       self.image_segments,
+                                       self.input_data,
+                                       self.background,
+                                       self.channels_axis_index,
+                                       self.input_node_dtype.as_numpy_dtype
+                                       )
+        if self.preprocess_function is not None:
+            model_input = self.preprocess_function(model_input)
+        return prepare(self.onnx_model).run(model_input)[f"{self.output_node}"]
