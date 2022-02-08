@@ -22,8 +22,7 @@ become a source of (scientific) insights.
 See https://github.com/dianna-ai/dianna
 """
 import logging
-from . import methods
-from . import utils
+import importlib
 
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -51,6 +50,7 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
     if method == "SHAP":
         from onnx_tf.backend import prepare  # To avoid Access Violation on Windows with SHAP
     explainer = _get_explainer(method, kwargs)
+    from . import utils
     explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_image, kwargs)
     return explainer.explain_image(model_or_function, input_data, labels, **explain_image_kwargs)
 
@@ -71,11 +71,14 @@ def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
 
     """
     explainer = _get_explainer(method, kwargs)
+    from . import utils
     explain_text_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_text, kwargs)
     return explainer.explain_text(model_or_function, input_data, labels, **explain_text_kwargs)
 
 
 def _get_explainer(method, kwargs):
-    method_class = getattr(methods, method)
+    method_submodule = importlib.import_module(f'dianna.methods.{method.lower()}')
+    method_class = getattr(method_submodule, method)
+    from . import utils
     method_kwargs = utils.get_kwargs_applicable_to_function(method_class.__init__, kwargs)
     return method_class(**method_kwargs)
