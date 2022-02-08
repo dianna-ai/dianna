@@ -21,8 +21,8 @@ become a source of (scientific) insights.
 
 See https://github.com/dianna-ai/dianna
 """
-import logging
 import importlib
+import logging
 from . import utils
 
 
