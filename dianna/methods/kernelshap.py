@@ -149,6 +149,8 @@ class KernelSHAP:
         Returns:
             transformed input data
         """
+        if self.preprocess_function is not None:
+            input_data = self.preprocess_function(input_data)
         input_data = utils.to_xarray(
             input_data, self.axes_labels, KernelSHAP.required_labels)
         # remove batch axis from input data; this is only here for a consistent API
@@ -213,6 +215,5 @@ class KernelSHAP:
                                        self.channels_axis_index,
                                        self.input_node_dtype.as_numpy_dtype
                                        )
-        if self.preprocess_function is not None:
-            model_input = self.preprocess_function(model_input)
+
         return prepare(self.onnx_model).run(model_input)[f"{self.output_node}"]
