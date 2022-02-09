@@ -71,6 +71,12 @@ To install the most recent development version directly from the GitHub reposito
 python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 ```
 
+### Pre-requisites only for Macbook Pro with M1 Pro chip users
+
+- To install TensorFlow you can follow this [tutorial](https://betterdatascience.com/install-tensorflow-2-7-on-macbook-pro-m1-pro/).
+
+- To install TensorFlow Addons you can follow these [steps](https://github.com/tensorflow/addons/pull/2504). For further reading see this [issue](https://github.com/tensorflow/addons/issues/2503). 
+
 ## How to use DIANNA
 To use DIANNA you need a _trained AI model_ (in ONNX format) and a _data item_ (e.g. an image or text, etc.) for which you would like to explain the output of the model. 
 DIANNA calls an explainable AI method to produce a "heatmap" of the relevances of each data pont (e.g. pixel, word) to a given model's decision overlaid on the data item. 
