@@ -35,6 +35,8 @@ affiliations:
 
 <img width="150" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
+![comparison_mnist](https://user-images.githubusercontent.com/55382553/153225630-82ab905a-b326-4bf5-8153-ef7576279b5e.png)
+
 # Deep Insight And Neural Network Analysis
 
 DIANNA is a Python package that brings explainable AI (XAI) to your research project. It wraps carefully selected XAI methods in a simple, uniform interface.
