@@ -21,7 +21,8 @@ class KernelSHAP:
         """
         self.preprocess_function = preprocess_function
         self.axis_labels = axis_labels if axis_labels is not None else []
-        from onnx_tf.backend import prepare
+        # import here because it's slow
+        from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel
         self.onnx_to_tf = prepare
 
     @staticmethod
