@@ -53,8 +53,8 @@ class ShapOnImages(TestCase):
         input_data = np.random.random((1, 28, 28))
         onnx_model_path = "./tests/test_data/mnist_model.onnx"
         n_segments = 50
-        explainer = KernelSHAP()
-        axes_labels = ('channels', 'height', 'width')
+        axis_labels = ('channels', 'height', 'width')
+        explainer = KernelSHAP(axis_labels=axis_labels)
         shap_values, _ = explainer.explain_image(
             onnx_model_path,
             input_data,
@@ -63,7 +63,6 @@ class ShapOnImages(TestCase):
             n_segments=n_segments,
             compactness=10.0,
             sigma=0,
-            axes_labels=axes_labels,
         )
 
         assert shap_values[0].shape == np.zeros((1, n_segments)).shape
