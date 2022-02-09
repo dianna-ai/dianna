@@ -25,19 +25,12 @@ class LimeOnImages(TestCase):
 
     def test_lime_filename(self):
         """Test if lime runs and outputs are correct given some data and a model file."""
-        def preprocess(data):
-            # select single channel out of 3, but keep the channel axis
-            return data[:, [0], ...]
-
         np.random.seed(42)
         model_filename = 'tests/test_data/mnist_model.onnx'
-        black_and_white = generate_data(batch_size=1)[0]
-        # Make data 3-channel instead of 1-channel
-        input_data = np.zeros([3] + list(black_and_white.shape[1:])) + black_and_white
-        input_data = input_data.astype(np.float32)
+        input_data = generate_data(batch_size=1)[0].astype(np.float32)
         labels = ('channels', 'y', 'x')
 
-        heatmap = dianna.explain_image(model_filename, input_data, method="LIME", preprocess_function=preprocess, random_state=42,
+        heatmap = dianna.explain_image(model_filename, input_data, method="LIME", random_state=42,
                                        axis_labels=labels)
 
         heatmap_expected = np.load('tests/test_data/heatmap_lime_filename.npy')
