@@ -79,6 +79,43 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 
 - To install TensorFlow Addons you can follow these [steps](https://github.com/tensorflow/addons/pull/2504). For further reading see this [issue](https://github.com/tensorflow/addons/issues/2503). 
 
+## Getting started
+You need:
+- your trained model (in ONNX format)
+- 1 data item to be explained
+
+### Text example:
+```python
+model_path = 'your_model.onnx'  # model trained on text
+text = 'Lorem ipsum dolor sit amet'
+```
+Run using the XAI method of your choice, for example LIME:
+```python
+explanation = dianna.explain_text(model_path, text, 'LIME')
+dianna.visualization.highlight_text(explanation[0], text)  # take the 0th explanation, corresponding to the 0th class; explained in next example
+```
+![image](https://user-images.githubusercontent.com/6087314/153433644-acf14533-b546-48c7-a633-4cddc625fea3.png)
+
+### Image example:
+```python
+model_path = 'your_model.onnx'  # model trained on images
+image = PIL.Image.open('your_image.jpeg')
+```
+Tell us what label refers to the channels, or colors, in the image.
+```python
+axis_labels = {0: 'channels'}
+```
+Which of your model's classes do you want an explanation for?
+```python
+labels = [class_a, class_b]
+```
+Run using the XAI method of your choice, for example RISE:
+```python
+explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
+dianna.visualization.plot_image(explanation[labels.index(class_a)], original_data=image)
+```
+![image](https://user-images.githubusercontent.com/6087314/153430007-17b5d501-5de0-40db-896b-11a3bb81c806.png)
+
 ## How to use DIANNA
 To use DIANNA you need a _trained AI model_ (in ONNX format) and a _data item_ (e.g. an image or text, etc.) for which you would like to explain the output of the model. 
 DIANNA calls an explainable AI method to produce the relevance scores of each data pont (e.g. pixel, word) to a given model's decision overlaid on the data item. 
