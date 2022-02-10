@@ -1,3 +1,5 @@
+<img width="150" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
+
 ## Tutorials
 This folder contains DIANNA tutorial notebooks.
 
