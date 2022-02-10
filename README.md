@@ -116,16 +116,6 @@ dianna.visualization.plot_image(explanation[labels.index(class_a)], original_dat
 ```
 ![image](https://user-images.githubusercontent.com/6087314/153430007-17b5d501-5de0-40db-896b-11a3bb81c806.png)
 
-## How to use DIANNA
-To use DIANNA you need a _trained AI model_ (in ONNX format) and a _data item_ (e.g. an image or text, etc.) for which you would like to explain the output of the model. 
-DIANNA calls an explainable AI method to produce the relevance scores of each data pont (e.g. pixel, word) to a given model's decision overlaid on the data item. 
-
-For example usage see the DIANNA [tutorials](./tutorials). For creating or converting a trained model to ONNX see the **ONNX models** and for example datasets- the **Datasets**  sections below.
-
-![Architecture_high_level_resized](https://user-images.githubusercontent.com/3244249/152557189-3ed6fe1a-b461-4cc8-bd2e-e420ee46c784.png)
-
-
-
 ## Datasets
 DIANNA comes with simple datasets. Their main goal is to provide intuitive insight into the working of the XAI methods. They can be used as benchmarks for evaluation and comparison of existing and new XAI methods.
 
