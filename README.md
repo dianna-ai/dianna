@@ -35,7 +35,7 @@ affiliations:
 
 <img width="150" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
-<img align="left" src="https://user-images.githubusercontent.com/55382553/153362567-2cda7a1a-9767-4231-8407-5744f2a419fe.png">
+<img align="left" src="https://user-images.githubusercontent.com/55382553/153408200-36c4de2e-7865-4934-956d-09eefd893e6a.png">
 
 # Deep Insight And Neural Network Analysis
 
