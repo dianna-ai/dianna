@@ -33,7 +33,7 @@ affiliations:
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 
-<img width="150" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
+<img width="300" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
 <img align="left" src="https://user-images.githubusercontent.com/55382553/153408200-36c4de2e-7865-4934-956d-09eefd893e6a.png">
 
@@ -77,7 +77,9 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 
 - To install TensorFlow you can follow this [tutorial](https://betterdatascience.com/install-tensorflow-2-7-on-macbook-pro-m1-pro/).
 
-- To install TensorFlow Addons you can follow these [steps](https://github.com/tensorflow/addons/pull/2504). For further reading see this [issue](https://github.com/tensorflow/addons/issues/2503). 
+- To install TensorFlow Addons you can follow these [steps](https://github.com/tensorflow/addons/pull/2504). For further reading see this [issue](https://github.com/tensorflow/addons/issues/2503). Note that this temporary solution works only for macOS versions >= 12.0.
+
+- Before installing DIANNA, comment `tensorflow` requirement in `setup.cfg` file (tensorflow package for M1 is called `tensorflow-macos`).
 
 ## How to use DIANNA
 To use DIANNA you need a _trained AI model_ (in ONNX format) and a _data item_ (e.g. an image or text, etc.) for which you would like to explain the output of the model. 

@@ -1,8 +1,4 @@
 import inspect
-import onnx
-import xarray as xr
-from onnx_tf.backend import prepare
-from dianna.utils.onnx_runner import SimpleModelRunner
 
 
 def get_function(model_or_function, preprocess_function=None):
@@ -15,6 +11,7 @@ def get_function(model_or_function, preprocess_function=None):
             If input is a function, the function is returned unchanged.
         preprocess_function: function to be run to preprocess the data
     """
+    from dianna.utils.onnx_runner import SimpleModelRunner  # pylint: disable=import-outside-toplevel
     if isinstance(model_or_function, str):
         runner = SimpleModelRunner(model_or_function, preprocess_function=preprocess_function)
     elif callable(model_or_function):
@@ -59,6 +56,9 @@ def to_xarray(data, axis_labels, required_labels=None):
         for label in required_labels:
             assert label in labels, f'Required label missing: {label}'
 
+    # import here because it's slow
+    import xarray as xr  # pylint: disable=import-outside-toplevel
+
     return xr.DataArray(data, dims=labels)
 
 
@@ -102,6 +102,9 @@ def onnx_model_node_loader(model_path):
     Returns:
         loaded onnx model and the label of output node.
     """
+    # these imports are done in the function because they are slow
+    import onnx  # pylint: disable=import-outside-toplevel
+    from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel
     onnx_model = onnx.load(model_path)  # load onnx model
     tf_model_rep = prepare(onnx_model, gen_tensor_dict=True)
     label_input_node = tf_model_rep.inputs[0]

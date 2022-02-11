@@ -2,7 +2,6 @@ import warnings
 import numpy as np
 import shap
 import skimage.segmentation
-from onnx_tf.backend import prepare  # onnx to tf model converter&runner
 from dianna import utils
 
 
@@ -22,6 +21,9 @@ class KernelSHAP:
         """
         self.preprocess_function = preprocess_function
         self.axis_labels = axis_labels if axis_labels is not None else []
+        # import here because it's slow
+        from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel
+        self.onnx_to_tf = prepare
 
     @staticmethod
     def _segment_image(
@@ -208,4 +210,4 @@ class KernelSHAP:
                                        )
         if self.preprocess_function is not None:
             model_input = self.preprocess_function(model_input)
-        return prepare(self.onnx_model).run(model_input)[f"{self.output_node}"]
+        return self.onnx_to_tf(self.onnx_model).run(model_input)[f"{self.output_node}"]
