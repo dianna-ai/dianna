@@ -10,14 +10,11 @@ Welcome to dianna's documentation!
   :maxdepth: 2
   :caption: Contents:
 
+  CONTEXT.md
+  ROADMAP.md
+  CONTRIBUTING.md
   developer_info.rst
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+  CODE_OF_CONDUCT.md
 
 Examples
 ========
@@ -27,3 +24,10 @@ Examples
    :glob:
    
    tutorials/*
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
