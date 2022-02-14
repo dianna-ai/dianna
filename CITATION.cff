@@ -23,6 +23,10 @@ authors:
     family-names: Oostrum
     given-names: Leon
     orcid: "https://orcid.org/0000-0001-8724-8372"
+  -
+    family-names: Crocioni
+    given-names: Giulia
+    orcid: "https://orcid.org/0000-0002-0823-0121"
 
 # date-released: 2021-12-23
 doi: 10.5281/zenodo.5801485
