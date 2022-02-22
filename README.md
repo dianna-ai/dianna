@@ -33,7 +33,7 @@ affiliations:
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 
-<img width="150" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
+<img width="300" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
 <img align="left" src="https://user-images.githubusercontent.com/55382553/153408200-36c4de2e-7865-4934-956d-09eefd893e6a.png">
 
@@ -43,8 +43,6 @@ DIANNA is a Python package that brings explainable AI (XAI) to your research pro
 It's built by, with and for (academic) researchers and research software engineers working on machine learning projects.
 
 ## Why DIANNA? 
-<!-- TO DO: edit the proposal text into something much shorter and point to CONTEXT.md -->
-
 DIANNA software is addressing needs of both (X)AI reseachers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: the only XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
 
 * Provides an easy-to-use interface for non (X)AI experts
@@ -55,7 +53,7 @@ DIANNA software is addressing needs of both (X)AI reseachers and mostly the vari
 * Comes with simple intuitive image and text benchmarks 
 * Easily extendable to other XAI methods 
 
-For more information on the unique stengths of DIANNA with comparision to other tools, please see the [context landscape](CONTEXT.md).
+For more information on the unique stengths of DIANNA with comparision to other tools, please see the [context landscape](https://dianna.readthedocs.io/en/latest/CONTEXT.html).
 
 ## Installation 
 [![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
@@ -77,7 +75,9 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 
 - To install TensorFlow you can follow this [tutorial](https://betterdatascience.com/install-tensorflow-2-7-on-macbook-pro-m1-pro/).
 
-- To install TensorFlow Addons you can follow these [steps](https://github.com/tensorflow/addons/pull/2504). For further reading see this [issue](https://github.com/tensorflow/addons/issues/2503). 
+- To install TensorFlow Addons you can follow these [steps](https://github.com/tensorflow/addons/pull/2504). For further reading see this [issue](https://github.com/tensorflow/addons/issues/2503). Note that this temporary solution works only for macOS versions >= 12.0.
+
+- Before installing DIANNA, comment `tensorflow` requirement in `setup.cfg` file (tensorflow package for M1 is called `tensorflow-macos`).
 
 ## Getting started
 You need:
@@ -158,7 +158,7 @@ And here are links to notebooks showing how we created our models on the benchma
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
 
 ## Tutorials
-DIANNA supports different data modalities and XAI methods. The table contains links to the relevant XAI method's papers. There are DIANNA [tutorials](./tutorials) covering each supported method and data modality on a least one dataset. Our future plans to expand DIANNA with more data modalities and XAI methods are given at the [ROADMAP.md](./ROADMAP.md).
+DIANNA supports different data modalities and XAI methods. The table contains links to the relevant XAI method's papers. There are DIANNA [tutorials](./tutorials) covering each supported method and data modality on a least one dataset. Our future plans to expand DIANNA with more data modalities and XAI methods are given in the [ROADMAP](https://dianna.readthedocs.io/en/latest/ROADMAP.html).
 
 <!-- see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
 
@@ -180,7 +180,7 @@ For detailed information on using specific DIANNA functions, please visit the [d
 ## Contributing
 
 If you want to contribute to the development of DIANNA,
-have a look at the [contribution guidelines](https://github.com/dianna-ai/dianna/blob/main/CONTRIBUTING.md).
+have a look at the [contribution guidelines](https://dianna.readthedocs.io/en/latest/CONTRIBUTING.html).
 
 ## How to cite us 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592607.svg)](https://zenodo.org/record/5592607)

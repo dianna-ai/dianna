@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = u"dianna"
-copyright = u"2021, Netherlands eScience Center"
+copyright = u"2022, Netherlands eScience Center"
 author = u"DIANNA Team"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -26,7 +26,7 @@ author = u"DIANNA Team"
 # built documents.
 #
 # The short X.Y version.
-version = "0.2.1"
+version = "0.3.0"
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -47,6 +47,7 @@ extensions = [
     "autoapi.extension",
     "nbsphinx",
     "nbsphinx_link",
+    "myst_parser"
 ]
 
 # Add any paths that contain templates here, relative to this directory.

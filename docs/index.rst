@@ -11,14 +11,11 @@ Welcome to dianna's documentation!
   :caption: Contents:
 
   usage.rst
+  CONTEXT.md
+  ROADMAP.md
+  CONTRIBUTING.md
   developer_info.rst
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+  CODE_OF_CONDUCT.md
 
 Examples
 ========
@@ -28,3 +25,10 @@ Examples
    :glob:
    
    tutorials/*
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

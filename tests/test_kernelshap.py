@@ -1,8 +1,7 @@
 from unittest import TestCase
 
-import dianna
 import numpy as np
-from dianna.methods import KernelSHAP
+from dianna.methods.kernelshap import KernelSHAP
 
 
 class ShapOnImages(TestCase):
@@ -11,7 +10,7 @@ class ShapOnImages(TestCase):
         """Test if the segmentation of images are correct given some data."""
         input_data = np.random.random((28, 28, 1))
 
-        explainer = dianna.methods.KernelSHAP()
+        explainer = KernelSHAP()
         # most arguments are chosen by default
         # https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
         n_segments = 50
@@ -31,7 +30,7 @@ class ShapOnImages(TestCase):
     def test_shap_mask_image(self):
         """Test if the images masks are correct given some data."""
         input_data = np.random.random((28, 28, 1))
-        explainer = dianna.methods.KernelSHAP()
+        explainer = KernelSHAP()
         n_segments = 50
         compactness = 10.0
         sigma = 0
@@ -53,8 +52,8 @@ class ShapOnImages(TestCase):
         input_data = np.random.random((1, 28, 28))
         onnx_model_path = "./tests/test_data/mnist_model.onnx"
         n_segments = 50
-        explainer = KernelSHAP()
-        axes_labels = ('channels', 'height', 'width')
+        axis_labels = ('channels', 'height', 'width')
+        explainer = KernelSHAP(axis_labels=axis_labels)
         shap_values, _ = explainer.explain_image(
             onnx_model_path,
             input_data,
@@ -63,7 +62,6 @@ class ShapOnImages(TestCase):
             n_segments=n_segments,
             compactness=10.0,
             sigma=0,
-            axes_labels=axes_labels,
         )
 
         assert shap_values[0].shape == np.zeros((1, n_segments)).shape

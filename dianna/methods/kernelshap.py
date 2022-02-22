@@ -2,7 +2,6 @@ import warnings
 import numpy as np
 import shap
 import skimage.segmentation
-from onnx_tf.backend import prepare  # onnx to tf model converter&runner
 from dianna import utils
 
 
@@ -22,6 +21,9 @@ class KernelSHAP:
         """
         self.preprocess_function = preprocess_function
         self.axis_labels = axis_labels if axis_labels is not None else []
+        # import here because it's slow
+        from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel
+        self.onnx_to_tf = prepare
 
     @staticmethod
     def _segment_image(
@@ -68,7 +70,6 @@ class KernelSHAP:
         n_segments=100,
         compactness=10.0,
         sigma=0,
-        axes_labels=None,
         **kwargs,
     ):  # pylint: disable=too-many-arguments
         """Run the KernelSHAP explainer.
@@ -84,7 +85,7 @@ class KernelSHAP:
                                      model to explain a model prediction on each individual
                                      example. The input dimension must be
                                      [batch, height, width, color_channels] or
-                                     [batch, color_channels, height, width] (see axes_labels)
+                                     [batch, color_channels, height, width] (see axis_labels)
             labels (tuple): Indices of classes to be explained
             nsamples ("auto" or int): Number of times to re-evaluate the model when
                                       explaining each prediction. More samples lead
@@ -111,7 +112,6 @@ class KernelSHAP:
         self.onnx_model, self.input_node_dtype,\
             self.output_node = utils.onnx_model_node_loader(model)
         self.labels = labels
-        self.axes_labels = axes_labels if axes_labels is not None else []
         self.input_data = self._prepare_image_data(input_data)
         self.background = background
 
@@ -150,7 +150,7 @@ class KernelSHAP:
             transformed input data
         """
         input_data = utils.to_xarray(
-            input_data, self.axes_labels, KernelSHAP.required_labels)
+            input_data, self.axis_labels, KernelSHAP.required_labels)
         # ensure channels axis is last and keep track of where it was so we can move it back
         self.channels_axis_index = input_data.dims.index('channels')
         input_data = utils.move_axis(input_data, 'channels', -1)
@@ -175,7 +175,7 @@ class KernelSHAP:
         """
         # check the background color
         if background is None:
-            background = image.mean((0, 1))
+            background = image.mean(axis=(0, 1))
 
         # Create an empty 4D array
         out = np.zeros(
@@ -210,4 +210,4 @@ class KernelSHAP:
                                        )
         if self.preprocess_function is not None:
             model_input = self.preprocess_function(model_input)
-        return prepare(self.onnx_model).run(model_input)[f"{self.output_node}"]
+        return self.onnx_to_tf(self.onnx_model).run(model_input)[f"{self.output_node}"]

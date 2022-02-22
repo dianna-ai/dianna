@@ -2,7 +2,7 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
-from dianna.methods import LIME
+from dianna.methods.lime import LIME
 from tests.test_onnx_runner import generate_data
 from tests.utils import ModelRunner
 from tests.utils import run_model
