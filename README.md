@@ -81,7 +81,7 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 
 ## Getting started
 You need:
-- your trained model (in ONNX format)
+- your trained ONNX model ([convert my pytorch/tensorflow model to ONNX](https://github.com/dianna-ai/dianna#onnx-models))
 - 1 data item to be explained
 
 ### Text example:
