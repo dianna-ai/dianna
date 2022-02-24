@@ -119,7 +119,7 @@ Run using the XAI method of your choice, for example RISE:
 explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
 dianna.visualization.plot_image(explanation[labels.index(class_a)], original_data=image)
 ```
-![image](https://user-images.githubusercontent.com/6087314/153430007-17b5d501-5de0-40db-896b-11a3bb81c806.png)
+![image](https://user-images.githubusercontent.com/6087314/155557077-e2052094-d8ac-49d3-a840-0160256d53a6.png)
 
 ## Datasets
 DIANNA comes with simple datasets. Their main goal is to provide intuitive insight into the working of the XAI methods. They can be used as benchmarks for evaluation and comparison of existing and new XAI methods.
