@@ -87,14 +87,16 @@ You need:
 ### Text example:
 ```python
 model_path = 'your_model.onnx'  # model trained on text
-text = 'Lorem ipsum dolor sit amet'
+text = 'The movie started great but the ending is boring and unoriginal.'
 ```
 Run using the XAI method of your choice, for example LIME:
 ```python
 explanation = dianna.explain_text(model_path, text, 'LIME')
-dianna.visualization.highlight_text(explanation[0], text)  # take the 0th explanation, corresponding to the 0th class; explained in next example
+# take the 0th explanation, corresponding to the 0th class; explained in next example
+dianna.visualization.highlight_text(explanation[0], text)
 ```
-![image](https://user-images.githubusercontent.com/6087314/153433644-acf14533-b546-48c7-a633-4cddc625fea3.png)
+![image](https://user-images.githubusercontent.com/6087314/155532077-60d754e7-6124-4e32-828e-d799aecb2125.png)
+
 
 ### Image example:
 ```python
@@ -114,7 +116,7 @@ Run using the XAI method of your choice, for example RISE:
 explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
 dianna.visualization.plot_image(explanation[labels.index(class_a)], original_data=image)
 ```
-![image](https://user-images.githubusercontent.com/6087314/153430007-17b5d501-5de0-40db-896b-11a3bb81c806.png)
+![image](https://user-images.githubusercontent.com/6087314/155532504-6f90f032-cbb4-4e71-9b99-aa9c0de4e86a.png)
 
 ## Datasets
 DIANNA comes with simple datasets. Their main goal is to provide intuitive insight into the working of the XAI methods. They can be used as benchmarks for evaluation and comparison of existing and new XAI methods.
