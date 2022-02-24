@@ -89,11 +89,14 @@ You need:
 model_path = 'your_model.onnx'  # model trained on text
 text = 'The movie started great but the ending is boring and unoriginal.'
 ```
+Which of your model's classes do you want an explanation for?
+```python
+labels = [positive_class, negative_class]
+```
 Run using the XAI method of your choice, for example LIME:
 ```python
 explanation = dianna.explain_text(model_path, text, 'LIME')
-# take the 0th explanation, corresponding to the 0th class; explained in next example
-dianna.visualization.highlight_text(explanation[0], text)
+dianna.visualization.highlight_text(explanation[labels.index(positive_class)], text)
 ```
 ![image](https://user-images.githubusercontent.com/6087314/155532077-60d754e7-6124-4e32-828e-d799aecb2125.png)
 
