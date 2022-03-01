@@ -79,15 +79,47 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 
 - Before installing DIANNA, comment `tensorflow` requirement in `setup.cfg` file (tensorflow package for M1 is called `tensorflow-macos`).
 
-## How to use DIANNA
-To use DIANNA you need a _trained AI model_ (in ONNX format) and a _data item_ (e.g. an image or text, etc.) for which you would like to explain the output of the model. 
-DIANNA calls an explainable AI method to produce the relevance scores of each data pont (e.g. pixel, word) to a given model's decision overlaid on the data item. 
+## Getting started
+You need:
+- your trained ONNX model ([convert my pytorch/tensorflow model to ONNX](https://github.com/dianna-ai/dianna#onnx-models))
+- 1 data item to be explained
 
-For example usage see the DIANNA [tutorials](./tutorials). For creating or converting a trained model to ONNX see the **ONNX models** and for example datasets- the **Datasets**  sections below.
+### Text example:
+```python
+model_path = 'your_model.onnx'  # model trained on text
+text = 'The movie started great but the ending is boring and unoriginal.'
+```
+Which of your model's classes do you want an explanation for?
+```python
+labels = [positive_class, negative_class]
+```
+Run using the XAI method of your choice, for example LIME:
+```python
+explanation = dianna.explain_text(model_path, text, 'LIME')
+dianna.visualization.highlight_text(explanation[labels.index(positive_class)], text)
+```
+![image](https://user-images.githubusercontent.com/6087314/155532504-6f90f032-cbb4-4e71-9b99-aa9c0de4e86a.png)
 
-![Architecture_high_level_resized](https://user-images.githubusercontent.com/3244249/152557189-3ed6fe1a-b461-4cc8-bd2e-e420ee46c784.png)
 
-
+### Image example:
+```python
+model_path = 'your_model.onnx'  # model trained on images
+image = PIL.Image.open('your_image.jpeg')
+```
+Tell us what label refers to the channels, or colors, in the image.
+```python
+axis_labels = {0: 'channels'}
+```
+Which of your model's classes do you want an explanation for?
+```python
+labels = [class_a, class_b]
+```
+Run using the XAI method of your choice, for example RISE:
+```python
+explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
+dianna.visualization.plot_image(explanation[labels.index(class_a)], original_data=image)
+```
+![image](https://user-images.githubusercontent.com/6087314/155557077-e2052094-d8ac-49d3-a840-0160256d53a6.png)
 
 ## Datasets
 DIANNA comes with simple datasets. Their main goal is to provide intuitive insight into the working of the XAI methods. They can be used as benchmarks for evaluation and comparison of existing and new XAI methods.
