@@ -126,18 +126,6 @@
   eprint    = {1912.05100}
 }
 
-@article{chrupala2021,
-  author    = {Grzegorz Chrupala},
-  title     = {Visually grounded models of spoken language: {A} survey of datasets,
-               architectures and evaluation techniques},
-  journal   = {CoRR},
-  volume    = {abs/2104.13225},
-  year      = {2021},
-  url       = {https://arxiv.org/abs/2104.13225},
-  eprinttype = {arXiv},
-  eprint    = {2104.13225}
-}
-
 @misc{bryancardenas,
   author       = {Bryan Cardenas Guevara and Damian Podareanu and Matthieu Laneuville},
   title        = {XAI in practice: medical case study using DIANNA},
@@ -331,4 +319,66 @@ year = {2012}
   publisher = {University of Leiden},
   journal = {Digital Scholarship@Leiden},
   url = {https://www.digitalscholarshipleiden.nl/articles/mediating-islam-in-the-digital-age}
+}
+
+@article{chrupala18,
+  author    = {Grzegorz Chrupala},
+  title     = {Symbolic inductive bias for visually grounded learning of spoken language},
+  journal   = {CoRR},
+  volume    = {abs/1812.09244},
+  year      = {2018},
+  url       = {http://arxiv.org/abs/1812.09244},
+  eprinttype = {arXiv},
+  eprint    = {1812.09244},
+  timestamp = {Wed, 02 Jan 2019 14:40:18 +0100},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1812-09244.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{chrupala+17-representations,
+    title = "Representations of language in a model of visually grounded speech signal",
+    author = "Chrupa{\l}a, Grzegorz  and
+      Gelderloos, Lieke  and
+      Alishahi, Afra",
+    booktitle = "Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    month = jul,
+    year = "2017",
+    address = "Vancouver, Canada",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/P17-1057",
+    doi = "10.18653/v1/P17-1057",
+    pages = "613--622",
+    abstract = "We present a visually grounded model of speech perception which projects spoken utterances and images to a joint semantic space. We use a multi-layer recurrent highway network to model the temporal nature of spoken speech, and show that it learns to extract both form and meaning-based linguistic knowledge from the input signal. We carry out an in-depth analysis of the representations used by different components of the trained model and show that encoding of semantic aspects tends to become richer as we go up the hierarchy of layers, whereas encoding of form-related aspects of the language input tends to initially increase and then plateau or decrease.",
+}
+
+@article{alishahi+17,
+  author    = {Afra Alishahi and
+               Marie Barking and
+               Grzegorz Chrupala},
+  title     = {Encoding of phonology in a recurrent neural model of grounded speech},
+  journal   = {CoRR},
+  volume    = {abs/1706.03815},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1706.03815},
+  eprinttype = {arXiv},
+  eprint    = {1706.03815},
+  timestamp = {Mon, 13 Aug 2018 16:46:47 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/AlishahiBC17.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{chrupala+19,
+title = "On the difficulty of a distributional semantics of spoken language",
+abstract = "The bulk of research in the area of speech processing concerns itself with supervised approaches to transcribing spoken language into text. In the domain of unsupervised learning most work on speech has focused on discovering relatively low level constructs such as phoneme inventories or word-like units. This is in contrast to research on written language, where there is a large body of work on unsupervised induction of semantic representations of words and whole sentences and longer texts. In this study we examine the challenges of adapting these approaches from written to spoken language. We conjecture that unsupervised learning of spoken language semantics becomes possible if we abstract from the surface variability. We simulate this setting by using a dataset of utterances spoken by a realistic but uniform synthetic voice. We evaluate two simple unsupervised models which, to varying degrees of success, learn semantic representations of speech fragments. Finally we suggest possible routes toward transferring our methods to the domain of unrestricted natural speech. ",
+keywords = "cs.CL, cs.LG, cs.SD, eess.AS",
+author = "Grzegorz Chrupa{\l}a and Lieke Gelderloos and {\'A}kos K{\'a}d{\'a}r and Afra Alishahi",
+year = "2019",
+doi = "10.7275/extq-7546",
+language = "English",
+volume = "2",
+booktitle = "Proceedings of the Society for Computation in Linguistics",
+note = "Society for Computation in Linguistics ; Conference date: 03-01-2019",
+url = "https://blogs.umass.edu/scil/scil-2019/",
+
 }
