@@ -10,6 +10,7 @@ Welcome to dianna's documentation!
   :maxdepth: 2
   :caption: Contents:
 
+  usage.rst
   CONTEXT.md
   ROADMAP.md
   CONTRIBUTING.md
