@@ -1,0 +1,24 @@
+name: onnx-conversion
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+
+  build:
+    name: onnx-conversion
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install-python-and-package
+      - name: Check style against standards using prospector
+        run: python -m tf2onnx.convert --saved-model tutorials/conversion_onnx/resnet_savedmodel/ --output tutorials/conversion_onnx/resnet_savedmodel.onnx --signature_def serving_default --tag serve
+        
