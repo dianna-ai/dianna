@@ -19,6 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/install-python-and-package
+        with:
+          extras-require: dev,notebooks
       - name: Check style against standards using prospector
         run: python -m tf2onnx.convert --saved-model tutorials/conversion_onnx/resnet_savedmodel/ --output tutorials/conversion_onnx/resnet_savedmodel.onnx --signature_def serving_default --tag serve
         
