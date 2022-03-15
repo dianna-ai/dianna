@@ -75,16 +75,16 @@ In addition, on more fundamental level, the results of XAI research does not hel
 
 # Key Features
 
-![DIANNA logo. \label{fig:dianna_logo}](https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png){ width=20% }
+![DIANNA logo. \label{fig:dianna_logo}](https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png)
 
 DIANNA is an open source XAI Python package with the following key characteristics:
-* **Systematically chosen diverse set of XAI methods.**  We have used a relevant subset of the thorough objective and systematic evaluation criteria defined in [@peterflatch]. Several complementary and model-architecture agnostic state-of-the-art XAI methods have been chosen and included in DIANNA [cite blog].
-* **Multiple data modalities.** DIANNA supports images and text, we will extend this to embeddings, time-series, tabular data and graphs. This is particularly important to scientific researchers, whose data are in domains different than the  classical examples from CV and natural language processing communities.
-* **Open Neural Network Exchange (ONNX) format.** ONNX is the de-facto standard format for neural network models. Not only is the use of ONNX very beneficial for interoperability, enabling reproducible science, but it is also compatible with runtimes and libraries designed to maximize performance across hardware. To the best of our knowledge, DIANNA is the first and only XAI library supporting ONNX.
-* **Simple, intuitive benchmark datasets.** We have proposed two new datasets which enable systematic research of the properties of the XAI mehtods' output and understanding on an intuitive level: Simple Geometric Shapes [@oostrum_leon_2021_5012825] and LeafSnap30 [@ranguelova_elena_2021_5061353]. The classification of tree species on LeafSnap data is a great example of a simple scientific problem tackled with both classical CV and a deep learning method, where the latter outperforms, but needs explanations.  DIANNA also uses well-established benchmarks: a simplified MNIST with 2 distinctive classes only and the Stanford Sentiment Treebank [@socher-etal-2013-recursive].
-* **User-friendly interface.** DIANNA wraps all XAI methods with a common API.
-* **Modular architecture, extensive testing and compliance with modern software engineering practices.** We welcome the XAI research community to contribute by including current and future XAI methods.
-* **Thorough documentation.** The package includes user and developer documentation. It also provides clear instructions for conversions from Tensorflow, Pytorch, Keras and Scikit-learn to ONNX.
+- **Systematically chosen diverse set of XAI methods.**  We have used a relevant subset of the thorough objective and systematic evaluation criteria defined in [@peterflatch]. Several complementary and model-architecture agnostic state-of-the-art XAI methods have been chosen and included in DIANNA [cite blog].
+- **Multiple data modalities.** DIANNA supports images and text, we will extend this to embeddings, time-series, tabular data and graphs. This is particularly important to scientific researchers, whose data are in domains different than the  classical examples from CV and natural language processing communities.
+- **Open Neural Network Exchange (ONNX) format.** ONNX is the de-facto standard format for neural network models. Not only is the use of ONNX very beneficial for interoperability, enabling reproducible science, but it is also compatible with runtimes and libraries designed to maximize performance across hardware. To the best of our knowledge, DIANNA is the first and only XAI library supporting ONNX.
+- **Simple, intuitive benchmark datasets.** We have proposed two new datasets which enable systematic research of the properties of the XAI mehtods' output and understanding on an intuitive level: Simple Geometric Shapes [@oostrum_leon_2021_5012825] and LeafSnap30 [@ranguelova_elena_2021_5061353]. The classification of tree species on LeafSnap data is a great example of a simple scientific problem tackled with both classical CV and a deep learning method, where the latter outperforms, but needs explanations.  DIANNA also uses well-established benchmarks: a simplified MNIST with 2 distinctive classes only and the Stanford Sentiment Treebank [@socher-etal-2013-recursive].
+- **User-friendly interface.** DIANNA wraps all XAI methods with a common API.
+- **Modular architecture, extensive testing and compliance with modern software engineering practices.** We welcome the XAI research community to contribute by including current and future XAI methods.
+- **Thorough documentation.** The package includes user and developer documentation. It also provides clear instructions for conversions from Tensorflow, Pytorch, Keras and Scikit-learn to ONNX.
 
 # Used by
 
