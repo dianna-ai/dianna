@@ -7,31 +7,31 @@ tags:
   - ONNX
   - benchmark datasets
 authors:
-  - name: Elena Ranguelova^[first author] # note this makes a footnote saying 'co-first author'
+  - name: Elena Ranguelova
     orcid: 0000-0002-9834-1756
     affiliation: 1
-  - name: Christiaan Meijer^[co-first author] # note this makes a footnote saying 'co-first author'
+  - name: Christiaan Meijer
     orcid: 0000-0002-5529-5761
     affiliation: 1
-  - name: Leon Oostrum^[co-first author] # note this makes a footnote saying 'co-first author'
+  - name: Leon Oostrum
     orcid: 0000-0001-8724-8372
     affiliation: 1
-  - name: Yang Liu^[co-first author] # note this makes a footnote saying 'co-first author'
+  - name: Yang Liu
     orcid: 0000-0002-1966-8460
     affiliation: 1
-  - name: Patrick Bos^[co-first author] # note this makes a footnote saying 'co-first author'
+  - name: Patrick Bos
     orcid: 0000-0002-6033-960X
     affiliation: 1
-  - name: Giulia Crocioni^[co-first author] # note this makes a footnote saying 'co-first author'
+  - name: Giulia Crocioni
     orcid: 0000-0002-0823-0121
     affiliation: 1
-  - name: Matthieu Laneuville^[co-first author] # note this makes a footnote saying 'co-first author'
+  - name: Matthieu Laneuville
     orcid: 0000-0001-6022-0046
     affiliation: 2
-  - name: Bryan Cardenas Guevara^[co-first author] # note this makes a footnote saying 'co-first author'
+  - name: Bryan Cardenas Guevara
     orcid: 0000-0001-9793-910X
     affiliation: 2
-  - name: Damian Podareanu^[co-first author] # note this makes a footnote saying 'co-first author'
+  - name: Damian Podareanu
     orcid: 0000-0002-4207-8725
     affiliation: 2
 affiliations:
