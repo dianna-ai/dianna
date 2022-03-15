@@ -66,6 +66,7 @@ While libraries such as SHAP, LIME, Pytorch GradCAM, etc. have gained great popu
 
 
 In addition, on more fundamental level, the results of XAI research does not help to make the technology understandable and trustworthy for non (X)AI experts:
+
 - **Properties of the output of the explainer.** There is no commonly accepted methodology to systematically study XAI methods and their output.
 - **Human interpretation intertwined with the one of the explainer.** This is a major problem in the current XAI literature, and there has been limited research to define what constitutes a meaningful explanation in the context of AI systems [@joylu].
 - **Lack of suitable (scientific) datasets.** The most popular and simplest dataset used as "toy-example" is the MNIST dataset of handwritten digits [@mnistdataset], composed of 10 classes and with no structural variation in the content. Such a dataset is too complex for non-AI experts to intuitively understand the XAI output and simultaneously too far from scientific research data.
@@ -78,6 +79,7 @@ In addition, on more fundamental level, the results of XAI research does not hel
 ![DIANNA logo. \label{fig:dianna_logo}](https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png){ width=30% }
 
 DIANNA is an open source XAI Python package with the following key characteristics:
+
 - **Systematically chosen diverse set of XAI methods.**  We have used a relevant subset of the thorough objective and systematic evaluation criteria defined in [@peterflatch]. Several complementary and model-architecture agnostic state-of-the-art XAI methods have been chosen and included in DIANNA [cite blog].
 - **Multiple data modalities.** DIANNA supports images and text, we will extend this to embeddings, time-series, tabular data and graphs. This is particularly important to scientific researchers, whose data are in domains different than the  classical examples from CV and natural language processing communities.
 - **Open Neural Network Exchange (ONNX) format.** ONNX is the de-facto standard format for neural network models. Not only is the use of ONNX very beneficial for interoperability, enabling reproducible science, but it is also compatible with runtimes and libraries designed to maximize performance across hardware. To the best of our knowledge, DIANNA is the first and only XAI library supporting ONNX.
