@@ -66,11 +66,11 @@ While libraries such as SHAP, LIME, Pytorch GradCAM, etc. have gained great popu
 
 
 In addition, on more fundamental level, the results of XAI research does not help to make the technology understandable and trustworthy for non (X)AI experts:
- - **Properties of the output of the explainer.** There is no commonly accepted methodology to systematically study XAI methods and their output.
- - **Human interpretation intertwined with the one of the explainer.** This is a major problem in the current XAI literature, and there has been limited research to define what constitutes a meaningful explanation in the context of AI systems [@joylu].
- - **Lack of suitable (scientific) datasets.** The most popular and simplest dataset used as "toy-example" is the MNIST dataset of handwritten digits [@mnistdataset], composed of 10 classes and with no structural variation in the content. Such a dataset is too complex for non-AI experts to intuitively understand the XAI output and simultaneously too far from scientific research data.
- - **Plethora of current AI model formats.** The amount and the speed with which they become obsolete is another important show-stopper for reproducibility of AI-enabled science.
--  **Lack of funding.** Some libraries, such as iNNvestigate, are becoming obsolete due to the lack of support for research projects that sponsored their creation.
+- **Properties of the output of the explainer.** There is no commonly accepted methodology to systematically study XAI methods and their output.
+- **Human interpretation intertwined with the one of the explainer.** This is a major problem in the current XAI literature, and there has been limited research to define what constitutes a meaningful explanation in the context of AI systems [@joylu].
+- **Lack of suitable (scientific) datasets.** The most popular and simplest dataset used as "toy-example" is the MNIST dataset of handwritten digits [@mnistdataset], composed of 10 classes and with no structural variation in the content. Such a dataset is too complex for non-AI experts to intuitively understand the XAI output and simultaneously too far from scientific research data.
+- **Plethora of current AI model formats.** The amount and the speed with which they become obsolete is another important show-stopper for reproducibility of AI-enabled science.
+- **Lack of funding.** Some libraries, such as iNNvestigate, are becoming obsolete due to the lack of support for research projects that sponsored their creation.
 
 
 # Key Features
