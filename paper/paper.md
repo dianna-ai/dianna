@@ -92,7 +92,7 @@ DIANNA is an open source XAI Python package with the following key characteristi
 
 DIANNA is currently used in the "Recognizing symbolism in Turkish television drama" project [@turkishdrama]. An important task is the development of an effective model for detecting and recognizing symbols in videos. DIANNA is used to increase insight into the AI models in order to explore how to improve them.
 
-DIANNA is also currently used in the "Visually grounded models of spoken language" project, which builds on earlier work from [@chrupala+17-representations;@alishahi+17;@chrupala18;@chrupala+19].
+DIANNA is also currently used in the "Visually grounded models of spoken language" project, which builds on earlier work from [@chrupala17representations;@alishahi+17;@chrupala18;@chrupala+19].
 The goal is a multi-modal model by projecting image and sound data into a common embedded space. Within DIANNA, we are developing XAI methods to visualize and explain these embedded spaces in their complex multi-modal network contexts.
 
 Finally, DIANNA was also used in the EU-funded [Examode](https://www.examode.eu/) medical research project [@bryancardenas]. It  deals with very large data sets and since it aims to support physicians in their decision-making, it needs transparent and trustworthy models.
