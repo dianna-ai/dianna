@@ -76,7 +76,7 @@ In addition, on more fundamental level, the results of XAI research does not hel
 
 # Key Features
 
-![DIANNA logo. \label{fig:dianna_logo}](https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png)
+![Architecture_high_level_with_logo](https://user-images.githubusercontent.com/3244249/158770366-a624d1e0-2eae-43cc-aeb5-bfa33b50b3e4.png)
 
 DIANNA is an open source XAI Python package with the following key characteristics:
 
