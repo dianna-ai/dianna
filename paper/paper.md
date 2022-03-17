@@ -55,8 +55,7 @@ Especially in AI-enhanced research, a scientist need to be able to trust a high-
 DIANNA addresses these needs of researchers in various scientific domains who make use of AI models, especially if they are not AI experts. DIANNA provides a Python-based, user-friendly, and uniform interface to several XAI methods. It is the only library supporting Open Neural Network Exchange (ONNX) [@onnx], the open-source, framework-agnostic standard for AI models, which supports repeatability of scientific research.
 
 # State of the field
-
-There are numerous Python XAI libraries, many are listed in the Awesome explainable AI [@awesomeai] repository. Popular and widely used packages are [@lundbergshap;@ribeirolime;@uozbulak_pytorch_vis_2021;@nori2019interpretml;@tflucid;@jacobgilpytorchcam;@yosinski-2015-ICML-DL-understanding-neural-networks;@kokhlikyan2020captum;@eli5]. These libraries have limitations that complicate adoption by scientific communities:
+There are numerous Python XAI libraries, many are listed in the Awesome explainable AI [@awesomeai] repository. Popular and widely used packages are Pytorch [@pytorch], LIME [@ribeirolime], Captum [@kokhlikyan2020captum], Lucid [@tflucid], SHAP [@lundbergshap], InterpretML [@nori2019interpretml], PyTorch CNN visualizaitons [@uozbulak_pytorch_vis_2021] Pytorch GradCAM [@jacobgilpytorchcam], Deep Visualization Toolbox [@yosinski-2015-ICML-DL-understanding-neural-networks], ELI5 [@eli5]. These libraries have limitations that complicate adoption by scientific communities:
 
 - **Single XAI method** or **single data modality.**
 While libraries such as SHAP, LIME, Pytorch GradCAM, etc. have gained great popularity, their methods are not always suitable for the research task and/or data modality. For example, GradCAM is applicable only to images. Most importantly, each library in that class addresses AI explainability with a different method, complicating comparison between methods. 
