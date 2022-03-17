@@ -39,7 +39,7 @@ affiliations:
    index: 1
  - name: SURF, Amsterdam, the Netherlands
    index: 2
-date: dd Month yyyy # put date here
+date: 17 March 2022 # put date here
 bibliography: paper.bib
 ---
 
@@ -76,7 +76,7 @@ In addition, on more fundamental level, the results of XAI research does not hel
 
 # Key Features
 
-![Architecture_high_level_with_logo](https://user-images.githubusercontent.com/3244249/158770366-a624d1e0-2eae-43cc-aeb5-bfa33b50b3e4.png)
+![High level architecture of DIANNA](https://user-images.githubusercontent.com/3244249/158770366-a624d1e0-2eae-43cc-aeb5-bfa33b50b3e4.png)
 
 DIANNA is an open source XAI Python package with the following key characteristics:
 
