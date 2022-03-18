@@ -7,7 +7,7 @@ tags:
   - ONNX
   - benchmark datasets
 authors:
-  - name: Elena Ranguelova
+  - name: Elena Ranguelova 
     orcid: 0000-0002-9834-1756
     affiliation: 1
   - name: Christiaan Meijer
@@ -19,18 +19,21 @@ authors:
   - name: Yang Liu
     orcid: 0000-0002-1966-8460
     affiliation: 1
-  - name: Patrick Bos
+  - name: Patrick Bos 
     orcid: 0000-0002-6033-960X
     affiliation: 1
-  - name: Giulia Crocioni
+  - name: Giulia Crocioni 
     orcid: 0000-0002-0823-0121
     affiliation: 1
-  - name: Matthieu Laneuville
+  - name: Matthieu Laneuville 
     orcid: 0000-0001-6022-0046
     affiliation: 2
   - name: Bryan Cardenas Guevara
     orcid: 0000-0001-9793-910X
     affiliation: 2
+  - name: Rena Bakhshi 
+    orcid: 0000-0002-2932-3028 
+    affiliation: 1   
   - name: Damian Podareanu
     orcid: 0000-0002-4207-8725
     affiliation: 2
@@ -39,7 +42,7 @@ affiliations:
    index: 1
  - name: SURF, Amsterdam, the Netherlands
    index: 2
-date: 17 March 2022 # put date here
+date: 18 March 2022 # put date here
 bibliography: paper.bib
 ---
 
