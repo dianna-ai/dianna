@@ -125,7 +125,8 @@ class LIME:
         Args:
             model_or_function (callable or str): The function that runs the model to be explained _or_
                                                  the path to a ONNX model on disk.
-            input_data (np.ndarray): Data to be explained
+            input_data (np.ndarray): Data to be explained. Must be an "RGB image", i.e. with values in
+                                     the [0,255] range.
             labels (tuple): Indices of classes to be explained
         Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance and
         ImageExplanation.get_image_and_mask:
