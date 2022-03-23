@@ -30,7 +30,7 @@ authors:
 
 # date-released: 2021-12-23
 doi: 10.5281/zenodo.5801485
-version: "0.3.0"
+version: "0.4.0"
 repository-code: "https://github.com/dianna-ai/dianna"
 keywords:
   - XAI
