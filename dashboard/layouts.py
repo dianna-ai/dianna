@@ -7,9 +7,10 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import pandas as pd
 import base64
+import utilities
 
 #static images
-image_filename = '../tutorials/img/logo.png' # replace with your own image
+image_filename = 'logo.png' # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 #rise = base64.b64encode(open('rise.png', 'rb').read())
@@ -231,3 +232,74 @@ def get_uploads():
     )
     
     return uploads
+
+def get_method_sel():
+
+    method_sel =     html.Div([
+        html.Div(['b'],
+            className = 'five columns',
+            style = {'color' : colors['blue4']}),
+        html.Div([
+            dcc.Dropdown(id = 'method_sel',
+                options = [{'label': 'RISE', 'value': 'RISE'},
+                           {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
+                           {'label': 'LIME', 'value': 'LIME'}],
+                placeholder = "Select one/more methods",
+                value=[],
+                multi = True
+            ),
+            #html.Button(
+            #    id='submit-val',
+            #    children = html.Div(['Get explanation']), n_clicks=0,
+            #    style={
+            #        'width': '100%',
+            #        #'height': '40px',
+            #        #'lineHeight': '40px',
+            #        'borderWidth': '1px',
+            #        #'borderStyle': 'dashed',
+            #        'borderRadius': '3px',
+            #        'textAlign': 'center',
+            #        'align-items': 'center',
+            #        'margin': '10px',
+            #        'color' : colors['white'],
+            #        'background-color' : colors['blue2']}
+            #    )
+            ], 
+            className = 'two columns')
+    ], className = 'row', style = {
+        'textAlign': 'center',
+        'background-color' : colors['blue4'],
+        'align-items': 'center'})
+
+    return method_sel
+
+def get_pred():
+
+    pred = html.Div([
+        html.Div(['b'],
+            className = 'five columns',
+            style = {'color' : colors['blue4']}),
+        html.Div(id='output-state', className = 'two columns')
+        ], className = 'row', style = {
+        'textAlign': 'center',
+        'background-color' : colors['blue4'],
+        'align-items': 'center'})
+
+    return pred
+
+def get_method_plot():
+
+    method_plot = html.Div([
+        html.Div(['b'],
+            className = 'five columns',
+            style = {'color' : colors['blue4']}),
+        html.Div([dcc.Graph(id='rise', figure = utilities.blank_fig())], className = 'two columns'),
+        ],
+        className="row",
+        style={
+            'background-color' : colors['blue4'],
+            'textAlign': 'center',
+            'align-items': 'center',
+            'verical-align': 'center'})
+
+    return method_plot
