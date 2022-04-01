@@ -7,6 +7,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import pandas as pd
 import base64
+import numpy as np
 
 colors = {
     'white': '#FFFFFF',
@@ -14,15 +15,17 @@ colors = {
     'blue1' : '#063446',
     'blue2' : '#0e749b',
     'blue3' : '#15b3f0',
-    'blue4' : '#d0f0fc',
+    'blue4' : '#E4F3F9',
     'yellow1' : '#f0d515'
 }
 
 def blank_fig():
-    fig = go.Figure(go.Scatter(x=[], y = []))
-    fig.update_layout(template = None, paper_bgcolor=colors['blue4'])
-    fig.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
-    fig.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+    fig = go.Figure()
+    fig.update_layout(
+        paper_bgcolor=colors['blue4'],
+        plot_bgcolor = colors['blue4'])
+    fig.update_xaxes(gridcolor = colors['blue4'], showticklabels = False, zerolinecolor=colors['blue4'])
+    fig.update_yaxes(gridcolor = colors['blue4'], showticklabels = False, zerolinecolor=colors['blue4'])
     
     return fig
 
@@ -38,3 +41,14 @@ def parse_contents_model(contents, filename):
     return html.Div([
         html.H5(filename + ' loaded')
     ])
+
+# For KernelSHAP: fill each pixel with SHAP values
+def fill_segmentation(values, segmentation):
+    out = np.zeros(segmentation.shape)
+    for i in range(len(values)):
+        out[segmentation == i] = values[i]
+    return out
+
+# For LIME: we divided the input data by 256 for the models and LIME needs RGB values
+def preprocess_function(image):
+    return (image / 256).astype(np.float32)

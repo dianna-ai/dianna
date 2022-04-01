@@ -10,7 +10,7 @@ import base64
 import utilities
 
 #static images
-image_filename = 'logo.png' # replace with your own image
+image_filename = 'app_data/logo.png' # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 #rise = base64.b64encode(open('rise.png', 'rb').read())
@@ -20,10 +20,10 @@ encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 colors = {
     'white': '#FFFFFF',
     'text': '#091D58',
-    'blue1' : '#063446',
+    'blue1' : '#063446', #dark blue
     'blue2' : '#0e749b',
     'blue3' : '#15b3f0',
-    'blue4' : '#d0f0fc',
+    'blue4' : '#E4F3F9', #light blue
     'yellow1' : '#f0d515'
 }
 
@@ -86,7 +86,7 @@ def get_header():
 
     return header
 
-# Nav bar
+# nav bar
 def get_navbar(p = 'images'):
 
     navbar_images = html.Div([
@@ -162,92 +162,157 @@ def get_navbar(p = 'images'):
     else:
         return navbar_text
 
+# uploads bar        
 def get_uploads():
 
+    # uploads row
     uploads = html.Div([
 
-        html.Div(['b'],
-            className = 'three columns',
-            style = {'color' : colors['blue4']}),
-
+        # uploads first col (3-col)
         html.Div([
-            dcc.Upload(
-                id='upload-image',
-                children=html.Div([
-                    'Drag and Drop or ',
-                    html.A('Select Image')
-                ]),
-                style={
-                    'width': '80%',
-                    'height': '40px',
-                    'lineHeight': '40px',
-                    'borderWidth': '1px',
-                    'borderStyle': 'dashed',
-                    'borderRadius': '3px',
-                    'textAlign': 'center',
-                    'align-items': 'center',
-                    'margin': '10px',
-                    'color' : colors['blue1']
-                },
-                # Allow multiple files to be uploaded
-                multiple=True
+
+            # select image row
+            html.Div([
+                dcc.Upload(
+                    id='upload-image',
+                    children=html.Div([
+                        'Drag and Drop or ',
+                        html.A('Select Image')
+                    ]),
+                    style={
+                        'width': '80%',
+                        'height': '40px',
+                        'lineHeight': '40px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '3px',
+                        'margin-left': '30px',
+                        'margin-top': '20px',
+                        'color' : colors['blue1']
+                    },
+                    # Allow multiple files to be uploaded
+                    multiple=True
+                )
+            ],
+            className = 'row',
             ),
-            html.Div(id='output-image-upload',
+
+            # plot selected image row
+            html.Div(dcc.Graph(
+                    id='graph_test',
+                    figure = utilities.blank_fig()
+                    ),
+            className = 'row',
             style = {
-                'background-color' : colors['blue4'],
-                'textAlign': 'center',
-                'height': '230px'}),
-            ], className = 'three columns', style = {'align-items': 'center'}),
-
-        html.Div([
-            dcc.Upload(
-                id='upload-model',
-                children=html.Div([
-                    'Drag and Drop or ',
-                    html.A('Select Model')
-                ]),
-                style={
-                    'width': '80%',
-                    'height': '40px',
-                    'lineHeight': '40px',
-                    'borderWidth': '1px',
-                    'borderStyle': 'dashed',
-                    'borderRadius': '3px',
-                    'textAlign': 'center',
-                    'align-items': 'center',
-                    'margin': '10px',
-                    'color' : colors['blue1']
-                },
-                # Allow multiple files to be uploaded
-                multiple=True
+                #'height': '230px'
+                }
+            ), 
+        
+            # select model row
+            html.Div([
+                dcc.Upload(
+                    id='upload-model',
+                    children=html.Div([
+                        'Drag and Drop or ',
+                        html.A('Select Model')
+                    ]),
+                    style={
+                        'width': '80%',
+                        'height': '40px',
+                        'lineHeight': '40px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '3px',
+                        'margin-left': '30px',
+                        'margin-top': '20px',
+                        'color' : colors['blue1']
+                    },
+                    # Allow multiple files to be uploaded
+                    multiple=True
+                ),
+            ],
+            className = 'row', 
             ),
+
+            # print selected model row
             html.Div(id='output-model-upload',
+            className = 'row',
             style = {
-                'background-color' : colors['blue4'],
+                'height': '230px'}
+            )
+
+            ],
+            className = 'three columns',
+            style = {
                 'textAlign': 'center',
-                'height': '230px'})
-            ], className = 'three columns'),
-    ], 
-    className = 'row', style = {'background-color' : colors['blue4']}
-    )
-    
+                'align-items': 'center'
+            }),
+
+        # XAI methods col (9-col)
+        html.Div([
+
+            # XAI methods selection row
+            html.Div([
+                dcc.Dropdown(id = 'method_sel',
+                    options = [{'label': 'RISE', 'value': 'RISE'},
+                            {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
+                            {'label': 'LIME', 'value': 'LIME'}],
+                    placeholder = "Select one/more XAI methods",
+                    value=[""],
+                    multi = True,
+                    style={
+                            'margin-left': '155px',
+                            'margin-top': '20px',
+                            'width': '60%',
+                            'color' : colors['blue1']
+                        }
+                )
+            ],
+            className = 'row'
+            ),
+
+            # printing predictions
+            html.Div(
+                id='output-state',
+                className = 'row'),
+
+            html.Div([
+                dcc.Graph(
+                    id='graph',
+                    figure = utilities.blank_fig())],
+                    className = 'row',
+                    style = {
+                        'margin-left': '140px',
+                    })
+
+        ], 
+        className = 'nine columns')
+
+    ], className = 'row',
+    style = { 
+        'background-color' : colors['blue4'],
+        'textAlign': 'center',
+        'align-items': 'center'
+        })
+
     return uploads
 
-def get_method_sel():
+# def get_method_sel():
 
-    method_sel =     html.Div([
-        html.Div(['b'],
-            className = 'five columns',
-            style = {'color' : colors['blue4']}),
-        html.Div([
-            dcc.Dropdown(id = 'method_sel',
-                options = [{'label': 'RISE', 'value': 'RISE'},
-                           {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
-                           {'label': 'LIME', 'value': 'LIME'}],
-                placeholder = "Select one/more methods",
-                value=[],
-                multi = True
-            ),
+#     method_sel = html.Div([
+
+#         html.Div(['b'],
+#             className = 'five columns',
+#             style = {'color' : colors['blue4']}),
+#         html.Div([
+#             dcc.Dropdown(id = 'method_sel2',
+#                 options = [{'label': 'RISE', 'value': 'RISE'},
+#                            {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
+#                            {'label': 'LIME', 'value': 'LIME'}],
+#                 placeholder = "Select one/more methods",
+#                 value=[],
+#                 multi = True
+#             ),
             #html.Button(
             #    id='submit-val',
             #    children = html.Div(['Get explanation']), n_clicks=0,
@@ -264,42 +329,42 @@ def get_method_sel():
             #        'color' : colors['white'],
             #        'background-color' : colors['blue2']}
             #    )
-            ], 
-            className = 'two columns')
-    ], className = 'row', style = {
-        'textAlign': 'center',
-        'background-color' : colors['blue4'],
-        'align-items': 'center'})
+            # ], 
+    #         className = 'two columns')
+    # ], className = 'row', style = {
+    #     'textAlign': 'center',
+    #     'background-color' : colors['blue4'],
+    #     'align-items': 'center'})
 
-    return method_sel
+    # return method_sel
 
-def get_pred():
+# def get_pred():
 
-    pred = html.Div([
-        html.Div(['b'],
-            className = 'five columns',
-            style = {'color' : colors['blue4']}),
-        html.Div(id='output-state', className = 'two columns')
-        ], className = 'row', style = {
-        'textAlign': 'center',
-        'background-color' : colors['blue4'],
-        'align-items': 'center'})
+#     pred = html.Div([
+#         html.Div(['b'],
+#             className = 'five columns',
+#             style = {'color' : colors['blue4']}),
+#         html.Div(id='output-state', className = 'two columns')
+#         ], className = 'row', style = {
+#         'textAlign': 'center',
+#         'background-color' : colors['blue4'],
+#         'align-items': 'center'})
 
-    return pred
+#     return pred
 
-def get_method_plot():
+# def get_method_plot():
 
-    method_plot = html.Div([
-        html.Div(['b'],
-            className = 'five columns',
-            style = {'color' : colors['blue4']}),
-        html.Div([dcc.Graph(id='rise', figure = utilities.blank_fig())], className = 'two columns'),
-        ],
-        className="row",
-        style={
-            'background-color' : colors['blue4'],
-            'textAlign': 'center',
-            'align-items': 'center',
-            'verical-align': 'center'})
+#     method_plot = html.Div([
+#         html.Div(['b'],
+#             className = 'five columns',
+#             style = {'color' : colors['blue4']}),
+#         html.Div([dcc.Graph(id='rise', figure = utilities.blank_fig())], className = 'two columns'),
+#         ],
+#         className="row",
+#         style={
+#             'background-color' : colors['blue4'],
+#             'textAlign': 'center',
+#             'align-items': 'center',
+#             'verical-align': 'center'})
 
-    return method_plot
+#     return method_plot
