@@ -1,33 +1,52 @@
-import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-from jupyter_dash import JupyterDash
-from dash import html, dcc
-from dash.dependencies import Input, Output
-import dash_bootstrap_components as dbc
-import pandas as pd
-import base64
+from dash import html
 import numpy as np
+import layouts
+from PIL import Image, ImageStat
 
-colors = {
-    'white': '#FFFFFF',
-    'text': '#091D58',
-    'blue1' : '#063446',
-    'blue2' : '#0e749b',
-    'blue3' : '#15b3f0',
-    'blue4' : '#E4F3F9',
-    'yellow1' : '#f0d515'
-}
-
-def blank_fig():
-    fig = go.Figure()
+def blank_fig(text=None):
+    fig = go.Figure(data=go.Scatter(x=[], y=[]))
     fig.update_layout(
-        paper_bgcolor=colors['blue4'],
-        plot_bgcolor = colors['blue4'])
-    fig.update_xaxes(gridcolor = colors['blue4'], showticklabels = False, zerolinecolor=colors['blue4'])
-    fig.update_yaxes(gridcolor = colors['blue4'], showticklabels = False, zerolinecolor=colors['blue4'])
-    
+        paper_bgcolor=layouts.colors['blue4'],
+        plot_bgcolor = layouts.colors['blue4'])
+
+    fig.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
+    fig.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+
+    if text is not None:
+        fig.update_layout(
+            width=300,
+            height=300,
+            annotations = [
+                        {   
+                            "text": text,
+                            "xref": "paper",
+                            "yref": "paper",
+                            "showarrow": False,
+                            "font": {
+                                "size": 14,
+                                "color" : layouts.colors['blue1']
+                            },
+                            "valign": "top",
+                            "yanchor": "top",
+                            "xanchor": "center",
+                            "yshift": 60,
+                            "xshift": 10
+                        }
+                    ]
+            )
+
     return fig
+
+def open_image(path):
+    im = Image.open(path).convert("RGB")
+    stat = ImageStat.Stat(im)
+    im = np.asarray(im).astype(np.float32)
+
+    if sum(stat.sum)/3 == stat.sum[0]: #check the avg with any element value
+        return np.expand_dims(im[:,:,0], axis=2) / 255 #if grayscale
+    else:
+        return im #else its colour
 
 def parse_contents_image(contents, filename):
     return html.Div([
