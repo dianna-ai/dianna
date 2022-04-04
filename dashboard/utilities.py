@@ -8,7 +8,9 @@ def blank_fig(text=None):
     fig = go.Figure(data=go.Scatter(x=[], y=[]))
     fig.update_layout(
         paper_bgcolor=layouts.colors['blue4'],
-        plot_bgcolor = layouts.colors['blue4'])
+        plot_bgcolor = layouts.colors['blue4'],
+        width=300,
+        height=300)
 
     fig.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
     fig.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
