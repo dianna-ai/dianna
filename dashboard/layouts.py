@@ -152,8 +152,8 @@ def get_navbar(p = 'images'):
     else:
         return navbar_text
 
-# uploads bar        
-def get_uploads():
+# uploads images bar        
+def get_uploads_images():
 
     # uploads row
     uploads = html.Div([
@@ -201,7 +201,7 @@ def get_uploads():
             # select model row
             html.Div([
                 dcc.Upload(
-                    id='upload-model',
+                    id='upload-model-img',
                     children=html.Div([
                         'Drag and Drop or ',
                         html.A('Select Model')
@@ -225,7 +225,7 @@ def get_uploads():
             ),
 
             # print selected model row
-            html.Div(id='output-model-upload',
+            html.Div(id='output-model-img-upload',
             className = 'row',
             style = {
                 'height': '230px',
@@ -267,7 +267,7 @@ def get_uploads():
 
             # printing predictions
             html.Div(
-                id='output-state',
+                id='output-state-img',
                 className = 'row'),
 
             html.Div([
@@ -290,3 +290,196 @@ def get_uploads():
         })
 
     return uploads
+
+
+# uploads images bar        
+def get_uploads_text():
+
+    # uploads row
+    uploads = html.Div([
+
+        # uploads first col (3-col)
+        html.Div([
+
+            # insert text row
+            html.Div([
+                dcc.Input(
+                    id='upload-text',
+                    placeholder='Type here input string...',
+                    value='',
+                    type='text',
+                    style={
+                        'width': '80%',
+                        'height': '40px',
+                        'lineHeight': '40px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '3px',
+                        'margin-left': '30px',
+                        'margin-top': '20px',
+                        'textAlign': 'center',
+                        'align-items': 'center',
+                        'color' : colors['blue1']
+                    },
+                ),
+            ],
+            className = 'row',
+            ),
+
+            # submit text row
+            html.Div([
+                html.Button(
+                    id='submit-text',
+                    type='submit',
+                    children='Submit',
+                    style={
+                        'background-color' : colors['blue2'],
+                        'color' : colors['white']
+                    })
+            ],
+            className = 'row',
+            style={
+                #'width': '80%',
+                #'height': '40px',
+                #'lineHeight': '40px',
+                'borderWidth': '1px',
+                #'borderStyle': 'dashed',
+                #'borderRadius': '3px',
+                #'margin-left': '30px',
+                'margin-top': '10px',
+                'textAlign': 'center',
+                'align-items': 'center'
+                }
+            ),
+
+            # plot inserted text row
+            html.Div(id='text_test',
+            className = 'row',
+            style = {
+                'height': '130px',
+                'margin-top': '20px',
+                }
+            ), 
+        
+            # select model row
+            html.Div([
+                dcc.Upload(
+                    id='upload-model-text',
+                    children=html.Div([
+                        'Drag and Drop or ',
+                        html.A('Select Model')
+                    ]),
+                    style={
+                        'width': '80%',
+                        'height': '40px',
+                        'lineHeight': '40px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '3px',
+                        'margin-left': '30px',
+                        'margin-top': '20px',
+                        'color' : colors['blue1']
+                    },
+                    # Allow multiple files to be uploaded
+                    multiple=True
+                ),
+            ],
+            className = 'row', 
+            ),
+
+            # print selected model row
+            html.Div(id='output-model-text-upload',
+            className = 'row',
+            style = {
+                'height': '230px',
+                'margin-top': '20px',
+                #'margin-bottom': '50px',
+                #'fontSize': 8,
+                'color' : colors['blue1']}
+            )
+
+            ],
+            className = 'three columns',
+            style = {
+                'textAlign': 'center',
+                'align-items': 'center'
+            }),
+
+        # XAI methods col (9-col)
+        html.Div([
+
+            # XAI methods selection row
+            html.Div([
+                dcc.Dropdown(id = 'method_sel',
+                    options = [{'label': 'RISE', 'value': 'RISE'},
+                            {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
+                            {'label': 'LIME', 'value': 'LIME'}],
+                    placeholder = "Select one/more XAI methods",
+                    value=[""],
+                    multi = True,
+                    style={
+                            'margin-left': '155px',
+                            'margin-top': '20px',
+                            'width': '60%',
+                            'color' : colors['blue1']
+                        }
+                )
+            ],
+            className = 'row'
+            ),
+
+            # printing predictions
+            html.Div(
+                id='output-state-text',
+                className = 'row'),
+
+            html.Div([
+                dcc.Graph(
+                    id='graph',
+                    figure = utilities.blank_fig())],
+                    className = 'row',
+                    style = {
+                        'margin-left': '140px',
+                    })
+
+        ], 
+        className = 'nine columns')
+
+    ], className = 'row',
+    style = { 
+        'background-color' : colors['blue4'],
+        'textAlign': 'center',
+        'align-items': 'center',
+        'height': '600px'
+        })
+
+    return uploads
+
+
+images_page = html.Div([
+    
+    #Row 1 : Header
+    get_header(),
+    #Row 2 : Nav bar
+    get_navbar("images"),
+
+    get_uploads_images(),
+
+    # hidden signal value
+    dcc.Store(id='signal'),
+    
+    ])
+
+text_page = html.Div([
+    
+    #Row 1 : Header
+    get_header(),
+    #Row 2 : Nav bar
+    get_navbar("text"),
+
+    get_uploads_text(),
+
+    # hidden signal value
+    #dcc.Store(id='signal'),
+    
+    ])
