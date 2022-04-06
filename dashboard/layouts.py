@@ -247,7 +247,7 @@ def get_uploads_images():
 
             # XAI methods selection row
             html.Div([
-                dcc.Dropdown(id = 'method_sel',
+                dcc.Dropdown(id = 'method_sel_img',
                     options = [{'label': 'RISE', 'value': 'RISE'},
                             {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
                             {'label': 'LIME', 'value': 'LIME'}],
@@ -339,13 +339,7 @@ def get_uploads_text():
             ],
             className = 'row',
             style={
-                #'width': '80%',
-                #'height': '40px',
-                #'lineHeight': '40px',
                 'borderWidth': '1px',
-                #'borderStyle': 'dashed',
-                #'borderRadius': '3px',
-                #'margin-left': '30px',
                 'margin-top': '10px',
                 'textAlign': 'center',
                 'align-items': 'center'
@@ -393,8 +387,6 @@ def get_uploads_text():
             style = {
                 'height': '230px',
                 'margin-top': '20px',
-                #'margin-bottom': '50px',
-                #'fontSize': 8,
                 'color' : colors['blue1']}
             )
 
@@ -410,7 +402,7 @@ def get_uploads_text():
 
             # XAI methods selection row
             html.Div([
-                dcc.Dropdown(id = 'method_sel',
+                dcc.Dropdown(id = 'method_sel_text',
                     options = [{'label': 'RISE', 'value': 'RISE'},
                             {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
                             {'label': 'LIME', 'value': 'LIME'}],
@@ -431,16 +423,31 @@ def get_uploads_text():
             # printing predictions
             html.Div(
                 id='output-state-text',
-                className = 'row'),
+                className = 'row',
+                style = {
+                    'margin-top': '20px',
+                    'color' : colors['blue1']
+                    }
+                    ),
 
+            # printing explainations
             html.Div([
-                dcc.Graph(
-                    id='graph',
-                    figure = utilities.blank_fig())],
+                dcc.Markdown(
+                    id='text_expl',
                     className = 'row',
-                    style = {
-                        'margin-left': '140px',
-                    })
+                    dangerously_allow_html = True
+                )
+            ]),
+
+            # # printing explainations
+            # html.Div(
+            #     id='text_expl',
+            #     className = 'row',
+            #     style = {
+            #         'margin-top': '40px',
+            #         'color' : colors['blue1']
+            #         }
+            #     ),
 
         ], 
         className = 'nine columns')
@@ -466,7 +473,7 @@ images_page = html.Div([
     get_uploads_images(),
 
     # hidden signal value
-    dcc.Store(id='signal'),
+    dcc.Store(id='signal_image'),
     
     ])
 
@@ -480,6 +487,6 @@ text_page = html.Div([
     get_uploads_text(),
 
     # hidden signal value
-    #dcc.Store(id='signal'),
+    dcc.Store(id='signal_text'),
     
     ])

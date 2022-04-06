@@ -12,16 +12,12 @@ import onnx
 from onnx_tf.backend import prepare
 # Others
 import dianna
-from dianna import visualization
-from dianna import utils
-from scipy.special import expit as sigmoid
 import spacy
-from torchtext.data import get_tokenizer
-from torchtext.vocab import Vectors
 import os
 import base64
 import layouts
 import utilities
+from utilities import MovieReviewsModelRunner, _create_html, _highlight_word
 import numpy as np
 import dianna
 import warnings
@@ -55,58 +51,9 @@ except: # If not present, we download
     spacy.cli.download("en_core_web_sm")
     spacy.load("en_core_web_sm")
 
-@app.callback(dash.dependencies.Output('output-model-img-upload', 'children'),
-              dash.dependencies.Input('upload-model-img', 'contents'),
-              dash.dependencies.State('upload-model-img', 'filename'))
-def upload_model(contents, filename):
-    if contents is not None:
-        try:
-            if 'onnx' in filename[0]:
+########################### Images page ###########################
 
-                content_type, content_string = contents[0].split(',')
-
-                with open(os.path.join(folder_on_server, filename[0]), 'wb') as f:
-                    f.write(base64.b64decode(content_string))
-
-                return html.Div([f'{filename[0]} uploaded'])
-            else:
-                return html.Div([
-                    html.P('File format error!'),
-                    html.Br(),
-                    html.P('Please upload only models in .onnx format.')
-                    ])
-        except Exception as e:
-            print(e)
-            return html.Div(['There was an error processing this file.'])
-    else:
-        raise PreventUpdate
-
-@app.callback(dash.dependencies.Output('output-model-text-upload', 'children'),
-              dash.dependencies.Input('upload-model-text', 'contents'),
-              dash.dependencies.State('upload-model-text', 'filename'))
-def upload_model(contents, filename):
-    if contents is not None:
-        try:
-            if 'onnx' in filename[0]:
-
-                content_type, content_string = contents[0].split(',')
-
-                with open(os.path.join(folder_on_server, filename[0]), 'wb') as f:
-                    f.write(base64.b64decode(content_string))
-
-                return html.Div([f'{filename[0]} uploaded'])
-            else:
-                return html.Div([
-                    html.P('File format error!'),
-                    html.Br(),
-                    html.P('Please upload only models in .onnx format.')
-                    ])
-        except Exception as e:
-            print(e)
-            return html.Div(['There was an error processing this file.'])
-    else:
-        raise PreventUpdate
-
+# uploading test image
 @app.callback(dash.dependencies.Output('graph_test', 'figure'),
               dash.dependencies.Input('upload-image', 'contents'),
               dash.dependencies.State('upload-image', 'filename'))
@@ -154,20 +101,32 @@ def upload_image(contents, filename):
             return utilities.blank_fig(
                     text='There was an error processing this file.')
 
+# uploading model for image
+@app.callback(dash.dependencies.Output('output-model-img-upload', 'children'),
+              dash.dependencies.Input('upload-model-img', 'contents'),
+              dash.dependencies.State('upload-model-img', 'filename'))
+def upload_model(contents, filename):
+    if contents is not None:
+        try:
+            if 'onnx' in filename[0]:
 
-@app.callback(dash.dependencies.Output('text_test', 'children'),
-              dash.dependencies.Input('submit-text', 'n_clicks'),
-              dash.dependencies.State('upload-text', 'value'))
-def upload_text(clicks, input_value):
-    if clicks is not None:
-        return html.Div([
-                    html.P('Input string for the model is:'),
+                content_type, content_string = contents[0].split(',')
+
+                with open(os.path.join(folder_on_server, filename[0]), 'wb') as f:
+                    f.write(base64.b64decode(content_string))
+
+                return html.Div([f'{filename[0]} uploaded'])
+            else:
+                return html.Div([
+                    html.P('File format error!'),
                     html.Br(),
-                    html.P(f'"{input_value}"')
+                    html.P('Please upload only models in .onnx format.')
                     ])
+        except Exception as e:
+            print(e)
+            return html.Div(['There was an error processing this file.'])
     else:
-        return html.Div([f'No string uploaded.'])
-
+        raise PreventUpdate
 
 # perform expensive computations in this "global store"
 # these computations are cached in a globally available
@@ -200,15 +159,16 @@ def global_store_i(method_sel, model_path, image_test):
 
     return relevances
 
+# signaling
 @app.callback(
-    dash.dependencies.Output('signal', 'data'),
-    [dash.dependencies.Input('method_sel', 'value'),
+    dash.dependencies.Output('signal_image', 'data'),
+    [dash.dependencies.Input('method_sel_img', 'value'),
     dash.dependencies.State("upload-model-img", "filename"),
     dash.dependencies.State("upload-image", "filename"),
     ])
 def compute_value_i(method_sel, fn_m, fn_i):
 
-    if method_sel is None:
+    if (method_sel is None) or (fn_m is None) or (fn_i is None):
         raise PreventUpdate
     else:
         for m in method_sel:
@@ -225,16 +185,17 @@ def compute_value_i(method_sel, fn_m, fn_i):
                 
         return method_sel
 
+# update image explainations
 @app.callback(
     dash.dependencies.Output('output-state-img', 'children'),
     dash.dependencies.Output('graph', 'figure'),
-    dash.dependencies.Input("signal", "data"),
     dash.dependencies.State("upload-model-img", "filename"),
     dash.dependencies.State("upload-image", "filename"),
+    dash.dependencies.Input("signal_image", "data"),
     dash.dependencies.Input("upload-model-img", "filename"),
     dash.dependencies.Input("upload-image", "filename"),
 )
-def update_multi_options_i(sel_methods, fn_m, fn_i, new_model, new_image):
+def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
 
     ctx = dash.callback_context
 
@@ -335,24 +296,113 @@ def update_multi_options_i(sel_methods, fn_m, fn_i, new_model, new_image):
         else:
             return html.Div(['Missing either model or image.']), utilities.blank_fig()
 
+###################################################################
+
+########################### Text page ###########################
+
+# uploading test text
+@app.callback(dash.dependencies.Output('text_test', 'children'),
+              dash.dependencies.Input('submit-text', 'n_clicks'),
+              dash.dependencies.State('upload-text', 'value'))
+def upload_text(clicks, input_value):
+    if clicks is not None:
+        return html.Div([
+                    html.P('Input string for the model is:'),
+                    html.Br(),
+                    html.P(f'"{input_value}"')
+                    ])
+    else:
+        return html.Div([f'No string uploaded.'])
+
+# uploading model for the text
+@app.callback(dash.dependencies.Output('output-model-text-upload', 'children'),
+              dash.dependencies.Input('upload-model-text', 'contents'),
+              dash.dependencies.State('upload-model-text', 'filename'))
+def upload_model(contents, filename):
+    if contents is not None:
+        try:
+            if 'onnx' in filename[0]:
+
+                content_type, content_string = contents[0].split(',')
+
+                with open(os.path.join(folder_on_server, filename[0]), 'wb') as f:
+                    f.write(base64.b64decode(content_string))
+
+                return html.Div([f'{filename[0]} uploaded'])
+            else:
+                return html.Div([
+                    html.P('File format error!'),
+                    html.Br(),
+                    html.P('Please upload only models in .onnx format.')
+                    ])
+        except Exception as e:
+            print(e)
+            return html.Div(['There was an error processing this file.'])
+    else:
+        raise PreventUpdate
+
+# perform expensive computations in this "global store"
+# these computations are cached in a globally available
+# redis memory store which is available across processes
+# and for all time.
+@cache.memoize()
+def global_store_t(method_sel, model_runner, input_text):
+    # expensive query
+    if method_sel == "LIME":
+        relevances = dianna.explain_text(
+            model_runner,
+            input_text,
+            method_sel,
+            label=tuple(class_name_text)
+            )
+
+    return relevances
+
+# signaling
 @app.callback(
-    dash.dependencies.Output('output-state-text', 'children'),
-    #dash.dependencies.Input("signal", "data"),
-    dash.dependencies.Input("method_sel", "value"),
+    dash.dependencies.Output('signal_text', 'data'),
+    [dash.dependencies.Input('method_sel_text', 'value'),
     dash.dependencies.State("upload-model-text", "filename"),
     dash.dependencies.State("upload-text", "value"),
+    ])
+def compute_value_t(method_sel, fn_m, input_text):
+
+    if (method_sel is None) or (fn_m is None) or (input_text is None):
+        raise PreventUpdate
+    else:
+        word_vector_path = '../tutorials/data/movie_reviews_word_vectors.txt'
+        model_path = os.path.join(folder_on_server, fn_m[0])
+        model_runner = MovieReviewsModelRunner(model_path, word_vector_path, max_filter_size=5)
+
+        for m in method_sel:
+            # compute value and send a signal when done
+
+            try:
+                global_store_t(m, model_runner, input_text)
+            except Exception:
+                return method_sel
+                
+        return method_sel
+
+# update text explainations
+@app.callback(
+    dash.dependencies.Output("output-state-text", "children"),
+    dash.dependencies.Output("text_expl", "children"),
+    dash.dependencies.State("upload-model-text", "filename"),
+    dash.dependencies.State("upload-text", "value"),
+    dash.dependencies.Input("signal_text", "data"),
     dash.dependencies.Input("upload-model-text", "filename"),
     dash.dependencies.Input("upload-text", "value"),
 )
-def update_multi_options_t(sel_methods, fn_m, input_text, new_model, new_text):
+def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
 
     ctx = dash.callback_context
 
     if (ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or (ctx.triggered[0]["prop_id"] == "upload-text.value") or (not ctx.triggered):
         cache.clear()
-        return html.Div([''])
+        return html.Div(['']), html.Div([''])
     elif (not sel_methods):
-        return html.Div([''])
+        return html.Div(['']), html.Div([''])
     else:
         # update text explainations
         if (fn_m and input_text) is not None:
@@ -362,46 +412,31 @@ def update_multi_options_t(sel_methods, fn_m, input_text, new_model, new_text):
 
             # define model runner. max_filter_size is a property of the model
             model_runner = MovieReviewsModelRunner(onnx_model_path, word_vector_path, max_filter_size=5)
+            
+            try:
+                predictions = model_runner(input_text)
+                class_name = [c for c in class_name_text]
+                pred_class = class_name[np.argmax(predictions)]
 
-            for m in sel_methods:
-                if m=="LIME":
-                    # An explanation is returned for each label, but we ask for just one label so the output is a list of length one.
-                    relevances = dianna.explain_text(model_runner, input_text, m, label=class_name_text.index('positive'))[0]
-                    print(relevances)
-                    return html.Div([relevances])
+                rel_prova = 'rel_prova'
+
+                for m in sel_methods:
+                    if m=="LIME":
+
+                        try:
+                            relevances_lime = global_store_t(
+                                m, model_runner, input_text)
+
+                            output = _create_html(input_text, relevances_lime[0], max_opacity=0.8)
+                            print(output)
+
+                            return html.Div(['The predicted class is: ' + pred_class]), f''' {output} '''
+
+                        except Exception:
+                            html.Div(['There was an error running the model. Check either the test text or the model.']), html.Div([''])
+            except Exception:
+                return html.Div(['There was an error running the model. Check either the test text or the model.']), html.Div([''])
         else:
-            return html.Div(['Missing either model or input text.'])
+            return html.Div(['Missing either model or input text.']), html.Div([''])
 
-
-class MovieReviewsModelRunner:
-    def __init__(self, model, word_vectors, max_filter_size):
-        self.run_model = utils.get_function(model)
-        self.vocab = Vectors(word_vectors, cache=os.path.dirname(word_vectors))
-        self.max_filter_size = max_filter_size    
-        self.tokenizer = get_tokenizer('spacy', 'en_core_web_sm')
-
-    def __call__(self, sentences):
-        # ensure the input has a batch axis
-        if isinstance(sentences, str):
-            sentences = [sentences]
-
-        tokenized_sentences = []
-        for sentence in sentences:
-            # tokenize and pad to minimum length
-            tokens = self.tokenizer(sentence)
-            if len(tokens) < self.max_filter_size:
-                tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
-            
-            # numericalize the tokens
-            tokens_numerical = [self.vocab.stoi[token] if token in self.vocab.stoi else self.vocab.stoi['<unk>']
-                                for token in tokens]
-            tokenized_sentences.append(tokens_numerical)
-            
-        # run the model, applying a sigmoid because the model outputs logits
-        logits = self.run_model(tokenized_sentences)
-        pred = np.apply_along_axis(sigmoid, 1, logits)
-        
-        # output two classes
-        positivity = pred[:, 0]
-        negativity = 1 - positivity
-        return np.transpose([negativity, positivity])
+###################################################################

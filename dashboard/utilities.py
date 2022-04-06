@@ -3,6 +3,44 @@ from dash import html
 import numpy as np
 import layouts
 from PIL import Image, ImageStat
+from dianna import utils
+from torchtext.data import get_tokenizer
+from torchtext.vocab import Vectors
+from scipy.special import expit as sigmoid
+import os
+
+class MovieReviewsModelRunner:
+    def __init__(self, model, word_vectors, max_filter_size):
+        self.run_model = utils.get_function(model)
+        self.vocab = Vectors(word_vectors, cache=os.path.dirname(word_vectors))
+        self.max_filter_size = max_filter_size    
+        self.tokenizer = get_tokenizer('spacy', 'en_core_web_sm')
+
+    def __call__(self, sentences):
+        # ensure the input has a batch axis
+        if isinstance(sentences, str):
+            sentences = [sentences]
+
+        tokenized_sentences = []
+        for sentence in sentences:
+            # tokenize and pad to minimum length
+            tokens = self.tokenizer(sentence)
+            if len(tokens) < self.max_filter_size:
+                tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
+            
+            # numericalize the tokens
+            tokens_numerical = [self.vocab.stoi[token] if token in self.vocab.stoi else self.vocab.stoi['<unk>']
+                                for token in tokens]
+            tokenized_sentences.append(tokens_numerical)
+            
+        # run the model, applying a sigmoid because the model outputs logits
+        logits = self.run_model(tokenized_sentences)
+        pred = np.apply_along_axis(sigmoid, 1, logits)
+        
+        # output two classes
+        positivity = pred[:, 0]
+        negativity = 1 - positivity
+        return np.transpose([negativity, positivity])
 
 def blank_fig(text=None):
     fig = go.Figure(data=go.Scatter(x=[], y=[]))
@@ -73,3 +111,23 @@ def fill_segmentation(values, segmentation):
 # For LIME: we divided the input data by 256 for the models and LIME needs RGB values
 def preprocess_function(image):
     return (image / 256).astype(np.float32)
+
+def _create_html(original_text, explanation, max_opacity):
+    max_importance = max([abs(item[2]) for item in explanation])
+    body = original_text
+    words_in_reverse_order = sorted(explanation, key=lambda item: item[1], reverse=True)
+    for word, word_start, importance in words_in_reverse_order:
+        word_end = word_start + len(word)
+        highlighted_word = _highlight_word(word, importance, max_importance, max_opacity)
+        body = body[:word_start] + highlighted_word + body[word_end:]
+    return '<html><body>' + body + '</body></html>'
+
+
+def _highlight_word(word, importance, max_importance, max_opacity):
+    opacity = max_opacity * abs(importance) / max_importance
+    if importance > 0:
+        color = f'rgba(255, 0, 0, {opacity:.2f})'
+    else:
+        color = f'rgba(0, 0, 255, {opacity:2f})'
+    highlighted_word = f'<span style="background:{color}">{word}</span>'
+    return highlighted_word
