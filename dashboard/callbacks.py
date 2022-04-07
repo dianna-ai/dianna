@@ -1,6 +1,7 @@
 # Plotly
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import plotly.express as px
 # Dash&Flask
 from jupyter_dash import JupyterDash
 import dash
@@ -11,13 +12,15 @@ from flask_caching import Cache
 import onnx
 from onnx_tf.backend import prepare
 # Others
+from PIL import Image
+from html2image import Html2Image
 import dianna
 import spacy
 import os
 import base64
 import layouts
 import utilities
-from utilities import MovieReviewsModelRunner, _create_html, _highlight_word
+from utilities import MovieReviewsModelRunner, _create_html
 import numpy as np
 import dianna
 import warnings
@@ -43,7 +46,7 @@ cache.clear()
 
 # global variables
 class_name_mnist = ['digit 0', 'digit 1']
-class_name_text = ("negative", "positive")
+class_name_text = ["negative", "positive"]
 
 try:
     spacy.load("en_core_web_sm")
@@ -188,7 +191,7 @@ def compute_value_i(method_sel, fn_m, fn_i):
 # update image explainations
 @app.callback(
     dash.dependencies.Output('output-state-img', 'children'),
-    dash.dependencies.Output('graph', 'figure'),
+    dash.dependencies.Output('graph_img', 'figure'),
     dash.dependencies.State("upload-model-img", "filename"),
     dash.dependencies.State("upload-image", "filename"),
     dash.dependencies.Input("signal_image", "data"),
@@ -347,13 +350,29 @@ def upload_model(contents, filename):
 # and for all time.
 @cache.memoize()
 def global_store_t(method_sel, model_runner, input_text):
+
+    predictions = model_runner(input_text)
+    class_name = [c for c in class_name_text]
+    pred_class = class_name[np.argmax(predictions)]
+    labels = tuple(class_name_text)
+    pred_idx = labels.index(pred_class)
+
     # expensive query
     if method_sel == "LIME":
+
         relevances = dianna.explain_text(
             model_runner,
             input_text,
             method_sel,
-            label=tuple(class_name_text)
+            label=pred_idx
+            )
+
+    elif method_sel == "RISE":
+        relevances = dianna.explain_text(
+            model_runner,
+            input_text,
+            method_sel, # RISE
+            labels=[pred_idx]
             )
 
     return relevances
@@ -376,18 +395,17 @@ def compute_value_t(method_sel, fn_m, input_text):
 
         for m in method_sel:
             # compute value and send a signal when done
-
             try:
                 global_store_t(m, model_runner, input_text)
             except Exception:
-                return method_sel
-                
+                return method_sel     
         return method_sel
 
 # update text explainations
 @app.callback(
     dash.dependencies.Output("output-state-text", "children"),
-    dash.dependencies.Output("text_expl", "children"),
+    dash.dependencies.Output("graph_text_lime", "figure"),
+    dash.dependencies.Output("graph_text_rise", "figure"),
     dash.dependencies.State("upload-model-text", "filename"),
     dash.dependencies.State("upload-text", "value"),
     dash.dependencies.Input("signal_text", "data"),
@@ -400,9 +418,9 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
 
     if (ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or (ctx.triggered[0]["prop_id"] == "upload-text.value") or (not ctx.triggered):
         cache.clear()
-        return html.Div(['']), html.Div([''])
+        return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
     elif (not sel_methods):
-        return html.Div(['']), html.Div([''])
+        return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
     else:
         # update text explainations
         if (fn_m and input_text) is not None:
@@ -410,33 +428,84 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
             word_vector_path = '../tutorials/data/movie_reviews_word_vectors.txt'
             onnx_model_path = os.path.join(folder_on_server, fn_m[0])
 
+            print(onnx_model_path)
+
             # define model runner. max_filter_size is a property of the model
             model_runner = MovieReviewsModelRunner(onnx_model_path, word_vector_path, max_filter_size=5)
-            
+
             try:
                 predictions = model_runner(input_text)
                 class_name = [c for c in class_name_text]
                 pred_class = class_name[np.argmax(predictions)]
 
-                rel_prova = 'rel_prova'
+                fig_l = utilities.blank_fig()
+                fig_r = utilities.blank_fig()
 
                 for m in sel_methods:
                     if m=="LIME":
 
-                        try:
-                            relevances_lime = global_store_t(
-                                m, model_runner, input_text)
+                        relevances_lime = global_store_t(
+                            m, model_runner, input_text)
 
-                            output = _create_html(input_text, relevances_lime[0], max_opacity=0.8)
-                            print(output)
+                        output = _create_html(input_text, relevances_lime[0], max_opacity=0.8)
+                        hti = Html2Image()
+                        expl_path = 'text_expl.jpg'
 
-                            return html.Div(['The predicted class is: ' + pred_class]), f''' {output} '''
+                        hti.screenshot(output, save_as=expl_path)
 
-                        except Exception:
-                            html.Div(['There was an error running the model. Check either the test text or the model.']), html.Div([''])
+                        im = Image.open(expl_path)
+                        im = np.asarray(im).astype(np.float32)
+
+                        fig_l = px.imshow(im)
+                        fig_l.update_xaxes(showgrid = False, range=[0,1000], showticklabels = False, zeroline=False)
+                        fig_l.update_yaxes(showgrid = False, range=[200,0], showticklabels = False, zeroline=False)
+                        fig_l.update_layout(
+                            title='LIME explaination:',
+                            title_font_color=layouts.colors['blue1'],
+                            paper_bgcolor=layouts.colors['blue4'],
+                            plot_bgcolor = layouts.colors['blue4'],
+                            height=200,
+                            width=500,
+                            margin_b=40,
+                            margin_t=40,
+                            margin_l=0,
+                            margin_r=0
+                            )
+                    
+                    elif m=="RISE": # m="RISE"
+
+                        relevances_rise = global_store_t(
+                            m, model_runner, input_text)
+
+                        output = _create_html(input_text, relevances_rise[0], max_opacity=0.8)
+                        hti = Html2Image()
+                        expl_path = 'text_expl.jpg'
+
+                        hti.screenshot(output, save_as=expl_path)
+
+                        im = Image.open(expl_path)
+                        im = np.asarray(im).astype(np.float32)
+
+                        fig_r = px.imshow(im)
+                        fig_r.update_xaxes(showgrid = False, range=[0,1000], showticklabels = False, zeroline=False)
+                        fig_r.update_yaxes(showgrid = False, range=[200,0], showticklabels = False, zeroline=False)
+                        fig_r.update_layout(
+                            title='RISE explaination:',
+                            title_font_color=layouts.colors['blue1'],
+                            paper_bgcolor=layouts.colors['blue4'],
+                            plot_bgcolor = layouts.colors['blue4'],
+                            height=200,
+                            width=500,
+                            margin_b=10,
+                            margin_t=40,
+                            margin_l=0,
+                            margin_r=0)
+
+                return html.Div(['The predicted class is: ' + pred_class]), fig_l, fig_r
+
             except Exception:
-                return html.Div(['There was an error running the model. Check either the test text or the model.']), html.Div([''])
+                return html.Div(['There was an error running the model. Check either the test text or the model.']), utilities.blank_fig(), utilities.blank_fig()
         else:
-            return html.Div(['Missing either model or input text.']), html.Div([''])
+            return html.Div(['Missing either model or input text.']), utilities.blank_fig(), utilities.blank_fig()
 
 ###################################################################

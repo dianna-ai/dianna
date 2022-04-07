@@ -272,7 +272,7 @@ def get_uploads_images():
 
             html.Div([
                 dcc.Graph(
-                    id='graph',
+                    id='graph_img',
                     figure = utilities.blank_fig())],
                     className = 'row',
                     style = {
@@ -404,7 +404,6 @@ def get_uploads_text():
             html.Div([
                 dcc.Dropdown(id = 'method_sel_text',
                     options = [{'label': 'RISE', 'value': 'RISE'},
-                            {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
                             {'label': 'LIME', 'value': 'LIME'}],
                     placeholder = "Select one/more XAI methods",
                     value=[""],
@@ -430,14 +429,29 @@ def get_uploads_text():
                     }
                     ),
 
-            # printing explainations
+            # plotting explainations
             html.Div([
-                dcc.Markdown(
-                    id='text_expl',
+                dcc.Graph(
+                    id='graph_text_lime',
+                    figure = utilities.blank_fig())],
                     className = 'row',
-                    dangerously_allow_html = True
-                )
-            ]),
+                    style = {
+                        'margin-top': '80',
+                        'margin-left': '140px',
+                        'height': '100px'
+                    }),
+
+            # plotting explainations
+            html.Div([
+                dcc.Graph(
+                    id='graph_text_rise',
+                    figure = utilities.blank_fig())],
+                    className = 'row',
+                    style = {
+                        'margin-top': '80',
+                        'margin-left': '140px',
+                        'height': '100px'
+                    })
 
             # # printing explainations
             # html.Div(
