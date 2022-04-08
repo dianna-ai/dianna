@@ -453,16 +453,6 @@ def get_uploads_text():
                         'height': '100px'
                     })
 
-            # # printing explainations
-            # html.Div(
-            #     id='text_expl',
-            #     className = 'row',
-            #     style = {
-            #         'margin-top': '40px',
-            #         'color' : colors['blue1']
-            #         }
-            #     ),
-
         ], 
         className = 'nine columns')
 
