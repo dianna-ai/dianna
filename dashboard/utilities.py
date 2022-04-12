@@ -1,5 +1,4 @@
 import plotly.graph_objects as go
-from dash import html
 import numpy as np
 from PIL import Image, ImageStat
 from dianna import utils
@@ -95,26 +94,13 @@ def open_image(path):
 
     if sum(stat.sum)/3 == stat.sum[0]: #check the avg with any element value
         return np.expand_dims(im[:,:,0], axis=2) / 255 #if grayscale
-    else:
-        return im #else its colour
-
-def parse_contents_image(contents, filename):
-    return html.Div([
-        html.H5(filename + ' loaded'),
-        # HTML images accept base64 encoded strings in the same format
-        # that is supplied by the upload
-        html.Img(src=contents, height = '160 px', width = 'auto')
-    ])
-
-def parse_contents_model(contents, filename):
-    return html.Div([
-        html.H5(filename + ' loaded')
-    ])
+    
+    return im #else its colour
 
 # For KernelSHAP: fill each pixel with SHAP values
 def fill_segmentation(values, segmentation):
     out = np.zeros(segmentation.shape)
-    for i in range(len(values)):
+    for i,_ in enumerate(values):
         out[segmentation == i] = values[i]
     return out
 

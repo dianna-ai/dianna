@@ -4,6 +4,7 @@ import utilities
 
 #static images
 image_filename = 'app_data/logo.png' # replace with your own image
+# pylint: disable=consider-using-with
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 # colors
@@ -57,7 +58,7 @@ def get_header():
 
         html.Div([
             html.Img(
-                    src = 'data:image/png;base64,{}'.format(encoded_image.decode()),
+                    src = f'data:image/png;base64,{encoded_image.decode()}',
                     height = '43 px',
                     width = 'auto')
             ],
@@ -149,8 +150,8 @@ def get_navbar(p = 'images'):
 
     if p == 'images':
         return navbar_images
-    else:
-        return navbar_text
+
+    return navbar_text
 
 # uploads images bar        
 def get_uploads_images():
