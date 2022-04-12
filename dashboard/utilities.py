@@ -1,13 +1,23 @@
 import plotly.graph_objects as go
 from dash import html
 import numpy as np
-import layouts
 from PIL import Image, ImageStat
 from dianna import utils
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
 from scipy.special import expit as sigmoid
 import os
+
+# colors
+colors = {
+    'white': '#FFFFFF',
+    'text': '#091D58',
+    'blue1' : '#063446', #dark blue
+    'blue2' : '#0e749b',
+    'blue3' : '#15b3f0',
+    'blue4' : '#E4F3F9', #light blue
+    'yellow1' : '#f0d515'
+}
 
 class MovieReviewsModelRunner:
     def __init__(self, model, word_vectors, max_filter_size):
@@ -45,8 +55,8 @@ class MovieReviewsModelRunner:
 def blank_fig(text=None):
     fig = go.Figure(data=go.Scatter(x=[], y=[]))
     fig.update_layout(
-        paper_bgcolor=layouts.colors['blue4'],
-        plot_bgcolor = layouts.colors['blue4'],
+        paper_bgcolor = colors['blue4'],
+        plot_bgcolor = colors['blue4'],
         width=300,
         height=300)
 
@@ -65,7 +75,7 @@ def blank_fig(text=None):
                             "showarrow": False,
                             "font": {
                                 "size": 14,
-                                "color" : layouts.colors['blue1']
+                                "color" : colors['blue1']
                             },
                             "valign": "top",
                             "yanchor": "top",

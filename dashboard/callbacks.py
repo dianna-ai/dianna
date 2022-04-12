@@ -22,7 +22,6 @@ import layouts
 import utilities
 from utilities import MovieReviewsModelRunner, _create_html
 import numpy as np
-import dianna
 import warnings
 warnings.filterwarnings('ignore') # disable warnings relateds to versions of tf
 
@@ -50,7 +49,7 @@ class_name_text = ["negative", "positive"]
 
 try:
     spacy.load("en_core_web_sm")
-except: # If not present, we download
+except Exception: # If not present, we download
     spacy.cli.download("en_core_web_sm")
     spacy.load("en_core_web_sm")
 
@@ -61,6 +60,7 @@ except: # If not present, we download
               dash.dependencies.Input('upload-image', 'contents'),
               dash.dependencies.State('upload-image', 'filename'))
 def upload_image(contents, filename):
+    '''Takes in test image file, returns it as a Plotly figure'''
     if contents is not None:
 
         try:
@@ -103,12 +103,15 @@ def upload_image(contents, filename):
             print(e)
             return utilities.blank_fig(
                     text='There was an error processing this file.')
+    else:
+        return utilities.blank_fig()
 
 # uploading model for image
 @app.callback(dash.dependencies.Output('output-model-img-upload', 'children'),
               dash.dependencies.Input('upload-model-img', 'contents'),
               dash.dependencies.State('upload-model-img', 'filename'))
 def upload_model(contents, filename):
+    '''Takes in the model file, returns a print statement about its uploading state'''
     if contents is not None:
         try:
             if 'onnx' in filename[0]:
@@ -137,6 +140,8 @@ def upload_model(contents, filename):
 # and for all time.
 @cache.memoize()
 def global_store_i(method_sel, model_path, image_test):
+    '''Takes in the selected XAI method, the model path and the image to test,
+    returns the explainations array'''
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
@@ -170,6 +175,8 @@ def global_store_i(method_sel, model_path, image_test):
     dash.dependencies.State("upload-image", "filename"),
     ])
 def compute_value_i(method_sel, fn_m, fn_i):
+    '''Takes in the selected XAI method, the model and the image filenames,
+    returns the selected XAI method'''
 
     if (method_sel is None) or (fn_m is None) or (fn_i is None):
         raise PreventUpdate
@@ -199,6 +206,8 @@ def compute_value_i(method_sel, fn_m, fn_i):
     dash.dependencies.Input("upload-image", "filename"),
 )
 def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
+    '''Takes in the last model and image uploaded filenames, the selected XAI method, and 
+    returns the selected XAI method'''
 
     ctx = dash.callback_context
 
@@ -435,7 +444,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
 
             try:
                 predictions = model_runner(input_text)
-                class_name = [c for c in class_name_text]
+                class_name = class_name_text
                 pred_class = class_name[np.argmax(predictions)]
 
                 fig_l = utilities.blank_fig()
@@ -504,7 +513,9 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                 return html.Div(['The predicted class is: ' + pred_class]), fig_l, fig_r
 
             except Exception:
-                return html.Div(['There was an error running the model. Check either the test text or the model.']), utilities.blank_fig(), utilities.blank_fig()
+                return html.Div([
+                    'There was an error running the model. Check either the test text or the model.'
+                    ]), utilities.blank_fig(), utilities.blank_fig()
         else:
             return html.Div(['Missing either model or input text.']), utilities.blank_fig(), utilities.blank_fig()
 
