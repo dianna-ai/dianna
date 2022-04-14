@@ -63,8 +63,8 @@ class RISE:
         input_shape = (num_tokens,)
         self.masks = self._generate_masks_for_text(input_shape, active_p_keep,
                                                    self.n_masks)  # Expose masks for to make user inspection possible
-        sentences = self._create_masked_sentences(input_tokens, self.masks)
-        saliencies = self._get_saliencies(runner, sentences, num_tokens, batch_size, active_p_keep)
+        masked_sentences = self._create_masked_sentences(input_tokens, self.masks)
+        saliencies = self._get_saliencies(runner, masked_sentences, num_tokens, batch_size, active_p_keep)
         return self._reshape_result(input_tokens, labels, saliencies)
 
     def _determine_p_keep_for_text(self, input_data, runner, n_masks=100):
@@ -115,11 +115,16 @@ class RISE:
         return predictions
 
     def _create_masked_sentences(self, tokens, masks):
-        tokens_masked = []
-        for mask in masks:
-            tokens_masked.append([token if keep else self.mask_string for token, keep in zip(tokens, mask)])
-        sentences = [" ".join(t) for t in tokens_masked]
-        return sentences
+        tokens_masked_list = [
+            [token if keep else self.mask_string for token, keep in zip(tokens, mask)]
+            for mask in masks]
+        masked_sentences = [self._convert_tokens_to_string(tokens_masked)
+                            for tokens_masked in tokens_masked_list]
+        return masked_sentences
+
+    def _convert_tokens_to_string(self, tokens):
+        sentence = " ".join(tokens)
+        return sentence
 
     def explain_image(self, model_or_function, input_data, labels=None, batch_size=100):
         """Runs the RISE explainer on images.
