@@ -58,13 +58,13 @@ class RISE:
         """
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         input_tokens = np.asarray(model_or_function.tokenizer(input_text))
-        text_length = len(input_tokens)
+        num_tokens = len(input_tokens)
         active_p_keep = self._determine_p_keep_for_text(input_tokens, runner) if self.p_keep is None else self.p_keep
-        input_shape = (text_length,)
+        input_shape = (num_tokens,)
         self.masks = self._generate_masks_for_text(input_shape, active_p_keep,
                                                    self.n_masks)  # Expose masks for to make user inspection possible
         sentences = self._create_masked_sentences(input_tokens, self.masks)
-        saliencies = self._get_saliencies(runner, sentences, text_length, batch_size, active_p_keep)
+        saliencies = self._get_saliencies(runner, sentences, num_tokens, batch_size, active_p_keep)
         return self._reshape_result(input_tokens, labels, saliencies)
 
     def _determine_p_keep_for_text(self, input_data, runner, n_masks=100):
@@ -96,9 +96,9 @@ class RISE:
         masks = np.random.choice(a=(True, False), size=(n_masks,) + input_shape, p=(p_keep, 1 - p_keep))
         return masks
 
-    def _get_saliencies(self, runner, sentences, text_length, batch_size, p_keep):  # pylint: disable=too-many-arguments
+    def _get_saliencies(self, runner, sentences, num_tokens, batch_size, p_keep):  # pylint: disable=too-many-arguments
         self.predictions = self._get_predictions(sentences, runner, batch_size)
-        unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_length)
+        unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, num_tokens)
         return normalize(unnormalized_saliency, self.n_masks, p_keep)
 
     @staticmethod
