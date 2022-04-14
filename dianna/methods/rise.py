@@ -118,13 +118,9 @@ class RISE:
         tokens_masked_list = [
             [token if keep else tokenizer.mask_token for token, keep in zip(tokens, mask)]
             for mask in masks]
-        masked_sentences = [self._convert_tokens_to_string(tokens_masked)
+        masked_sentences = [tokenizer.convert_tokens_to_string(tokens_masked)
                             for tokens_masked in tokens_masked_list]
         return masked_sentences
-
-    def _convert_tokens_to_string(self, tokens):
-        sentence = " ".join(tokens)
-        return sentence
 
     def explain_image(self, model_or_function, input_data, labels=None, batch_size=100):
         """Runs the RISE explainer on images.
