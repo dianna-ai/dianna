@@ -40,7 +40,7 @@ class RISE:
         self.predictions = None
         self.axis_labels = axis_labels if axis_labels is not None else []
 
-    def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100, mask_string="UNKWORDZ"):
+    def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
         """Runs the RISE explainer on text.
 
            The model will be called with masked versions of the input text.
@@ -51,38 +51,38 @@ class RISE:
             input_text (np.ndarray): Text to be explained
             labels (list(int)): Labels to be explained
             batch_size (int): Batch size to use for running the model.
-            mask_string (str, optional): String to replace masked tokens with (defaults to "UNKWORDZ")
 
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
-        input_tokens = np.asarray(model_or_function.tokenizer(input_text))
+        tokenizer = model_or_function.tokenizer
+        input_tokens = np.asarray(tokenizer.tokenize(input_text))
         num_tokens = len(input_tokens)
-        active_p_keep = self._determine_p_keep_for_text(input_tokens, runner, mask_string) if self.p_keep is None else self.p_keep
+        active_p_keep = self._determine_p_keep_for_text(input_tokens, runner, tokenizer) if self.p_keep is None else self.p_keep
         input_shape = (num_tokens,)
         self.masks = self._generate_masks_for_text(input_shape, active_p_keep,
                                                    self.n_masks)  # Expose masks for to make user inspection possible
-        masked_sentences = self._create_masked_sentences(input_tokens, self.masks, mask_string)
+        masked_sentences = self._create_masked_sentences(input_tokens, self.masks, tokenizer)
         saliencies = self._get_saliencies(runner, masked_sentences, num_tokens, batch_size, active_p_keep)
         return self._reshape_result(input_tokens, labels, saliencies)
 
-    def _determine_p_keep_for_text(self, input_data, runner, mask_string, n_masks=100):
+    def _determine_p_keep_for_text(self, input_data, runner, tokenizer, n_masks=100):
         """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""
         p_keeps = np.arange(0.1, 1.0, 0.1)
         stds = []
         for p_keep in p_keeps:
-            std = self._calculate_mean_class_std_for_text(p_keep, runner, input_data, mask_string, n_masks=n_masks)
+            std = self._calculate_mean_class_std_for_text(p_keep, runner, input_data, tokenizer, n_masks=n_masks)
             stds += [std]
         best_i = np.argmax(stds)
         best_p_keep = p_keeps[best_i]
         print(f'Rise parameter p_keep was automatically determined at {best_p_keep}')
         return best_p_keep
 
-    def _calculate_mean_class_std_for_text(self, p_keep, runner, input_data, mask_string, n_masks):
+    def _calculate_mean_class_std_for_text(self, p_keep, runner, input_data, tokenizer, n_masks):
         batch_size = 50
         masks = self._generate_masks_for_text(input_data.shape, p_keep, n_masks)
-        masked = self._create_masked_sentences(input_data, masks, mask_string)
+        masked = self._create_masked_sentences(input_data, masks, tokenizer)
         predictions = []
         for i in range(0, n_masks, batch_size):
             current_input = masked[i:i + batch_size]
@@ -114,9 +114,9 @@ class RISE:
         predictions = np.concatenate(predictions)
         return predictions
 
-    def _create_masked_sentences(self, tokens, masks, mask_string):
+    def _create_masked_sentences(self, tokens, masks, tokenizer):
         tokens_masked_list = [
-            [token if keep else mask_string for token, keep in zip(tokens, mask)]
+            [token if keep else tokenizer.mask_token for token, keep in zip(tokens, mask)]
             for mask in masks]
         masked_sentences = [self._convert_tokens_to_string(tokens_masked)
                             for tokens_masked in tokens_masked_list]
