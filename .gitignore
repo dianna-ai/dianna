@@ -34,3 +34,6 @@ venv
 venv3
 
 .python-version
+
+# testing jpgs
+embedding_WIP/*.jpg*
