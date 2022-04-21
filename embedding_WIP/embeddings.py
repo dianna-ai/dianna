@@ -9,6 +9,12 @@ import numpy as np
 from matplotlib import pyplot as plt
 from tqdm import tqdm
 
+import os
+import random
+import numpy as np
+import tensorflow as tf
+from keras import backend as K
+
 
 class Model():
     def __init__(self):
@@ -52,12 +58,9 @@ def class_name(idx):
     return decode_predictions(np.eye(1, 1000, idx))[0][0][1]
 
 
-def download(url, filename=None):
-    if filename is None:
-        filename = os.path.basename(urlparse(url).path)
-    with open(filename, "wb") as file:
-        response = get(url)
-        file.write(response.content)
+def download(url):
+    filename = os.path.basename(urlparse(url).path)
+    os.system(f"wget {url}")
     return filename
 
 
@@ -72,3 +75,18 @@ def plot_explainer(image, saliency, ax=None, vmin=None, vmax=None, **kwargs):
     im = ax.imshow(saliency, cmap='jet', alpha=0.5, vmin=vmin, vmax=vmax)
     plt.colorbar(im, ax=ax)
     return fig
+
+
+# from https://stackoverflow.com/a/52897216/1199693
+def set_all_the_seeds(seed_value=0):
+    os.environ['PYTHONHASHSEED']=str(seed_value)
+
+    random.seed(seed_value)
+
+    np.random.seed(seed_value)
+
+    tf.random.set_seed(seed_value)
+
+    session_conf = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)
+    sess = tf.compat.v1.Session(graph=tf.compat.v1.get_default_graph(), config=session_conf)
+    tf.compat.v1.keras.backend.set_session(sess)
