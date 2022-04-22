@@ -19,7 +19,9 @@ colors = {
 }
 
 class MovieReviewsModelRunner:
+    """Creates runner for movie review model."""
     def __init__(self, model, word_vectors, max_filter_size):
+        """Initializes the class."""
         self.run_model = utils.get_function(model)
         self.vocab = Vectors(word_vectors, cache=os.path.dirname(word_vectors))
         self.max_filter_size = max_filter_size    
@@ -52,6 +54,7 @@ class MovieReviewsModelRunner:
         return np.transpose([negativity, positivity])
 
 def blank_fig(text=None):
+    """Creates a blank figure."""
     fig = go.Figure(data=go.Scatter(x=[], y=[]))
     fig.update_layout(
         paper_bgcolor = colors['blue4'],
@@ -88,6 +91,7 @@ def blank_fig(text=None):
     return fig
 
 def open_image(path):
+    """Open an image from a path and returns it as a numpy array."""
     im = Image.open(path).convert("RGB")
     stat = ImageStat.Stat(im)
     im = np.asarray(im).astype(np.float32)
@@ -97,18 +101,21 @@ def open_image(path):
     
     return im #else its colour
 
-# For KernelSHAP: fill each pixel with SHAP values
+
 def fill_segmentation(values, segmentation):
+    """For KernelSHAP: fill each pixel with SHAP values."""
     out = np.zeros(segmentation.shape)
     for i,_ in enumerate(values):
         out[segmentation == i] = values[i]
     return out
 
-# For LIME: we divided the input data by 256 for the models and LIME needs RGB values
+
 def preprocess_function(image):
+    """For LIME: we divided the input data by 256 for the model (binary mnist) and LIME needs RGB values."""
     return (image / 256).astype(np.float32)
 
 def _create_html(original_text, explanation, max_opacity):
+    """Creates text explaination map using html format."""
     max_importance = max([abs(item[2]) for item in explanation])
     body = original_text
     words_in_reverse_order = sorted(explanation, key=lambda item: item[1], reverse=True)
@@ -120,6 +127,7 @@ def _create_html(original_text, explanation, max_opacity):
 
 
 def _highlight_word(word, importance, max_importance, max_opacity):
+    """Defines how to highlight words according to importance."""
     opacity = max_opacity * abs(importance) / max_importance
     if importance > 0:
         color = f'rgba(255, 0, 0, {opacity:.2f})'

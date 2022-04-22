@@ -40,7 +40,7 @@ navbarotherpage = {
 
 # header
 def get_header():
-
+    """Creates layout for header row."""
     header = html.Div([
 
         html.Div([],
@@ -79,7 +79,7 @@ def get_header():
 
 # nav bar
 def get_navbar(p = 'images'):
-
+    """Creates layout for navbar row."""
     navbar_images = html.Div([
 
         html.Div(['b'],
@@ -155,7 +155,7 @@ def get_navbar(p = 'images'):
 
 # uploads images bar        
 def get_uploads_images():
-
+    """Creates layout for images page."""
     # uploads row
     uploads = html.Div([
 
@@ -295,7 +295,7 @@ def get_uploads_images():
 
 # uploads images bar        
 def get_uploads_text():
-
+    """Creates layout for text page."""
     # uploads row
     uploads = html.Div([
 
