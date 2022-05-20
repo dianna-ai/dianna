@@ -71,6 +71,8 @@ def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
         List of (word, index of word in raw text, importance for target class) tuples.
 
     """
+    if kwargs.get('tokenizer') is not None and method != 'RISE':
+        raise ValueError('A custom tokenizer is only supported by RISE')
     explainer = _get_explainer(method, kwargs)
     explain_text_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_text, kwargs)
     return explainer.explain_text(model_or_function, input_data, labels, **explain_text_kwargs)

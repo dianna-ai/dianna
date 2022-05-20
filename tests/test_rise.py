@@ -59,7 +59,8 @@ class RiseOnText(TestCase):
         expected_word_indices = [0, 5, 7, 11]
         expected_positive_scores = [0.3044678, 0.28736606, 0.03623142, 0.23650846]
 
-        positive_explanation = dianna.explain_text(runner, review, labels=(1, 0), method='RISE', p_keep=.5)[0]
+        positive_explanation = dianna.explain_text(runner, review, tokenizer=runner.tokenizer,
+                                                   labels=(1, 0), method='RISE', p_keep=.5)[0]
 
         words = [element[0] for element in positive_explanation]
         word_indices = [element[1] for element in positive_explanation]
@@ -77,8 +78,8 @@ class RiseOnText(TestCase):
         runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)
         input_text = 'such a bad movie'
         runner = get_function(runner)
-        input_tokens = np.asarray(runner.tokenizer(input_text))
+        input_tokens = np.asarray(runner.tokenizer.tokenize(input_text))
 
-        p_keep = RISE()._determine_p_keep_for_text(input_tokens, runner)  # pylint: disable=protected-access
+        p_keep = RISE()._determine_p_keep_for_text(input_tokens, runner, runner.tokenizer)  # pylint: disable=protected-access
 
         assert np.isclose(p_keep, expected_p_exact_keep)

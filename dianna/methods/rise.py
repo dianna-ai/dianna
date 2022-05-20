@@ -40,7 +40,7 @@ class RISE:
         self.predictions = None
         self.axis_labels = axis_labels if axis_labels is not None else []
 
-    def explain_text(self, model_or_function, input_text, labels=(0,), batch_size=100):
+    def explain_text(self, model_or_function, input_text, labels=(0,), tokenizer=None, batch_size=100):
         """Runs the RISE explainer on text.
 
            The model will be called with masked versions of the input text.
@@ -49,14 +49,16 @@ class RISE:
             model_or_function (callable or str): The function that runs the model to be explained _or_
                                                  the path to a ONNX model on disk.
             input_text (np.ndarray): Text to be explained
+            tokenizer: Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
             labels (list(int)): Labels to be explained
             batch_size (int): Batch size to use for running the model.
 
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
+        if tokenizer is None:
+            raise ValueError('Please provide a tokenizer to explain_text')
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
-        tokenizer = model_or_function.tokenizer
         input_tokens = np.asarray(tokenizer.tokenize(input_text))
         num_tokens = len(input_tokens)
         active_p_keep = self._determine_p_keep_for_text(input_tokens, runner, tokenizer) if self.p_keep is None else self.p_keep
