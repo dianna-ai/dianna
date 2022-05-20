@@ -88,4 +88,3 @@ class TextVisualizationTestCase(unittest.TestCase):
 
     def tearDown(self) -> None:
         shutil.rmtree(self.temp_folder, ignore_errors=True)
-
