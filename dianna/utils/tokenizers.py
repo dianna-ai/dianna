@@ -28,9 +28,9 @@ class Tokenizer(ABC):
 
 
 class SpacyTokenizer(Tokenizer):
-    """Spacy tokenizer for natural language"""
+    """Spacy tokenizer for natural language."""
     def __init__(self, name: str = 'en_core_web_sm', mask_token: str = "UNKWORDZ"):
-        """SpacyTokenizer initalizer
+        """Spacy tokenizer initalizer.
 
         Args:
             name: Name of the Spacy tokenizer to use
