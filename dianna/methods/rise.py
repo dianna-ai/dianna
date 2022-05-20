@@ -1,4 +1,3 @@
-from tkinter import W
 import numpy as np
 from skimage.transform import resize
 from tqdm import tqdm

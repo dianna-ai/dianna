@@ -10,7 +10,7 @@ class Tokenizer(ABC):
 
     Has the same interface as (part of) the transformers Tokenizer class.
     """
-    def __init__(self, mask_token: str ):
+    def __init__(self, mask_token: str):
         """
         Tokenizer initializer.
 
