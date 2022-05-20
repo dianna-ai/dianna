@@ -1,37 +1,47 @@
 import os
-import re
 import shutil
 import unittest
 from pathlib import Path
 from dianna.visualization.text import highlight_text
+from dianna.utils.tokenizers import SpacyTokenizer
 
 
 class TextExample:
     """Text and explanation for running visualizing tests."""
     original_text = 'Doloremque aliquam totam ut. Aspernatur repellendus autem quia deleniti. Natus accusamus ' \
                     'doloribus et in quam officiis veniam et. '
-    explanation = [('ut', 25, -0.06405025896517044),
-                   ('in', 102, -0.05127647027074053),
-                   ('et', 99, 0.02254588506724936),
-                   ('quia', 58, -0.0008216335740370412),
-                   ('aliquam', 11, -0.0006268298968242725),
-                   ('Natus', 73, -0.0005556223616156406),
-                   ('totam', 19, -0.0005126140261410219),
-                   ('veniam', 119, -0.0005058379023790869),
-                   ('quam', 105, -0.0004573258796550468),
-                   ('repellendus', 40, -0.0003253862469633824)]
+    tokenizer = SpacyTokenizer()
+    tokens = tokenizer.tokenize(original_text)
+    explanation = [
+                    ('aliquam', 1, 0.6450221),
+                    ('et', 19, 0.63976675),
+                    ('in', 15, 0.6397511),
+                    ('Aspernatur', 5, 0.6329795),
+                    ('totam', 2, 0.6242337),
+                    ('quia', 8, 0.61881626),
+                    ('quam', 16, 0.6173148),
+                    ('Natus', 11, 0.60527676),
+                    ('ut', 3, 0.60203224)
+                    ]
 
 
 class TextExampleWithExpectedHtml:
     """Short text and explanation and its expected html output after visualizing."""
-    expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.08)">such</span> ' \
-                    '<span style="background:rgba(255, 0, 0, 0.01)">a</span> <span style="background:rgba(0, 0, 255, 0.800000)">' \
-                    'bad</span> <span style="background:rgba(0, 0, 255, 0.059287)">movie</span>.</body></html>\n'
+    expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.59)">Such</span> ' \
+                    '<span style="background:rgba(255, 0, 0, 0.62)">a</span> ' \
+                    '<span style="background:rgba(255, 0, 0, 0.80)">bad</span> ' \
+                    '<span style="background:rgba(255, 0, 0, 0.63)">movie</span> ' \
+                    '<span style="background:rgba(128, 128, 128, 0.3)">.</span></body></html>\n'
+
     original_text = 'Such a bad movie.'
-    explanation = [('bad', 7, -0.4922624307995777),
-                   ('such', 0, 0.04637815000309109),
-                   ('movie', 11, -0.03648111256069627),
-                   ('a', 5, 0.008377155657765745)]
+    tokenizer = SpacyTokenizer()
+    tokens = tokenizer.tokenize(original_text)
+    explanation =[
+                    ('bad', 2, 0.9959058),
+                    ('movie', 3, 0.78263557),
+                    ('a', 1, 0.7753202),
+                    ('Such', 0, 0.73788315)
+                    ]
 
 
 class TextVisualizationTestCase(unittest.TestCase):
@@ -41,25 +51,25 @@ class TextVisualizationTestCase(unittest.TestCase):
 
     def test_text_visualization_html_output_exists(self):
         """Test if any output is generated at all."""
-        highlight_text(TextExample.explanation, original_text=TextExample.original_text,
+        highlight_text(TextExample.explanation, TextExample.tokens,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
 
     def test_text_visualization_html_output_contains_text(self):
         """Test if all words in the input are present in the output html."""
-        highlight_text(TextExample.explanation, original_text=TextExample.original_text,
+        highlight_text(TextExample.explanation, TextExample.tokens,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
         with open(self.html_file_path, encoding='utf-8') as result_file:
             result = result_file.read()
-        for word in _split_text_into_words(TextExample.original_text):
+        for word in TextExample.tokens:
             assert word in result
 
     def test_text_visualization_html_output_is_correct(self):
         """Test if exact html output of visualization is correct."""
-        highlight_text(TextExampleWithExpectedHtml.explanation, original_text=TextExampleWithExpectedHtml.original_text,
+        highlight_text(TextExampleWithExpectedHtml.explanation, TextExampleWithExpectedHtml.tokens,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
@@ -70,7 +80,7 @@ class TextVisualizationTestCase(unittest.TestCase):
 
     def test_text_visualization_show_plot(self):
         """Test if it runs while showing the plot."""
-        highlight_text(TextExample.explanation, original_text=TextExample.original_text,
+        highlight_text(TextExample.explanation, TextExample.tokens,
                        show_plot=True)
 
     def setUp(self) -> None:
@@ -79,11 +89,3 @@ class TextVisualizationTestCase(unittest.TestCase):
     def tearDown(self) -> None:
         shutil.rmtree(self.temp_folder, ignore_errors=True)
 
-
-def _split_text_into_words(text):
-    # regex taken from
-    # https://stackoverflow.com/questions/12683201/python-re-split-to-split-by-spaces-commas-and-periods-but-not-in-cases-like
-    # explanation: split by \s (whitespace), and only split by commas and
-    # periods if they are not followed (?!\d) or preceded (?<!\d) by a digit.
-    regex = r'\s|(?<!\d)[,.](?!\d)'
-    return re.split(regex, text)

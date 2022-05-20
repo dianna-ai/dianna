@@ -56,7 +56,7 @@ class RiseOnText(TestCase):
         runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)
         review = 'such a bad movie'
         expected_words = ['such', 'a', 'bad', 'movie']
-        expected_word_indices = [0, 5, 7, 11]
+        expected_word_indices = [0, 1, 2, 3]
         expected_positive_scores = [0.3044678, 0.28736606, 0.03623142, 0.23650846]
 
         positive_explanation = dianna.explain_text(runner, review, tokenizer=runner.tokenizer,

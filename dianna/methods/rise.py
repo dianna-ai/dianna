@@ -104,8 +104,7 @@ class RISE:
 
     @staticmethod
     def _reshape_result(input_tokens, labels, saliencies):
-        word_lengths = [len(t) for t in input_tokens]
-        word_indices = [sum(word_lengths[:i]) + i for i in range(len(input_tokens))]
+        word_indices = list(range(len(input_tokens)))
         return [list(zip(input_tokens, word_indices, saliencies[label])) for label in labels]
 
     def _get_predictions(self, sentences, runner, batch_size):

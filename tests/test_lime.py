@@ -45,7 +45,7 @@ def test_lime_text():
     runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)
     review = 'such a bad movie'
     expected_words = ['bad', 'such', 'movie', 'a']
-    expected_word_indices = [7, 0, 11, 5]
+    expected_word_indices = [2, 0, 3, 1]
     expected_scores = [.492, -.046, .036, -.008]
 
     explanation = dianna.explain_text(runner, review, labels=[0], method='LIME', random_state=42)[0]
