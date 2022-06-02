@@ -116,7 +116,7 @@ def preprocess_function(image):
 
 def _create_html(original_text, explanation, max_opacity):
     """Creates text explaination map using html format."""
-    max_importance = max([abs(item[2]) for item in explanation])
+    max_importance = max((abs(item[2]) for item in explanation))
     body = original_text
     words_in_reverse_order = sorted(explanation, key=lambda item: item[1], reverse=True)
     for word, word_start, importance in words_in_reverse_order:
