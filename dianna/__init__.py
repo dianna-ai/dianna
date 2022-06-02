@@ -56,7 +56,7 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
     return explainer.explain_image(model_or_function, input_data, labels, **explain_image_kwargs)
 
 
-def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
+def explain_text(model_or_function, input_data, tokenizer, method, labels=(1,), **kwargs):
     """
     Explain text (input_data) given a model and a chosen method.
 
@@ -64,6 +64,7 @@ def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
         model_or_function (callable or str): The function that runs the model to be explained _or_
                                              the path to a ONNX model on disk.
         input_data (string): Text to be explained
+        tokenizer : Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
         method (string): One of the supported methods: RISE or LIME
         labels (tuple): Labels to be explained
 
@@ -71,11 +72,14 @@ def explain_text(model_or_function, input_data, method, labels=(1,), **kwargs):
         List of (word, index of word in raw text, importance for target class) tuples.
 
     """
-    if kwargs.get('tokenizer') is not None and method != 'RISE':
-        raise ValueError('A custom tokenizer is only supported by RISE')
     explainer = _get_explainer(method, kwargs)
     explain_text_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_text, kwargs)
-    return explainer.explain_text(model_or_function, input_data, labels, **explain_text_kwargs)
+    return explainer.explain_text(
+        model_or_function=model_or_function,
+        input_data=input_data,
+        labels=labels,
+        tokenizer=tokenizer,
+        **explain_text_kwargs)
 
 
 def _get_explainer(method, kwargs):

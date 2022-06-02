@@ -68,6 +68,7 @@ class LIME:
                      model_or_function,
                      input_data,
                      labels=(0,),
+                     tokenizer=None,
                      top_labels=None,
                      num_features=10,
                      num_samples=5000,
@@ -79,6 +80,7 @@ class LIME:
         Args:
             model_or_function (callable or str): The function that runs the model to be explained _or_
                                                  the path to a ONNX model on disk.
+            tokenizer : Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
             input_data (np.ndarray): Data to be explained
             labels ([int], optional): Iterable of indices of class to be explained
 
@@ -88,6 +90,10 @@ class LIME:
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
         """
+        if tokenizer is None:
+            raise ValueError('Please provide a tokenizer to explain_text.')
+        
+        self.text_explainer.split_expression = tokenizer.tokenize
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.text_explainer.explain_instance, kwargs)
         explanation = self.text_explainer.explain_instance(input_data,
@@ -101,13 +107,43 @@ class LIME:
 
         local_explanations = explanation.local_exp
         string_map = explanation.domain_mapper.indexed_string
-        return [self._get_results_for_single_label(local_explanations[label], string_map) for label in labels]
+        token_indices = self._find_token_indices(input_data, string_map, tokenizer)
+        return [self._get_results_for_single_label(local_explanations[label], string_map, token_indices) for label in labels]
 
     @staticmethod
-    def _get_results_for_single_label(local_explanation, string_map):
-        return [(string_map.word(index), int(string_map.string_position(index)), importance)
-                for index, importance in local_explanation]
+    def _get_results_for_single_label(local_explanation, string_map, token_indices):
+        """
+        Args:
+            local_explanation: Lime output, map of tuples (index, importance)
+            string_map: Lime's IndexedString, see documentation:
+                https://lime-ml.readthedocs.io/en/latest/lime.html?highlight=indexedstring#lime.lime_text.IndexedString
+            token_indices: indices of tokens.
+        """
+        explained_tokens = [string_map.word(index) for index, _ in local_explanation]
+        explained_indices = [token_indices[index] for index, _ in local_explanation]
+        importances = [importance for _, importance in local_explanation]
 
+        return list(zip(explained_tokens, explained_indices, importances))
+
+    @staticmethod
+    def _find_token_indices(input_data, string_map, tokenizer):
+        """
+        Lime works with indices of both tokens and inter-token strings. 
+        This extracts only those indices that belong to tokens.
+        """
+        token_list = tokenizer.tokenize(input_data)
+        token_intertoken_list = string_map._segment_with_tokens(input_data, token_list)
+
+        num_intertokens = 0
+        token_indices = []
+        for index, token in enumerate(token_intertoken_list):
+            if token in token_list:
+                token_indices.append(index - num_intertokens)
+            else:
+                num_intertokens += 1
+        
+        return token_indices
+                                                
     def explain_image(self,
                       model_or_function,
                       input_data,
