@@ -113,6 +113,8 @@ class LIME:
     @staticmethod
     def _get_results_for_single_label(local_explanation, string_map, token_indices):
         """
+        Get results for single label.
+
         Args:
             local_explanation: Lime output, map of tuples (index, importance)
             string_map: Lime's IndexedString, see documentation:
@@ -128,7 +130,8 @@ class LIME:
     @staticmethod
     def _find_token_indices(input_data, string_map, tokenizer):
         """
-        Lime works with indices of both tokens and inter-token strings. 
+        Lime works with indices of both tokens and inter-token strings.
+
         This extracts only those indices that belong to tokens.
         """
         token_list = tokenizer.tokenize(input_data)

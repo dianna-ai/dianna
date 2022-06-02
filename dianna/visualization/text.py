@@ -31,7 +31,7 @@ def highlight_text(explanation,
 
 
 def _create_html(input_tokens, explanation, max_opacity):
-    max_importance = max([abs(item[2]) for item in explanation])
+    max_importance = max((abs(item[2]) for item in explanation))
     explained_indices = [index for _, index, _ in explanation]
     highlighted_words = []
     for index, word in enumerate(input_tokens):
