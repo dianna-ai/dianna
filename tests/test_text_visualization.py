@@ -2,8 +2,12 @@ import os
 import shutil
 import unittest
 from pathlib import Path
+import spacy
 from dianna.visualization.text import highlight_text
 from dianna.utils.tokenizers import SpacyTokenizer
+
+
+spacy.cli.download('en_core_web_sm')
 
 
 class TextExample:
@@ -88,4 +92,3 @@ class TextVisualizationTestCase(unittest.TestCase):
 
     def tearDown(self) -> None:
         shutil.rmtree(self.temp_folder, ignore_errors=True)
-
