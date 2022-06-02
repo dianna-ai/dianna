@@ -54,7 +54,7 @@ def to_xarray(data, axis_labels, required_labels=None):
     # check if the required labels are present
     if required_labels is not None:
         for label in required_labels:
-            assert label in labels, f'Required label missing: {label}'
+            assert label in labels, f'Required axis-label missing: {label}'
 
     # import here because it's slow
     import xarray as xr  # pylint: disable=import-outside-toplevel
