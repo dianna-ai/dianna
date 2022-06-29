@@ -13,6 +13,33 @@ def _upscale(grid_i, up_size):
     return resize(grid_i, up_size, order=1, mode='reflect', anti_aliasing=False)
 
 
+def generate_masks_for_images(input_size, p_keep, n_masks, feature_res):
+    """Generates a set of random masks to mask the input data.
+
+    Args:
+        input_size (int): Size of a single sample of input data, for images without the channel axis.
+
+    Returns:
+        The generated masks (np.ndarray)
+    """
+    cell_size = np.ceil(np.array(input_size) / feature_res)
+    up_size = (feature_res + 1) * cell_size
+
+    grid = np.random.choice(a=(True, False), size=(n_masks, feature_res, feature_res),
+                            p=(p_keep, 1 - p_keep))
+    grid = grid.astype('float32')
+
+    masks = np.empty((n_masks, *input_size), dtype=np.float32)
+
+    for i in range(n_masks):
+        y = np.random.randint(0, cell_size[0])
+        x = np.random.randint(0, cell_size[1])
+        # Linear upsampling and cropping
+        masks[i, :, :] = _upscale(grid[i], up_size)[y:y + input_size[0], x:x + input_size[1]]
+    masks = masks.reshape(-1, *input_size, 1)
+    return masks
+
+
 class RISE:
     """RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
     # axis labels required to be present in input image data
@@ -149,7 +176,7 @@ class RISE:
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
         # Expose masks for to make user inspection possible
-        self.masks = self.generate_masks_for_images(img_shape, active_p_keep, self.n_masks)
+        self.masks = generate_masks_for_images(img_shape, active_p_keep, self.n_masks, self.feature_res)
 
         # Make sure multiplication is being done for correct axes
         masked = input_data * self.masks
@@ -180,7 +207,7 @@ class RISE:
     def _calculate_mean_class_std_for_images(self, p_keep, runner, input_data, n_masks):
         batch_size = 50
         img_shape = input_data.shape[1:3]
-        masks = self.generate_masks_for_images(img_shape, p_keep, n_masks)
+        masks = generate_masks_for_images(img_shape, p_keep, n_masks, self.feature_res)
         masked = input_data * masks
         predictions = []
         for i in range(0, n_masks, batch_size):
@@ -189,33 +216,7 @@ class RISE:
             predictions.append(current_predictions.max(axis=1))
         predictions = np.concatenate(predictions)
         std_per_class = predictions.std()
-        return np.mean(std_per_class)
-
-    def generate_masks_for_images(self, input_size, p_keep, n_masks):
-        """Generates a set of random masks to mask the input data.
-
-        Args:
-            input_size (int): Size of a single sample of input data, for images without the channel axis.
-
-        Returns:
-            The generated masks (np.ndarray)
-        """
-        cell_size = np.ceil(np.array(input_size) / self.feature_res)
-        up_size = (self.feature_res + 1) * cell_size
-
-        grid = np.random.choice(a=(True, False), size=(n_masks, self.feature_res, self.feature_res),
-                                p=(p_keep, 1 - p_keep))
-        grid = grid.astype('float32')
-
-        masks = np.empty((n_masks, *input_size), dtype=np.float32)
-
-        for i in range(n_masks):
-            y = np.random.randint(0, cell_size[0])
-            x = np.random.randint(0, cell_size[1])
-            # Linear upsampling and cropping
-            masks[i, :, :] = _upscale(grid[i], up_size)[y:y + input_size[0], x:x + input_size[1]]
-        masks = masks.reshape(-1, *input_size, 1)
-        return masks
+        return np.mean(std_per_class)    
 
     def _prepare_image_data(self, input_data):
         """Transforms the data to be of the shape and type RISE expects.
