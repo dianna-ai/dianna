@@ -93,7 +93,7 @@ class LIME:
         if tokenizer is None:
             raise ValueError('Please provide a tokenizer to explain_text.')
         
-        self.text_explainer.split_expression = tokenizer.tokenize
+        self.text_explainer.split_expression = tokenizer.tokenize  # lime accepts a callable as a split_expression
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.text_explainer.explain_instance, kwargs)
         explanation = self.text_explainer.explain_instance(input_data,
@@ -108,10 +108,10 @@ class LIME:
         local_explanations = explanation.local_exp
         string_map = explanation.domain_mapper.indexed_string
         token_indices = self._find_token_indices(input_data, string_map, tokenizer)
-        return [self._get_results_for_single_label(local_explanations[label], string_map, token_indices) for label in labels]
+        return [self._reshape_result_for_single_label(local_explanations[label], string_map, token_indices) for label in labels]
 
     @staticmethod
-    def _get_results_for_single_label(local_explanation, string_map, token_indices):
+    def _reshape_result_for_single_label(local_explanation, string_map, token_indices):
         """
         Get results for single label.
 
@@ -132,7 +132,13 @@ class LIME:
         """
         Lime works with indices of both tokens and inter-token strings.
 
-        This extracts only those indices that belong to tokens.
+        This extracts the indices of the tokens in the list that also contains inter-token strings.
+        For example:
+            input_data: "This is a bad movie"
+            token_list: ["This", "is", "a", "bad", "movie"]
+            token_intertoken_list: ["This", " ", "is", " ", "a", " ", "bad", " ", "movie"]
+            output: [0, 2, 4, 6, 8]
+
         """
         token_list = tokenizer.tokenize(input_data)
         token_intertoken_list = string_map._segment_with_tokens(input_data, token_list)
