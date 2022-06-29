@@ -15,6 +15,7 @@ from onnx_tf.backend import prepare
 from PIL import Image
 from html2image import Html2Image
 import dianna
+from dianna.utils.tokenizers import SpacyTokenizer
 import spacy
 import os
 import base64
@@ -367,12 +368,15 @@ def global_store_t(method_sel, model_runner, input_text):
     labels = tuple(class_name_text)
     pred_idx = labels.index(pred_class)
 
+    tokenizer = SpacyTokenizer()  # for now always use SpacyTokenizer, needs to be changed
+
     # expensive query
     if method_sel == "LIME":
 
         relevances = dianna.explain_text(
             model_runner,
             input_text,
+            tokenizer,
             method_sel,
             label=pred_idx
             )
@@ -381,6 +385,7 @@ def global_store_t(method_sel, model_runner, input_text):
         relevances = dianna.explain_text(
             model_runner,
             input_text,
+            tokenizer,
             method_sel, # RISE
             labels=[pred_idx]
             )
