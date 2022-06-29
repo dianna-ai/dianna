@@ -379,24 +379,13 @@ def global_store_t(method_sel, model_runner, input_text):
     tokenizer = SpacyTokenizer()  # for now always use SpacyTokenizer, needs to be changed
 
     # expensive query
-    if method_sel == "LIME":
-
-        relevances = dianna.explain_text(
-            model_runner,
-            input_text,
-            tokenizer,
-            method_sel,
-            label=pred_idx
-            )
-
-    elif method_sel == "RISE":
-        relevances = dianna.explain_text(
-            model_runner,
-            input_text,
-            tokenizer,
-            method_sel,  # RISE
-            labels=[pred_idx]
-            )
+    relevances = dianna.explain_text(
+        model_runner,
+        input_text,
+        tokenizer,
+        method_sel,
+        labels=[pred_idx]
+        )
 
     return relevances
 
