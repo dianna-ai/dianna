@@ -24,7 +24,7 @@ import utilities
 from utilities import MovieReviewsModelRunner, _create_html
 import numpy as np
 import warnings
-warnings.filterwarnings('ignore') # disable warnings relateds to versions of tf
+warnings.filterwarnings('ignore')  # disable warnings relateds to versions of tf
 
 folder_on_server = "app_data"
 os.makedirs(folder_on_server, exist_ok=True)
@@ -50,11 +50,12 @@ class_name_text = ["negative", "positive"]
 
 try:
     spacy.load("en_core_web_sm")
-except Exception: # If not present, we download
+except Exception:  # If not present, we download
     spacy.cli.download("en_core_web_sm")
     spacy.load("en_core_web_sm")
 
-########################### Images page ###########################
+# ########################## Images page ###########################
+
 
 # uploading test image
 @app.callback(dash.dependencies.Output('graph_test', 'figure'),
@@ -79,9 +80,9 @@ def upload_image(contents, filename):
 
                 fig = go.Figure()
 
-                if X_test.shape[2] < 3: # it's grayscale
+                if X_test.shape[2] < 3:  # it's grayscale
 
-                    fig.add_trace(go.Heatmap(z=X_test[:,:,0], colorscale='gray', showscale=False))
+                    fig.add_trace(go.Heatmap(z=X_test[:, :, 0], colorscale='gray', showscale=False))
 
                 fig.update_layout(
                     width=300,
@@ -90,8 +91,8 @@ def upload_image(contents, filename):
                     title_x=0.5,
                     title_font_color=layouts.colors['blue1'])
 
-                fig.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
-                fig.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+                fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False)
+                fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False)
 
                 fig.layout.paper_bgcolor = layouts.colors['blue4']
 
@@ -99,13 +100,14 @@ def upload_image(contents, filename):
 
             return utilities.blank_fig(
                 text='File format error! <br><br>Please upload only images in .jpg format.')
-        
+
         except Exception as e:
             print(e)
             return utilities.blank_fig(
                     text='There was an error processing this file.')
     else:
         return utilities.blank_fig()
+
 
 # uploading model for image
 @app.callback(dash.dependencies.Output('output-model-img-upload', 'children'),
@@ -135,6 +137,7 @@ def upload_model_img(contents, filename):
     else:
         raise PreventUpdate
 
+
 # perform expensive computations in this "global store"
 # these computations are cached in a globally available
 # redis memory store which is available across processes
@@ -148,32 +151,33 @@ def global_store_i(method_sel, model_path, image_test):
             model_path, image_test, method=method_sel,
             labels=list(range(2)),
             n_masks=5000, feature_res=8, p_keep=.1,
-            axis_labels=('height','width','channels'))
+            axis_labels=('height', 'width', 'channels'))
 
     elif method_sel == "KernelSHAP":
         relevances = dianna.explain_image(
             model_path, image_test,
             method=method_sel, nsamples=1000,
             background=0, n_segments=200, sigma=0,
-            axis_labels=('height','width','channels'))
+            axis_labels=('height', 'width', 'channels'))
 
     else:
         relevances = dianna.explain_image(
             model_path, image_test * 256, 'LIME',
-            axis_labels=('height','width','channels'),
+            axis_labels=('height', 'width', 'channels'),
             random_state=2,
             labels=list(range(2)),
             preprocess_function=utilities.preprocess_function)
 
     return relevances
 
+
 # signaling
 @app.callback(
     dash.dependencies.Output('signal_image', 'data'),
     [dash.dependencies.Input('method_sel_img', 'value'),
-    dash.dependencies.State("upload-model-img", "filename"),
-    dash.dependencies.State("upload-image", "filename"),
-    ])
+     dash.dependencies.State("upload-model-img", "filename"),
+     dash.dependencies.State("upload-image", "filename"),
+     ])
 def compute_value_i(method_sel, fn_m, fn_i):
     """Takes in the selected XAI method, the model and the image filenames, returns the selected XAI method."""
     if (method_sel is None) or (fn_m is None) or (fn_i is None):
@@ -190,8 +194,9 @@ def compute_value_i(method_sel, fn_m, fn_i):
             global_store_i(m, model_path, image_test)
         except Exception:
             return method_sel
-            
+
     return method_sel
+
 
 # update image explainations
 @app.callback(
@@ -237,7 +242,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
 
             n_rows = len(class_name)
 
-            fig = make_subplots(rows=n_rows, cols=3, subplot_titles=("RISE", "KernelShap", "LIME"))#, horizontal_spacing = 0.05)
+            fig = make_subplots(rows=n_rows, cols=3, subplot_titles=("RISE", "KernelShap", "LIME"))  # , horizontal_spacing = 0.05)
 
             for m in sel_methods:
 
@@ -246,14 +251,14 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
                     fig.update_yaxes(title_text=class_name[i], row=i+1, col=1)
 
                     if m == "RISE":
-                        
+
                         try:
                             relevances_rise = global_store_i(
                                 m, onnx_model_path, X_test)
 
                             # RISE plot
                             fig.add_trace(go.Heatmap(
-                                                z=X_test[:,:,0], colorscale='gray', showscale=False), i+1, 1)
+                                                z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 1)
                             fig.add_trace(go.Heatmap(
                                                 z=relevances_rise[i], colorscale='Bluered',
                                                 showscale=False, opacity=0.7), i+1, 1)
@@ -268,7 +273,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
 
                         # KernelSHAP plot
                         fig.add_trace(go.Heatmap(
-                                        z=X_test[:,:,0], colorscale='gray', showscale=False), i+1, 2)
+                                        z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 2)
                         fig.add_trace(go.Heatmap(
                                         z=utilities.fill_segmentation(shap_values[i][0], segments_slic),
                                         colorscale='Bluered',
@@ -281,7 +286,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
 
                         # LIME plot
                         fig.add_trace(go.Heatmap(
-                                            z=X_test[:,:,0], colorscale='gray', showscale=False), i+1, 3)
+                                            z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 3)
 
                         fig.add_trace(go.Heatmap(
                                             z=relevances_lime[i], colorscale='Bluered',
@@ -292,10 +297,10 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
                 height=500,
                 paper_bgcolor=layouts.colors['blue4'])
 
-            fig.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
-            fig.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+            fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False)
+            fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False)
 
-            return html.Div(['The predicted class is: ' + pred_class], style = {
+            return html.Div(['The predicted class is: ' + pred_class], style={
                 'fontSize': 14,
                 'margin-top': '20px',
                 'margin-right': '40px'
@@ -309,7 +314,8 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
 
 ###################################################################
 
-########################### Text page ###########################
+# ########################## Text page ###########################
+
 
 # uploading test text
 @app.callback(dash.dependencies.Output('text_test', 'children'),
@@ -325,6 +331,7 @@ def upload_text(clicks, input_value):
                     ])
 
     return html.Div(['No string uploaded.'])
+
 
 # uploading model for the text
 @app.callback(dash.dependencies.Output('output-model-text-upload', 'children'),
@@ -348,12 +355,13 @@ def upload_model_text(contents, filename):
                 html.Br(),
                 html.P('Please upload only models in .onnx format.')
                 ])
-                
+
         except Exception as e:
             print(e)
             return html.Div(['There was an error processing this file.'])
     else:
         raise PreventUpdate
+
 
 # perform expensive computations in this "global store"
 # these computations are cached in a globally available
@@ -386,19 +394,20 @@ def global_store_t(method_sel, model_runner, input_text):
             model_runner,
             input_text,
             tokenizer,
-            method_sel, # RISE
+            method_sel,  # RISE
             labels=[pred_idx]
             )
 
     return relevances
 
+
 # signaling
 @app.callback(
     dash.dependencies.Output('signal_text', 'data'),
     [dash.dependencies.Input('method_sel_text', 'value'),
-    dash.dependencies.State("upload-model-text", "filename"),
-    dash.dependencies.State("upload-text", "value"),
-    ])
+     dash.dependencies.State("upload-model-text", "filename"),
+     dash.dependencies.State("upload-text", "value"),
+     ])
 def compute_value_t(method_sel, fn_m, input_text):
     """Takes in the selected XAI method, the model filename and the text, returns the selected XAI method."""
     if (method_sel is None) or (fn_m is None) or (input_text is None):
@@ -413,8 +422,9 @@ def compute_value_t(method_sel, fn_m, input_text):
         try:
             global_store_t(m, model_runner, input_text)
         except Exception:
-            return method_sel     
+            return method_sel
     return method_sel
+
 
 # update text explainations
 @app.callback(
@@ -459,7 +469,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
             fig_r = utilities.blank_fig()
 
             for m in sel_methods:
-                if m=="LIME":
+                if m == "LIME":
 
                     relevances_lime = global_store_t(
                         m, model_runner, input_text)
@@ -474,13 +484,13 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                     im = np.asarray(im).astype(np.float32)
 
                     fig_l = px.imshow(im)
-                    fig_l.update_xaxes(showgrid = False, range=[0,1000], showticklabels = False, zeroline=False)
-                    fig_l.update_yaxes(showgrid = False, range=[200,0], showticklabels = False, zeroline=False)
+                    fig_l.update_xaxes(showgrid=False, range=[0, 1000], showticklabels=False, zeroline=False)
+                    fig_l.update_yaxes(showgrid=False, range=[200, 0], showticklabels=False, zeroline=False)
                     fig_l.update_layout(
                         title='LIME explaination:',
                         title_font_color=layouts.colors['blue1'],
                         paper_bgcolor=layouts.colors['blue4'],
-                        plot_bgcolor = layouts.colors['blue4'],
+                        plot_bgcolor=layouts.colors['blue4'],
                         height=200,
                         width=500,
                         margin_b=40,
@@ -488,8 +498,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                         margin_l=0,
                         margin_r=0
                         )
-                
-                elif m=="RISE": # m="RISE"
+
+                elif m == "RISE":
 
                     relevances_rise = global_store_t(
                         m, model_runner, input_text)
@@ -504,13 +514,13 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                     im = np.asarray(im).astype(np.float32)
 
                     fig_r = px.imshow(im)
-                    fig_r.update_xaxes(showgrid = False, range=[0,1000], showticklabels = False, zeroline=False)
-                    fig_r.update_yaxes(showgrid = False, range=[200,0], showticklabels = False, zeroline=False)
+                    fig_r.update_xaxes(showgrid=False, range=[0, 1000], showticklabels=False, zeroline=False)
+                    fig_r.update_yaxes(showgrid=False, range=[200, 0], showticklabels=False, zeroline=False)
                     fig_r.update_layout(
                         title='RISE explaination:',
                         title_font_color=layouts.colors['blue1'],
                         paper_bgcolor=layouts.colors['blue4'],
-                        plot_bgcolor = layouts.colors['blue4'],
+                        plot_bgcolor=layouts.colors['blue4'],
                         height=200,
                         width=500,
                         margin_b=10,
