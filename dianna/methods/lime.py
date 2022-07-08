@@ -66,7 +66,7 @@ class LIME:
 
     def explain_text(self,
                      model_or_function,
-                     input_data,
+                     input_text,
                      labels=(0,),
                      tokenizer=None,
                      top_labels=None,
@@ -81,7 +81,7 @@ class LIME:
             model_or_function (callable or str): The function that runs the model to be explained _or_
                                                  the path to a ONNX model on disk.
             tokenizer : Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
-            input_data (np.ndarray): Data to be explained
+            input_text (np.ndarray): Data to be explained
             labels ([int], optional): Iterable of indices of class to be explained
 
         Other keyword arguments: see the LIME documentation for LimeTextExplainer.explain_instance:
@@ -96,7 +96,7 @@ class LIME:
         self.text_explainer.split_expression = tokenizer.tokenize  # lime accepts a callable as a split_expression
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.text_explainer.explain_instance, kwargs)
-        explanation = self.text_explainer.explain_instance(input_data,
+        explanation = self.text_explainer.explain_instance(input_text,
                                                            runner,
                                                            labels=labels,
                                                            top_labels=top_labels,
