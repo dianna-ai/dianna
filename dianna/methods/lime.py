@@ -121,11 +121,8 @@ class LIME:
                 https://lime-ml.readthedocs.io/en/latest/lime.html?highlight=indexedstring#lime.lime_text.IndexedString
             token_indices: indices of tokens.
         """
-        explained_tokens = [string_map.word(index) for index, _ in local_explanation]
-        explained_indices = [token_indices[index] for index, _ in local_explanation]
-        importances = [importance for _, importance in local_explanation]
-
-        return list(zip(explained_tokens, explained_indices, importances))
+        return = [(string_map.word(index), token_indices[index], importance) 
+                  for index, importance in local_explanation]
 
     @staticmethod
     def _find_token_indices(input_data, string_map, tokenizer):
