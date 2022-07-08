@@ -92,7 +92,7 @@ class LIME:
         """
         if tokenizer is None:
             raise ValueError('Please provide a tokenizer to explain_text.')
-        
+
         self.text_explainer.split_expression = tokenizer.tokenize  # lime accepts a callable as a split_expression
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.text_explainer.explain_instance, kwargs)
@@ -121,8 +121,8 @@ class LIME:
                 https://lime-ml.readthedocs.io/en/latest/lime.html?highlight=indexedstring#lime.lime_text.IndexedString
             token_indices: indices of tokens.
         """
-        return = [(string_map.word(index), token_indices[index], importance) 
-                  for index, importance in local_explanation]
+        return [(string_map.word(index), token_indices[index], importance)
+                for index, importance in local_explanation]
 
     @staticmethod
     def _find_token_indices(input_data, string_map, tokenizer):
@@ -147,9 +147,9 @@ class LIME:
                 token_indices.append(index - num_intertokens)
             else:
                 num_intertokens += 1
-        
+
         return token_indices
-                                                
+
     def explain_image(self,
                       model_or_function,
                       input_data,
