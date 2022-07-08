@@ -118,7 +118,6 @@ class LIME:
             local_explanation: Lime output, map of tuples (index, importance)
             string_map: Lime's IndexedString, see documentation:
                 https://lime-ml.readthedocs.io/en/latest/lime.html?highlight=indexedstring#lime.lime_text.IndexedString
-            token_indices: indices of tokens.
         """
         return [(string_map.word(index), index, importance) for index, importance in local_explanation]
 
