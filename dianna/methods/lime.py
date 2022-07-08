@@ -107,11 +107,10 @@ class LIME:
 
         local_explanations = explanation.local_exp
         string_map = explanation.domain_mapper.indexed_string
-        token_indices = self._find_token_indices(input_data, string_map, tokenizer)
-        return [self._reshape_result_for_single_label(local_explanations[label], string_map, token_indices) for label in labels]
+        return [self._reshape_result_for_single_label(local_explanations[label], string_map) for label in labels]
 
     @staticmethod
-    def _reshape_result_for_single_label(local_explanation, string_map, token_indices):
+    def _reshape_result_for_single_label(local_explanation, string_map):
         """
         Get results for single label.
 
@@ -121,34 +120,7 @@ class LIME:
                 https://lime-ml.readthedocs.io/en/latest/lime.html?highlight=indexedstring#lime.lime_text.IndexedString
             token_indices: indices of tokens.
         """
-        return [(string_map.word(index), token_indices[index], importance)
-                for index, importance in local_explanation]
-
-    @staticmethod
-    def _find_token_indices(input_data, string_map, tokenizer):
-        """
-        Lime works with indices of both tokens and inter-token strings.
-
-        This extracts the indices of the tokens in the list that also contains inter-token strings.
-        For example:
-            input_data: "This is a bad movie"
-            token_list: ["This", "is", "a", "bad", "movie"]
-            token_intertoken_list: ["This", " ", "is", " ", "a", " ", "bad", " ", "movie"]
-            output: [0, 2, 4, 6, 8]
-
-        """
-        token_list = tokenizer.tokenize(input_data)
-        token_intertoken_list = string_map._segment_with_tokens(input_data, token_list)
-
-        num_intertokens = 0
-        token_indices = []
-        for index, token in enumerate(token_intertoken_list):
-            if token in token_list:
-                token_indices.append(index - num_intertokens)
-            else:
-                num_intertokens += 1
-
-        return token_indices
+        return [(string_map.word(index), index, importance) for index, importance in local_explanation]
 
     def explain_image(self,
                       model_or_function,
