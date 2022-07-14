@@ -56,7 +56,7 @@ class DistanceExplainer:
         self.predictions = np.concatenate(batch_predictions)
 
         reference_pred = embedded_reference
-        distances = pairwise_distances(self.predictions, reference_pred, metric='cosine') / 2
+        distances = pairwise_distances(self.predictions, reference_pred, metric='cosine') / 2  # divide by 2 to have [0.1] output range
         lowest_distances_indices = np.argsort(distances, axis=0)[:int(len(self.predictions) * self.p_keep_lowest_distances)]
 
         mask_weights = np.exp(-distances[lowest_distances_indices])
