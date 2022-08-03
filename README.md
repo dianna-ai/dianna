@@ -43,7 +43,7 @@ DIANNA is a Python package that brings explainable AI (XAI) to your research pro
 It's built by, with and for (academic) researchers and research software engineers working on machine learning projects.
 
 ## Why DIANNA? 
-DIANNA software is addressing needs of both (X)AI reseachers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: the only XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
+DIANNA software is addressing needs of both (X)AI researchers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: the only XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
 
 * Provides an easy-to-use interface for non (X)AI experts
 * Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
@@ -53,7 +53,7 @@ DIANNA software is addressing needs of both (X)AI reseachers and mostly the vari
 * Comes with simple intuitive image and text benchmarks 
 * Easily extendable to other XAI methods 
 
-For more information on the unique stengths of DIANNA with comparision to other tools, please see the [context landscape](https://dianna.readthedocs.io/en/latest/CONTEXT.html).
+For more information on the unique strengths of DIANNA with comparison to other tools, please see the [context landscape](https://dianna.readthedocs.io/en/latest/CONTEXT.html).
 
 ## Installation 
 [![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
@@ -180,7 +180,7 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 |Tabular|planned|planned|planned|
 |Graphs | | | |
 
-[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective critera (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
+[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective criteria (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
 
 ## Reference documentation 
 
