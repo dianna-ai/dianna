@@ -1,6 +1,8 @@
-from dash import html, dcc
 import base64
+from dash import dcc
+from dash import html
 import utilities
+
 
 #static images
 image_filename = 'app_data/logo.png' # replace with your own image
