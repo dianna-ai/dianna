@@ -2,8 +2,9 @@ import numpy as np
 import onnxruntime as ort
 import spacy
 from scipy.special import expit
-from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
+
+from dianna.utils.tokenizers import SpacyTokenizer
 
 
 def get_mnist_1_data():
@@ -71,7 +72,7 @@ class ModelRunner:
         self.filename = model_path
         # ensure the spacy english is downloaded
         spacy.cli.download('en_core_web_sm')
-        self.tokenizer = get_tokenizer('spacy', 'en_core_web_sm')
+        self.tokenizer = SpacyTokenizer()
         self.vocab = Vectors(word_vector_file, cache='.')
 
         self.max_filter_size = max_filter_size
@@ -88,7 +89,7 @@ class ModelRunner:
 
         for sentence in sentences:
             # get tokens
-            tokens = self.tokenizer(sentence)
+            tokens = self.tokenizer.tokenize(sentence)
             if len(tokens) < self.max_filter_size:
                 tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
 

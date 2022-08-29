@@ -3,7 +3,7 @@ from IPython.display import display
 
 
 def highlight_text(explanation,
-                   original_text,
+                   input_tokens,
                    show_plot=True,
                    output_html_filename=None,
                    max_opacity=.8):
@@ -12,7 +12,7 @@ def highlight_text(explanation,
 
     Args:
         explanation: list of tuples of (word, index of word in original data, importance)
-        original_text: original text
+        input_tokens: list of all tokens (including those without importance)
         show_plot: Shows plot if true (for testing or writing plots to disk instead)
         output_html_filename: Name of the file to save the plot to (optional).
         max_opacity: Maximum opacity (0-1)
@@ -20,7 +20,7 @@ def highlight_text(explanation,
     Returns:
         None
     """
-    output = _create_html(original_text, explanation, max_opacity)
+    output = _create_html(input_tokens, explanation, max_opacity)
 
     if output_html_filename:
         with open(output_html_filename, 'w', encoding='utf-8') as output_html_file:
@@ -30,15 +30,23 @@ def highlight_text(explanation,
         display(HTML(output))
 
 
-def _create_html(original_text, explanation, max_opacity):
+def _create_html(input_tokens, explanation, max_opacity):
     max_importance = max(abs(item[2]) for item in explanation)
-    body = original_text
-    words_in_reverse_order = sorted(explanation, key=lambda item: item[1], reverse=True)
-    for word, word_start, importance in words_in_reverse_order:
-        word_end = word_start + len(word)
-        highlighted_word = _highlight_word(word, importance, max_importance, max_opacity)
-        body = body[:word_start] + highlighted_word + body[word_end:]
-    return '<html><body>' + body + '</body></html>'
+    explained_indices = [index for _, index, _ in explanation]
+    highlighted_words = []
+    for index, word in enumerate(input_tokens):
+        # if word has an explanation, highlight based on that, otherwise
+        # make it grey
+        try:
+            explained_index = explained_indices.index(index)
+            importance = explanation[explained_index][2]
+            highlighted_words.append(
+                _highlight_word(word, importance, max_importance, max_opacity)
+                )
+        except ValueError:
+            highlighted_words.append(f'<span style="background:rgba(128, 128, 128, 0.3)">{word}</span>')
+
+    return '<html><body>' + ' '.join(highlighted_words) + '</body></html>'
 
 
 def _highlight_word(word, importance, max_importance, max_opacity):

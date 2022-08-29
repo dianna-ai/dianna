@@ -66,8 +66,9 @@ class LIME:
 
     def explain_text(self,
                      model_or_function,
-                     input_data,
+                     input_text,
                      labels=(0,),
+                     tokenizer=None,
                      top_labels=None,
                      num_features=10,
                      num_samples=5000,
@@ -79,7 +80,8 @@ class LIME:
         Args:
             model_or_function (callable or str): The function that runs the model to be explained _or_
                                                  the path to a ONNX model on disk.
-            input_data (np.ndarray): Data to be explained
+            tokenizer : Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
+            input_text (np.ndarray): Data to be explained
             labels ([int], optional): Iterable of indices of class to be explained
 
         Other keyword arguments: see the LIME documentation for LimeTextExplainer.explain_instance:
@@ -88,9 +90,13 @@ class LIME:
         Returns:
             list of (word, index of word in raw text, importance for target class) tuples
         """
+        if tokenizer is None:
+            raise ValueError('Please provide a tokenizer to explain_text.')
+
+        self.text_explainer.split_expression = tokenizer.tokenize  # lime accepts a callable as a split_expression
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.text_explainer.explain_instance, kwargs)
-        explanation = self.text_explainer.explain_instance(input_data,
+        explanation = self.text_explainer.explain_instance(input_text,
                                                            runner,
                                                            labels=labels,
                                                            top_labels=top_labels,
@@ -101,12 +107,19 @@ class LIME:
 
         local_explanations = explanation.local_exp
         string_map = explanation.domain_mapper.indexed_string
-        return [self._get_results_for_single_label(local_explanations[label], string_map) for label in labels]
+        return [self._reshape_result_for_single_label(local_explanations[label], string_map) for label in labels]
 
     @staticmethod
-    def _get_results_for_single_label(local_explanation, string_map):
-        return [(string_map.word(index), int(string_map.string_position(index)), importance)
-                for index, importance in local_explanation]
+    def _reshape_result_for_single_label(local_explanation, string_map):
+        """
+        Get results for single label.
+
+        Args:
+            local_explanation: Lime output, map of tuples (index, importance)
+            string_map: Lime's IndexedString, see documentation:
+                https://lime-ml.readthedocs.io/en/latest/lime.html?highlight=indexedstring#lime.lime_text.IndexedString
+        """
+        return [(string_map.word(index), index, importance) for index, importance in local_explanation]
 
     def explain_image(self,
                       model_or_function,
