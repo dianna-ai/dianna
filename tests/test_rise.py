@@ -3,7 +3,7 @@ from unittest import TestCase
 import dianna
 import dianna.visualization
 import numpy as np
-from dianna.methods.rise import RISE
+from dianna.methods.rise import RISEImage, RISEText
 from dianna.utils import get_function
 from tests.utils import ModelRunner, run_model, get_mnist_1_data
 
@@ -40,7 +40,7 @@ class RiseOnImages(TestCase):
         model_filename = 'tests/test_data/mnist_model.onnx'
         data = get_mnist_1_data().astype(np.float32)
 
-        p_keep = RISE()._determine_p_keep_for_images(  # pylint: disable=protected-access
+        p_keep = RISEImage()._determine_p_keep(  # pylint: disable=protected-access
             data, get_function(model_filename))
 
         assert np.isclose(p_keep, expected_p_exact_keep)
@@ -80,6 +80,5 @@ class RiseOnText(TestCase):
         runner = get_function(runner)
         input_tokens = np.asarray(runner.tokenizer.tokenize(input_text))
 
-        p_keep = RISE()._determine_p_keep_for_text(input_tokens, runner, runner.tokenizer)  # pylint: disable=protected-access
-
-        assert np.isclose(p_keep, expected_p_exact_keep)
+        p_keep = RISEText()._determine_p_keep(input_tokens, runner)  # pylint: disable=protected-access
+        assert np.isclose(p_keep, expected_p_exact_keep), (p_keep, expected_p_exact_keep)

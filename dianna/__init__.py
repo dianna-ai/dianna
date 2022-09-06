@@ -51,9 +51,15 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
     if method == "KernelSHAP":
         # To avoid Access Violation on Windows with SHAP:
         from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel,unused-import
-    explainer = _get_explainer(method, kwargs)
-    explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_image, kwargs)
-    return explainer.explain_image(model_or_function, input_data, labels, **explain_image_kwargs)
+    explainer = _get_explainer(method, kwargs, modality="Image")
+    # the name of the explainer function is different for RISE while it is the only method split
+    # into separate classes per data modality
+    if method.lower() == "rise":
+        explainer_function = explainer.explain
+    else:
+        explainer_function = explainer.explain_image
+    explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer_function, kwargs)
+    return explainer_function(model_or_function, input_data, labels, **explain_image_kwargs)
 
 
 def explain_text(model_or_function, input_text, tokenizer, method, labels=(1,), **kwargs):
@@ -72,9 +78,15 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels=(1,), 
         List of (word, index of word in raw text, importance for target class) tuples.
 
     """
-    explainer = _get_explainer(method, kwargs)
-    explain_text_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_text, kwargs)
-    return explainer.explain_text(
+    explainer = _get_explainer(method, kwargs, modality="Text")
+    # the name of the explainer function is different for RISE while it is the only method split
+    # into separate classes per data modality
+    if method.lower() == "rise":
+        explainer_function = explainer.explain
+    else:
+        explainer_function = explainer.explain_text
+    explain_text_kwargs = utils.get_kwargs_applicable_to_function(explainer_function, kwargs)
+    return explainer_function(
         model_or_function=model_or_function,
         input_text=input_text,
         labels=labels,
@@ -82,8 +94,14 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels=(1,), 
         **explain_text_kwargs)
 
 
-def _get_explainer(method, kwargs):
+def _get_explainer(method, kwargs, modality=None):
     method_submodule = importlib.import_module(f'dianna.methods.{method.lower()}')
-    method_class = getattr(method_submodule, method)
+    # The way of getting the explainer is different for RISE while RISE is the only method
+    # that is split into separate classes per data modality
+    if method.lower() == "rise":
+        assert modality is not None, "Data modality is mandatory when method is set to RISE"
+        method_class = getattr(method_submodule, f"{method}{modality}")
+    else:
+        method_class = getattr(method_submodule, method)
     method_kwargs = utils.get_kwargs_applicable_to_function(method_class.__init__, kwargs)
     return method_class(**method_kwargs)

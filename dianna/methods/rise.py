@@ -13,19 +13,124 @@ def _upscale(grid_i, up_size):
     return resize(grid_i, up_size, order=1, mode='reflect', anti_aliasing=False)
 
 
-class RISE:
-    """RISE implementation based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
+class RISEText:
+    """RISE implementation for text based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
+
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=None,
+                 preprocess_function=None):
+        """RISE initializer.
+
+        Args:
+            n_masks (int): Number of masks to generate.
+            feature_res (int): Resolution of features in masks.
+            p_keep (float): Fraction of input data to keep in each mask (Default: auto-tune this value).
+            preprocess_function (callable, optional): Function to preprocess input data with
+        """
+        self.n_masks = n_masks
+        self.feature_res = feature_res
+        self.p_keep = p_keep
+        self.preprocess_function = preprocess_function
+        self.masks = None
+        self.mask_string = ""
+        self.predictions = None
+
+    def explain(self, model_or_function, input_text, tokenizer, labels=(0,), batch_size=100):
+        """Runs the RISE explainer on text.
+
+           The model will be called with masked versions of the input text.
+
+        Args:
+            model_or_function (callable or str): The function that runs the model to be explained _or_
+                                                 the path to a ONNX model on disk.
+            input_text (np.ndarray): Text to be explained
+            Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
+            labels (list(int)): Labels to be explained
+            batch_size (int): Batch size to use for running the model.
+
+        Returns:
+            Explanation heatmap for each class (np.ndarray).
+        """
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
+        self.mask_string = tokenizer.mask_token
+        input_tokens = np.asarray(tokenizer.tokenize(input_text))
+        text_length = len(input_tokens)
+        active_p_keep = self._determine_p_keep(input_tokens, runner) if self.p_keep is None else self.p_keep
+        input_shape = (text_length,)
+        self.masks = self._generate_masks(input_shape, active_p_keep,
+                                          self.n_masks)  # Expose masks for to make user inspection possible
+        sentences = self._create_masked_sentences(input_tokens, self.masks)
+        saliencies = self._get_saliencies(runner, sentences, text_length, batch_size, active_p_keep)
+        return self._reshape_result(input_tokens, labels, saliencies)
+
+    def _determine_p_keep(self, input_data, runner, n_masks=100):
+        """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""
+        p_keeps = np.arange(0.1, 1.0, 0.1)
+        stds = []
+        for p_keep in p_keeps:
+            std = self._calculate_mean_class_std(p_keep, runner, input_data, n_masks=n_masks)
+            stds += [std]
+        best_i = np.argmax(stds)
+        best_p_keep = p_keeps[best_i]
+        print(f'Rise parameter p_keep was automatically determined at {best_p_keep}')
+        return best_p_keep
+
+    def _calculate_mean_class_std(self, p_keep, runner, input_data, n_masks):
+        batch_size = 50
+        masks = self._generate_masks(input_data.shape, p_keep, n_masks)
+        masked = self._create_masked_sentences(input_data, masks)
+        predictions = []
+        for i in range(0, n_masks, batch_size):
+            current_input = masked[i:i + batch_size]
+            current_predictions = runner(current_input)
+            predictions.append(current_predictions.max(axis=1))
+        predictions = np.concatenate(predictions)
+        std_per_class = predictions.std()
+        return np.mean(std_per_class)
+
+    def _generate_masks(self, input_shape, p_keep, n_masks):
+        masks = np.random.choice(a=(True, False), size=(n_masks,) + input_shape, p=(p_keep, 1 - p_keep))
+        return masks
+
+    def _create_masked_sentences(self, tokens, masks):
+        tokens_masked = []
+        for mask in masks:
+            tokens_masked.append([token if keep else self.mask_string for token, keep in zip(tokens, mask)])
+        sentences = [" ".join(t) for t in tokens_masked]
+        return sentences
+
+    def _get_saliencies(self, runner, sentences, text_length, batch_size, p_keep):  # pylint: disable=too-many-arguments
+        self.predictions = self._get_predictions(sentences, runner, batch_size)
+        unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, text_length)
+        return normalize(unnormalized_saliency, self.n_masks, p_keep)
+
+    @staticmethod
+    def _reshape_result(input_tokens, labels, saliencies):
+        word_lengths = [len(t) for t in input_tokens]
+        word_indices = [sum(word_lengths[:i]) + i for i in range(len(input_tokens))]
+        return [list(zip(input_tokens, word_indices, saliencies[label])) for label in labels]
+
+    def _get_predictions(self, sentences, runner, batch_size):
+        predictions = []
+        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
+            predictions.append(runner(sentences[i:i + batch_size]))
+        predictions = np.concatenate(predictions)
+        return predictions
+
+
+class RISEImage:
+    """RISE implementation for images based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
+
     # axis labels required to be present in input image data
     required_labels = ('channels', )
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=None,  # pylint: disable=too-many-arguments
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=None,
                  axis_labels=None, preprocess_function=None):
         """RISE initializer.
 
         Args:
             n_masks (int): Number of masks to generate.
             feature_res (int): Resolution of features in masks.
-            p_keep (float): Fraction of image to keep in each mask (Default: auto-tune this value).
+            p_keep (float): Fraction of input data to keep in each mask (Default: auto-tune this value).
             axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
@@ -39,90 +144,7 @@ class RISE:
         self.predictions = None
         self.axis_labels = axis_labels if axis_labels is not None else []
 
-    def explain_text(self, model_or_function, input_text, labels=(0,), tokenizer=None, batch_size=100):
-        """Runs the RISE explainer on text.
-
-           The model will be called with masked versions of the input text.
-
-        Args:
-            model_or_function (callable or str): The function that runs the model to be explained _or_
-                                                 the path to a ONNX model on disk.
-            input_text (np.ndarray): Text to be explained
-            tokenizer: Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
-            labels (list(int)): Labels to be explained
-            batch_size (int): Batch size to use for running the model.
-
-        Returns:
-            Explanation heatmap for each class (np.ndarray).
-        """
-        if tokenizer is None:
-            raise ValueError('Please provide a tokenizer to explain_text.')
-        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
-        input_tokens = np.asarray(tokenizer.tokenize(input_text))
-        num_tokens = len(input_tokens)
-        active_p_keep = self._determine_p_keep_for_text(input_tokens, runner, tokenizer) if self.p_keep is None else self.p_keep
-        input_shape = (num_tokens,)
-        self.masks = self._generate_masks_for_text(input_shape, active_p_keep,
-                                                   self.n_masks)  # Expose masks for to make user inspection possible
-        masked_sentences = self._create_masked_sentences(input_tokens, self.masks, tokenizer)
-        saliencies = self._get_saliencies(runner, masked_sentences, num_tokens, batch_size, active_p_keep)
-        return self._reshape_result(input_tokens, labels, saliencies)
-
-    def _determine_p_keep_for_text(self, input_text, runner, tokenizer, n_masks=100):
-        """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""
-        p_keeps = np.arange(0.1, 1.0, 0.1)
-        stds = []
-        for p_keep in p_keeps:
-            std = self._calculate_mean_class_std_for_text(p_keep, runner, input_text, tokenizer, n_masks=n_masks)
-            stds += [std]
-        best_i = np.argmax(stds)
-        best_p_keep = p_keeps[best_i]
-        print(f'Rise parameter p_keep was automatically determined at {best_p_keep}')
-        return best_p_keep
-
-    def _calculate_mean_class_std_for_text(self, p_keep, runner, input_text, tokenizer, n_masks):
-        batch_size = 50
-        masks = self._generate_masks_for_text(input_text.shape, p_keep, n_masks)
-        masked = self._create_masked_sentences(input_text, masks, tokenizer)
-        predictions = []
-        for i in range(0, n_masks, batch_size):
-            current_input = masked[i:i + batch_size]
-            current_predictions = runner(current_input)
-            predictions.append(current_predictions.max(axis=1))
-        predictions = np.concatenate(predictions)
-        std_per_class = predictions.std()
-        return np.mean(std_per_class)
-
-    def _generate_masks_for_text(self, input_shape, p_keep, n_masks):
-        masks = np.random.choice(a=(True, False), size=(n_masks,) + input_shape, p=(p_keep, 1 - p_keep))
-        return masks
-
-    def _get_saliencies(self, runner, sentences, num_tokens, batch_size, p_keep):  # pylint: disable=too-many-arguments
-        self.predictions = self._get_predictions(sentences, runner, batch_size)
-        unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, num_tokens)
-        return normalize(unnormalized_saliency, self.n_masks, p_keep)
-
-    @staticmethod
-    def _reshape_result(input_tokens, labels, saliencies):
-        word_indices = list(range(len(input_tokens)))
-        return [list(zip(input_tokens, word_indices, saliencies[label])) for label in labels]
-
-    def _get_predictions(self, sentences, runner, batch_size):
-        predictions = []
-        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            predictions.append(runner(sentences[i:i + batch_size]))
-        predictions = np.concatenate(predictions)
-        return predictions
-
-    def _create_masked_sentences(self, tokens, masks, tokenizer):
-        tokens_masked_list = [
-            [token if keep else tokenizer.mask_token for token, keep in zip(tokens, mask)]
-            for mask in masks]
-        masked_sentences = [tokenizer.convert_tokens_to_string(tokens_masked)
-                            for tokens_masked in tokens_masked_list]
-        return masked_sentences
-
-    def explain_image(self, model_or_function, input_data, labels=None, batch_size=100):
+    def explain(self, model_or_function, input_data, labels=None, batch_size=100):
         """Runs the RISE explainer on images.
 
            The model will be called with masked images,
@@ -139,18 +161,18 @@ class RISE:
             Explanation heatmap for each class (np.ndarray).
         """
         # convert data to xarray
-        input_data = utils.to_xarray(input_data, self.axis_labels, RISE.required_labels)
+        input_data = utils.to_xarray(input_data, self.axis_labels, RISEImage.required_labels)
         # add batch axis as first axis
         input_data = input_data.expand_dims('batch', 0)
         input_data, full_preprocess_function = self._prepare_image_data(input_data)
         runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
 
-        active_p_keep = self._determine_p_keep_for_images(input_data, runner) if self.p_keep is None else self.p_keep
+        active_p_keep = self._determine_p_keep(input_data, runner) if self.p_keep is None else self.p_keep
 
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
         # Expose masks for to make user inspection possible
-        self.masks = self.generate_masks_for_images(img_shape, active_p_keep, self.n_masks)
+        self.masks = self._generate_masks(img_shape, active_p_keep, self.n_masks)
 
         # Make sure multiplication is being done for correct axes
         masked = input_data * self.masks
@@ -166,22 +188,22 @@ class RISE:
             result = result[list(labels)]
         return result
 
-    def _determine_p_keep_for_images(self, input_data, runner, n_masks=100):
+    def _determine_p_keep(self, input_data, runner, n_masks=100):
         """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""
         p_keeps = np.arange(0.1, 1.0, 0.1)
         stds = []
         for p_keep in p_keeps:
-            std = self._calculate_mean_class_std_for_images(p_keep, runner, input_data, n_masks=n_masks)
+            std = self._calculate_mean_class_std(p_keep, runner, input_data, n_masks=n_masks)
             stds += [std]
         best_i = np.argmax(stds)
         best_p_keep = p_keeps[best_i]
         print(f'Rise parameter p_keep was automatically determined at {best_p_keep}')
         return best_p_keep
 
-    def _calculate_mean_class_std_for_images(self, p_keep, runner, input_data, n_masks):
+    def _calculate_mean_class_std(self, p_keep, runner, input_data, n_masks):
         batch_size = 50
         img_shape = input_data.shape[1:3]
-        masks = self.generate_masks_for_images(img_shape, p_keep, n_masks)
+        masks = self._generate_masks(img_shape, p_keep, n_masks)
         masked = input_data * masks
         predictions = []
         for i in range(0, n_masks, batch_size):
@@ -192,7 +214,7 @@ class RISE:
         std_per_class = predictions.std()
         return np.mean(std_per_class)
 
-    def generate_masks_for_images(self, input_size, p_keep, n_masks):
+    def _generate_masks(self, input_size, p_keep, n_masks):
         """Generates a set of random masks to mask the input data.
 
         Args:
