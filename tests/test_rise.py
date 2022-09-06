@@ -80,5 +80,5 @@ class RiseOnText(TestCase):
         runner = get_function(runner)
         input_tokens = np.asarray(runner.tokenizer.tokenize(input_text))
 
-        p_keep = RISEText()._determine_p_keep(input_tokens, runner)  # pylint: disable=protected-access
-        assert np.isclose(p_keep, expected_p_exact_keep), (p_keep, expected_p_exact_keep)
+        p_keep = RISEText()._determine_p_keep(input_tokens, runner, runner.tokenizer)  # pylint: disable=protected-access
+        assert np.isclose(p_keep, expected_p_exact_keep)
