@@ -4,10 +4,8 @@ from lime.lime_text import LimeTextExplainer
 from dianna import utils
 
 
-class LIME:
+class LIMEText:
     """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
-    # axis labels required to be present in input image data
-    required_labels = ('channels', )
 
     def __init__(self,
                  kernel_width=25,
@@ -20,9 +18,8 @@ class LIME:
                  mask_string=None,
                  random_state=None,
                  char_level=False,
-                 axis_labels=None,
                  preprocess_function=None,
-                 ):  # pylint: disable=too-many-arguments
+                 ):
         """
         Initializes Lime explainer.
 
@@ -37,43 +34,32 @@ class LIME:
             mask_string (str, optional): mask string
             random_state (int or np.RandomState, optional): seed or random state
             char_level (bool, optional): char level
-            axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
-                                               If a list, the name of each axis where the index
-                                               in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
         """
-        self.text_explainer = LimeTextExplainer(kernel_width,
-                                                kernel,
-                                                verbose,
-                                                class_names,
-                                                feature_selection,
-                                                split_expression,
-                                                bow,
-                                                mask_string,
-                                                random_state,
-                                                char_level,
-                                                )
-
-        self.image_explainer = LimeImageExplainer(kernel_width,
-                                                  kernel,
-                                                  verbose,
-                                                  feature_selection,
-                                                  random_state,
-                                                  )
 
         self.preprocess_function = preprocess_function
-        self.axis_labels = axis_labels if axis_labels is not None else []
+        self.explainer = LimeTextExplainer(kernel_width,
+                                           kernel,
+                                           verbose,
+                                           class_names,
+                                           feature_selection,
+                                           split_expression,
+                                           bow,
+                                           mask_string,
+                                           random_state,
+                                           char_level,
+                                           )
 
-    def explain_text(self,
-                     model_or_function,
-                     input_text,
-                     labels=(0,),
-                     tokenizer=None,
-                     top_labels=None,
-                     num_features=10,
-                     num_samples=5000,
-                     **kwargs,
-                     ):  # pylint: disable=too-many-arguments
+    def explain(self,
+                model_or_function,
+                input_text,
+                labels=(0,),
+                tokenizer=None,
+                top_labels=None,
+                num_features=10,
+                num_samples=5000,
+                **kwargs,
+                ):  # pylint: disable=too-many-arguments
         """
         Run the LIME explainer.
 
@@ -93,17 +79,17 @@ class LIME:
         if tokenizer is None:
             raise ValueError('Please provide a tokenizer to explain_text.')
 
-        self.text_explainer.split_expression = tokenizer.tokenize  # lime accepts a callable as a split_expression
+        self.explainer.split_expression = tokenizer.tokenize  # lime accepts a callable as a split_expression
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
-        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.text_explainer.explain_instance, kwargs)
-        explanation = self.text_explainer.explain_instance(input_text,
-                                                           runner,
-                                                           labels=labels,
-                                                           top_labels=top_labels,
-                                                           num_features=num_features,
-                                                           num_samples=num_samples,
-                                                           **explain_instance_kwargs
-                                                           )
+        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.explainer.explain_instance, kwargs)
+        explanation = self.explainer.explain_instance(input_text,
+                                                      runner,
+                                                      labels=labels,
+                                                      top_labels=top_labels,
+                                                      num_features=num_features,
+                                                      num_samples=num_samples,
+                                                      **explain_instance_kwargs
+                                                      )
 
         local_explanations = explanation.local_exp
         string_map = explanation.domain_mapper.indexed_string
@@ -121,17 +107,56 @@ class LIME:
         """
         return [(string_map.word(index), index, importance) for index, importance in local_explanation]
 
-    def explain_image(self,
-                      model_or_function,
-                      input_data,
-                      labels=(1,),
-                      top_labels=None,
-                      num_features=10,
-                      num_samples=5000,
-                      positive_only=False,
-                      hide_rest=True,
-                      **kwargs,
-                      ):  # pylint: disable=too-many-arguments,too-many-locals
+
+class LIMEImage:
+    """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
+    # axis labels required to be present in input image data
+    required_labels = ('channels', )
+
+    def __init__(self,
+                 kernel_width=25,
+                 kernel=None,
+                 verbose=False,
+                 feature_selection='auto',
+                 random_state=None,
+                 axis_labels=None,
+                 preprocess_function=None,
+                 ):
+        """
+        Initializes Lime explainer.
+
+        Args:
+            kernel_width (int, optional): kernel width
+            kernel (callable, optional): kernel
+            verbose (bool, optional): verbose
+            feature_selection (str, optional): feature selection
+            random_state (int or np.RandomState, optional): seed or random state
+            axis_labels (dict/list, optional): If a dict, key,value pairs of axis index, name.
+                                               If a list, the name of each axis where the index
+                                               in the list is the axis index
+            preprocess_function (callable, optional): Function to preprocess input data with
+        """
+
+        self.preprocess_function = preprocess_function
+        self.axis_labels = axis_labels if axis_labels is not None else []
+        self.explainer = LimeImageExplainer(kernel_width,
+                                            kernel,
+                                            verbose,
+                                            feature_selection,
+                                            random_state,
+                                            )
+
+    def explain(self,
+                model_or_function,
+                input_data,
+                labels=(1,),
+                top_labels=None,
+                num_features=10,
+                num_samples=5000,
+                positive_only=False,
+                hide_rest=True,
+                **kwargs,
+                ):  # pylint: disable=too-many-arguments,too-many-locals
         """
         Run the LIME explainer.
 
@@ -154,15 +179,15 @@ class LIME:
         runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
 
         # run the explanation.
-        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.image_explainer.explain_instance, kwargs)
-        explanation = self.image_explainer.explain_instance(input_data,
-                                                            runner,
-                                                            labels=labels,
-                                                            top_labels=top_labels,
-                                                            num_features=num_features,
-                                                            num_samples=num_samples,
-                                                            **explain_instance_kwargs,
-                                                            )
+        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.explainer.explain_instance, kwargs)
+        explanation = self.explainer.explain_instance(input_data,
+                                                      runner,
+                                                      labels=labels,
+                                                      top_labels=top_labels,
+                                                      num_features=num_features,
+                                                      num_samples=num_samples,
+                                                      **explain_instance_kwargs,
+                                                      )
 
         get_image_and_mask_kwargs = utils.get_kwargs_applicable_to_function(explanation.get_image_and_mask, kwargs)
         masks = [explanation.get_image_and_mask(label, positive_only=positive_only, hide_rest=hide_rest,
@@ -180,7 +205,7 @@ class LIME:
         Returns:
             transformed input data, preprocessing function to use with utils.get_function()
         """
-        input_data = utils.to_xarray(input_data, self.axis_labels, LIME.required_labels)
+        input_data = utils.to_xarray(input_data, self.axis_labels, LIMEImage.required_labels)
         # ensure channels axis is last and keep track of where it was so we can move it back
         channels_axis_index = input_data.dims.index('channels')
         input_data = utils.move_axis(input_data, 'channels', -1)

@@ -2,7 +2,7 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
-from dianna.methods.lime import LIME
+from dianna.methods.lime import LIMEImage
 from tests.test_onnx_runner import generate_data
 from tests.utils import ModelRunner
 from tests.utils import run_model
@@ -17,8 +17,8 @@ class LimeOnImages(TestCase):
         labels = ('y', 'x', 'channels')
         heatmap_expected = np.load('tests/test_data/heatmap_lime_function.npy')
 
-        explainer = LIME(random_state=42, axis_labels=labels)
-        heatmap = explainer.explain_image(run_model, input_data, num_samples=100)
+        explainer = LIMEImage(random_state=42, axis_labels=labels)
+        heatmap = explainer.explain(run_model, input_data, num_samples=100)
 
         assert heatmap[0].shape == input_data.shape[:2]
         assert np.allclose(heatmap, heatmap_expected, atol=.01)
@@ -49,7 +49,7 @@ def test_lime_text():
     expected_scores = [.492, -.046, .036, -.008]
 
     explanation = dianna.explain_text(runner, review, tokenizer=runner.tokenizer,
-                        labels=[0], method='LIME', random_state=42)[0]
+                                      labels=[0], method='LIME', random_state=42)[0]
     words = [element[0] for element in explanation]
     word_indices = [element[1] for element in explanation]
     scores = [element[2] for element in explanation]
