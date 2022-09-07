@@ -36,7 +36,6 @@ class LIMEText:
             char_level (bool, optional): char level
             preprocess_function (callable, optional): Function to preprocess input data with
         """
-
         self.preprocess_function = preprocess_function
         self.explainer = LimeTextExplainer(kernel_width,
                                            kernel,
@@ -136,7 +135,6 @@ class LIMEImage:
                                                in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
         """
-
         self.preprocess_function = preprocess_function
         self.axis_labels = axis_labels if axis_labels is not None else []
         self.explainer = LimeImageExplainer(kernel_width,
