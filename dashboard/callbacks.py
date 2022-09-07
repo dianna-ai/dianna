@@ -28,6 +28,7 @@ warnings.filterwarnings('ignore')  # disable warnings relateds to versions of tf
 
 folder_on_server = "app_data"
 os.makedirs(folder_on_server, exist_ok=True)
+tokenizer = SpacyTokenizer()  # for now always use SpacyTokenizer, needs to be changed
 
 # Build App
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -376,7 +377,6 @@ def global_store_t(method_sel, model_runner, input_text):
     labels = tuple(class_name_text)
     pred_idx = labels.index(pred_class)
 
-    tokenizer = SpacyTokenizer()  # for now always use SpacyTokenizer, needs to be changed
 
     # expensive query
     relevances = dianna.explain_text(
@@ -450,6 +450,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
         model_runner = MovieReviewsModelRunner(onnx_model_path, word_vector_path, max_filter_size=5)
 
         try:
+            input_tokens = tokenizer.tokenize(input_text)
             predictions = model_runner(input_text)
             class_name = class_name_text
             pred_class = class_name[np.argmax(predictions)]
@@ -463,7 +464,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                     relevances_lime = global_store_t(
                         m, model_runner, input_text)
 
-                    output = _create_html(input_text, relevances_lime[0], max_opacity=0.8)
+                    output = _create_html(input_tokens, relevances_lime[0], max_opacity=0.8)
                     hti = Html2Image()
                     expl_path = 'text_expl.jpg'
 
@@ -493,7 +494,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                     relevances_rise = global_store_t(
                         m, model_runner, input_text)
 
-                    output = _create_html(input_text, relevances_rise[0], max_opacity=0.8)
+                    output = _create_html(input_tokens, relevances_rise[0], max_opacity=0.8)
                     hti = Html2Image()
                     expl_path = 'text_expl.jpg'
 
