@@ -24,6 +24,7 @@ See https://github.com/dianna-ai/dianna
 import importlib
 import logging
 from . import utils
+from .methods.distance import DistanceExplainer
 
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -80,6 +81,12 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels=(1,), 
         labels=labels,
         tokenizer=tokenizer,
         **explain_text_kwargs)
+
+def explain_image_distance(model_or_function, input_data, embedded_reference, **kwargs):
+    method_kwargs = utils.get_kwargs_applicable_to_function(DistanceExplainer.__init__, kwargs)
+    explainer = DistanceExplainer(**method_kwargs)
+    explain_distance_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_image_distance, kwargs)
+    return explainer.explain_image_distance(model_or_function, input_data, embedded_reference, **explain_distance_kwargs)
 
 
 def _get_explainer(method, kwargs):
