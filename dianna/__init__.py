@@ -51,9 +51,9 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
     if method == "KernelSHAP":
         # To avoid Access Violation on Windows with SHAP:
         from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel,unused-import
-    explainer = _get_explainer(method, kwargs)
-    explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_image, kwargs)
-    return explainer.explain_image(model_or_function, input_data, labels, **explain_image_kwargs)
+    explainer = _get_explainer(method, kwargs, modality="Image")
+    explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain, kwargs)
+    return explainer.explain(model_or_function, input_data, labels, **explain_image_kwargs)
 
 
 def explain_text(model_or_function, input_text, tokenizer, method, labels=(1,), **kwargs):
@@ -72,9 +72,9 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels=(1,), 
         List of (word, index of word in raw text, importance for target class) tuples.
 
     """
-    explainer = _get_explainer(method, kwargs)
-    explain_text_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain_text, kwargs)
-    return explainer.explain_text(
+    explainer = _get_explainer(method, kwargs, modality="Text")
+    explain_text_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain, kwargs)
+    return explainer.explain(
         model_or_function=model_or_function,
         input_text=input_text,
         labels=labels,
@@ -82,8 +82,14 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels=(1,), 
         **explain_text_kwargs)
 
 
-def _get_explainer(method, kwargs):
-    method_submodule = importlib.import_module(f'dianna.methods.{method.lower()}')
-    method_class = getattr(method_submodule, method)
+def _get_explainer(method, kwargs, modality):
+    try:
+        method_submodule = importlib.import_module(f'dianna.methods.{method.lower()}')
+    except ImportError as err:
+        raise Exception(f"Method {method} does not exist") from err
+    try:
+        method_class = getattr(method_submodule, f"{method}{modality}")
+    except AttributeError as err:
+        raise Exception(f"Data modality {modality} is not available for method {method}") from err
     method_kwargs = utils.get_kwargs_applicable_to_function(method_class.__init__, kwargs)
     return method_class(**method_kwargs)

@@ -5,7 +5,7 @@ import skimage.segmentation
 from dianna import utils
 
 
-class KernelSHAP:
+class KernelSHAPImage:
     """Kernel SHAP implementation based on shap https://github.com/slundberg/shap."""
     # axis labels required to be present in input image data
     required_labels = ('channels', )
@@ -60,7 +60,7 @@ class KernelSHAP:
 
         return image_segments
 
-    def explain_image(
+    def explain(
         self,
         model,
         input_data,
@@ -150,7 +150,7 @@ class KernelSHAP:
             transformed input data
         """
         input_data = utils.to_xarray(
-            input_data, self.axis_labels, KernelSHAP.required_labels)
+            input_data, self.axis_labels, KernelSHAPImage.required_labels)
         # ensure channels axis is last and keep track of where it was so we can move it back
         self.channels_axis_index = input_data.dims.index('channels')
         input_data = utils.move_axis(input_data, 'channels', -1)
