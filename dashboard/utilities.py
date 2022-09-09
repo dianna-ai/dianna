@@ -117,17 +117,24 @@ def preprocess_function(image):
     """For LIME: we divided the input data by 256 for the model (binary mnist) and LIME needs RGB values."""
     return (image / 256).astype(np.float32)
 
-
-def _create_html(original_text, explanation, max_opacity):
+def _create_html(input_tokens, explanation, max_opacity):
     """Creates text explaination map using html format."""
     max_importance = max(abs(item[2]) for item in explanation)
-    body = original_text
-    words_in_reverse_order = sorted(explanation, key=lambda item: item[1], reverse=True)
-    for word, word_start, importance in words_in_reverse_order:
-        word_end = word_start + len(word)
-        highlighted_word = _highlight_word(word, importance, max_importance, max_opacity)
-        body = body[:word_start] + highlighted_word + body[word_end:]
-    return '<html><body>' + body + '</body></html>'
+    explained_indices = [index for _, index, _ in explanation]
+    highlighted_words = []
+    for index, word in enumerate(input_tokens):
+        # if word has an explanation, highlight based on that, otherwise
+        # make it grey
+        try:
+            explained_index = explained_indices.index(index)
+            importance = explanation[explained_index][2]
+            highlighted_words.append(
+                _highlight_word(word, importance, max_importance, max_opacity)
+                )
+        except ValueError:
+            highlighted_words.append(f'<span style="background:rgba(128, 128, 128, 0.3)">{word}</span>')
+
+    return '<html><body>' + ' '.join(highlighted_words) + '</body></html>'
 
 
 def _highlight_word(word, importance, max_importance, max_opacity):
