@@ -35,9 +35,17 @@ class DistanceExplainer:
         self.batch_size = batch_size
 
     def explain_image_distance(self, model_or_function, input_data, embedded_reference, **explain_distance_kwargs):
+        """
+
+        :param model_or_function:
+        :param input_data:
+        :param embedded_reference:
+        :param explain_distance_kwargs:
+        :return: saliency map and the neutral value within the saliency map which indicates the parts of the image that
+        neither bring the image closer nor further away from the embedded reference.
+        """
         full_preprocess_function, input_data = self._prepare_input_data(input_data)
         runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
-
         active_p_keep = 0.5 if self.p_keep is None else self.p_keep  # Could autotune here (See #319)
 
         # data shape without batch axis and channel axis
@@ -55,12 +63,18 @@ class DistanceExplainer:
                                                                                            self.predictions, self.masks,
                                                                                            self.p_keep_lowest_distances)
 
-        sal = mask_weights.T.dot(lowest_distances_masks.reshape(len(lowest_distances_masks), -1)).reshape(-1,
+
+        unnormalized_sal = mask_weights.T.dot(lowest_distances_masks.reshape(len(lowest_distances_masks), -1)).reshape(-1,
                                                                                                           *img_shape)
 
         normalization = mask_weights.sum()
+        saliency = unnormalized_sal / normalization
 
-        return sal / normalization
+        input_prediction = runner(input_data)
+        input_distance = pairwise_distances(input_prediction, embedded_reference, metric='cosine') / 2
+        neutral_value = np.exp(-input_distance)
+
+        return saliency, neutral_value
 
     @staticmethod
     def _get_lowest_distance_masks_and_weights(embedded_reference, predictions, masks, p_keep_lowest_distances):
