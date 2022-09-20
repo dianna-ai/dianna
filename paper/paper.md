@@ -92,12 +92,12 @@ DIANNA is an open source XAI Python package with the following key characteristi
 
 # Used by
 
-DIANNA is currently used in the "Recognizing symbolism in Turkish television drama" project [@turkishdrama]. An important task is the development of an effective model for detecting and recognizing symbols in videos. DIANNA is used to increase insight into the AI models in order to explore how to improve them.
+DIANNA is currently being used in the project "Recognizing symbolism in Turkish television drama" [@turkishdrama]. An important task is the development of an effective model for detecting and recognizing symbols in videos. DIANNA is being used to increase understanding of AI models in order to explore how to improve them.
 
-DIANNA is also currently used in the "Visually grounded models of spoken language" project, which builds on earlier work from [@chrupala17representations;@alishahi+17;@chrupala18;@chrupala+19].
-The goal is a multi-modal model by projecting image and sound data into a common embedded space. Within DIANNA, we are developing XAI methods to visualize and explain these embedded spaces in their complex multi-modal network contexts.
+DIANNA is also currently being used in the "Visually grounded models of spoken language" project, which builds on previous work by [@chrupala17representations;@alishahi+17;@chrupala18;@chrupala+19].
+The goal is a multimodal model that projects image and sound data into a common embedded space. Within DIANNA, we are developing XAI methods to visualize and explain these embedded spaces in their complex multimodal network contexts.
 
-Finally, DIANNA was also used in the EU-funded [Examode](https://www.examode.eu/) medical research project [@bryancardenas]. It  deals with very large data sets and since it aims to support physicians in their decision-making, it needs transparent and trustworthy models.
+Finally, DIANNA has also been used in the EU-funded [Examode](https://www.examode.eu/) medical research project [@bryancardenas]. It deals with very large datasets and, because it aims to support physicians in their decision making, needs transparent and trustworthy models.
 
 # Acknowledgements
 
