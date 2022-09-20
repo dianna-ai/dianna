@@ -23,7 +23,8 @@ class DistanceExplainer:
     required_labels = ('channels',)
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=.5,  # pylint: disable=too-many-arguments
-                 p_keep_lowest_distances=.2, axis_labels=None, batch_size=10, preprocess_function=None):
+                 mask_selection_range_max=0.2, mask_selection_range_min=0, axis_labels=None, batch_size=10,
+                 preprocess_function=None):
         self.n_masks = n_masks
         self.feature_res = feature_res
         self.p_keep = p_keep
@@ -31,7 +32,8 @@ class DistanceExplainer:
         self.masks = None
         self.predictions = None
         self.axis_labels = axis_labels if axis_labels is not None else []
-        self.p_keep_lowest_distances = p_keep_lowest_distances
+        self.mask_selection_range_max = mask_selection_range_max
+        self.mask_selection_range_min = mask_selection_range_min
         self.batch_size = batch_size
 
     def explain_image_distance(self, model_or_function, input_data, embedded_reference, **explain_distance_kwargs):
@@ -61,7 +63,8 @@ class DistanceExplainer:
 
         lowest_distances_masks, mask_weights = self._get_lowest_distance_masks_and_weights(embedded_reference,
                                                                                            self.predictions, self.masks,
-                                                                                           self.p_keep_lowest_distances)
+                                                                                           self.mask_selection_range_min,
+                                                                                           self.mask_selection_range_max)
 
 
         unnormalized_sal = mask_weights.T.dot(lowest_distances_masks.reshape(len(lowest_distances_masks), -1)).reshape(-1,
@@ -77,11 +80,12 @@ class DistanceExplainer:
         return saliency, neutral_value
 
     @staticmethod
-    def _get_lowest_distance_masks_and_weights(embedded_reference, predictions, masks, p_keep_lowest_distances):
+    def _get_lowest_distance_masks_and_weights(embedded_reference, predictions, masks, mask_selection_range_min, mask_selection_range_max):
         distances = pairwise_distances(predictions, embedded_reference,
                                        metric='cosine') / 2  # divide by 2 to have [0.1] output range
         lowest_distances_indices = np.argsort(distances, axis=0)[
-                                   :int(len(predictions) * p_keep_lowest_distances)]
+                                   int(len(predictions) * mask_selection_range_min)
+                                   :int(len(predictions) * mask_selection_range_max)]
         mask_weights = np.exp(-distances[lowest_distances_indices])
         lowest_distances_masks = masks[lowest_distances_indices]
         return lowest_distances_masks, mask_weights
