@@ -27,6 +27,10 @@ authors:
     family-names: Crocioni
     given-names: Giulia
     orcid: "https://orcid.org/0000-0002-0823-0121"
+  -
+    family-names: Jansen
+    given-names: Aron
+    orcid: "https://orcid.org/0000-0002-4764-9347"
 
 # date-released: 2021-12-23
 doi: 10.5281/zenodo.5801485
