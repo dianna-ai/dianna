@@ -302,7 +302,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
             fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False)
 
             return html.Div(['The predicted class is: ' + pred_class], style={
-                'fontSize': 14,
+                'fontSize': 18,
                 'margin-top': '20px',
                 'margin-right': '40px'
                 }), fig
