@@ -67,9 +67,8 @@ def upload_image(contents, filename):
     if contents is not None:
 
         try:
-
-            if 'jpg' in filename[0]:
-
+            extensions = ['.png', '.jpg', 'jpeg']
+            if any(ext in filename[0] for ext in extensions):
                 _, content_string = contents[0].split(',')
 
                 with open(os.path.join(folder_on_server, filename[0]), 'wb') as f:
@@ -100,7 +99,7 @@ def upload_image(contents, filename):
                 return fig
 
             return utilities.blank_fig(
-                text='File format error! <br><br>Please upload only images in .jpg format.')
+                text='File format error! <br><br>Please upload only images in one of the following formats:' + extensions)
 
         except Exception as e:
             print(e)
@@ -302,7 +301,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
             fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False)
 
             return html.Div(['The predicted class is: ' + pred_class], style={
-                'fontSize': 14,
+                'fontSize': 18,
                 'margin-top': '20px',
                 'margin-right': '40px'
                 }), fig

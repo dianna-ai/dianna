@@ -274,9 +274,11 @@ def get_uploads_images():
                 className = 'row'),
 
             html.Div([
-                dcc.Graph(
-                    id='graph_img',
-                    figure = utilities.blank_fig())],
+                dcc.Loading(children=[
+                    dcc.Graph(
+                        id='graph_img',
+                        figure = utilities.blank_fig())],
+                    color=colors['blue1'], type="dot", fullscreen=False)],
                     className = 'row',
                     style = {
                         'margin-left': '140px',
