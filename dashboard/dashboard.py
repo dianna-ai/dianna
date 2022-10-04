@@ -1,3 +1,5 @@
+# debug
+from importlib import reload
 # Dash&Flask
 import dash
 from dash import html, dcc
@@ -10,8 +12,6 @@ from callbacks import app
 # Others
 import warnings
 warnings.filterwarnings('ignore') # disable warnings relateds to versions of tf
-# debug
-from importlib import reload
 
 reload(layouts)
 reload(utilities)
@@ -24,7 +24,7 @@ app.layout = html.Div([
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
-    """load content of dashboard"""
+    """Load content of dashboard."""
     if pathname == '/apps/text':
         return text_page
     return images_page # home page
