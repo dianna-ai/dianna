@@ -64,7 +64,6 @@ except Exception:  # If not present, we download
               dash.dependencies.State('upload-image', 'filename'))
 def upload_image(contents, filename):
     """Takes in test image file, returns it as a Plotly figure."""
-
     if contents is not None:
 
         try:
