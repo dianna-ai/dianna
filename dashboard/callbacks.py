@@ -64,12 +64,12 @@ except Exception:  # If not present, we download
               dash.dependencies.State('upload-image', 'filename'))
 def upload_image(contents, filename):
     """Takes in test image file, returns it as a Plotly figure."""
+
     if contents is not None:
 
         try:
-
-            if 'jpg' in filename[0]:
-
+            extensions = ['.png', '.jpg', 'jpeg']
+            if any(ext in filename[0] for ext in extensions):
                 _, content_string = contents[0].split(',')
 
                 with open(os.path.join(folder_on_server, filename[0]), 'wb') as f:
@@ -100,7 +100,7 @@ def upload_image(contents, filename):
                 return fig
 
             return utilities.blank_fig(
-                text='File format error! <br><br>Please upload only images in .jpg format.')
+                text='File format error! <br><br>Please upload only images in one of the following formats:' + extensions)
 
         except Exception as e:
             print(e)
