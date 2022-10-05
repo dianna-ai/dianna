@@ -1,5 +1,8 @@
 import inspect
 
+import PIL
+import numpy as np
+
 
 def get_function(model_or_function, preprocess_function=None):
     """Converts input to callable function.
@@ -36,9 +39,20 @@ def get_kwargs_applicable_to_function(function, kwargs):
             if key in inspect.getfullargspec(function).args}
 
 
+def _get_num_dims(data):
+    if hasattr(data, 'ndim'):
+        return data.ndim
+    if hasattr(data, 'shape'):
+        return len(data.shape)
+    raise TypeError('Unsupported data type. Supported types are numpy arrays or PIL images and similar.')
+
+
 def to_xarray(data, axis_labels, required_labels=None):
     """Converts numpy data and axes labels to an xarray object."""
-    if isinstance(axis_labels, dict):
+    if isinstance(data, PIL.Image.Image):
+        data = np.array(data)
+        labels = ['dim_0', 'dim_1', 'channels']
+    elif isinstance(axis_labels, dict):
         # key = axis index, value = label
         # not all axes have to be present in the input, but we need to provide
         # a name for each axis
@@ -47,7 +61,7 @@ def to_xarray(data, axis_labels, required_labels=None):
         for index in indices:
             if index < 0:
                 axis_labels[data.ndim + index] = axis_labels.pop(index)
-        labels = [axis_labels[index] if index in axis_labels else f'dim_{index}' for index in range(data.ndim)]
+        labels = [axis_labels[index] if index in axis_labels else f'dim_{index}' for index in range(_get_num_dims(data))]
     else:
         labels = list(axis_labels)
 
