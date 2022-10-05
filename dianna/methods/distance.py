@@ -23,7 +23,8 @@ class DistanceExplainer:
     required_labels = ('channels',)
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=.5,  # pylint: disable=too-many-arguments
-                 mask_selection_range_max=0.2, mask_selection_range_min=0, axis_labels=None, batch_size=10,
+                 mask_selection_range_max=0.2, mask_selection_range_min=0, mask_selection_negative_range_max=1,
+                 mask_selection_negative_range_min=0.8, axis_labels=None, batch_size=10,
                  preprocess_function=None):
         self.n_masks = n_masks
         self.feature_res = feature_res
@@ -34,6 +35,8 @@ class DistanceExplainer:
         self.axis_labels = axis_labels if axis_labels is not None else []
         self.mask_selection_range_max = mask_selection_range_max
         self.mask_selection_range_min = mask_selection_range_min
+        self.mask_selection_negative_range_max = mask_selection_negative_range_max
+        self.mask_selection_negative_range_min = mask_selection_negative_range_min
         self.batch_size = batch_size
 
     def explain_image_distance(self, model_or_function, input_data, embedded_reference, **explain_distance_kwargs):
@@ -57,20 +60,37 @@ class DistanceExplainer:
         # Make sure multiplication is being done for correct axes
         masked = input_data * self.masks
 
-        batch_predictions = [runner(masked[i:i + self.batch_size])
-                             for i in tqdm(range(0, self.n_masks, self.batch_size), desc='Explaining')]
+        batch_predictions = []
+
+        for i in tqdm(range(0, self.n_masks, self.batch_size), desc='Explaining'):
+            new_predictions = runner(masked[i:i + self.batch_size])
+            batch_predictions.append(new_predictions)
+
         self.predictions = np.concatenate(batch_predictions)
 
-        lowest_distances_masks, mask_weights = self._get_lowest_distance_masks_and_weights(embedded_reference,
+        lowest_distances_masks, lowest_mask_weights = self._get_lowest_distance_masks_and_weights(embedded_reference,
                                                                                            self.predictions, self.masks,
                                                                                            self.mask_selection_range_min,
                                                                                            self.mask_selection_range_max)
+        highest_distances_masks, highest_mask_weights = self._get_lowest_distance_masks_and_weights(embedded_reference,
+                                                                                           self.predictions, self.masks,
+                                                                                           self.mask_selection_negative_range_min,
+                                                                                           self.mask_selection_negative_range_max)
 
+        def describe(x, name):
+            print('Description of ', name)
+            print('mean:', np.mean(x))
+            print('std:', np.std(x))
+            print('min:', np.min(x))
+            print('max:', np.max(x))
+        describe(highest_mask_weights, 'highest_mask_weights')
+        describe(lowest_mask_weights, 'lowest_mask_weights')
 
-        unnormalized_sal = mask_weights.T.dot(lowest_distances_masks.reshape(len(lowest_distances_masks), -1)).reshape(-1,
-                                                                                                          *img_shape)
+        unnormalized_sal_lowest = lowest_mask_weights.T.dot(lowest_distances_masks.reshape(len(lowest_distances_masks), -1)).reshape(-1,            *img_shape)
+        unnormalized_sal_highest = highest_mask_weights.T.dot(highest_distances_masks.reshape(len(highest_distances_masks), -1)).reshape(-1,            *img_shape)
+        unnormalized_sal = unnormalized_sal_lowest - unnormalized_sal_highest
 
-        normalization = mask_weights.sum()
+        normalization = lowest_mask_weights.sum() + highest_mask_weights.sum()
         saliency = unnormalized_sal / normalization
 
         input_prediction = runner(input_data)
@@ -80,7 +100,8 @@ class DistanceExplainer:
         return saliency, neutral_value
 
     @staticmethod
-    def _get_lowest_distance_masks_and_weights(embedded_reference, predictions, masks, mask_selection_range_min, mask_selection_range_max):
+    def _get_lowest_distance_masks_and_weights(embedded_reference, predictions, masks, mask_selection_range_min,
+                                               mask_selection_range_max):
         distances = pairwise_distances(predictions, embedded_reference,
                                        metric='cosine') / 2  # divide by 2 to have [0.1] output range
         lowest_distances_indices = np.argsort(distances, axis=0)[
