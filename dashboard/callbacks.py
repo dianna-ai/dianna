@@ -2,6 +2,7 @@
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.express as px
+from skimage import io
 # Dash&Flask
 from jupyter_dash import JupyterDash
 import dash
@@ -21,7 +22,7 @@ import os
 import base64
 import layouts
 import utilities
-from utilities import MovieReviewsModelRunner, _create_html
+from utilities import MovieReviewsModelRunner, _create_html, imagenet_class_name
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore')  # disable warnings relateds to versions of tf
@@ -48,6 +49,8 @@ cache.clear()
 # global variables
 class_name_mnist = ['digit 0', 'digit 1']
 class_name_text = ["negative", "positive"]
+class_names_imagenet = [imagenet_class_name(idx) for idx in range(1000)]
+class_names_imagenet = class_names_imagenet[:4]
 
 try:
     spacy.load("en_core_web_sm")
@@ -77,12 +80,13 @@ def upload_image(contents, filename):
                 data_path = os.path.join(folder_on_server, filename[0])
 
                 X_test = utilities.open_image(data_path)
-
-                fig = go.Figure()
+                
 
                 if X_test.shape[2] < 3:  # it's grayscale
-
+                    fig = go.Figure()
                     fig.add_trace(go.Heatmap(z=X_test[:, :, 0], colorscale='gray', showscale=False))
+                else: # it's multicolor
+                    fig = px.imshow(X_test)
 
                 fig.update_layout(
                     width=300,
@@ -143,13 +147,13 @@ def upload_model_img(contents, filename):
 # redis memory store which is available across processes
 # and for all time.
 @cache.memoize()
-def global_store_i(method_sel, model_path, image_test):
+def global_store_i(method_sel, model_path, image_test, labels=list(range(2))):
     """Takes in the selected XAI method, the model path and the image to test, returns the explainations array."""
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
             model_path, image_test, method=method_sel,
-            labels=list(range(2)),
+            labels=labels,
             n_masks=5000, feature_res=8, p_keep=.1,
             axis_labels=('height', 'width', 'channels'))
 
@@ -165,7 +169,7 @@ def global_store_i(method_sel, model_path, image_test):
             model_path, image_test * 256, 'LIME',
             axis_labels=('height', 'width', 'channels'),
             random_state=2,
-            labels=list(range(2)),
+            labels=labels,
             preprocess_function=utilities.preprocess_function)
 
     return relevances
@@ -234,7 +238,6 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
 
         try:
             predictions = prepare(onnx_model).run(X_test[None, ...])[f'{output_node}']
-
             if len(predictions[0]) == 2:
                 class_name = class_name_mnist
 
