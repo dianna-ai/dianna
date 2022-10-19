@@ -34,8 +34,7 @@ __version__ = "0.5.0"
 
 
 class XAIMethodException(Exception):
-    """DIANNA exception used when the user asks for a non-existent method or data modality"""
-    pass
+    """DIANNA exception used when the user asks for a non-existent method or data modality."""
 
 
 def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
