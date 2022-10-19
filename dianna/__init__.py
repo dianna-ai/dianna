@@ -33,6 +33,10 @@ __email__ = "dianna-ai@esciencecenter.nl"
 __version__ = "0.5.0"
 
 
+class XAIMethodException(Exception):
+    pass
+
+
 def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
     """
     Explain an image (input_data) given a model and a chosen method.
@@ -86,10 +90,10 @@ def _get_explainer(method, kwargs, modality):
     try:
         method_submodule = importlib.import_module(f'dianna.methods.{method.lower()}')
     except ImportError as err:
-        raise Exception(f"Method {method} does not exist") from err
+        raise XAIMethodException(f"Method {method} does not exist") from err
     try:
         method_class = getattr(method_submodule, f"{method}{modality}")
     except AttributeError as err:
-        raise Exception(f"Data modality {modality} is not available for method {method}") from err
+        raise XAIMethodException(f"Data modality {modality} is not available for method {method}") from err
     method_kwargs = utils.get_kwargs_applicable_to_function(method_class.__init__, kwargs)
     return method_class(**method_kwargs)
