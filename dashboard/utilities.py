@@ -1,11 +1,19 @@
 import plotly.graph_objects as go
 import numpy as np
 from PIL import Image, ImageStat
+import dianna
 from dianna import utils
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
 from scipy.special import expit as sigmoid
 import os
+# keras model and preprocessing tools
+from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input, decode_predictions
+from keras import utils as keras_utils
+from keras import backend as K
+import warnings
+warnings.filterwarnings('ignore') # disable warnings relateds to versions of tf
+
 
 # colors
 colors = {
@@ -55,6 +63,16 @@ class MovieReviewsModelRunner:
         return np.transpose([negativity, positivity])
 
 
+class Model_imagenet():
+    def __init__(self):
+        K.set_learning_phase(0)
+        self.model = ResNet50()
+        self.input_size = (224, 224)
+        
+    def run_on_batch(self, x):
+        return self.model.predict(x)
+
+
 def blank_fig(text=None):
     """Creates a blank figure."""
     fig = go.Figure(data=go.Scatter(x=[], y=[]))
@@ -100,9 +118,18 @@ def open_image(path):
     im = np.asarray(im).astype(np.float32)
 
     if sum(stat.sum)/3 == stat.sum[0]:  # check the avg with any element value
-        return np.expand_dims(im[:, :, 0], axis=2) / 255  # if grayscale
+        return np.expand_dims(im[:, :, 0], axis=2) / 255, im  # if grayscale
+    else: # else it's colour
+        img_norm, img = load_img(path)
+    return img_norm, img
 
-    return im  # else it's colour
+
+def load_img(path):
+    img = keras_utils.load_img(path, target_size=(224,224))
+    x = keras_utils.img_to_array(img)
+    x = preprocess_input(x)
+    x = x[::-1, :, :]
+    return x, img
 
 
 def fill_segmentation(values, segmentation):
@@ -116,6 +143,7 @@ def fill_segmentation(values, segmentation):
 def preprocess_function(image):
     """For LIME: we divided the input data by 256 for the model (binary mnist) and LIME needs RGB values."""
     return (image / 256).astype(np.float32)
+
 
 def _create_html(input_tokens, explanation, max_opacity):
     """Creates text explaination map using html format."""
@@ -146,3 +174,9 @@ def _highlight_word(word, importance, max_importance, max_opacity):
         color = f'rgba(0, 0, 255, {opacity:2f})'
     highlighted_word = f'<span style="background:{color}">{word}</span>'
     return highlighted_word
+
+
+
+def imagenet_class_name(idx):
+    """Returns label of class index."""
+    return decode_predictions(np.eye(1, 1000, idx))[0][0][1]
