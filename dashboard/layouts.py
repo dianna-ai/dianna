@@ -263,6 +263,17 @@ def get_uploads_images():
                             'width': '60%',
                             'color' : colors['blue1']
                         }
+                ),
+                dcc.Input(id = 'show_top',
+                    placeholder = "Show top #",
+                    type="number",
+                    debounce=True,
+                    style={
+                            'margin-right': '320px',
+                            'margin-top': '20px',
+                            'width': '15%',
+                            'color' : colors['blue1']
+                        }
                 )
             ],
             className = 'row'
