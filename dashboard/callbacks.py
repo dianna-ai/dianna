@@ -17,12 +17,13 @@ from PIL import Image
 from html2image import Html2Image
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer
+from keras import utils as keras_utils
 import spacy
 import os
 import base64
 import layouts
 import utilities
-from utilities import MovieReviewsModelRunner, _create_html, imagenet_class_name
+from utilities import MovieReviewsModelRunner, _create_html, imagenet_class_name, Model_imagenet
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore')  # disable warnings relateds to versions of tf
@@ -46,11 +47,10 @@ cache = Cache(app.server, config={
 })
 cache.clear()
 
-# global variables
+# global variables # replace by generic label loader
 class_name_mnist = ['digit 0', 'digit 1']
 class_name_text = ["negative", "positive"]
 class_names_imagenet = [imagenet_class_name(idx) for idx in range(1000)]
-class_names_imagenet = class_names_imagenet[:4]
 
 try:
     spacy.load("en_core_web_sm")
@@ -79,14 +79,14 @@ def upload_image(contents, filename):
 
                 data_path = os.path.join(folder_on_server, filename[0])
 
-                X_test = utilities.open_image(data_path)
-                
+                X_test, img = utilities.open_image(data_path)
 
                 if X_test.shape[2] < 3:  # it's grayscale
                     fig = go.Figure()
                     fig.add_trace(go.Heatmap(z=X_test[:, :, 0], colorscale='gray', showscale=False))
                 else: # it's multicolor
-                    fig = px.imshow(X_test)
+                    X_test, img = utilities.open_image(data_path)
+                    fig = px.imshow(img)
 
                 fig.update_layout(
                     width=300,
@@ -156,7 +156,6 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2))):
             labels=labels,
             n_masks=5000, feature_res=8, p_keep=.1,
             axis_labels=('height', 'width', 'channels'))
-
     elif method_sel == "KernelSHAP":
         relevances = dianna.explain_image(
             model_path, image_test,
@@ -171,7 +170,6 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2))):
             random_state=2,
             labels=labels,
             preprocess_function=utilities.preprocess_function)
-
     return relevances
 
 
@@ -190,7 +188,7 @@ def compute_value_i(method_sel, fn_m, fn_i):
     for m in method_sel:
         # compute value and send a signal when done
         data_path = os.path.join(folder_on_server, fn_i[0])
-        image_test = utilities.open_image(data_path)
+        image_test, _ = utilities.open_image(data_path)
 
         model_path = os.path.join(folder_on_server, fn_m[0])
 
@@ -211,10 +209,11 @@ def compute_value_i(method_sel, fn_m, fn_i):
     dash.dependencies.Input("signal_image", "data"),
     dash.dependencies.Input("upload-model-img", "filename"),
     dash.dependencies.Input("upload-image", "filename"),
+    dash.dependencies.Input("show_top", "value"),
 )
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
-def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
+def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2):
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
@@ -229,7 +228,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
     if (fn_m and fn_i) is not None:
 
         data_path = os.path.join(folder_on_server, fn_i[0])
-        X_test = utilities.open_image(data_path)
+        X_test, img = utilities.open_image(data_path)
 
         onnx_model_path = os.path.join(folder_on_server, fn_m[0])
         onnx_model = onnx.load(onnx_model_path)
@@ -237,34 +236,53 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
         output_node = prepare(onnx_model, gen_tensor_dict=True).outputs[0]
 
         try:
-            predictions = prepare(onnx_model).run(X_test[None, ...])[f'{output_node}']
+            try:
+                predictions = prepare(onnx_model).run(X_test[None, ...])[f'{output_node}']
+            except Exception:
+                # trying to do imagenet
+                model = Model_imagenet()
+                predictions = model.model.predict(X_test[None, ...])
             if len(predictions[0]) == 2:
                 class_name = class_name_mnist
-
-            pred_class = class_name[np.argmax(predictions)]
-
-            n_rows = len(class_name)
-
-            fig = make_subplots(rows=n_rows, cols=3, subplot_titles=("RISE", "KernelShap", "LIME"))  # , horizontal_spacing = 0.05)
-
+            else:
+                class_name = class_names_imagenet
+                onnx_model_path = model.run_on_batch
+            # get the predicted class
+            preds = np.array(predictions[0])
+            pred_class = class_name[np.argmax(preds)]
+            # get the top most likely results
+            ind = np.array(np.argpartition(preds, -show_top)[-show_top:])
+            ind = ind[np.argsort(preds[ind])]
+            ind = np.flip(ind)
+            top = [class_name[i] for i in ind]
+            n_rows = len(top)
+            fig = make_subplots(rows=n_rows, cols=3, subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top)  # , horizontal_spacing = 0.05)
             for m in sel_methods:
 
                 for i in range(n_rows):
-
-                    fig.update_yaxes(title_text=class_name[i], row=i+1, col=1)
 
                     if m == "RISE":
 
                         try:
                             relevances_rise = global_store_i(
-                                m, onnx_model_path, X_test)
-
+                                m, onnx_model_path, X_test, ind)
                             # RISE plot
-                            fig.add_trace(go.Heatmap(
+                            if class_name == class_name_mnist:
+                                # original
+                                fig.add_trace(go.Heatmap(
                                                 z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 1)
-                            fig.add_trace(go.Heatmap(
-                                                z=relevances_rise[i], colorscale='Bluered',
-                                                showscale=False, opacity=0.7), i+1, 1)
+                                fig.add_trace(go.Heatmap(
+                                                    z=relevances_rise[i], colorscale='Bluered',
+                                                    showscale=False, opacity=0.5), i+1, 1)
+                            else: 
+                                # for imagenet
+                                fig.add_trace(go.Heatmap(
+                                                    z=X_test[:, :, 0]/255.
+                                                    , colorscale='gray', 
+                                                    showscale=False), i+1, 1)
+                                fig.add_trace(go.Heatmap(
+                                                    z=relevances_rise[i], colorscale='jet',
+                                                    showscale=False, opacity=0.7), i+1, 1)
 
                         except Exception:
                             return html.Div(['There was an error running the model. Check either the test image or the model.']), utilities.blank_fig()
@@ -273,7 +291,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
 
                         shap_values, segments_slic = global_store_i(
                             m, onnx_model_path, X_test)
-
+                        
                         # KernelSHAP plot
                         fig.add_trace(go.Heatmap(
                                         z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 2)
@@ -297,7 +315,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image):
 
             fig.update_layout(
                 width=650,
-                height=500,
+                height=250*n_rows,
                 paper_bgcolor=layouts.colors['blue4'])
 
             fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False)
