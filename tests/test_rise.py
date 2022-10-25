@@ -19,8 +19,10 @@ class RiseOnImages(TestCase):
         axis_labels = ['y', 'x', 'channels']
 
         heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axis_labels=axis_labels, n_masks=200, p_keep=.5)
+        heatmaps_expected = np.load('tests/test_data/heatmap_rise_function.npy')
 
         assert heatmaps[0].shape == input_data.shape[:2]
+        assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
 
     def test_rise_filename(self):
         """Test if rise runs and outputs the correct shape given some data and a model file."""
@@ -30,8 +32,10 @@ class RiseOnImages(TestCase):
         axis_labels = ['channels', 'y', 'x']
 
         heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", axis_labels=axis_labels, n_masks=200, p_keep=.5)
+        heatmaps_expected = np.load('tests/test_data/heatmap_rise_filename.npy')
 
         assert heatmaps[0].shape == input_data.shape[1:]
+        assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
 
     def test_rise_determine_p_keep_for_images(self):
         """Tests exact expected p_keep given an image and model."""
@@ -67,7 +71,7 @@ class RiseOnText(TestCase):
         positive_scores = [element[2] for element in positive_explanation]
         assert words == expected_words
         assert word_indices == expected_word_indices
-        assert np.allclose(positive_scores, expected_positive_scores)
+        assert np.allclose(positive_scores, expected_positive_scores, atol=1e-5)
 
     def test_rise_determine_p_keep_for_text(self):
         """Tests exact expected p_keep given a text and model."""
