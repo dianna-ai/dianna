@@ -86,12 +86,11 @@ class DistanceExplainer:
         describe(highest_mask_weights, 'highest_mask_weights')
         describe(lowest_mask_weights, 'lowest_mask_weights')
 
-        unnormalized_sal_lowest = lowest_mask_weights.T.dot(lowest_distances_masks.reshape(len(lowest_distances_masks), -1)).reshape(-1,            *img_shape)
-        unnormalized_sal_highest = highest_mask_weights.T.dot(highest_distances_masks.reshape(len(highest_distances_masks), -1)).reshape(-1,            *img_shape)
+        unnormalized_sal_lowest = np.mean(lowest_distances_masks, axis=0)
+        unnormalized_sal_highest = np.mean(highest_distances_masks, axis=0)
         unnormalized_sal = unnormalized_sal_lowest - unnormalized_sal_highest
 
-        normalization = lowest_mask_weights.sum() + highest_mask_weights.sum()
-        saliency = unnormalized_sal / normalization
+        saliency = unnormalized_sal
 
         input_prediction = runner(input_data)
         input_distance = pairwise_distances(input_prediction, embedded_reference, metric='cosine') / 2
