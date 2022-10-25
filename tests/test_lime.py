@@ -21,7 +21,7 @@ class LimeOnImages(TestCase):
         heatmap = explainer.explain(run_model, input_data, num_samples=100)
 
         assert heatmap[0].shape == input_data.shape[:2]
-        assert np.allclose(heatmap, heatmap_expected, atol=.01)
+        assert np.allclose(heatmap, heatmap_expected, atol=1e-5)
 
     def test_lime_filename(self):
         """Test if lime runs and outputs are correct given some data and a model file."""
@@ -35,7 +35,7 @@ class LimeOnImages(TestCase):
 
         heatmap_expected = np.load('tests/test_data/heatmap_lime_filename.npy')
         assert heatmap[0].shape == input_data[0].shape
-        assert np.allclose(heatmap, heatmap_expected, atol=.01)
+        assert np.allclose(heatmap, heatmap_expected, atol=1e-5)
 
 
 def test_lime_text():
@@ -46,7 +46,7 @@ def test_lime_text():
     review = 'such a bad movie'
     expected_words = ['bad', 'such', 'movie', 'a']
     expected_word_indices = [2, 0, 3, 1]
-    expected_scores = [.492, -.046, .036, -.008]
+    expected_scores = [0.49226245, -0.04637814, 0.03648112, -0.00837716]
 
     explanation = dianna.explain_text(runner, review, tokenizer=runner.tokenizer,
                                       labels=[0], method='LIME', random_state=42)[0]
@@ -56,4 +56,4 @@ def test_lime_text():
 
     assert words == expected_words
     assert word_indices == expected_word_indices
-    assert np.allclose(scores, expected_scores, atol=.01)
+    assert np.allclose(scores, expected_scores, atol=1e-5)

@@ -43,13 +43,19 @@ DIANNA is a Python package that brings explainable AI (XAI) to your research pro
 It's built by, with and for (academic) researchers and research software engineers working on machine learning projects.
 
 ## Why DIANNA? 
-DIANNA software is addressing needs of both (X)AI researchers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: the only XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
+DIANNA software is addressing needs of both (X)AI researchers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: one of the very few XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
+
+After studying the vast XAI landscape we have made choices in the parts of the [XAI Taxonomy](https://doi.org/10.3390/make3030032) on which methods, data modalities and problems types to focus. Our choices, based on the largest usage in scientific literature, are shown graphically in the XAI taxonomy below:
+
+<img src="https://user-images.githubusercontent.com/3244249/196441854-24c8c6b7-2364-4cb3-90b9-1c63e3bdc345.png" alt="XAI_taxonomy" width="60%"/>
+
+The key points of DIANNA:
 
 * Provides an easy-to-use interface for non (X)AI experts
 * Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
 * Supports the de-facto standard format for neural network models - ONNX.
 * Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and scikit-learn to ONNX.
-* Supports both images and text data modalities. Time series, tabular data and even embeddings support is planned.
+* Supports both images and text data modalities. Time series is work in progress, tabular data and even embeddings support is planned.
 * Comes with simple intuitive image and text benchmarks 
 * Easily extendable to other XAI methods 
 

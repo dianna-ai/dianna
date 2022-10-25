@@ -48,7 +48,7 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
         One heatmap (2D array) per class.
 
     """
-    if method == "KernelSHAP":
+    if method.upper() == "KERNELSHAP":
         # To avoid Access Violation on Windows with SHAP:
         from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel,unused-import
     explainer = _get_explainer(method, kwargs, modality="Image")
@@ -88,8 +88,8 @@ def _get_explainer(method, kwargs, modality):
     except ImportError as err:
         raise ValueError(f"Method {method} does not exist") from err
     try:
-        method_class = getattr(method_submodule, f"{method}{modality}")
+        method_class = getattr(method_submodule, f"{method.upper()}{modality}")
     except AttributeError as err:
-        raise ValueError(f"Data modality {modality} is not available for method {method}") from err
+        raise ValueError(f"Data modality {modality} is not available for method {method.upper()}") from err
     method_kwargs = utils.get_kwargs_applicable_to_function(method_class.__init__, kwargs)
     return method_class(**method_kwargs)
