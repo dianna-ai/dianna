@@ -7,7 +7,7 @@ try:
     from torchtext.data import get_tokenizer
 except ImportError:
     raise ImportError("Failed to import torchtext, please install manually or reinstall dianna with "
-                      "text support: `pip install --force-reinstall dianna[text]`")
+                      "text support: `pip install dianna[text]`")
 
 
 class Tokenizer(ABC):
