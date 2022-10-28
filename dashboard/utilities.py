@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image, ImageStat
 import dianna
 from dianna import utils
+from dianna.utils import to_xarray, move_axis
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
 from scipy.special import expit as sigmoid
@@ -120,16 +121,30 @@ def open_image(path):
     if sum(stat.sum)/3 == stat.sum[0]:  # check the avg with any element value
         return np.expand_dims(im[:, :, 0], axis=2) / 255, im  # if grayscale
     else: # else it's colour
-        img_norm, img = load_img(path)
+        img_norm, img = preprocess_img_rise(path)
     return img_norm, img
 
 
-def load_img(path):
+def preprocess_img_rise(path):
+    '''reshape figure to 224,224 and get colour channel at position 0.
+    Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet'''
     img = keras_utils.load_img(path, target_size=(224,224))
-    x = keras_utils.img_to_array(img)
-    x = preprocess_input(x)
-    x = x[::-1, :, :]
-    return x, img
+    img_data = keras_utils.img_to_array(img)
+    img_data = preprocess_input(img_data)
+    if img_data.shape[0] != 3:
+        # reshape the data
+        xarray = to_xarray(img_data, ('height', 'width', 'channels'))
+        reshaped_data = move_axis(xarray, 'channels', 0)
+        img_data = np.array(reshaped_data)
+    # definitions for normalisation (for ImageNet)
+    mean_vec = np.array([0.485, 0.456, 0.406])
+    stddev_vec = np.array([0.229, 0.224, 0.225])
+    norm_img_data = np.zeros(img_data.shape).astype('float32')
+    for i in range(img_data.shape[0]):
+         # for each pixel in each channel, divide the values by 255 ([0,1]), and normalize 
+         # using mean and standard deviation from values above
+        norm_img_data[i,:,:] = (img_data[i,:,:]/255 - mean_vec[i]) / stddev_vec[i]
+    return img_data, img
 
 
 def fill_segmentation(values, segmentation):
