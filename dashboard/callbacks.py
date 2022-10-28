@@ -85,7 +85,6 @@ def upload_image(contents, filename):
                     fig = go.Figure()
                     fig.add_trace(go.Heatmap(z=X_test[:, :, 0], colorscale='gray', showscale=False))
                 else: # it's multicolor
-                    X_test, img = utilities.open_image(data_path)
                     fig = px.imshow(img)
 
                 fig.update_layout(
@@ -236,17 +235,11 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
         output_node = prepare(onnx_model, gen_tensor_dict=True).outputs[0]
 
         try:
-            try:
-                predictions = prepare(onnx_model).run(X_test[None, ...])[f'{output_node}']
-            except Exception:
-                # trying to do imagenet
-                model = Model_imagenet()
-                predictions = model.model.predict(X_test[None, ...])
+            predictions = prepare(onnx_model).run(X_test[None, ...])[f'{output_node}']
             if len(predictions[0]) == 2:
                 class_name = class_name_mnist
             else:
                 class_name = class_names_imagenet
-                onnx_model_path = model.run_on_batch
             # get the predicted class
             preds = np.array(predictions[0])
             pred_class = class_name[np.argmax(preds)]
