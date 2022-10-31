@@ -122,7 +122,7 @@ def open_image(path):
         return np.expand_dims(im[:, :, 0], axis=2) / 255, im  # if grayscale
     else: # else it's colour
         img_norm, img = preprocess_img_rise(path)
-    return img_norm, img
+        return img_norm, img
 
 
 def preprocess_img_rise(path):
@@ -144,7 +144,7 @@ def preprocess_img_rise(path):
          # for each pixel in each channel, divide the values by 255 ([0,1]), and normalize 
          # using mean and standard deviation from values above
         norm_img_data[i,:,:] = (img_data[i,:,:]/255 - mean_vec[i]) / stddev_vec[i]
-    return img_data, img
+    return norm_img_data, img
 
 
 def fill_segmentation(values, segmentation):
