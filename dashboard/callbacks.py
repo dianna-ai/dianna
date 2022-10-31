@@ -146,7 +146,7 @@ def upload_model_img(contents, filename):
 # redis memory store which is available across processes
 # and for all time.
 @cache.memoize()
-def global_store_i(method_sel, model_path, image_test, labels=list(range(2))):
+def global_store_i(method_sel, model_path, image_test, labels=list(range(2)), axis_labels={2: 'channels'}):
     """Takes in the selected XAI method, the model path and the image to test, returns the explainations array."""
     # expensive query
     if method_sel == "RISE":
@@ -154,18 +154,18 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2))):
             model_path, image_test, method=method_sel,
             labels=labels,
             n_masks=5000, feature_res=8, p_keep=.1,
-            axis_labels=('height', 'width', 'channels'))
+            axis_labels=axis_labels)
     elif method_sel == "KernelSHAP":
         relevances = dianna.explain_image(
             model_path, image_test,
             method=method_sel, nsamples=1000,
             background=0, n_segments=200, sigma=0,
-            axis_labels=('height', 'width', 'channels'))
+            axis_labels=axis_labels)
 
     else:
         relevances = dianna.explain_image(
             model_path, image_test * 256, 'LIME',
-            axis_labels=('height', 'width', 'channels'),
+            axis_labels=axis_labels,
             random_state=2,
             labels=labels,
             preprocess_function=utilities.preprocess_function)
@@ -250,32 +250,31 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
             top = [class_name[i] for i in ind]
             n_rows = len(top)
             fig = make_subplots(rows=n_rows, cols=3, subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top)  # , horizontal_spacing = 0.05)
+            # To be fixed: define relevances and z specifically for mnist and resnet (+ mirror image for resnet vertically)
+            if class_name == class_name_mnist:
+                relevances_rise = global_store_i('RISE', onnx_model_path, X_test)
+                z_rise = X_test[:, :, 0]
+            else:
+                if "RISE" in sel_methods:
+                    relevances_rise = global_store_i('RISE', onnx_model_path, X_test, [range(0, len(class_name))], {0: 'channels'})
+                    z_rise = np.flipud(X_test[1, :, :])
             for m in sel_methods:
-
                 for i in range(n_rows):
-
                     if m == "RISE":
-
                         try:
-                            relevances_rise = global_store_i(
-                                m, onnx_model_path, X_test, ind)
                             # RISE plot
+                            fig.add_trace(go.Heatmap(
+                                            z=z_rise, colorscale='gray', showscale=False), i+1, 1)
+                            # To be fixed: color for mnist
                             if class_name == class_name_mnist:
-                                # original
                                 fig.add_trace(go.Heatmap(
-                                                z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 1)
+                                                z=relevances_rise[ind[i]], colorscale='Bluered',   #np.flipud(relevances_rise[ind[i]])
+                                                showscale=False, opacity=0.5), i+1, 1)
+                            # To be fixed: color for resnet + mirror image vertically
+                            else:
                                 fig.add_trace(go.Heatmap(
-                                                    z=relevances_rise[i], colorscale='Bluered',
-                                                    showscale=False, opacity=0.5), i+1, 1)
-                            else: 
-                                # for imagenet
-                                fig.add_trace(go.Heatmap(
-                                                    z=X_test[:, :, 0]/255.
-                                                    , colorscale='gray', 
-                                                    showscale=False), i+1, 1)
-                                fig.add_trace(go.Heatmap(
-                                                    z=relevances_rise[i], colorscale='jet',
-                                                    showscale=False, opacity=0.7), i+1, 1)
+                                                z=np.flipud(relevances_rise[ind[i]]), colorscale='Jet',   #
+                                                showscale=False, opacity=0.5), i+1, 1)
 
                         except Exception:
                             return html.Div(['There was an error running the model. Check either the test image or the model.']), utilities.blank_fig()
@@ -284,7 +283,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
 
                         shap_values, segments_slic = global_store_i(
                             m, onnx_model_path, X_test)
-                        
+        
                         # KernelSHAP plot
                         fig.add_trace(go.Heatmap(
                                         z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 2)
