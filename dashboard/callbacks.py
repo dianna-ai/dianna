@@ -1,3 +1,5 @@
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 # Plotly
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -153,7 +155,7 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2)), ax
         relevances = dianna.explain_image(
             model_path, image_test, method=method_sel,
             labels=labels,
-            n_masks=5000, feature_res=8, p_keep=.1,
+            n_masks=1000, feature_res=6, p_keep=.1,
             axis_labels=axis_labels)
     elif method_sel == "KernelSHAP":
         relevances = dianna.explain_image(
@@ -249,7 +251,8 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
             ind = np.flip(ind)
             top = [class_name[i] for i in ind]
             n_rows = len(top)
-            fig = make_subplots(rows=n_rows, cols=3, subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top)  # , horizontal_spacing = 0.05)
+            fig = make_subplots(rows=n_rows, cols=3, subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top,
+                                shared_xaxes=True, vertical_spacing=0.02, horizontal_spacing = 0.02)
             # To be fixed: define relevances and z specifically for mnist and resnet (+ mirror image for resnet vertically)
             if class_name == class_name_mnist:
                 relevances_rise = global_store_i('RISE', onnx_model_path, X_test)
@@ -268,13 +271,13 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                             # To be fixed: color for mnist
                             if class_name == class_name_mnist:
                                 fig.add_trace(go.Heatmap(
-                                                z=relevances_rise[ind[i]], colorscale='Bluered',   #np.flipud(relevances_rise[ind[i]])
-                                                showscale=False, opacity=0.5), i+1, 1)
+                                                z=relevances_rise[ind[i]], colorscale='Bluered',  
+                                                showscale=False, opacity=0.7), i+1, 1)
                             # To be fixed: color for resnet + mirror image vertically
                             else:
                                 fig.add_trace(go.Heatmap(
-                                                z=np.flipud(relevances_rise[ind[i]]), colorscale='Jet',   #
-                                                showscale=False, opacity=0.5), i+1, 1)
+                                                z=np.flipud(relevances_rise[ind[i]]), colorscale='Jet',
+                                                showscale=False, opacity=0.7), i+1, 1)
 
                         except Exception:
                             return html.Div(['There was an error running the model. Check either the test image or the model.']), utilities.blank_fig()
@@ -282,7 +285,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                     elif m == "KernelSHAP":
 
                         shap_values, segments_slic = global_store_i(
-                            m, onnx_model_path, X_test)
+                            m, onnx_model_path, X_test, [range(0, len(class_name))], {0: 'channels'})
         
                         # KernelSHAP plot
                         fig.add_trace(go.Heatmap(
@@ -295,19 +298,19 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                     else:
 
                         relevances_lime = global_store_i(
-                            m, onnx_model_path, X_test)
+                            m, onnx_model_path, X_test, [range(0, len(class_name))], {0: 'channels'})
 
                         # LIME plot
                         fig.add_trace(go.Heatmap(
                                             z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 3)
 
                         fig.add_trace(go.Heatmap(
-                                            z=relevances_lime[i], colorscale='Bluered',
+                                            z=relevances_lime[ind[i]], colorscale='Bluered',
                                             showscale=False, opacity=0.7), i+1, 3)
 
             fig.update_layout(
                 width=650,
-                height=250*n_rows,
+                height=(200*n_rows+50),
                 paper_bgcolor=layouts.colors['blue4'])
 
             fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False)
