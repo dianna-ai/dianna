@@ -267,6 +267,7 @@ def get_uploads_images():
                 dcc.Input(id = 'show_top',
                     placeholder = "Show top #",
                     type="number",
+                    value=2,
                     debounce=True,
                     style={
                             'margin-right': '320px',
