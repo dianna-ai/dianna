@@ -148,27 +148,28 @@ def upload_model_img(contents, filename):
 # redis memory store which is available across processes
 # and for all time.
 @cache.memoize()
-def global_store_i(method_sel, model_path, image_test, labels=list(range(2)), axis_labels={2: 'channels'}):
+def global_store_i(method_sel, model_path, image_test, labels=list(range(2)), axis_labels={2: 'channels'}, 
+        n_masks=1000, feature_res=6, p_keep=.1, n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):
     """Takes in the selected XAI method, the model path and the image to test, returns the explainations array."""
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
             model_path, image_test, method=method_sel,
             labels=labels,
-            n_masks=1000, feature_res=6, p_keep=.1,
+            n_masks=n_masks, feature_res=feature_res, p_keep=p_keep,
             axis_labels=axis_labels)
     elif method_sel == "KernelSHAP":
         relevances = dianna.explain_image(
             model_path, image_test,
-            method=method_sel, nsamples=1000,
-            background=0, n_segments=200, sigma=0,
+            method=method_sel, nsamples=n_samples,
+            background=background, n_segments=n_segments, sigma=sigma,
             axis_labels=axis_labels)
 
     else:
         relevances = dianna.explain_image(
             model_path, image_test * 256, 'LIME',
             axis_labels=axis_labels,
-            random_state=2,
+            random_state=random_state,
             labels=labels,
             preprocess_function=utilities.preprocess_function)
     return relevances
@@ -211,10 +212,19 @@ def compute_value_i(method_sel, fn_m, fn_i):
     dash.dependencies.Input("upload-model-img", "filename"),
     dash.dependencies.Input("upload-image", "filename"),
     dash.dependencies.Input("show_top", "value"),
+    dash.dependencies.Input("n_masks", "value"),
+    dash.dependencies.Input("feature_res", "value"),
+    dash.dependencies.Input("p_keep", "value"),
+    dash.dependencies.Input("n_samples", "value"),
+    dash.dependencies.Input("background", "value"),
+    dash.dependencies.Input("n_segments", "value"),
+    dash.dependencies.Input("sigma", "value"),
+    dash.dependencies.Input("random_state", "value")
 )
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
-def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2):
+def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
+    background=0, n_segments=200, sigma=0, random_state=2):
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
@@ -255,11 +265,12 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                                 shared_xaxes=True, vertical_spacing=0.02, horizontal_spacing = 0.02)
             # To be fixed: define relevances and z specifically for mnist and resnet (+ mirror image for resnet vertically)
             if class_name == class_name_mnist:
-                relevances_rise = global_store_i('RISE', onnx_model_path, X_test)
+                relevances_rise = global_store_i('RISE', onnx_model_path, X_test, n_masks=n_masks, feature_res= feature_res, p_keep=p_keep)
                 z_rise = X_test[:, :, 0]
             else:
                 if "RISE" in sel_methods:
-                    relevances_rise = global_store_i('RISE', onnx_model_path, X_test, [range(0, len(class_name))], {0: 'channels'})
+                    relevances_rise = global_store_i('RISE', onnx_model_path, X_test, labels = [range(0, len(class_name))], axis_labels = {0: 'channels'},
+                        n_masks=n_masks, feature_res= feature_res, p_keep=p_keep)
                     z_rise = np.flipud(X_test[1, :, :])
             for m in sel_methods:
                 for i in range(n_rows):
@@ -285,7 +296,8 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                     elif m == "KernelSHAP":
 
                         shap_values, segments_slic = global_store_i(
-                            m, onnx_model_path, X_test, [range(0, len(class_name))], {0: 'channels'})
+                            m, onnx_model_path, X_test, labels=[range(0, len(class_name))], axis_labels={0: 'channels'},
+                            n_sampels=n_samples, background=background, n_segments=n_segments, sigma=sigma)
         
                         # KernelSHAP plot
                         fig.add_trace(go.Heatmap(
@@ -298,7 +310,8 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                     else:
 
                         relevances_lime = global_store_i(
-                            m, onnx_model_path, X_test, [range(0, len(class_name))], {0: 'channels'})
+                            m, onnx_model_path, X_test, labels=[range(0, len(class_name))], axis_labels={0: 'channels'},
+                            random_state=random_state)
 
                         # LIME plot
                         fig.add_trace(go.Heatmap(
