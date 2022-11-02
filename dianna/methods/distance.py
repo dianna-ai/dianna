@@ -78,13 +78,8 @@ class DistanceExplainer:
                                                                                            self.mask_selection_negative_range_max)
 
         def describe(x, name):
-            print('Description of ', name)
-            print('mean:', np.mean(x))
-            print('std:', np.std(x))
-            print('min:', np.min(x))
-            print('max:', np.max(x))
-        describe(highest_mask_weights, 'highest_mask_weights')
-        describe(lowest_mask_weights, 'lowest_mask_weights')
+            return f'Description of {name}\nmean:{np.mean(x)}\nstd:{np.std(x)}\nmin:{np.min(x)}\nmax:{np.max(x)}'
+        self.statistics = describe(highest_mask_weights, 'highest_mask_weights') +'\n' + describe(lowest_mask_weights, 'lowest_mask_weights')
 
         unnormalized_sal_lowest = np.mean(lowest_distances_masks, axis=0)
         unnormalized_sal_highest = np.mean(highest_distances_masks, axis=0)
