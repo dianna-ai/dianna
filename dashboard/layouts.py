@@ -382,7 +382,7 @@ def get_uploads_images():
                     dcc.Markdown(children='Number of segments',
                         style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
-                    dcc.Input(id = 'n_sgements',
+                    dcc.Input(id = 'n_segments',
                         placeholder = "N segments",
                         type="number",
                         value=200,
