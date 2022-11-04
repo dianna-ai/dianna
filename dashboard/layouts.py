@@ -275,7 +275,7 @@ def get_uploads_images():
                         style = {'margin-top': '20px', 'textAlign' : 'center', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'show_top',
-                            type="text",
+                            type="number",
                             value=2,
                             style={
                                     'margin-right': '10px',
