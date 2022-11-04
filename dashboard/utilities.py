@@ -120,7 +120,7 @@ def open_image(path):
 
     if sum(stat.sum)/3 == stat.sum[0]:  # check the avg with any element value
         return np.expand_dims(im[:, :, 0], axis=2) / 255, im  # if grayscale
-    else: # else it's colour
+    else: # else it's colour, reshape to 224x224x3 for resnet
         img_norm, img = preprocess_img_rise(path)
         return img_norm, img
 
@@ -132,8 +132,8 @@ def preprocess_img_rise(path):
     img_data = keras_utils.img_to_array(img)
     img_data = preprocess_input(img_data)
     if img_data.shape[0] != 3:
-        # reshape the data
-        xarray = to_xarray(img_data, ('height', 'width', 'channels'))
+        # Colour channel is not in position 0; reshape the data
+        xarray = to_xarray(img_data, {0: 'height', 1: 'width', 2: 'channels'}) 
         reshaped_data = move_axis(xarray, 'channels', 0)
         img_data = np.array(reshaped_data)
     # definitions for normalisation (for ImageNet)
