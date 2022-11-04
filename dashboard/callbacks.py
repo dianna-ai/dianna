@@ -81,13 +81,8 @@ def upload_image(contents, filename):
 
                 data_path = os.path.join(folder_on_server, filename[0])
 
-                X_test, img = utilities.open_image(data_path)
-
-                if X_test.shape[2] < 3:  # it's grayscale
-                    fig = go.Figure()
-                    fig.add_trace(go.Heatmap(z=X_test[:, :, 0], colorscale='gray', showscale=False))
-                else: # it's multicolor
-                    fig = px.imshow(img)
+                _, img = utilities.open_image(data_path)
+                fig = px.imshow(img)
 
                 fig.update_layout(
                     width=300,
@@ -239,7 +234,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
     if (fn_m and fn_i) is not None:
 
         data_path = os.path.join(folder_on_server, fn_i[0])
-        X_test, img = utilities.open_image(data_path)
+        X_test, _ = utilities.open_image(data_path)
 
         onnx_model_path = os.path.join(folder_on_server, fn_m[0])
         onnx_model = onnx.load(onnx_model_path)
@@ -256,6 +251,9 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
             preds = np.array(predictions[0])
             pred_class = class_name[np.argmax(preds)]
             # get the top most likely results
+            if show_top > len(class_name):
+                show_top = len(class_name)
+            # make sure the top results are ordered most to least likely
             ind = np.array(np.argpartition(preds, -show_top)[-show_top:])
             ind = ind[np.argsort(preds[ind])]
             ind = np.flip(ind)
@@ -263,45 +261,40 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
             n_rows = len(top)
             fig = make_subplots(rows=n_rows, cols=3, subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top,
                                 shared_xaxes=True, vertical_spacing=0.02, horizontal_spacing = 0.02)
-            # To be fixed: define relevances and z specifically for mnist and resnet (+ mirror image for resnet vertically)
-            if class_name == class_name_mnist:
-                relevances_rise = global_store_i('RISE', onnx_model_path, X_test, n_masks=n_masks, feature_res= feature_res, p_keep=p_keep)
+            # check which axis is color channel
+            if X_test.shape[2] <=3:
                 z_rise = X_test[:, :, 0]
+                axis_labels = {2: 'channels'}
+                colorscale='Bluered'
             else:
-                if "RISE" in sel_methods:
-                    relevances_rise = global_store_i('RISE', onnx_model_path, X_test, labels = [range(0, len(class_name))], axis_labels = {0: 'channels'},
-                        n_masks=n_masks, feature_res= feature_res, p_keep=p_keep)
-                    z_rise = np.flipud(X_test[1, :, :])
+                z_rise = X_test[1, :, :]
+                axis_labels = {0: 'channels'}
+                colorscale='jet'
             for m in sel_methods:
                 for i in range(n_rows):
                     if m == "RISE":
                         try:
                             # RISE plot
+                            relevances_rise = global_store_i('RISE', onnx_model_path, X_test, labels = list(range(0, len(class_name))), axis_labels = axis_labels,
+                                n_masks=n_masks, feature_res= feature_res, p_keep=p_keep)
                             fig.add_trace(go.Heatmap(
-                                            z=z_rise, colorscale='gray', showscale=False), i+1, 1)
-                            # To be fixed: color for mnist
-                            if class_name == class_name_mnist:
-                                fig.add_trace(go.Heatmap(
-                                                z=relevances_rise[ind[i]], colorscale='Bluered',  
+                                                z=z_rise, colorscale='gray', showscale=False), i+1, 1)
+                            fig.add_trace(
+                                    go.Heatmap(
+                                                z=relevances_rise[ind[i]], colorscale=colorscale,  
                                                 showscale=False, opacity=0.7), i+1, 1)
-                            # To be fixed: color for resnet + mirror image vertically
-                            else:
-                                fig.add_trace(go.Heatmap(
-                                                z=np.flipud(relevances_rise[ind[i]]), colorscale='Jet',
-                                                showscale=False, opacity=0.7), i+1, 1)
-
                         except Exception:
                             return html.Div(['There was an error running the model. Check either the test image or the model.']), utilities.blank_fig()
 
                     elif m == "KernelSHAP":
 
                         shap_values, segments_slic = global_store_i(
-                            m, onnx_model_path, X_test, labels=[range(0, len(class_name))], axis_labels={0: 'channels'},
-                            n_sampels=n_samples, background=background, n_segments=n_segments, sigma=sigma)
+                            m, onnx_model_path, X_test, labels=list(range(0, len(class_name))), axis_labels=axis_labels,
+                            n_samples=n_samples, background=background, n_segments=n_segments, sigma=sigma)
         
                         # KernelSHAP plot
                         fig.add_trace(go.Heatmap(
-                                        z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 2)
+                                        z=z_rise, colorscale='gray', showscale=False), i+1, 2)
                         fig.add_trace(go.Heatmap(
                                         z=utilities.fill_segmentation(shap_values[i][0], segments_slic),
                                         colorscale='Bluered',
@@ -310,13 +303,13 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                     else:
 
                         relevances_lime = global_store_i(
-                            m, onnx_model_path, X_test, labels=[range(0, len(class_name))], axis_labels={0: 'channels'},
+                            m, onnx_model_path, X_test, labels=list(range(0, len(class_name))), axis_labels=axis_labels,
                             random_state=random_state)
 
                         # LIME plot
                         fig.add_trace(go.Heatmap(
-                                            z=X_test[:, :, 0], colorscale='gray', showscale=False), i+1, 3)
-
+                                            z=z_rise, colorscale='gray', showscale=False), i+1, 3)
+                                            
                         fig.add_trace(go.Heatmap(
                                             z=relevances_lime[ind[i]], colorscale='Bluered',
                                             showscale=False, opacity=0.7), i+1, 3)
@@ -327,12 +320,14 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                 paper_bgcolor=layouts.colors['blue4'])
 
             fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False)
-            fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False)
+            fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False, autorange="reversed")
 
             return html.Div(['The predicted class is: ' + pred_class], style={
                 'fontSize': 18,
-                'margin-top': '20px',
-                'margin-right': '40px'
+                'font-weight': 'bold',
+                'text-decoration': 'underline',
+                'margin-top': '60px',
+                'textAlign' : 'center'
                 }), fig
 
         except Exception as e:
