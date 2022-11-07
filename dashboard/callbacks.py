@@ -1,33 +1,36 @@
+import base64
 import os
-os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+import warnings
+import dash
+import layouts
+import numpy as np
+# Onnx
+import onnx
+import plotly.express as px
 # Plotly
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import plotly.express as px
-from skimage import io
-# Dash&Flask
-from jupyter_dash import JupyterDash
-import dash
+import spacy
+import utilities
 from dash import html
 from dash.exceptions import PreventUpdate
 from flask_caching import Cache
-# Onnx
-import onnx
+from html2image import Html2Image
+# Dash&Flask
+from jupyter_dash import JupyterDash
+from keras import utils as keras_utils
 from onnx_tf.backend import prepare
 # Others
 from PIL import Image
-from html2image import Html2Image
+from plotly.subplots import make_subplots
+from skimage import io
+from utilities import Model_imagenet
+from utilities import MovieReviewsModelRunner
+from utilities import _create_html
+from utilities import imagenet_class_name
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer
-from keras import utils as keras_utils
-import spacy
-import os
-import base64
-import layouts
-import utilities
-from utilities import MovieReviewsModelRunner, _create_html, imagenet_class_name, Model_imagenet
-import numpy as np
-import warnings
+
+
 warnings.filterwarnings('ignore')  # disable warnings relateds to versions of tf
 
 folder_on_server = "app_data"

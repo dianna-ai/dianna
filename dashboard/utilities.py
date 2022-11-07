@@ -1,18 +1,24 @@
-import plotly.graph_objects as go
+import os
+import warnings
 import numpy as np
-from PIL import Image, ImageStat
-import dianna
-from dianna import utils
-from dianna.utils import to_xarray, move_axis
+import plotly.graph_objects as go
+from keras import backend as K
+from keras import utils as keras_utils
+from PIL import Image
+from PIL import ImageStat
+from scipy.special import expit as sigmoid
+# keras model and preprocessing tools
+from tensorflow.keras.applications.resnet50 import ResNet50
+from tensorflow.keras.applications.resnet50 import decode_predictions
+from tensorflow.keras.applications.resnet50 import preprocess_input
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
-from scipy.special import expit as sigmoid
-import os
-# keras model and preprocessing tools
-from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input, decode_predictions
-from keras import utils as keras_utils
-from keras import backend as K
-import warnings
+import dianna
+from dianna import utils
+from dianna.utils import move_axis
+from dianna.utils import to_xarray
+
+
 warnings.filterwarnings('ignore') # disable warnings relateds to versions of tf
 
 

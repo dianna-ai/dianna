@@ -1,7 +1,7 @@
 import base64
+import utilities
 from dash import dcc
 from dash import html
-import utilities
 
 
 #static images
