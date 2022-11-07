@@ -142,8 +142,8 @@ def upload_model_img(contents, filename):
 # these computations are cached in a globally available
 # redis memory store which is available across processes
 # and for all time.
-# pylint: ignore=dangerous-default-value
-# pylint: ignore=too-many-arguments
+# pylint: disable=dangerous-default-value
+# pylint: disable=too-many-arguments
 @cache.memoize()
 def global_store_i(method_sel, model_path, image_test, labels=list(range(2)), axis_labels={2: 'channels'}, 
         n_masks=1000, feature_res=6, p_keep=.1, n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):

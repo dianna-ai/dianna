@@ -2,14 +2,12 @@ import os
 import warnings
 import numpy as np
 import plotly.graph_objects as go
-from keras import backend as K
 from keras import utils as keras_utils
 from PIL import Image
 from PIL import ImageStat
 from scipy.special import expit as sigmoid
 # keras model and preprocessing tools
 # pylint: disable=import-error
-from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.resnet50 import decode_predictions
 from tensorflow.keras.applications.resnet50 import preprocess_input
 from torchtext.data import get_tokenizer
@@ -124,7 +122,7 @@ def open_image(path):
 
 
 def preprocess_img_rise(path):
-    """
+    """ResNet specific function for preprocessing
     
     Reshape figure to 224,224 and get colour channel at position 0.
     Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet.
