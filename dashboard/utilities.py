@@ -122,7 +122,7 @@ def open_image(path):
 
 
 def preprocess_img_rise(path):
-    """ResNet specific function for preprocessing
+    """Resnet specific function for preprocessing.
     
     Reshape figure to 224,224 and get colour channel at position 0.
     Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet.
