@@ -304,11 +304,11 @@ def get_uploads_images():
                     dcc.Markdown(children='**Rise**',
                         style = {'margin-top': '20px', 'textAlign' : 'center', 'color' : colors['blue1']}
                         ),
-                    dcc.Markdown(children='N masks',
+                    dcc.Markdown(children='Number of masks',
                         style = {'margin-left': '5px', 'margin-top': '0px', 'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'n_masks',
-                        placeholder = "N masks",
+                        placeholder = "Number of masks",
                         type="number",
                         value=1000,
                         style={
@@ -318,7 +318,7 @@ def get_uploads_images():
                                 'color' : colors['blue1']
                             }
                     ),
-                    dcc.Markdown(children='Feature res',
+                    dcc.Markdown(children='Feature resolution',
                         style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'feature_res',
@@ -332,7 +332,7 @@ def get_uploads_images():
                                 'color' : colors['blue1']
                             }
                     ),
-                    dcc.Markdown(children='P keep',
+                    dcc.Markdown(children='Probability to be kept unmasked',
                         style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'p_keep',
