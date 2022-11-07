@@ -17,13 +17,10 @@ from flask_caching import Cache
 from html2image import Html2Image
 # Dash&Flask
 from jupyter_dash import JupyterDash
-from keras import utils as keras_utils
 from onnx_tf.backend import prepare
 # Others
 from PIL import Image
 from plotly.subplots import make_subplots
-from skimage import io
-from utilities import Model_imagenet
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html
 from utilities import imagenet_class_name
@@ -145,6 +142,8 @@ def upload_model_img(contents, filename):
 # these computations are cached in a globally available
 # redis memory store which is available across processes
 # and for all time.
+# pylint: ignore=dangerous-default-value
+# pylint: ignore=too-many-arguments
 @cache.memoize()
 def global_store_i(method_sel, model_path, image_test, labels=list(range(2)), axis_labels={2: 'channels'}, 
         n_masks=1000, feature_res=6, p_keep=.1, n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):
@@ -221,7 +220,7 @@ def compute_value_i(method_sel, fn_m, fn_i):
 )
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
-# pylint: diable=too-many-arguments
+# pylint: disable=too-many-arguments
 def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
     background=0, n_segments=200, sigma=0, random_state=2):
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
@@ -234,7 +233,6 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
         return html.Div(['']), utilities.blank_fig()
 
     # update graph
-    # pylint: disable=too-many-nested-blocks
     if (fn_m and fn_i) is not None:
 
         data_path = os.path.join(folder_on_server, fn_i[0])

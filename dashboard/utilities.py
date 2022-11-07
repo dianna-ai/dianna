@@ -8,7 +8,7 @@ from PIL import Image
 from PIL import ImageStat
 from scipy.special import expit as sigmoid
 # keras model and preprocessing tools
-# pylint: ignore=import-error
+# pylint: disable=import-error
 from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.resnet50 import decode_predictions
 from tensorflow.keras.applications.resnet50 import preprocess_input
@@ -72,16 +72,6 @@ class MovieReviewsModelRunner:
         return np.transpose([negativity, positivity])
 
 
-class Model_imagenet():
-    def __init__(self):
-        K.set_learning_phase(0)
-        self.model = ResNet50()
-        self.input_size = (224, 224)
-        
-    def run_on_batch(self, x):
-        return self.model.predict(x)
-
-
 def blank_fig(text=None):
     """Creates a blank figure."""
     fig = go.Figure(data=go.Scatter(x=[], y=[]))
@@ -134,8 +124,12 @@ def open_image(path):
 
 
 def preprocess_img_rise(path):
-    """Reshape figure to 224,224 and get colour channel at position 0.
-    Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet"""
+    """
+    
+    Reshape figure to 224,224 and get colour channel at position 0.
+    Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet.
+    
+    """
     img = keras_utils.load_img(path, target_size=(224,224))
     img_data = keras_utils.img_to_array(img)
     img_data = preprocess_input(img_data)
