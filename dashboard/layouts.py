@@ -393,7 +393,8 @@ def get_uploads_images():
                                 'color' : colors['blue1']
                             }
                     ),
-                    dcc.Markdown(children='$$\sigma$$', mathjax=True, 
+                    # noqa: W605
+                    dcc.Markdown(children='$$\sigma$$', mathjax=True,  # noqa: W605
                         style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'sigma',
