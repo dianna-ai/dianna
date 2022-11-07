@@ -8,11 +8,13 @@ from PIL import Image
 from PIL import ImageStat
 from scipy.special import expit as sigmoid
 # keras model and preprocessing tools
+# pylint: ignore=import-error
 from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.resnet50 import decode_predictions
 from tensorflow.keras.applications.resnet50 import preprocess_input
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
+# pylint: disable=unused-import
 import dianna
 from dianna import utils
 from dianna.utils import move_axis
@@ -64,7 +66,7 @@ class MovieReviewsModelRunner:
         logits = self.run_model(tokenized_sentences)
         pred = np.apply_along_axis(sigmoid, 1, logits)
 
-        # output two classes
+        # output pos/neg
         positivity = pred[:, 0]
         negativity = 1 - positivity
         return np.transpose([negativity, positivity])
@@ -126,14 +128,14 @@ def open_image(path):
 
     if sum(stat.sum)/3 == stat.sum[0]:  # check the avg with any element value
         return np.expand_dims(im[:, :, 0], axis=2) / 255, im  # if grayscale
-    else: # else it's colour, reshape to 224x224x3 for resnet
-        img_norm, img = preprocess_img_rise(path)
-        return img_norm, img
+    # else it's colour, reshape to 224x224x3 for resnet
+    img_norm, img = preprocess_img_rise(path)
+    return img_norm, img
 
 
 def preprocess_img_rise(path):
-    '''reshape figure to 224,224 and get colour channel at position 0.
-    Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet'''
+    """Reshape figure to 224,224 and get colour channel at position 0.
+    Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet"""
     img = keras_utils.load_img(path, target_size=(224,224))
     img_data = keras_utils.img_to_array(img)
     img_data = preprocess_input(img_data)
@@ -147,8 +149,8 @@ def preprocess_img_rise(path):
     stddev_vec = np.array([0.229, 0.224, 0.225])
     norm_img_data = np.zeros(img_data.shape).astype('float32')
     for i in range(img_data.shape[0]):
-         # for each pixel in each channel, divide the values by 255 ([0,1]), and normalize 
-         # using mean and standard deviation from values above
+        # for each pixel in each channel, divide the values by 255 ([0,1]), and normalize 
+        # using mean and standard deviation from values above
         norm_img_data[i,:,:] = (img_data[i,:,:]/255 - mean_vec[i]) / stddev_vec[i]
     return norm_img_data, img
 
