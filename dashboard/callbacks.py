@@ -221,6 +221,7 @@ def compute_value_i(method_sel, fn_m, fn_i):
 )
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
+# pylint: diable=too-many-arguments
 def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
     background=0, n_segments=200, sigma=0, random_state=2):
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
@@ -276,19 +277,15 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
             for m in sel_methods:
                 for i in range(n_rows):
                     if m == "RISE":
-                        try:
-                            # RISE plot
-                            relevances_rise = global_store_i('RISE', onnx_model_path, X_test, labels=[ind[i]], axis_labels=axis_labels,
-                                n_masks=n_masks, feature_res= feature_res, p_keep=p_keep)
-                            fig.add_trace(go.Heatmap(
-                                                z=z_rise, colorscale='gray', showscale=False), i+1, 1)
-                            fig.add_trace(
-                                    go.Heatmap(
-                                                z=relevances_rise[0], colorscale=colorscale,  
-                                                showscale=False, opacity=0.7), i+1, 1)
-                        except Exception:
-                            return html.Div(['There was an error running the model. Check either the test image or the model.']), utilities.blank_fig()
-
+                        # RISE plot
+                        relevances_rise = global_store_i('RISE', onnx_model_path, X_test, labels=[ind[i]], axis_labels=axis_labels,
+                            n_masks=n_masks, feature_res= feature_res, p_keep=p_keep)
+                        fig.add_trace(go.Heatmap(
+                                            z=z_rise, colorscale='gray', showscale=False), i+1, 1)
+                        fig.add_trace(
+                                go.Heatmap(
+                                            z=relevances_rise[0], colorscale=colorscale,  
+                                            showscale=False, opacity=0.7), i+1, 1)
                     elif m == "KernelSHAP":
                         shap_values, segments_slic = global_store_i(
                             m, onnx_model_path, X_test, labels=[ind[i]], axis_labels=axis_labels,
