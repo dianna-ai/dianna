@@ -275,21 +275,20 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                     if m == "RISE":
                         try:
                             # RISE plot
-                            relevances_rise = global_store_i('RISE', onnx_model_path, X_test, labels = list(range(0, len(class_name))), axis_labels = axis_labels,
+                            relevances_rise = global_store_i('RISE', onnx_model_path, X_test, labels=[ind[i]], axis_labels=axis_labels,
                                 n_masks=n_masks, feature_res= feature_res, p_keep=p_keep)
                             fig.add_trace(go.Heatmap(
                                                 z=z_rise, colorscale='gray', showscale=False), i+1, 1)
                             fig.add_trace(
                                     go.Heatmap(
-                                                z=relevances_rise[ind[i]], colorscale=colorscale,  
+                                                z=relevances_rise[0], colorscale=colorscale,  
                                                 showscale=False, opacity=0.7), i+1, 1)
                         except Exception:
                             return html.Div(['There was an error running the model. Check either the test image or the model.']), utilities.blank_fig()
 
                     elif m == "KernelSHAP":
-
                         shap_values, segments_slic = global_store_i(
-                            m, onnx_model_path, X_test, labels=list(range(0, len(class_name))), axis_labels=axis_labels,
+                            m, onnx_model_path, X_test, labels=[ind[i]], axis_labels=axis_labels,
                             n_samples=n_samples, background=background, n_segments=n_segments, sigma=sigma)
         
                         # KernelSHAP plot
@@ -301,17 +300,14 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                                         showscale=False,
                                         opacity=0.7), i+1, 2)
                     else:
-
                         relevances_lime = global_store_i(
-                            m, onnx_model_path, X_test, labels=list(range(0, len(class_name))), axis_labels=axis_labels,
+                            m, onnx_model_path, X_test, labels=[ind[i]], axis_labels=axis_labels,
                             random_state=random_state)
-
                         # LIME plot
                         fig.add_trace(go.Heatmap(
                                             z=z_rise, colorscale='gray', showscale=False), i+1, 3)
-                                            
                         fig.add_trace(go.Heatmap(
-                                            z=relevances_lime[ind[i]], colorscale='Bluered',
+                                            z=relevances_lime[0], colorscale='bluered',
                                             showscale=False, opacity=0.7), i+1, 3)
 
             fig.update_layout(
