@@ -31,6 +31,10 @@ authors:
     family-names: Jansen
     given-names: Aron
     orcid: "https://orcid.org/0000-0002-4764-9347"
+  -
+    family-names: Ootes
+    given-names: Laura
+    orcid: "https://orcid.org/0000-0002-2800-8309"    
 
 # date-released: 2021-12-23
 doi: 10.5281/zenodo.5801485
