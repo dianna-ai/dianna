@@ -1,7 +1,13 @@
 from abc import ABC
 from abc import abstractmethod
 from typing import List
-from torchtext.data import get_tokenizer
+
+
+try:
+    from torchtext.data import get_tokenizer
+except ImportError as err:
+    raise ImportError("Failed to import torchtext, please install manually or reinstall dianna with "
+                      "text support: `pip install dianna[text]`") from err
 
 
 class Tokenizer(ABC):
