@@ -40,7 +40,7 @@ class RiseOnImages(TestCase):
     def test_rise_determine_p_keep_for_images(self):
         """Tests exact expected p_keep given an image and model."""
         np.random.seed(0)
-        expected_p_exact_keep = .1
+        expected_p_exact_keep = .4
         model_filename = 'tests/test_data/mnist_model.onnx'
         data = get_mnist_1_data().astype(np.float32)
 
@@ -76,7 +76,7 @@ class RiseOnText(TestCase):
     def test_rise_determine_p_keep_for_text(self):
         """Tests exact expected p_keep given a text and model."""
         np.random.seed(0)
-        expected_p_exact_keep = .5
+        expected_p_exact_keep = .7
         model_path = 'tests/test_data/movie_review_model.onnx'
         word_vector_file = 'tests/test_data/word_vectors.txt'
         runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)

@@ -13,6 +13,17 @@ def _upscale(grid_i, up_size):
     return resize(grid_i, up_size, order=1, mode='reflect', anti_aliasing=False)
 
 
+def _predict_in_batches(masked, runner):
+    batch_size = 50
+    predictions = []
+    for i in range(0, len(masked), batch_size):
+        current_input = masked[i:i + batch_size]
+        current_predictions = runner(current_input)
+        predictions.append(current_predictions)
+    predictions = np.concatenate(predictions)
+    return predictions
+
+
 class RISEText:
     """RISE implementation for text based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
 
@@ -56,7 +67,7 @@ class RISEText:
         input_tokens = np.asarray(tokenizer.tokenize(input_text))
         num_tokens = len(input_tokens)
         active_p_keep = self._determine_p_keep(input_tokens, runner, tokenizer) if self.p_keep is None else self.p_keep
-        input_shape = (num_tokens, )
+        input_shape = (num_tokens,)
         self.masks = self._generate_masks(input_shape, active_p_keep,
                                           self.n_masks)  # Expose masks for to make user inspection possible
         masked_sentences = self._create_masked_sentences(input_tokens, self.masks, tokenizer)
@@ -76,17 +87,11 @@ class RISEText:
         return best_p_keep
 
     def _calculate_mean_class_std(self, p_keep, runner, input_text, tokenizer, n_masks):
-        batch_size = 50
         masks = self._generate_masks(input_text.shape, p_keep, n_masks)
         masked = self._create_masked_sentences(input_text, masks, tokenizer)
-        predictions = []
-        for i in range(0, n_masks, batch_size):
-            current_input = masked[i:i + batch_size]
-            current_predictions = runner(current_input)
-            predictions.append(current_predictions.max(axis=1))
-        predictions = np.concatenate(predictions)
-        std_per_class = predictions.std()
-        return np.mean(std_per_class)
+        predictions = _predict_in_batches(masked, runner)
+        std_per_class = predictions.std(axis=0)  # TODO: add axis see https://github.com/dianna-ai/dianna/issues/380
+        return np.max(std_per_class)
 
     def _generate_masks(self, input_shape, p_keep, n_masks):
         masks = np.random.choice(a=(True, False), size=(n_masks,) + input_shape, p=(p_keep, 1 - p_keep))
@@ -122,7 +127,7 @@ class RISEImage:
     """RISE implementation for images based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
 
     # axis labels required to be present in input image data
-    required_labels = ('channels', )
+    required_labels = ('channels',)
 
     def __init__(self, n_masks=1000, feature_res=8, p_keep=None,
                  axis_labels=None, preprocess_function=None):
@@ -194,26 +199,20 @@ class RISEImage:
         p_keeps = np.arange(0.1, 1.0, 0.1)
         stds = []
         for p_keep in p_keeps:
-            std = self._calculate_mean_class_std(p_keep, runner, input_data, n_masks=n_masks)
+            std = self._calculate_max_class_std(p_keep, runner, input_data, n_masks=n_masks)
             stds += [std]
         best_i = np.argmax(stds)
         best_p_keep = p_keeps[best_i]
         print(f'Rise parameter p_keep was automatically determined at {best_p_keep}')
         return best_p_keep
 
-    def _calculate_mean_class_std(self, p_keep, runner, input_data, n_masks):
-        batch_size = 50
+    def _calculate_max_class_std(self, p_keep, runner, input_data, n_masks):
         img_shape = input_data.shape[1:3]
         masks = self._generate_masks(img_shape, p_keep, n_masks)
         masked = input_data * masks
-        predictions = []
-        for i in range(0, n_masks, batch_size):
-            current_input = masked[i:i + batch_size]
-            current_predictions = runner(current_input)
-            predictions.append(current_predictions.max(axis=1))
-        predictions = np.concatenate(predictions)
-        std_per_class = predictions.std()
-        return np.mean(std_per_class)
+        predictions = _predict_in_batches(masked, runner)
+        std_per_class = predictions.std(axis=0)
+        return np.max(std_per_class)
 
     def _generate_masks(self, input_size, p_keep, n_masks):
         """Generates a set of random masks to mask the input data.
@@ -272,6 +271,7 @@ class RISEImage:
             Function that first ensures the data has the same shape and type as the input data,
             then runs the users' preprocessing function
         """
+
         def moveaxis_function(data):
             return utils.move_axis(data, 'channels', channel_axis_index).astype(dtype).values
 
