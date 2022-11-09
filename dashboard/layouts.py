@@ -2,6 +2,7 @@ import base64
 import utilities
 from dash import dcc
 from dash import html
+import dash_bootstrap_components as dbc
 
 
 #static images
@@ -254,16 +255,14 @@ def get_uploads_images():
                     dcc.Markdown(children='**Select one/more XAI methods**',
                         style = {'margin-top': '20px', 'textAlign' : 'center', 'color' : colors['blue1']}
                         ),
-                    dcc.Dropdown(id = 'method_sel_img',
+                    dcc.Checklist(id = 'method_sel_img',
                         options = [{'label': 'RISE', 'value': 'RISE'},
                                 {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
                                 {'label': 'LIME', 'value': 'LIME'}],
-                        placeholder = "Select methods",
-                        value=[""],
-                        multi = True,
                         style={
                                 'margin-left': '0px',
                                 'margin-top': '10px',
+                                'textAlign' : 'left',
                                 'width': '100%',
                                 'color' : colors['blue1']
                             }
