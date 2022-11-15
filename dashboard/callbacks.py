@@ -205,24 +205,25 @@ def compute_value_i(method_sel, fn_m, fn_i):
     dash.dependencies.Output('graph_img', 'figure'),
     dash.dependencies.State("upload-model-img", "filename"),
     dash.dependencies.State("upload-image", "filename"),
-    dash.dependencies.Input("signal_image", "data"),
-    dash.dependencies.Input("upload-model-img", "filename"),
-    dash.dependencies.Input("upload-image", "filename"),
-    dash.dependencies.Input("show_top", "value"),
-    dash.dependencies.Input("n_masks", "value"),
-    dash.dependencies.Input("feature_res", "value"),
-    dash.dependencies.Input("p_keep", "value"),
-    dash.dependencies.Input("n_samples", "value"),
-    dash.dependencies.Input("background", "value"),
-    dash.dependencies.Input("n_segments", "value"),
-    dash.dependencies.Input("sigma", "value"),
-    dash.dependencies.Input("random_state", "value")
+    dash.dependencies.State("signal_image", "data"),
+    dash.dependencies.State("upload-model-img", "filename"),
+    dash.dependencies.State("upload-image", "filename"),
+    dash.dependencies.State("show_top", "value"),
+    dash.dependencies.State("n_masks", "value"),
+    dash.dependencies.State("feature_res", "value"),
+    dash.dependencies.State("p_keep", "value"),
+    dash.dependencies.State("n_samples", "value"),
+    dash.dependencies.State("background", "value"),
+    dash.dependencies.State("n_segments", "value"),
+    dash.dependencies.State("sigma", "value"),
+    dash.dependencies.State("random_state", "value"),
+    dash.dependencies.Input("update_button", "n_clicks")
 )
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
 # pylint: disable=too-many-arguments
 def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
-    background=0, n_segments=200, sigma=0, random_state=2):
+    background=0, n_segments=200, sigma=0, random_state=2, update_button=0):
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 

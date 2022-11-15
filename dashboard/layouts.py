@@ -292,7 +292,7 @@ def get_uploads_images():
             # update button
             html.Div([
                 html.Button('Update explanation',
-                        id='update',
+                        id='update_button',
                         n_clicks=0,
                         style={
                             'margin-left': '0px',
