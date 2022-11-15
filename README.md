@@ -32,6 +32,7 @@ affiliations:
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
+ [![status](https://camo.githubusercontent.com/dcc6405df4084ef5aa1cdf0f13d7fc01e72c9e7c4ca907a68c95698cec85e75a/68747470733a2f2f6a6f73732e7468656f6a2e6f72672f7061706572732f66303539326331616563623337313165303638623538393730353838663138352f7374617475732e737667)](https://joss.theoj.org/papers/f0592c1aecb3711e068b58970588f185)
 
 <img width="300" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
