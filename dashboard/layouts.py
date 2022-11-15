@@ -287,7 +287,24 @@ def get_uploads_images():
                 ], className = 'three columns'
                 ),
             ],
-            className = 'row', style = {'padding-bottom' : '3%'}
+            className = 'row', style = {'padding-bottom' : '1%'}
+            ),
+            # update button
+            html.Div([
+                html.Button('Update explanation',
+                        id='update',
+                        n_clicks=0,
+                        style={
+                            'margin-left': '0px',
+                            'margin-top': '0px',
+                            'width': '20%',
+                            "float": 'left',
+                            'backgroundColor': colors['blue2'],
+                            'color' : colors['white']
+                        }
+                    ),
+                ],
+            className = 'row'
             ),
             # Settings bar
             html.Div([
