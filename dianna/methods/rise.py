@@ -17,7 +17,7 @@ def _predict_in_batches(masked, runner):
     batch_size = 50
     predictions = []
     for i in range(0, len(masked), batch_size):
-        current_input = masked[i:i + batch_size]
+        current_input = masked[i:min(i + batch_size, len(masked))]
         current_predictions = runner(current_input)
         predictions.append(current_predictions)
     predictions = np.concatenate(predictions)
@@ -90,7 +90,7 @@ class RISEText:
         masks = self._generate_masks(input_text.shape, p_keep, n_masks)
         masked = self._create_masked_sentences(input_text, masks, tokenizer)
         predictions = _predict_in_batches(masked, runner)
-        std_per_class = predictions.std(axis=0)  # TODO: add axis see https://github.com/dianna-ai/dianna/issues/380
+        std_per_class = predictions.std(axis=0)
         return np.max(std_per_class)
 
     def _generate_masks(self, input_shape, p_keep, n_masks):
