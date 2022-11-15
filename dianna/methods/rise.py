@@ -171,7 +171,7 @@ class RISEImage:
         active_p_keep = self._determine_p_keep(input_data, runner) if self.p_keep is None else self.p_keep
 
         # data shape without batch axis and channel axis
-        img_shape = input_data.shape[1:3]
+        img_shape = input_data.shape[1:-1]
         # Expose masks for to make user inspection possible
         self.masks = self._generate_masks(img_shape, active_p_keep, self.n_masks)
 
@@ -203,7 +203,7 @@ class RISEImage:
 
     def _calculate_mean_class_std(self, p_keep, runner, input_data, n_masks):
         batch_size = 50
-        img_shape = input_data.shape[1:3]
+        img_shape = input_data.shape[1:-1]
         masks = self._generate_masks(img_shape, p_keep, n_masks)
         masked = input_data * masks
         predictions = []
@@ -227,17 +227,18 @@ class RISEImage:
         cell_size = np.ceil(np.array(input_size) / self.feature_res)
         up_size = (self.feature_res + 1) * cell_size
 
-        grid = np.random.choice(a=(True, False), size=(n_masks, self.feature_res, self.feature_res),
+        grid = np.random.choice(a=(True, False), size=(n_masks, self.feature_res, self.feature_res, self.feature_res),
                                 p=(p_keep, 1 - p_keep))
         grid = grid.astype('float32')
 
         masks = np.empty((n_masks, *input_size), dtype=np.float32)
 
         for i in range(n_masks):
-            y = np.random.randint(0, cell_size[0])
-            x = np.random.randint(0, cell_size[1])
+            x = np.random.randint(0, cell_size[0])
+            y = np.random.randint(0, cell_size[1])
+            z = np.random.randint(0, cell_size[2])
             # Linear upsampling and cropping
-            masks[i, :, :] = _upscale(grid[i], up_size)[y:y + input_size[0], x:x + input_size[1]]
+            masks[i, ...] = _upscale(grid[i], up_size)[x:x + input_size[0], y:y + input_size[1], z:z + input_size[2]]
         masks = masks.reshape(-1, *input_size, 1)
         return masks
 
