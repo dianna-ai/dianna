@@ -252,7 +252,8 @@ def get_uploads_images():
             html.Div([
                 html.Div([
                     dcc.Markdown(children='**Select one/more XAI methods**',
-                        style = {'margin-top': '20px', 'textAlign' : 'center', 'color' : colors['blue1']}
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
                         ),
                     dcc.Dropdown(id = 'method_sel_img',
                         options = [{'label': 'RISE', 'value': 'RISE'},
@@ -272,7 +273,8 @@ def get_uploads_images():
                 ),
                 html.Div([
                     dcc.Markdown(children='**Number of top results to show**',
-                        style = {'margin-top': '20px', 'textAlign' : 'center', 'color' : colors['blue1']}
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'show_top',
                             type="number",
@@ -292,7 +294,8 @@ def get_uploads_images():
             # Settings bar
             html.Div([
                 html.Div([
-                    html.H6(children='XAI method specific settings', style={'font-weight': 'bold'}),
+                    html.H6(children='XAI method specific settings',
+                        style={'font-weight': 'bold'}),
                 ], className='nine columns'
                 ),
             ],
@@ -302,10 +305,12 @@ def get_uploads_images():
             html.Div([
                 html.Div([
                     dcc.Markdown(children='**Rise**',
-                        style = {'margin-top': '20px', 'textAlign' : 'center', 'color' : colors['blue1']}
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
                         ),
                     dcc.Markdown(children='Number of masks',
-                        style = {'margin-left': '5px', 'margin-top': '0px', 'textAlign' : 'left', 'color' : colors['blue1']}
+                        style = {'margin-left': '5px', 'margin-top': '0px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'n_masks',
                         placeholder = "Number of masks",
@@ -319,7 +324,8 @@ def get_uploads_images():
                             }
                     ),
                     dcc.Markdown(children='Feature resolution',
-                        style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'feature_res',
                         placeholder = "Feature res",
@@ -333,7 +339,8 @@ def get_uploads_images():
                             }
                     ),
                     dcc.Markdown(children='Probability to be kept unmasked',
-                        style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'p_keep',
                         placeholder = "P keep",
@@ -349,10 +356,12 @@ def get_uploads_images():
                 ], className = 'three columns'),
                 html.Div([
                     dcc.Markdown(children='**KernelShap**',
-                        style = {'margin-top': '20px', 'textAlign' : 'center', 'color' : colors['blue1']}
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
                         ),
                     dcc.Markdown(children='Number of samples',
-                        style = {'margin-left': '5px', 'margin-top': '0px', 'textAlign' : 'left', 'color' : colors['blue1']}
+                        style = {'margin-left': '5px', 'margin-top': '0px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'n_samples',
                         placeholder = "N samples",
@@ -366,7 +375,8 @@ def get_uploads_images():
                             }
                     ),
                     dcc.Markdown(children='Background',
-                        style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'background',
                         placeholder = "Background",
@@ -380,7 +390,8 @@ def get_uploads_images():
                             }
                     ),
                     dcc.Markdown(children='Number of segments',
-                        style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'n_segments',
                         placeholder = "N segments",
@@ -395,7 +406,8 @@ def get_uploads_images():
                     ),
                     # noqa: W605
                     dcc.Markdown(children='$$\sigma$$', mathjax=True,  # noqa: W605
-                        style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'sigma',
                         placeholder = "sigma",
@@ -411,10 +423,12 @@ def get_uploads_images():
                 ], className = 'three columns'),
                 html.Div([
                     dcc.Markdown(children='**Lime**',
-                        style = {'margin-top': '20px', 'textAlign' : 'center', 'color' : colors['blue1']}
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
                         ),
                     dcc.Markdown(children='Random state',
-                        style = {'margin-left': '5px', 'margin-top': '5px', 'textAlign' : 'left', 'color' : colors['blue1']}
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
                         ),
                     dcc.Input(id = 'random_state',
                         placeholder = "Random state",
