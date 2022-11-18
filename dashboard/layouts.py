@@ -297,8 +297,8 @@ def get_uploads_images():
                         style={
                             'margin-left': '0px',
                             'margin-top': '0px',
-                            'width': '20%',
-                            "float": 'left',
+                            'width': '25%',
+                            'float': 'left',
                             'backgroundColor': colors['blue2'],
                             'color' : colors['white']
                         }
@@ -309,7 +309,7 @@ def get_uploads_images():
             # Settings bar
             html.Div([
                 html.Div([
-                    html.H6(children='XAI method specific settings', style={'font-weight': 'bold'}),
+                    html.H6(children='XAI method specific settings', style={'margin-top': '20px','font-weight': 'bold'}),
                 ], className='nine columns'
                 ),
             ],

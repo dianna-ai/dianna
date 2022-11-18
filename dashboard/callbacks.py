@@ -191,10 +191,10 @@ def compute_value_i(method_sel, fn_m, fn_i):
 
         model_path = os.path.join(folder_on_server, fn_m[0])
 
-        try:
-            global_store_i(m, model_path, image_test)
-        except Exception:
-            return method_sel
+        #try:
+        #    global_store_i(m, model_path, image_test)
+        #except Exception:
+        #    return method_sel
 
     return method_sel
 
