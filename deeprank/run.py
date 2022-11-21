@@ -8,9 +8,12 @@ from torch.autograd import Variable
 import numpy as np
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
+from time import perf_counter
 
 from dianna.methods.rise import RISEImage
 np.random.seed(42)
+
+device_name = 'cuda'
 
 DATA_PATH = './'
 hdf5_path = DATA_PATH + '000_hla_drb1_0101_15mers.hdf5'
@@ -23,7 +26,7 @@ data_set = DataSet(
     chain2="P",
     process=False)
 
-state = torch.load(pretrained_model,  map_location='cpu')
+state = torch.load(pretrained_model,  map_location=device_name)
 
 for key in ['select_feature', 'select_target', 'pair_chain_feature', 'dict_filter',
             'normalize_targets', 'normalize_features', 'transform', 'proj2D',
@@ -41,7 +44,7 @@ if data_set.normalize_features:
 data_set.process_dataset()
 
 net = CnnClassificationBaseline(data_set.input_shape)
-device = torch.device("cpu")
+device = torch.device(device_name)
 net.to(device)
 if state['cuda']:
     for paramname in list(state['state_dict'].keys()):
@@ -69,19 +72,26 @@ axis_labels = ['channels', 'x', 'y', 'z']
 
 def run_model(data_item):
     outputs = net(data_item)
-    return F.softmax(torch.FloatTensor(outputs), dim=1).data.numpy()
+    tmp = outputs.to(torch.float32)
+    return F.softmax(tmp, dim=1).data.cpu().numpy()
 
 
 def prepare_input_data(data):
-    return Variable(torch.tensor(data)).float()
+    return Variable(torch.tensor(data).to(device)).float()
 
 
 # heatmaps = dianna.explain_image(run_model, feature_dianna, "RISE", axis_labels=axis_labels, preprocess_function=prepare_input_data, p_keep=.4, labels=(0,1))
-rise = RISEImage(n_masks=10, feature_res=8, p_keep=.4,
+n_masks = 1024
+#n_masks = 32
+#feature_res=8
+feature_res=1
+rise = RISEImage(n_masks=n_masks, feature_res=feature_res, p_keep=.4,
                  axis_labels=axis_labels, preprocess_function=prepare_input_data)
 
-
+t1 = perf_counter()
 heatmaps = rise.explain(run_model, feature_dianna, labels=(0, 1))
+t2 = perf_counter()
+print(f"Explaining took {t2-t1:.2f} seconds")
 
 grid = np.indices(feature_dianna.shape[1:])
 

@@ -145,7 +145,7 @@ class RISEImage:
         self.predictions = None
         self.axis_labels = axis_labels if axis_labels is not None else []
 
-    def explain(self, model_or_function, input_data, labels=None, batch_size=100):
+    def explain(self, model_or_function, input_data, labels=None, batch_size=32):
         """Runs the RISE explainer on images.
 
            The model will be called with masked images,
@@ -172,19 +172,31 @@ class RISEImage:
 
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:-1]
-        # Expose masks for to make user inspection possible
-        self.masks = self._generate_masks(img_shape, active_p_keep, self.n_masks)
 
-        # Make sure multiplication is being done for correct axes
-        masked = input_data * self.masks
+        last_step = False
+        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining', disable=True):
+            masks = self._generate_masks(img_shape, active_p_keep, batch_size)
+            masked = input_data * masks
+            predictions = runner(masked)
 
-        batch_predictions = []
-        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            batch_predictions.append(runner(masked[i:i + batch_size]))
-        self.predictions = np.concatenate(batch_predictions)
+            partial_saliency = predictions.T.dot(masks.reshape(batch_size, -1)).reshape(-1, *img_shape)
+            if i == 0:
+                result = normalize(partial_saliency, batch_size, active_p_keep)
+            else:
+                n_masks_till_now = batch_size * i
+                n_masks_including_now = batch_size * (i+1)
+                #Moving average over n_masks, see https://en.wikipedia.org/wiki/Moving_average
+                result_new = (partial_saliency/active_p_keep + n_masks_till_now * result) / n_masks_including_now
+                if np.allclose(result, result_new, atol=0, rtol=.001):
+                    #last_step = True
+                    print("One more step")
+                diff = result - result_new
+                print(f'{i} {result.mean()}  {diff.mean()}  {(result / result_new).mean()}')
+                result = result_new
 
-        saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
-        result = normalize(saliency, self.n_masks, active_p_keep)
+            if last_step:
+                break
+
         if labels is not None:
             result = result[list(labels)]
         return result
