@@ -167,7 +167,7 @@ class RISEImage:
         axis_label_names = self.axis_labels.values() if isinstance(self.axis_labels, dict) else self.axis_labels
         if not axis_label_names:
             channels_axis_index = utils.locate_channels_axis(input_data.shape)
-            self.axis_labels = {'channels': channels_axis_index}
+            self.axis_labels = {channels_axis_index: 'channels'}
         elif 'channels' not in axis_label_names:
             raise ValueError("When providing axis_labels it is required to provide the location"
                              " of the channels axis")
