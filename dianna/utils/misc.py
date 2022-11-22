@@ -112,3 +112,18 @@ def onnx_model_node_loader(model_path):
     dtype_input_node = tf_model_rep.tensor_dict[f'{label_input_node}'].dtype
 
     return onnx_model, dtype_input_node, label_output_node
+
+
+def locate_channels_axis(data_shape):
+    """Determine location of (colour) channels axis in input data.
+
+    The channels axis is assumed to have size 3 (for colour images) or 1
+    (for grayscale images). An error is raised if this is not the case.
+
+    Args:
+        data_shape (tuple): The shape of one data item, without a batch axis
+
+    Returns:
+        0 or -1 indicating the index of the channels axis.
+    """
+    raise NotImplementedError()
