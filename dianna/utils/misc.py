@@ -141,7 +141,7 @@ def locate_channels_axis(data_shape):
                              f" because both the first and last axis have size {size}. Please provide the"
                              f" location of the channels axis using the axis_labels argument")
         # if one of the two is true, we return the corresponding axis location
-        elif channels_first:
+        if channels_first:
             channels_axis_index = 0
             break
         elif channels_last:
