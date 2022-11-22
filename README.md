@@ -78,6 +78,8 @@ To install the most recent development version directly from the GitHub reposito
 python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 ```
 
+If you get an error related to OpenMP when importing dianna, have a look at [this issue](https://github.com/dianna-ai/dianna/issues/376) for possible workarounds.
+
 ### Pre-requisites only for Macbook Pro with M1 Pro chip users
 
 - To install TensorFlow you can follow this [tutorial](https://betterdatascience.com/install-tensorflow-2-7-on-macbook-pro-m1-pro/).
