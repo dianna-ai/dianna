@@ -144,7 +144,7 @@ def locate_channels_axis(data_shape):
         if channels_first:
             channels_axis_index = 0
             break
-        elif channels_last:
+        if channels_last:
             channels_axis_index = -1
             break
 
