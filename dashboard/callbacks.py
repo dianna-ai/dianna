@@ -103,7 +103,7 @@ def upload_image(contents, filename):
 
             return utilities.blank_fig(
                 text='File format error! <br><br>Please upload only images in' +
-                    'one of the following formats:' + extensions)
+                     'one of the following formats:' + extensions)
 
         except Exception as e:
             print(e)
@@ -118,8 +118,9 @@ def upload_image(contents, filename):
               dash.dependencies.Input('upload-model-img', 'contents'),
               dash.dependencies.State('upload-model-img', 'filename'))
 def upload_model_img(contents, filename):
-    """Takes in the model file, returns a print statement about its uploading
-    state."""
+    """
+    Takes in the model file. Returns a print statement about its uploading state.
+    """
     if contents is not None:
         try:
             if 'onnx' in filename[0]:
@@ -154,8 +155,7 @@ def upload_model_img(contents, filename):
 def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
     axis_labels={2: 'channels'}, n_masks=1000, feature_res=6, p_keep=.1,
     n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):
-    """Takes in the selected XAI method, the model path and the image to test,
-    returns the explainations array."""
+    """Takes in the selected XAI method, the model path and the image to test, returns the explainations array."""
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
@@ -188,8 +188,7 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
      dash.dependencies.State("upload-image", "filename"),
      ])
 def compute_value_i(method_sel, fn_m, fn_i):
-    """Takes in the selected XAI method, the model and the image filenames,
-    returns the selected XAI method."""
+    """Takes in the selected XAI method, the model and the image filenames, returns the selected XAI method."""
     if (method_sel is None) or (fn_m is None) or (fn_i is None):
         raise PreventUpdate
 
@@ -233,15 +232,14 @@ def compute_value_i(method_sel, fn_m, fn_i):
 def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
     show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
     background=0, n_segments=200, sigma=0, random_state=2):
-    """Takes in the last model and image uploaded filenames, the selected XAI
-    method, and returns the selected XAI method."""
+    """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
     if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or
         (ctx.triggered[0]["prop_id"] == "upload-image.filename") or
         (not ctx.triggered)):
-        cache.clear()
-        return html.Div(['']), utilities.blank_fig()
+            cache.clear()
+            return html.Div(['']), utilities.blank_fig()
     if (not sel_methods):
         return html.Div(['']), utilities.blank_fig()
 
@@ -384,8 +382,7 @@ def upload_text(clicks, input_value):
               dash.dependencies.Input('upload-model-text', 'contents'),
               dash.dependencies.State('upload-model-text', 'filename'))
 def upload_model_text(contents, filename):
-    """Takes in the model file, returns a print statement about its uploading
-    state."""
+    """Takes in the model file, returns a print statement about its uploading state."""
     if contents is not None:
         try:
             if 'onnx' in filename[0]:
@@ -417,8 +414,7 @@ def upload_model_text(contents, filename):
 # and for all time.
 @cache.memoize()
 def global_store_t(method_sel, model_runner, input_text):
-    """Takes in the selected XAI method, the model path and the string to test,
-    returns the explainations highlighted on the string itself."""
+    """Takes in the selected XAI method, the model path and the string to test, returns the explainations highlighted on the string itself."""
     predictions = model_runner(input_text)
     class_name = class_name_text
     pred_class = class_name[np.argmax(predictions)]
@@ -446,8 +442,7 @@ def global_store_t(method_sel, model_runner, input_text):
      dash.dependencies.State("upload-text", "value"),
      ])
 def compute_value_t(method_sel, fn_m, input_text):
-    """Takes in the selected XAI method, the model filename and the text,
-    returns the selected XAI method."""
+    """Takes in the selected XAI method, the model filename and the text, returns the selected XAI method."""
     if (method_sel is None) or (fn_m is None) or (input_text is None):
         raise PreventUpdate
 
@@ -479,15 +474,14 @@ def compute_value_t(method_sel, fn_m, input_text):
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
 def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
-    """Takes in the last model filename and text uploaded, the selected XAI
-    method, and returns the selected XAI method."""
+    """Takes in the last model filename and text uploaded, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
     if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or
         (ctx.triggered[0]["prop_id"] == "upload-text.value") or
         (not ctx.triggered)):
-        cache.clear()
-        return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
+            cache.clear()
+            return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
     if (not sel_methods):
         return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
 
