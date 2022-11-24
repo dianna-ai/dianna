@@ -118,9 +118,7 @@ def upload_image(contents, filename):
               dash.dependencies.Input('upload-model-img', 'contents'),
               dash.dependencies.State('upload-model-img', 'filename'))
 def upload_model_img(contents, filename):
-    """
-    Takes in the model file. Returns a print statement about its uploading state.
-    """
+    """Takes in the model file. Returns a print statement about its uploading state."""
     if contents is not None:
         try:
             if 'onnx' in filename[0]:
@@ -235,11 +233,11 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or
-        (ctx.triggered[0]["prop_id"] == "upload-image.filename") or
-        (not ctx.triggered)):
-            cache.clear()
-            return html.Div(['']), utilities.blank_fig()
+    if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or 
+    (ctx.triggered[0]["prop_id"] == "upload-image.filename") or 
+    (not ctx.triggered)):
+        cache.clear()
+        return html.Div(['']), utilities.blank_fig()
     if (not sel_methods):
         return html.Div(['']), utilities.blank_fig()
 
@@ -477,11 +475,11 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
     """Takes in the last model filename and text uploaded, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or
-        (ctx.triggered[0]["prop_id"] == "upload-text.value") or
-        (not ctx.triggered)):
-            cache.clear()
-            return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
+    if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or 
+    (ctx.triggered[0]["prop_id"] == "upload-text.value") or
+    (not ctx.triggered)):
+        cache.clear()
+        return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
     if (not sel_methods):
         return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
 
