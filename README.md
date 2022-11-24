@@ -218,7 +218,7 @@ have a look at the [contribution guidelines](https://dianna.readthedocs.io/en/la
 
 If you use this package for your scientific work, please consider citing it as:
 
-    Ranguelova, Elena, Bos, Patrick, Liu, Yang, Meijer, Christiaan, Oostrum, Leon, Crocioni, Giulia, Ootes, Laura, Chandramouli, Pranav, Jansen, Aron. (2022). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592607
+    Ranguelova, E., Bos, P., Liu, Y., Meijer, C., Oostrum, L., Crocioni, G., Ootes, L., Chandramouli, P., Jansen, A. (2022). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592607
 
 See also the [Zenodo page](https://zenodo.org/record/5592607) for exporting the citation to BibTteX and other formats.
 
