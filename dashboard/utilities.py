@@ -1,11 +1,25 @@
-import plotly.graph_objects as go
+import os
+import warnings
 import numpy as np
-from PIL import Image, ImageStat
-from dianna import utils
+import plotly.graph_objects as go
+from keras import utils as keras_utils
+from PIL import Image
+from PIL import ImageStat
+from scipy.special import expit as sigmoid
+# keras model and preprocessing tools
+# pylint: disable=import-error
+from tensorflow.keras.applications.resnet50 import decode_predictions
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
-from scipy.special import expit as sigmoid
-import os
+# pylint: disable=unused-import
+import dianna
+from dianna import utils
+from dianna.utils import move_axis
+from dianna.utils import to_xarray
+
+
+warnings.filterwarnings('ignore') # disable warnings relateds to versions of tf
+
 
 # colors
 colors = {
@@ -49,7 +63,7 @@ class MovieReviewsModelRunner:
         logits = self.run_model(tokenized_sentences)
         pred = np.apply_along_axis(sigmoid, 1, logits)
 
-        # output two classes
+        # output pos/neg
         positivity = pred[:, 0]
         negativity = 1 - positivity
         return np.transpose([negativity, positivity])
@@ -100,9 +114,36 @@ def open_image(path):
     im = np.asarray(im).astype(np.float32)
 
     if sum(stat.sum)/3 == stat.sum[0]:  # check the avg with any element value
-        return np.expand_dims(im[:, :, 0], axis=2) / 255  # if grayscale
+        return np.expand_dims(im[:, :, 0], axis=2) / 255, im  # if grayscale
+    # else it's colour, reshape to 224x224x3 for resnet
+    img_norm, img = preprocess_img_resnet(path)
+    return img_norm, img
 
-    return im  # else it's colour
+
+def preprocess_img_resnet(path):
+    """Resnet specific function for preprocessing.
+    
+    Reshape figure to 224,224 and get colour channel at position 0.
+    Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet.
+    See: https://github.com/onnx/models/tree/main/vision/classification/resnet
+    
+    """
+    img = keras_utils.load_img(path, target_size=(224,224))
+    img_data = keras_utils.img_to_array(img)
+    if img_data.shape[0] != 3:
+        # Colour channel is not in position 0; reshape the data
+        xarray = to_xarray(img_data, {0: 'height', 1: 'width', 2: 'channels'}) 
+        reshaped_data = move_axis(xarray, 'channels', 0)
+        img_data = np.array(reshaped_data)
+    # definitions for normalisation (for ImageNet)
+    mean_vec = np.array([0.485, 0.456, 0.406])
+    stddev_vec = np.array([0.229, 0.224, 0.225])
+    norm_img_data = np.zeros(img_data.shape).astype('float32')
+    for i in range(img_data.shape[0]):
+        # for each pixel in each channel, divide the values by 255 ([0,1]), and normalize 
+        # using mean and standard deviation from values above
+        norm_img_data[i,:,:] = (img_data[i,:,:]/255 - mean_vec[i]) / stddev_vec[i]
+    return norm_img_data, img
 
 
 def fill_segmentation(values, segmentation):
@@ -116,6 +157,7 @@ def fill_segmentation(values, segmentation):
 def preprocess_function(image):
     """For LIME: we divided the input data by 256 for the model (binary mnist) and LIME needs RGB values."""
     return (image / 256).astype(np.float32)
+
 
 def _create_html(input_tokens, explanation, max_opacity):
     """Creates text explaination map using html format."""
@@ -146,3 +188,9 @@ def _highlight_word(word, importance, max_importance, max_opacity):
         color = f'rgba(0, 0, 255, {opacity:2f})'
     highlighted_word = f'<span style="background:{color}">{word}</span>'
     return highlighted_word
+
+
+
+def imagenet_class_name(idx):
+    """Returns label of class index."""
+    return decode_predictions(np.eye(1, 1000, idx))[0][0][1]
