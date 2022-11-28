@@ -22,6 +22,18 @@ authors:
   - name: Leon Oostrum^[co-first author] # note this makes a footnote saying 'co-first author'
     orcid: 0000-0001-8724-8372
     affiliation: 1
+  - name: Giulia Crocioni^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-0823-0121
+    affiliation: 1
+  - name: Laura Ootes^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-2800-8309
+    affiliation: 1  
+  - name: Pranav Chandramouli^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-7896-2969
+    affiliation: 1    
+  - name: Aron Jansen^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-4764-9347
+    affiliation: 1    
 affiliations:
  - name: Netherlands eScience Center, Amsterdam, the Netherlands
    index: 1
@@ -206,7 +218,7 @@ have a look at the [contribution guidelines](https://dianna.readthedocs.io/en/la
 
 If you use this package for your scientific work, please consider citing it as:
 
-    Ranguelova, Elena, Bos, Patrick, Liu, Yang, Meijer, Christiaan, & Oostrum, Leon. (2021). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592607
+    Ranguelova, E., Bos, P., Liu, Y., Meijer, C., Oostrum, L., Crocioni, G., Ootes, L., Chandramouli, P., Jansen, A. (2022). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592607
 
 See also the [Zenodo page](https://zenodo.org/record/5592607) for exporting the citation to BibTteX and other formats.
 

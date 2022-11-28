@@ -1,7 +1,7 @@
 import base64
+import utilities
 from dash import dcc
 from dash import html
-import utilities
 
 
 #static images
@@ -244,26 +244,204 @@ def get_uploads_images():
                 'textAlign': 'center',
                 'align-items': 'center'
             }),
-
+        
         # XAI methods col (9-col)
         html.Div([
 
             # XAI methods selection row
             html.Div([
-                dcc.Dropdown(id = 'method_sel_img',
-                    options = [{'label': 'RISE', 'value': 'RISE'},
-                            {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
-                            {'label': 'LIME', 'value': 'LIME'}],
-                    placeholder = "Select one/more XAI methods",
-                    value=[""],
-                    multi = True,
-                    style={
-                            'margin-left': '155px',
-                            'margin-top': '20px',
-                            'width': '60%',
-                            'color' : colors['blue1']
-                        }
-                )
+                html.Div([
+                    dcc.Markdown(children='**Select one/more XAI methods**',
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
+                        ),
+                    dcc.Dropdown(id = 'method_sel_img',
+                        options = [{'label': 'RISE', 'value': 'RISE'},
+                                {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
+                                {'label': 'LIME', 'value': 'LIME'}],
+                        placeholder = "Select methods",
+                        value=[""],
+                        multi = True,
+                        style={
+                                'margin-left': '0px',
+                                'margin-top': '10px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    )
+                ], className = 'six columns'
+                ),
+                html.Div([
+                    dcc.Markdown(children='**Number of top results to show**',
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'show_top',
+                            type="number",
+                            value=2,
+                            style={
+                                    'margin-right': '10px',
+                                    'margin-top': '2px',
+                                    'width': '100%',
+                                    'color' : colors['blue1']
+                                }
+                        )
+                ], className = 'three columns'
+                ),
+            ],
+            className = 'row', style = {'padding-bottom' : '3%'}
+            ),
+            # Settings bar
+            html.Div([
+                html.Div([
+                    html.H6(children='XAI method specific settings',
+                        style={'font-weight': 'bold'}),
+                ], className='nine columns'
+                ),
+            ],
+            className = 'row'
+            ),
+            # XAI method settings buttons
+            html.Div([
+                html.Div([
+                    dcc.Markdown(children='**Rise**',
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
+                        ),
+                    dcc.Markdown(children='Number of masks',
+                        style = {'margin-left': '5px', 'margin-top': '0px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'n_masks',
+                        placeholder = "Number of masks",
+                        type="number",
+                        value=1000,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    ),
+                    dcc.Markdown(children='Feature resolution',
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'feature_res',
+                        placeholder = "Feature res",
+                        type="number",
+                        value=6,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    ),
+                    dcc.Markdown(children='Probability to be kept unmasked',
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'p_keep',
+                        placeholder = "P keep",
+                        type="number",
+                        value=0.1,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    )
+                ], className = 'three columns'),
+                html.Div([
+                    dcc.Markdown(children='**KernelShap**',
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
+                        ),
+                    dcc.Markdown(children='Number of samples',
+                        style = {'margin-left': '5px', 'margin-top': '0px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'n_samples',
+                        placeholder = "N samples",
+                        type="number",
+                        value=1000,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    ),
+                    dcc.Markdown(children='Background',
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'background',
+                        placeholder = "Background",
+                        type="number",
+                        value=0,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    ),
+                    dcc.Markdown(children='Number of segments',
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'n_segments',
+                        placeholder = "N segments",
+                        type="number",
+                        value=200,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    ),
+                    # noqa: W605
+                    dcc.Markdown(children='$$\sigma$$', mathjax=True,  # noqa: W605
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'sigma',
+                        placeholder = "sigma",
+                        type="number",
+                        value=0,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    )
+                ], className = 'three columns'),
+                html.Div([
+                    dcc.Markdown(children='**Lime**',
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
+                        ),
+                    dcc.Markdown(children='Random state',
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'random_state',
+                        placeholder = "Random state",
+                        type="number",
+                        value=2,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    )
+                ], className = 'three columns')
             ],
             className = 'row'
             ),
