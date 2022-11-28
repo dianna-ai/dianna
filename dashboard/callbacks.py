@@ -76,7 +76,7 @@ def upload_image(contents, filename):
             if any(ext in filename[0] for ext in extensions):
                 _, content_string = contents[0].split(',')
 
-                with open(os.path.join(folder_on_server, filename[0]),
+                with open(os.path.join(folder_on_server, filename[0]), 
                           'wb') as f:
                     f.write(base64.b64decode(content_string))
 
@@ -93,16 +93,16 @@ def upload_image(contents, filename):
                     title_font_color=layouts.colors['blue1'])
 
                 fig.update_xaxes(showgrid=False, showticklabels=False,
-                                 zeroline=False)
+                    zeroline=False)
                 fig.update_yaxes(showgrid=False, showticklabels=False,
-                                 zeroline=False)
+                    zeroline=False)
 
                 fig.layout.paper_bgcolor = layouts.colors['blue4']
 
                 return fig
 
             return utilities.blank_fig(
-                text='File format error! <br><br>Please upload only images in'+
+                text='File format error! <br><br>Please upload only images in' +
                      'one of the following formats:' + extensions)
 
         except Exception as e:
@@ -118,8 +118,7 @@ def upload_image(contents, filename):
               dash.dependencies.Input('upload-model-img', 'contents'),
               dash.dependencies.State('upload-model-img', 'filename'))
 def upload_model_img(contents, filename):
-    """Takes in the model file, returns a print statement about its uploading
-    state."""
+    """Takes in the model file. Returns a print statement about its uploading state."""
     if contents is not None:
         try:
             if 'onnx' in filename[0]:
@@ -152,11 +151,9 @@ def upload_model_img(contents, filename):
 # pylint: disable=too-many-arguments
 @cache.memoize()
 def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
-                   axis_labels={2: 'channels'}, n_masks=1000, feature_res=6,
-                   p_keep=.1, n_samples=1000, background=0, n_segments=200,
-                   sigma=0, random_state=2):
-    """Takes in the selected XAI method, the model path and the image to test,
-    returns the explainations array."""
+    axis_labels={2: 'channels'}, n_masks=1000, feature_res=6, p_keep=.1,
+    n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):
+    """Takes in the selected XAI method, the model path and the image to test, returns the explainations array."""
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
@@ -232,16 +229,15 @@ def compute_value_i(method_sel, fn_m, fn_i):
 # pylint: disable=unused-argument
 # pylint: disable=too-many-arguments
 def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
-                           show_top=2, n_masks=1000, feature_res=6, p_keep=0.1,
-                           n_samples=1000,
+    show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
     background=0, n_segments=200, sigma=0, random_state=2):
     """Takes in the last model and image uploaded filenames, the selected XAI
     method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or
-        (ctx.triggered[0]["prop_id"] == "upload-image.filename") or
-        (not ctx.triggered)):
+    if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or 
+    (ctx.triggered[0]["prop_id"] == "upload-image.filename") or 
+    (not ctx.triggered)):
         cache.clear()
         return html.Div(['']), utilities.blank_fig()
     if (not sel_methods):
@@ -278,10 +274,9 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
             top = [class_name[i] for i in ind]
             n_rows = len(top)
             fig = make_subplots(rows=n_rows, cols=3,
-                                subplot_titles=("RISE", "KernelShap", "LIME"),
-                                row_titles=top, shared_xaxes=True,
-                                vertical_spacing=0.02, horizontal_spacing = 0.02
-                                )
+                subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top,
+                shared_xaxes=True, vertical_spacing=0.02,
+                horizontal_spacing = 0.02)
             # check which axis is color channel
             if X_test.shape[2] <=3:
                 z_rise = X_test[:, :, 0]
@@ -298,15 +293,14 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
                         relevances_rise = global_store_i('RISE',
                             onnx_model_path, X_test, labels=[ind[i]],
                             axis_labels=axis_labels, n_masks=n_masks,
-                            feature_res= feature_res, p_keep=p_keep)
+                            feature_res=feature_res, p_keep=p_keep)
                         fig.add_trace(
                             go.Heatmap(z=z_rise, colorscale='gray',
-                                showscale=False),
-                            i+1, 1)
+                            showscale=False), i+1, 1)
                         fig.add_trace(
-                            go.Heatmap(z=relevances_rise[0],
-                                colorscale=colorscale,  
-                                showscale=False, opacity=0.7), i+1, 1)
+                                go.Heatmap(z=relevances_rise[0],
+                                    colorscale=colorscale, showscale=False,
+                                    opacity=0.7), i+1, 1)
                     elif m == "KernelSHAP":
                         shap_values, segments_slic = global_store_i(
                             m, onnx_model_path, X_test, labels=[ind[i]],
@@ -315,16 +309,14 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
                             sigma=sigma)
         
                         # KernelSHAP plot
-                        fig.add_trace(go.Heatmap(z=z_rise, colorscale='gray',
-                            showscale=False), i+1, 2)
+                        fig.add_trace(
+                            go.Heatmap(z=z_rise, colorscale='gray',
+                                showscale=False), i+1, 2)
                         fig.add_trace(
                             go.Heatmap(
                                 z=utilities.fill_segmentation(shap_values[i][0],
-                                    segments_slic),
-                                colorscale='Bluered',
-                                showscale=False,
-                                opacity=0.7),
-                            i+1, 2)
+                                    segments_slic), colorscale='Bluered',
+                                showscale=False, opacity=0.7), i+1, 2)
                     else:
                         relevances_lime = global_store_i(
                             m, onnx_model_path, X_test, labels=[ind[i]],
@@ -332,13 +324,11 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
                         # LIME plot
                         fig.add_trace(
                             go.Heatmap(z=z_rise, colorscale='gray',
-                                showscale=False),
-                            i+1, 3)
+                                showscale=False), i+1, 3)
                         fig.add_trace(
                             go.Heatmap(z=relevances_lime[0],
                                 colorscale='bluered', showscale=False,
-                                opacity=0.7),
-                            i+1, 3)
+                                opacity=0.7), i+1, 3)
 
             fig.update_layout(
                 width=650,
@@ -360,8 +350,8 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
 
         except Exception as e:
             print(e)
-            return html.Div(['There was an error running the model. Check' +
-                'either the test image or the model.']), utilities.blank_fig()
+            return (html.Div(['There was an error running the model. Check' +
+                'either the test image or the model.']), utilities.blank_fig())
     else:
         return (html.Div(['Missing either model or image.']),
             utilities.blank_fig())
@@ -401,7 +391,7 @@ def upload_model_text(contents, filename):
                 _, content_string = contents[0].split(',')
 
                 with open(os.path.join(folder_on_server, filename[0]),
-                          'wb') as f:
+                    'wb') as f:
                     f.write(base64.b64decode(content_string))
 
                 return html.Div([f'{filename[0]} uploaded'])
@@ -491,9 +481,9 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
     method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or
-        (ctx.triggered[0]["prop_id"] == "upload-text.value") or
-        (not ctx.triggered)):
+    if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or 
+    (ctx.triggered[0]["prop_id"] == "upload-text.value") or
+    (not ctx.triggered)):
         cache.clear()
         return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
     if (not sel_methods):

@@ -9,7 +9,6 @@ from scipy.special import expit as sigmoid
 # keras model and preprocessing tools
 # pylint: disable=import-error
 from tensorflow.keras.applications.resnet50 import decode_predictions
-from tensorflow.keras.applications.resnet50 import preprocess_input
 from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
 # pylint: disable=unused-import
@@ -117,20 +116,20 @@ def open_image(path):
     if sum(stat.sum)/3 == stat.sum[0]:  # check the avg with any element value
         return np.expand_dims(im[:, :, 0], axis=2) / 255, im  # if grayscale
     # else it's colour, reshape to 224x224x3 for resnet
-    img_norm, img = preprocess_img_rise(path)
+    img_norm, img = preprocess_img_resnet(path)
     return img_norm, img
 
 
-def preprocess_img_rise(path):
+def preprocess_img_resnet(path):
     """Resnet specific function for preprocessing.
     
     Reshape figure to 224,224 and get colour channel at position 0.
     Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet.
+    See: https://github.com/onnx/models/tree/main/vision/classification/resnet
     
     """
     img = keras_utils.load_img(path, target_size=(224,224))
     img_data = keras_utils.img_to_array(img)
-    img_data = preprocess_input(img_data)
     if img_data.shape[0] != 3:
         # Colour channel is not in position 0; reshape the data
         xarray = to_xarray(img_data, {0: 'height', 1: 'width', 2: 'channels'}) 

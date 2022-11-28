@@ -22,6 +22,18 @@ authors:
   - name: Leon Oostrum^[co-first author] # note this makes a footnote saying 'co-first author'
     orcid: 0000-0001-8724-8372
     affiliation: 1
+  - name: Giulia Crocioni^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-0823-0121
+    affiliation: 1
+  - name: Laura Ootes^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-2800-8309
+    affiliation: 1  
+  - name: Pranav Chandramouli^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-7896-2969
+    affiliation: 1    
+  - name: Aron Jansen^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-4764-9347
+    affiliation: 1    
 affiliations:
  - name: Netherlands eScience Center, Amsterdam, the Netherlands
    index: 1
@@ -32,6 +44,7 @@ affiliations:
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
+ [![status](https://camo.githubusercontent.com/dcc6405df4084ef5aa1cdf0f13d7fc01e72c9e7c4ca907a68c95698cec85e75a/68747470733a2f2f6a6f73732e7468656f6a2e6f72672f7061706572732f66303539326331616563623337313165303638623538393730353838663138352f7374617475732e737667)](https://joss.theoj.org/papers/f0592c1aecb3711e068b58970588f185)
 
 <img width="300" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
@@ -43,13 +56,19 @@ DIANNA is a Python package that brings explainable AI (XAI) to your research pro
 It's built by, with and for (academic) researchers and research software engineers working on machine learning projects.
 
 ## Why DIANNA? 
-DIANNA software is addressing needs of both (X)AI researchers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: the only XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
+DIANNA software is addressing needs of both (X)AI researchers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: one of the very few XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
+
+After studying the vast XAI landscape we have made choices in the parts of the [XAI Taxonomy](https://doi.org/10.3390/make3030032) on which methods, data modalities and problems types to focus. Our choices, based on the largest usage in scientific literature, are shown graphically in the XAI taxonomy below:
+
+<img src="https://user-images.githubusercontent.com/3244249/196441854-24c8c6b7-2364-4cb3-90b9-1c63e3bdc345.png" alt="XAI_taxonomy" width="60%"/>
+
+The key points of DIANNA:
 
 * Provides an easy-to-use interface for non (X)AI experts
 * Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
 * Supports the de-facto standard format for neural network models - ONNX.
 * Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and scikit-learn to ONNX.
-* Supports both images and text data modalities. Time series, tabular data and even embeddings support is planned.
+* Supports both images and text data modalities. Time series is work in progress, tabular data and even embeddings support is planned.
 * Comes with simple intuitive image and text benchmarks 
 * Easily extendable to other XAI methods 
 
@@ -71,6 +90,8 @@ To install the most recent development version directly from the GitHub reposito
 python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 ```
 
+If you get an error related to OpenMP when importing dianna, have a look at [this issue](https://github.com/dianna-ai/dianna/issues/376) for possible workarounds.
+
 ### Pre-requisites only for Macbook Pro with M1 Pro chip users
 
 - To install TensorFlow you can follow this [tutorial](https://betterdatascience.com/install-tensorflow-2-7-on-macbook-pro-m1-pro/).
@@ -81,7 +102,7 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 
 ## Getting started
 You need:
-- your trained ONNX model ([convert my pytorch/tensorflow model to ONNX](https://github.com/dianna-ai/dianna#onnx-models))
+- your trained ONNX model ([convert my pytorch/tensorflow/keras/scikit-learn model to ONNX](https://github.com/dianna-ai/dianna#onnx-models))
 - 1 data item to be explained
 
 ### Demo movie
@@ -176,8 +197,8 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 |Images|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 |Text|:white_check_mark:|:white_check_mark:|planned|
 |Embedding|coming soon|coming soon|coming soon|
-|Timeseries|planned|planned|planned|
-|Tabular|planned|planned|planned|
+|Timeseries|work in progress|work in progress|work in progress|
+|Tabular||||
 |Graphs | | | |
 
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective criteria (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
@@ -197,7 +218,7 @@ have a look at the [contribution guidelines](https://dianna.readthedocs.io/en/la
 
 If you use this package for your scientific work, please consider citing it as:
 
-    Ranguelova, Elena, Bos, Patrick, Liu, Yang, Meijer, Christiaan, & Oostrum, Leon. (2021). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592607
+    Ranguelova, E., Bos, P., Liu, Y., Meijer, C., Oostrum, L., Crocioni, G., Ootes, L., Chandramouli, P., Jansen, A. (2022). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592607
 
 See also the [Zenodo page](https://zenodo.org/record/5592607) for exporting the citation to BibTteX and other formats.
 
