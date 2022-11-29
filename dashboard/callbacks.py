@@ -76,7 +76,8 @@ def upload_image(contents, filename):
             if any(ext in filename[0] for ext in extensions):
                 _, content_string = contents[0].split(',')
 
-                with open(os.path.join(folder_on_server, filename[0]), 'wb') as f:
+                with open(os.path.join(folder_on_server, filename[0]), 
+                          'wb') as f:
                     f.write(base64.b64decode(content_string))
 
                 data_path = os.path.join(folder_on_server, filename[0])
@@ -91,15 +92,18 @@ def upload_image(contents, filename):
                     title_x=0.5,
                     title_font_color=layouts.colors['blue1'])
 
-                fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False)
-                fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False)
+                fig.update_xaxes(showgrid=False, showticklabels=False,
+                    zeroline=False)
+                fig.update_yaxes(showgrid=False, showticklabels=False,
+                    zeroline=False)
 
                 fig.layout.paper_bgcolor = layouts.colors['blue4']
 
                 return fig
 
             return utilities.blank_fig(
-                text='File format error! <br><br>Please upload only images in one of the following formats:' + extensions)
+                text='File format error! <br><br>Please upload only images in' +
+                     'one of the following formats:' + extensions)
 
         except Exception as e:
             print(e)
@@ -114,14 +118,15 @@ def upload_image(contents, filename):
               dash.dependencies.Input('upload-model-img', 'contents'),
               dash.dependencies.State('upload-model-img', 'filename'))
 def upload_model_img(contents, filename):
-    """Takes in the model file, returns a print statement about its uploading state."""
+    """Takes in the model file. Returns a print statement about its uploading state."""
     if contents is not None:
         try:
             if 'onnx' in filename[0]:
 
                 _, content_string = contents[0].split(',')
 
-                with open(os.path.join(folder_on_server, filename[0]), 'wb') as f:
+                with open(os.path.join(folder_on_server, filename[0]),
+                          'wb') as f:
                     f.write(base64.b64decode(content_string))
 
                 return html.Div([f'{filename[0]} uploaded'])
@@ -145,8 +150,9 @@ def upload_model_img(contents, filename):
 # pylint: disable=dangerous-default-value
 # pylint: disable=too-many-arguments
 @cache.memoize()
-def global_store_i(method_sel, model_path, image_test, labels=list(range(2)), axis_labels={2: 'channels'}, 
-        n_masks=1000, feature_res=6, p_keep=.1, n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):
+def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
+    axis_labels={2: 'channels'}, n_masks=1000, feature_res=6, p_keep=.1,
+    n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):
     """Takes in the selected XAI method, the model path and the image to test, returns the explainations array."""
     # expensive query
     if method_sel == "RISE":
@@ -227,7 +233,9 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    if (ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or (ctx.triggered[0]["prop_id"] == "upload-image.filename") or (not ctx.triggered):
+    if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or 
+    (ctx.triggered[0]["prop_id"] == "upload-image.filename") or 
+    (not ctx.triggered)):
         cache.clear()
         return html.Div(['']), utilities.blank_fig()
     if (not sel_methods):
@@ -245,7 +253,8 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
         output_node = prepare(onnx_model, gen_tensor_dict=True).outputs[0]
 
         try:
-            predictions = prepare(onnx_model).run(X_test[None, ...])[f'{output_node}']
+            predictions = (prepare(onnx_model).run(X_test[None, ...])
+                [f'{output_node}'])
             if len(predictions[0]) == 2:
                 class_name = class_name_mnist
             else:
@@ -262,8 +271,10 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
             ind = np.flip(ind)
             top = [class_name[i] for i in ind]
             n_rows = len(top)
-            fig = make_subplots(rows=n_rows, cols=3, subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top,
-                                shared_xaxes=True, vertical_spacing=0.02, horizontal_spacing = 0.02)
+            fig = make_subplots(rows=n_rows, cols=3,
+                subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top,
+                shared_xaxes=True, vertical_spacing=0.02,
+                horizontal_spacing = 0.02)
             # check which axis is color channel
             if X_test.shape[2] <=3:
                 z_rise = X_test[:, :, 0]
@@ -277,45 +288,55 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                 for i in range(n_rows):
                     if m == "RISE":
                         # RISE plot
-                        relevances_rise = global_store_i('RISE', onnx_model_path, X_test, labels=[ind[i]], axis_labels=axis_labels,
-                            n_masks=n_masks, feature_res= feature_res, p_keep=p_keep)
-                        fig.add_trace(go.Heatmap(
-                                            z=z_rise, colorscale='gray', showscale=False), i+1, 1)
+                        relevances_rise = global_store_i('RISE',
+                            onnx_model_path, X_test, labels=[ind[i]],
+                            axis_labels=axis_labels, n_masks=n_masks,
+                            feature_res=feature_res, p_keep=p_keep)
                         fig.add_trace(
-                                go.Heatmap(
-                                            z=relevances_rise[0], colorscale=colorscale,  
-                                            showscale=False, opacity=0.7), i+1, 1)
+                            go.Heatmap(z=z_rise, colorscale='gray',
+                            showscale=False), i+1, 1)
+                        fig.add_trace(
+                                go.Heatmap(z=relevances_rise[0],
+                                    colorscale=colorscale, showscale=False,
+                                    opacity=0.7), i+1, 1)
                     elif m == "KernelSHAP":
                         shap_values, segments_slic = global_store_i(
-                            m, onnx_model_path, X_test, labels=[ind[i]], axis_labels=axis_labels,
-                            n_samples=n_samples, background=background, n_segments=n_segments, sigma=sigma)
+                            m, onnx_model_path, X_test, labels=[ind[i]],
+                            axis_labels=axis_labels, n_samples=n_samples,
+                            background=background, n_segments=n_segments,
+                            sigma=sigma)
         
                         # KernelSHAP plot
-                        fig.add_trace(go.Heatmap(
-                                        z=z_rise, colorscale='gray', showscale=False), i+1, 2)
-                        fig.add_trace(go.Heatmap(
-                                        z=utilities.fill_segmentation(shap_values[i][0], segments_slic),
-                                        colorscale='Bluered',
-                                        showscale=False,
-                                        opacity=0.7), i+1, 2)
+                        fig.add_trace(
+                            go.Heatmap(z=z_rise, colorscale='gray',
+                                showscale=False), i+1, 2)
+                        fig.add_trace(
+                            go.Heatmap(
+                                z=utilities.fill_segmentation(shap_values[i][0],
+                                    segments_slic), colorscale='Bluered',
+                                showscale=False, opacity=0.7), i+1, 2)
                     else:
                         relevances_lime = global_store_i(
-                            m, onnx_model_path, X_test, labels=[ind[i]], axis_labels=axis_labels,
-                            random_state=random_state)
+                            m, onnx_model_path, X_test, labels=[ind[i]],
+                            axis_labels=axis_labels, random_state=random_state)
                         # LIME plot
-                        fig.add_trace(go.Heatmap(
-                                            z=z_rise, colorscale='gray', showscale=False), i+1, 3)
-                        fig.add_trace(go.Heatmap(
-                                            z=relevances_lime[0], colorscale='bluered',
-                                            showscale=False, opacity=0.7), i+1, 3)
+                        fig.add_trace(
+                            go.Heatmap(z=z_rise, colorscale='gray',
+                                showscale=False), i+1, 3)
+                        fig.add_trace(
+                            go.Heatmap(z=relevances_lime[0],
+                                colorscale='bluered', showscale=False,
+                                opacity=0.7), i+1, 3)
 
             fig.update_layout(
                 width=650,
                 height=(200*n_rows+50),
                 paper_bgcolor=layouts.colors['blue4'])
 
-            fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False)
-            fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False, autorange="reversed")
+            fig.update_xaxes(showgrid=False, showticklabels=False,
+                zeroline=False)
+            fig.update_yaxes(showgrid=False, showticklabels=False,
+                zeroline=False, autorange="reversed")
 
             return html.Div(['The predicted class is: ' + pred_class], style={
                 'fontSize': 18,
@@ -327,9 +348,11 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
 
         except Exception as e:
             print(e)
-            return html.Div(['There was an error running the model. Check either the test image or the model.']), utilities.blank_fig()
+            return (html.Div(['There was an error running the model. Check' +
+                'either the test image or the model.']), utilities.blank_fig())
     else:
-        return html.Div(['Missing either model or image.']), utilities.blank_fig()
+        return (html.Div(['Missing either model or image.']),
+            utilities.blank_fig())
 
 ###################################################################
 
@@ -364,7 +387,8 @@ def upload_model_text(contents, filename):
 
                 _, content_string = contents[0].split(',')
 
-                with open(os.path.join(folder_on_server, filename[0]), 'wb') as f:
+                with open(os.path.join(folder_on_server, filename[0]),
+                    'wb') as f:
                     f.write(base64.b64decode(content_string))
 
                 return html.Div([f'{filename[0]} uploaded'])
@@ -422,7 +446,8 @@ def compute_value_t(method_sel, fn_m, input_text):
 
     word_vector_path = '../tutorials/data/movie_reviews_word_vectors.txt'
     model_path = os.path.join(folder_on_server, fn_m[0])
-    model_runner = MovieReviewsModelRunner(model_path, word_vector_path, max_filter_size=5)
+    model_runner = MovieReviewsModelRunner(model_path, word_vector_path,
+        max_filter_size=5)
 
     for m in method_sel:
         # compute value and send a signal when done
@@ -450,7 +475,9 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
     """Takes in the last model filename and text uploaded, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    if (ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or (ctx.triggered[0]["prop_id"] == "upload-text.value") or (not ctx.triggered):
+    if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or 
+    (ctx.triggered[0]["prop_id"] == "upload-text.value") or
+    (not ctx.triggered)):
         cache.clear()
         return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
     if (not sel_methods):
@@ -465,7 +492,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
         print(onnx_model_path)
 
         # define model runner. max_filter_size is a property of the model
-        model_runner = MovieReviewsModelRunner(onnx_model_path, word_vector_path, max_filter_size=5)
+        model_runner = MovieReviewsModelRunner(onnx_model_path,
+            word_vector_path, max_filter_size=5)
 
         try:
             input_tokens = tokenizer.tokenize(input_text)
@@ -482,7 +510,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                     relevances_lime = global_store_t(
                         m, model_runner, input_text)
 
-                    output = _create_html(input_tokens, relevances_lime[0], max_opacity=0.8)
+                    output = _create_html(input_tokens, relevances_lime[0],
+                        max_opacity=0.8)
                     hti = Html2Image()
                     expl_path = 'text_expl.jpg'
 
@@ -492,8 +521,10 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                     im = np.asarray(im).astype(np.float32)
 
                     fig_l = px.imshow(im)
-                    fig_l.update_xaxes(showgrid=False, range=[0, 1000], showticklabels=False, zeroline=False)
-                    fig_l.update_yaxes(showgrid=False, range=[200, 0], showticklabels=False, zeroline=False)
+                    fig_l.update_xaxes(showgrid=False, range=[0, 1000],
+                        showticklabels=False, zeroline=False)
+                    fig_l.update_yaxes(showgrid=False, range=[200, 0],
+                        showticklabels=False, zeroline=False)
                     fig_l.update_layout(
                         title='LIME explaination:',
                         title_font_color=layouts.colors['blue1'],
@@ -512,7 +543,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                     relevances_rise = global_store_t(
                         m, model_runner, input_text)
 
-                    output = _create_html(input_tokens, relevances_rise[0], max_opacity=0.8)
+                    output = _create_html(input_tokens, relevances_rise[0],
+                        max_opacity=0.8)
                     hti = Html2Image()
                     expl_path = 'text_expl.jpg'
 
@@ -522,8 +554,10 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                     im = np.asarray(im).astype(np.float32)
 
                     fig_r = px.imshow(im)
-                    fig_r.update_xaxes(showgrid=False, range=[0, 1000], showticklabels=False, zeroline=False)
-                    fig_r.update_yaxes(showgrid=False, range=[200, 0], showticklabels=False, zeroline=False)
+                    fig_r.update_xaxes(showgrid=False, range=[0, 1000],
+                        showticklabels=False, zeroline=False)
+                    fig_r.update_yaxes(showgrid=False, range=[200, 0],
+                        showticklabels=False, zeroline=False)
                     fig_r.update_layout(
                         title='RISE explaination:',
                         title_font_color=layouts.colors['blue1'],
@@ -536,13 +570,16 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
                         margin_l=0,
                         margin_r=0)
 
-            return html.Div(['The predicted class is: ' + pred_class]), fig_l, fig_r
+            return (html.Div(['The predicted class is: ' + pred_class]), fig_l,
+                    fig_r)
 
         except Exception:
             return html.Div([
-                'There was an error running the model. Check either the test text or the model.'
+                'There was an error running the model. Check either the test' +
+                'text or the model.'
                 ]), utilities.blank_fig(), utilities.blank_fig()
     else:
-        return html.Div(['Missing either model or input text.']), utilities.blank_fig(), utilities.blank_fig()
+        return (html.Div(['Missing either model or input text.']),
+            utilities.blank_fig(), utilities.blank_fig())
 
 ###################################################################
