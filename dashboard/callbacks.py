@@ -197,10 +197,10 @@ def compute_value_i(method_sel, fn_m, fn_i):
 
         model_path = os.path.join(folder_on_server, fn_m[0])
 
-        #try:
-        #    global_store_i(m, model_path, image_test)
-        #except Exception:
-        #    return method_sel
+        try:
+            global_store_i(m, model_path, image_test)
+        except Exception:
+            return method_sel
 
     return method_sel
 
@@ -231,7 +231,7 @@ def compute_value_i(method_sel, fn_m, fn_i):
 def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
     background=0, n_segments=200, sigma=0, random_state=2, update_button=0):
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
-    ctx = dash.callback_context
+    # ctx = dash.callback_context
 
     # if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or 
     # (ctx.triggered[0]["prop_id"] == "upload-image.filename") or 
