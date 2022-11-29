@@ -233,16 +233,16 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or 
-    (ctx.triggered[0]["prop_id"] == "upload-image.filename") or 
-    (not ctx.triggered)):
-        cache.clear()
-        return html.Div(['']), utilities.blank_fig()
-    if (not sel_methods):
-        return html.Div(['']), utilities.blank_fig()
+    # if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or 
+    # (ctx.triggered[0]["prop_id"] == "upload-image.filename") or 
+    # (not ctx.triggered)):
+    #     cache.clear()
+    #     return html.Div(['']), utilities.blank_fig()
+    # if (not sel_methods):
+    #     return html.Div(['']), utilities.blank_fig()
 
     # update graph
-    if (fn_m and fn_i) is not None:
+    if (fn_m and fn_i and sel_methods) is not None:
 
         data_path = os.path.join(folder_on_server, fn_i[0])
         X_test, _ = utilities.open_image(data_path)
@@ -351,7 +351,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
             return (html.Div(['There was an error running the model. Check' +
                 'either the test image or the model.']), utilities.blank_fig())
     else:
-        return (html.Div(['Missing either model or image.']),
+        return (html.Div(['Missing model, image or XAI method.']),
             utilities.blank_fig())
 
 ###################################################################
