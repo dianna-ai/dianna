@@ -109,8 +109,6 @@ class LIMEText:
 
 class LIMEImage:
     """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
-    # axis labels required to be present in input image data
-    required_labels = ('channels', )
 
     def __init__(self,
                  kernel_width=25,
@@ -203,7 +201,16 @@ class LIMEImage:
         Returns:
             transformed input data, preprocessing function to use with utils.get_function()
         """
-        input_data = utils.to_xarray(input_data, self.axis_labels, LIMEImage.required_labels)
+        # automatically determine the location of the channels axis if no axis_labels were provided
+        axis_label_names = self.axis_labels.values() if isinstance(self.axis_labels, dict) else self.axis_labels
+        if not axis_label_names:
+            channels_axis_index = utils.locate_channels_axis(input_data.shape)
+            self.axis_labels = {channels_axis_index: 'channels'}
+        elif 'channels' not in axis_label_names:
+            raise ValueError("When providing axis_labels it is required to provide the location"
+                             " of the channels axis")
+
+        input_data = utils.to_xarray(input_data, self.axis_labels)
         # ensure channels axis is last and keep track of where it was so we can move it back
         channels_axis_index = input_data.dims.index('channels')
         input_data = utils.move_axis(input_data, 'channels', -1)

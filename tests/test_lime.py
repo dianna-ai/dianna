@@ -14,10 +14,9 @@ class LimeOnImages(TestCase):
         """Test if lime runs and outputs are correct given some data and a model function."""
         np.random.seed(42)
         input_data = np.random.random((224, 224, 3))
-        labels = ('y', 'x', 'channels')
         heatmap_expected = np.load('tests/test_data/heatmap_lime_function.npy')
 
-        explainer = LIMEImage(random_state=42, axis_labels=labels)
+        explainer = LIMEImage(random_state=42)
         heatmap = explainer.explain(run_model, input_data, num_samples=100)
 
         assert heatmap[0].shape == input_data.shape[:2]

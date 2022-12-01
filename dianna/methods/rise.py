@@ -126,9 +126,6 @@ class RISEText:
 class RISEImage:
     """RISE implementation for images based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
 
-    # axis labels required to be present in input image data
-    required_labels = ('channels',)
-
     def __init__(self, n_masks=1000, feature_res=8, p_keep=None,
                  axis_labels=None, preprocess_function=None):
         """RISE initializer.
@@ -166,8 +163,17 @@ class RISEImage:
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
+        # automatically determine the location of the channels axis if no axis_labels were provided
+        axis_label_names = self.axis_labels.values() if isinstance(self.axis_labels, dict) else self.axis_labels
+        if not axis_label_names:
+            channels_axis_index = utils.locate_channels_axis(input_data.shape)
+            self.axis_labels = {channels_axis_index: 'channels'}
+        elif 'channels' not in axis_label_names:
+            raise ValueError("When providing axis_labels it is required to provide the location"
+                             " of the channels axis")
+
         # convert data to xarray
-        input_data = utils.to_xarray(input_data, self.axis_labels, RISEImage.required_labels)
+        input_data = utils.to_xarray(input_data, self.axis_labels)
         # add batch axis as first axis
         input_data = input_data.expand_dims('batch', 0)
         input_data, full_preprocess_function = self._prepare_image_data(input_data)
