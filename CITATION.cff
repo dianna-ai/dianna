@@ -27,8 +27,22 @@ authors:
     family-names: Crocioni
     given-names: Giulia
     orcid: "https://orcid.org/0000-0002-0823-0121"
-
-# date-released: 2021-12-23
+   -
+    family-names: Laneuville
+    given-names: Matthieu
+    orcid: "https://orcid.org/0000-0001-6022-0046"
+   -
+    family-names: Cardenas Guevara
+    given-names: Bryan
+    orcid: "https://orcid.org/0000-0001-9793-910X"
+   -
+    family-names: Bakhshi
+    given-names: Rena
+    orcid: "https://orcid.org/0000-0002-2932-3028"
+   -
+    family-names: Podareanu
+    given-names: Damian
+    orcid: "https://orcid.org/0000-0002-4207-8725"
 doi: 10.5281/zenodo.5801485
 version: "0.4.1"
 repository-code: "https://github.com/dianna-ai/dianna"
