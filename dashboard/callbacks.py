@@ -69,7 +69,6 @@ except Exception:  # If not present, we download
               dash.dependencies.State('upload-image', 'filename'))
 def upload_image(contents, filename):
     """Takes in test image file, returns it as a Plotly figure."""
-
     if contents is not None:
         try:
             extensions = ['.png', '.jpg', 'jpeg']
@@ -187,7 +186,6 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
      ])
 def compute_value_i(method_sel, fn_m, fn_i):
     """Takes in the selected XAI method, the model and the image filenames, returns the selected XAI method."""
-
     if (method_sel is None) or (fn_m is None) or (fn_i is None):
         raise PreventUpdate
 
@@ -232,7 +230,6 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
     show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
     background=0, n_segments=200, sigma=0, random_state=2):
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
-
     ctx = dash.callback_context
 
     if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or 
@@ -383,7 +380,6 @@ def upload_text(clicks, input_value):
               dash.dependencies.State('upload-model-text', 'filename'))
 def upload_model_text(contents, filename):
     """Takes in the model file, returns a print statement about its uploading state."""
-
     if contents is not None:
         try:
             if 'onnx' in filename[0]:
@@ -416,7 +412,6 @@ def upload_model_text(contents, filename):
 @cache.memoize()
 def global_store_t(method_sel, model_runner, input_text):
     """Takes in the selected XAI method, the model path and the string to test, returns the explainations highlighted on the string itself."""
-    
     predictions = model_runner(input_text)
     class_name = class_name_text
     pred_class = class_name[np.argmax(predictions)]
@@ -445,7 +440,6 @@ def global_store_t(method_sel, model_runner, input_text):
      ])
 def compute_value_t(method_sel, fn_m, input_text):
     """Takes in the selected XAI method, the model filename and the text, returns the selected XAI method."""
-    
     if (method_sel is None) or (fn_m is None) or (input_text is None):
         raise PreventUpdate
 
@@ -478,7 +472,6 @@ def compute_value_t(method_sel, fn_m, input_text):
 # pylint: disable=unused-argument
 def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
     """Takes in the last model filename and text uploaded, the selected XAI method, and returns the selected XAI method."""
-    
     ctx = dash.callback_context
 
     if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or 
