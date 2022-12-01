@@ -44,7 +44,7 @@ authors:
     given-names: Damian
     orcid: "https://orcid.org/0000-0002-4207-8725"
 doi: 10.5281/zenodo.5801485
-version: "0.4.1"
+version: "0.4.2"
 repository-code: "https://github.com/dianna-ai/dianna"
 keywords:
   - XAI
