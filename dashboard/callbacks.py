@@ -70,7 +70,6 @@ except Exception:  # If not present, we download
 def upload_image(contents, filename):
     """Takes in test image file, returns it as a Plotly figure."""
     if contents is not None:
-
         try:
             extensions = ['.png', '.jpg', 'jpeg']
             if any(ext in filename[0] for ext in extensions):
@@ -243,7 +242,6 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
 
     # update graph
     if (fn_m and fn_i) is not None:
-
         data_path = os.path.join(folder_on_server, fn_i[0])
         X_test, _ = utilities.open_image(data_path)
 
