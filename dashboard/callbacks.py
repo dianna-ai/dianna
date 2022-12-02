@@ -242,7 +242,6 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
 
     # update graph
     if (fn_m and fn_i) is not None:
-        print('fnm and fni not none')
         data_path = os.path.join(folder_on_server, fn_i[0])
         X_test, _ = utilities.open_image(data_path)
 
