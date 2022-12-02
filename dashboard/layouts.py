@@ -252,7 +252,7 @@ def get_uploads_images():
             html.Div([
                 html.Div([
                     dcc.Markdown(children='**Select one/more XAI methods**',
-                        style = {'margin-top': '20px', "margin-left": "10px",
+                        style = {'margin-top': '20px', "margin-left": "50px",
                             'textAlign' : 'center',
                             'color' : colors['blue1']}
                         ),
@@ -261,7 +261,7 @@ def get_uploads_images():
                                 {'label': 'KernelSHAP', 'value': 'KernelSHAP'},
                                 {'label': 'LIME', 'value': 'LIME'}],
                         inline=True,
-                        inputStyle={"margin-left": "10px", "margin-right": "5px"},
+                        inputStyle={"margin-left": "50px", "margin-right": "5px"},
                         style={
                                 'margin-left': '0px',
                                 'margin-top': '10px',
