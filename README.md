@@ -211,6 +211,7 @@ For detailed information on using specific DIANNA functions, please visit the [d
 
 If you want to contribute to the development of DIANNA,
 have a look at the [contribution guidelines](https://dianna.readthedocs.io/en/latest/CONTRIBUTING.html).
+See our [developer documentation](developer_info.rst) for information on developer installation, running tests, generating documentation, versioning and making a release.
 
 ## How to cite us 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592607.svg)](https://zenodo.org/record/5592607)
