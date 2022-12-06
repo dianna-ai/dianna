@@ -33,10 +33,8 @@ Dependencies and Package management
 DIANNA aims to support all Python 3 minor versions that are still
 actively maintained, currently:
 
--  3.7
--  3.8
--  3.9
--  3.10 is still missing pending the availibility of `onnxruntime` in 3.10.
+.. image:: https://img.shields.io/pypi/pyversions/dianna
+   :target: https://pypi.python.org/project/dianna/
 
 Add or remove Python versions based on availability of dependencies in
 all versions. See `the
