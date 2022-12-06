@@ -52,7 +52,7 @@ class LIMEText:
     def explain(self,
                 model_or_function,
                 input_text,
-                labels=(0,),
+                labels,
                 tokenizer=None,
                 top_labels=None,
                 num_features=10,
@@ -67,7 +67,7 @@ class LIMEText:
                                                  the path to a ONNX model on disk.
             tokenizer : Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
             input_text (np.ndarray): Data to be explained
-            labels ([int], optional): Iterable of indices of class to be explained
+            labels (Iterable(int)): Iterable of indices of class to be explained
 
         Other keyword arguments: see the LIME documentation for LimeTextExplainer.explain_instance:
         https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_text.LimeTextExplainer.explain_instance.
@@ -145,7 +145,7 @@ class LIMEImage:
     def explain(self,
                 model_or_function,
                 input_data,
-                labels=(1,),
+                labels,
                 top_labels=None,
                 num_features=10,
                 num_samples=5000,
@@ -161,7 +161,7 @@ class LIMEImage:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained. Must be an "RGB image", i.e. with values in
                                      the [0,255] range.
-            labels (tuple): Indices of classes to be explained
+            labels (Iterable(int)): Indices of classes to be explained
         Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance and
         ImageExplanation.get_image_and_mask:
 

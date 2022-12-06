@@ -62,7 +62,7 @@ class KERNELSHAPImage:
         self,
         model,
         input_data,
-        labels=(0,),
+        labels,
         nsamples="auto",
         background=None,
         n_segments=100,
@@ -84,7 +84,7 @@ class KERNELSHAPImage:
                                      example. The input dimension must be
                                      [batch, height, width, color_channels] or
                                      [batch, color_channels, height, width] (see axis_labels)
-            labels (tuple): Indices of classes to be explained
+            labels (Iterable(int)): Indices of classes to be explained
             nsamples ("auto" or int): Number of times to re-evaluate the model when
                                       explaining each prediction. More samples lead
                                       to lower variance estimates of the SHAP values.
