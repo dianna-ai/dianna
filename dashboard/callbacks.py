@@ -351,7 +351,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
             return (html.Div(['There was an error running the model. Check' +
                 'either the test image or the model.']), utilities.blank_fig())
     else:
-        return (html.Div(['Missing model, image or XAI method.']),
+        return (html.Div(['Missing model, image or XAI method.'], style={'margin-top' : '60px'}),
             utilities.blank_fig())
 
 ###################################################################
