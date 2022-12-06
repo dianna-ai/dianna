@@ -71,7 +71,7 @@ Running the tests
 There are two ways to run tests.
 
 The first way requires an activated virtual environment with the
-development tools installed:
+development tools installed run the following from the root directory of this repository:
 
 .. code:: shell
 
