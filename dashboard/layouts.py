@@ -312,7 +312,8 @@ def get_uploads_images():
             html.Div([
                 html.Div([
                     html.H6(children='XAI method specific settings',
-                        style={'font-weight': 'bold'}),
+                        style={'font-weight': 'bold', 
+                        'margin-top': '30px',}),
                 ], className='nine columns'
                 ),
             ],
