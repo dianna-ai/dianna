@@ -1,4 +1,5 @@
 import inspect
+import warnings
 
 
 def get_function(model_or_function, preprocess_function=None):
@@ -112,3 +113,46 @@ def onnx_model_node_loader(model_path):
     dtype_input_node = tf_model_rep.tensor_dict[f'{label_input_node}'].dtype
 
     return onnx_model, dtype_input_node, label_output_node
+
+
+def locate_channels_axis(data_shape):
+    """Determine index of (colour) channels axis in input data.
+
+    The channels axis is assumed to have size 3 (for colour images) or 1
+    (for greyscale images). An error is raised if this is not the case or the channels
+    axis could not be found.
+
+    Args:
+        data_shape (tuple): The shape of one data item, without a batch axis
+
+    Returns:
+        0 or -1 indicating the index of the channels axis.
+    """
+    # check for channels axis of size 1 or 3
+    channels_axis_index = None
+    sizes = (1, 3)
+    for size in sizes:
+        # check if the first or last axis has the given size
+        channels_first = data_shape[0] == size
+        channels_last = data_shape[-1] == size
+        # if both are true, we cannot determine the location of the channels axis
+        if channels_first and channels_last:
+            raise ValueError(f"Could not automatically determine the location of the colour channels axis"
+                             f" because both the first and last axis have size {size}. Please provide the"
+                             f" location of the channels axis using the axis_labels argument")
+        # if one of the two is true, we return the corresponding axis location
+        if channels_first:
+            channels_axis_index = 0
+            break
+        if channels_last:
+            channels_axis_index = -1
+            break
+
+    # if channels_axis_index is still None, the location could not be determined
+    if channels_axis_index is None:
+        raise ValueError("Could not automatically determine location of the colour channels axis."
+                         " Please provide the location of the channels axis using the axis_labels argument")
+    warnings.warn(f"The index of the colour channels axis in the input data was automatically determined"
+                  f" to be {channels_axis_index}. Use the axis_labels to manually specify the index of"
+                  f" the channels axis if this is incorrect.")
+    return channels_axis_index

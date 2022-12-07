@@ -70,7 +70,6 @@ except Exception:  # If not present, we download
 def upload_image(contents, filename):
     """Takes in test image file, returns it as a Plotly figure."""
     if contents is not None:
-
         try:
             extensions = ['.png', '.jpg', 'jpeg']
             if any(ext in filename[0] for ext in extensions):
@@ -331,7 +330,6 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                                 go.Heatmap(z=relevances_lime[0],
                                     colorscale='bluered', showscale=False,
                                     opacity=0.7), i+1, 3)
-
                 fig.update_layout(
                     width=650,
                     height=(200*n_rows+50),
