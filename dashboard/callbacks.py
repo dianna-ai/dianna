@@ -223,15 +223,16 @@ def compute_value_i(method_sel, fn_m, fn_i):
     dash.dependencies.State("n_segments", "value"),
     dash.dependencies.State("sigma", "value"),
     dash.dependencies.State("random_state", "value"),
-    dash.dependencies.Input("update_button", "n_clicks")
+    dash.dependencies.Input("update_button", "n_clicks"),
+    dash.dependencies.Input("stop_button", "n_clicks")
 )
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
 # pylint: disable=too-many-arguments
 def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
-    background=0, n_segments=200, sigma=0, random_state=2, update_button=0):
+    background=0, n_segments=200, sigma=0, random_state=2, update_button=0, stop_button=0):
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
-    # ctx = dash.callback_context
+    ctx = dash.callback_context
 
     # if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or 
     # (ctx.triggered[0]["prop_id"] == "upload-image.filename") or 
@@ -240,119 +241,122 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
     #     return html.Div(['']), utilities.blank_fig()
     # if (not sel_methods):
     #     return html.Div(['']), utilities.blank_fig()
-
-    # update graph
-    if (fn_m and fn_i and sel_methods) is not None:
-
-        data_path = os.path.join(folder_on_server, fn_i[0])
-        X_test, _ = utilities.open_image(data_path)
-
-        onnx_model_path = os.path.join(folder_on_server, fn_m[0])
-        onnx_model = onnx.load(onnx_model_path)
-        # get the output node
-        output_node = prepare(onnx_model, gen_tensor_dict=True).outputs[0]
-
-        try:
-            predictions = (prepare(onnx_model).run(X_test[None, ...])
-                [f'{output_node}'])
-            if len(predictions[0]) == 2:
-                class_name = class_name_mnist
-            else:
-                class_name = class_names_imagenet
-            # get the predicted class
-            preds = np.array(predictions[0])
-            pred_class = class_name[np.argmax(preds)]
-            # get the top most likely results
-            if show_top > len(class_name):
-                show_top = len(class_name)
-            # make sure the top results are ordered most to least likely
-            ind = np.array(np.argpartition(preds, -show_top)[-show_top:])
-            ind = ind[np.argsort(preds[ind])]
-            ind = np.flip(ind)
-            top = [class_name[i] for i in ind]
-            n_rows = len(top)
-            fig = make_subplots(rows=n_rows, cols=3,
-                subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top,
-                shared_xaxes=True, vertical_spacing=0.02,
-                horizontal_spacing = 0.02)
-            # check which axis is color channel
-            if X_test.shape[2] <=3:
-                z_rise = X_test[:, :, 0]
-                axis_labels = {2: 'channels'}
-                colorscale='Bluered'
-            else:
-                z_rise = X_test[1, :, :]
-                axis_labels = {0: 'channels'}
-                colorscale='jet'
-            for m in sel_methods:
-                for i in range(n_rows):
-                    if m == "RISE":
-                        # RISE plot
-                        relevances_rise = global_store_i('RISE',
-                            onnx_model_path, X_test, labels=[ind[i]],
-                            axis_labels=axis_labels, n_masks=n_masks,
-                            feature_res=feature_res, p_keep=p_keep)
-                        fig.add_trace(
-                            go.Heatmap(z=z_rise, colorscale='gray',
-                            showscale=False), i+1, 1)
-                        fig.add_trace(
-                                go.Heatmap(z=relevances_rise[0],
-                                    colorscale=colorscale, showscale=False,
-                                    opacity=0.7), i+1, 1)
-                    elif m == "KernelSHAP":
-                        shap_values, segments_slic = global_store_i(
-                            m, onnx_model_path, X_test, labels=[ind[i]],
-                            axis_labels=axis_labels, n_samples=n_samples,
-                            background=background, n_segments=n_segments,
-                            sigma=sigma)
-        
-                        # KernelSHAP plot
-                        fig.add_trace(
-                            go.Heatmap(z=z_rise, colorscale='gray',
-                                showscale=False), i+1, 2)
-                        fig.add_trace(
-                            go.Heatmap(
-                                z=utilities.fill_segmentation(shap_values[i][0],
-                                    segments_slic), colorscale='Bluered',
-                                showscale=False, opacity=0.7), i+1, 2)
-                    else:
-                        relevances_lime = global_store_i(
-                            m, onnx_model_path, X_test, labels=[ind[i]],
-                            axis_labels=axis_labels, random_state=random_state)
-                        # LIME plot
-                        fig.add_trace(
-                            go.Heatmap(z=z_rise, colorscale='gray',
-                                showscale=False), i+1, 3)
-                        fig.add_trace(
-                            go.Heatmap(z=relevances_lime[0],
-                                colorscale='bluered', showscale=False,
-                                opacity=0.7), i+1, 3)
-
-            fig.update_layout(
-                width=650,
-                height=(200*n_rows+50),
-                paper_bgcolor=layouts.colors['blue4'])
-
-            fig.update_xaxes(showgrid=False, showticklabels=False,
-                zeroline=False)
-            fig.update_yaxes(showgrid=False, showticklabels=False,
-                zeroline=False, autorange="reversed")
-
-            return html.Div(['The predicted class is: ' + pred_class], style={
-                'fontSize': 18,
-                'font-weight': 'bold',
-                'text-decoration': 'underline',
-                'margin-top': '60px',
-                'textAlign' : 'center'
-                }), fig
-
-        except Exception as e:
-            print(e)
-            return (html.Div(['There was an error running the model. Check' +
-                'either the test image or the model.']), utilities.blank_fig())
-    else:
-        return (html.Div(['Missing model, image or XAI method.'], style={'margin-top' : '60px'}),
+    if (ctx.triggered[0]["prop_id"] == "stop_button.n_clicks"):
+        return (html.Div(['Explanation stopped.'], style={'margin-top' : '60px'}),
             utilities.blank_fig())
+    # update graph
+    elif (ctx.triggered[0]["prop_id"] == "update_button.n_clicks"):
+        if (fn_m and fn_i and sel_methods) is not None:
+
+            data_path = os.path.join(folder_on_server, fn_i[0])
+            X_test, _ = utilities.open_image(data_path)
+
+            onnx_model_path = os.path.join(folder_on_server, fn_m[0])
+            onnx_model = onnx.load(onnx_model_path)
+            # get the output node
+            output_node = prepare(onnx_model, gen_tensor_dict=True).outputs[0]
+
+            try:
+                predictions = (prepare(onnx_model).run(X_test[None, ...])
+                    [f'{output_node}'])
+                if len(predictions[0]) == 2:
+                    class_name = class_name_mnist
+                else:
+                    class_name = class_names_imagenet
+                # get the predicted class
+                preds = np.array(predictions[0])
+                pred_class = class_name[np.argmax(preds)]
+                # get the top most likely results
+                if show_top > len(class_name):
+                    show_top = len(class_name)
+                # make sure the top results are ordered most to least likely
+                ind = np.array(np.argpartition(preds, -show_top)[-show_top:])
+                ind = ind[np.argsort(preds[ind])]
+                ind = np.flip(ind)
+                top = [class_name[i] for i in ind]
+                n_rows = len(top)
+                fig = make_subplots(rows=n_rows, cols=3,
+                    subplot_titles=("RISE", "KernelShap", "LIME"), row_titles=top,
+                    shared_xaxes=True, vertical_spacing=0.02,
+                    horizontal_spacing = 0.02)
+                # check which axis is color channel
+                if X_test.shape[2] <=3:
+                    z_rise = X_test[:, :, 0]
+                    axis_labels = {2: 'channels'}
+                    colorscale='Bluered'
+                else:
+                    z_rise = X_test[1, :, :]
+                    axis_labels = {0: 'channels'}
+                    colorscale='jet'
+                for m in sel_methods:
+                    for i in range(n_rows):
+                        if m == "RISE":
+                            # RISE plot
+                            relevances_rise = global_store_i('RISE',
+                                onnx_model_path, X_test, labels=[ind[i]],
+                                axis_labels=axis_labels, n_masks=n_masks,
+                                feature_res=feature_res, p_keep=p_keep)
+                            fig.add_trace(
+                                go.Heatmap(z=z_rise, colorscale='gray',
+                                showscale=False), i+1, 1)
+                            fig.add_trace(
+                                    go.Heatmap(z=relevances_rise[0],
+                                        colorscale=colorscale, showscale=False,
+                                        opacity=0.7), i+1, 1)
+                        elif m == "KernelSHAP":
+                            shap_values, segments_slic = global_store_i(
+                                m, onnx_model_path, X_test, labels=[ind[i]],
+                                axis_labels=axis_labels, n_samples=n_samples,
+                                background=background, n_segments=n_segments,
+                                sigma=sigma)
+            
+                            # KernelSHAP plot
+                            fig.add_trace(
+                                go.Heatmap(z=z_rise, colorscale='gray',
+                                    showscale=False), i+1, 2)
+                            fig.add_trace(
+                                go.Heatmap(
+                                    z=utilities.fill_segmentation(shap_values[i][0],
+                                        segments_slic), colorscale='Bluered',
+                                    showscale=False, opacity=0.7), i+1, 2)
+                        else:
+                            relevances_lime = global_store_i(
+                                m, onnx_model_path, X_test, labels=[ind[i]],
+                                axis_labels=axis_labels, random_state=random_state)
+                            # LIME plot
+                            fig.add_trace(
+                                go.Heatmap(z=z_rise, colorscale='gray',
+                                    showscale=False), i+1, 3)
+                            fig.add_trace(
+                                go.Heatmap(z=relevances_lime[0],
+                                    colorscale='bluered', showscale=False,
+                                    opacity=0.7), i+1, 3)
+
+                fig.update_layout(
+                    width=650,
+                    height=(200*n_rows+50),
+                    paper_bgcolor=layouts.colors['blue4'])
+
+                fig.update_xaxes(showgrid=False, showticklabels=False,
+                    zeroline=False)
+                fig.update_yaxes(showgrid=False, showticklabels=False,
+                    zeroline=False, autorange="reversed")
+
+                return html.Div(['The predicted class is: ' + pred_class], style={
+                    'fontSize': 18,
+                    'font-weight': 'bold',
+                    'text-decoration': 'underline',
+                    'margin-top': '60px',
+                    'textAlign' : 'center'
+                    }), fig
+
+            except Exception as e:
+                print(e)
+                return (html.Div(['There was an error running the model. Check' +
+                    'either the test image or the model.']), utilities.blank_fig())
+        else:
+            return (html.Div(['Missing model, image or XAI method.'], style={'margin-top' : '60px'}),
+                utilities.blank_fig())
 
 ###################################################################
 

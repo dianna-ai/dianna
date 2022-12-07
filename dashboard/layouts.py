@@ -17,6 +17,7 @@ colors = {
     'blue2' : '#0e749b',
     'blue3' : '#15b3f0',
     'blue4' : '#E4F3F9', #light blue
+    'red1'  : '#FF0000',
     'yellow1' : '#f0d515'
 }
 
@@ -291,22 +292,40 @@ def get_uploads_images():
             ],
             className = 'row', style = {'padding-bottom' : '1%'}
             ),
-            # update button
             html.Div([
-                html.Button('Update explanation',
-                        id='update_button',
-                        n_clicks=0,
-                        style={
-                            'margin-left': '0px',
-                            'margin-top': '0px',
-                            'width': '25%',
-                            'float': 'left',
-                            'backgroundColor': colors['blue2'],
-                            'color' : colors['white']
-                        }
-                    ),
-                ],
-            className = 'row'
+                # update button
+                html.Div([
+                    html.Button('Update explanation',
+                            id='update_button',
+                            n_clicks=0,
+                            style={
+                                'margin-left': '0px',
+                                'margin-top': '0px',
+                                'width': '20%',
+                                'float': 'left',
+                                'backgroundColor': colors['blue2'],
+                                'color' : colors['white']
+                            }
+                        ),
+                    ],
+                ),
+                html.Div([
+                    html.Button('Stop Explanation',
+                            id='stop_button',
+                            n_clicks=0,
+                            style={
+                                'margin-left': '40px',
+                                'margin-top': '0px',
+                                'width': '20%',
+                                'float': 'left',
+                                'backgroundColor': colors['red1'],
+                                'color' : colors['white']
+                            }
+                        ),
+                    ],
+                ),
+            ],
+            className = 'row', style = {'padding-bottom' : '1%'}
             ),
             # Settings bar
             html.Div([
