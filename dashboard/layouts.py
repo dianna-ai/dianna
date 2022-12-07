@@ -623,22 +623,26 @@ def get_uploads_text():
 
             # XAI methods selection row
             html.Div([
-                dcc.Dropdown(id = 'method_sel_text',
-                    options = [{'label': 'RISE', 'value': 'RISE'},
-                            {'label': 'LIME', 'value': 'LIME'}],
-                    placeholder = "Select one/more XAI methods",
-                    value=[""],
-                    multi = True,
-                    style={
-                            'margin-left': '155px',
-                            'margin-top': '20px',
-                            'width': '60%',
-                            'color' : colors['blue1']
-                        }
-                )
-            ],
-            className = 'row'
-            ),
+                    dcc.Markdown(children='**Select one/more XAI methods**',
+                        style = {'margin-top': '20px', "margin-left": "50px",
+                            'textAlign' : 'center',
+                            'color' : colors['blue1']}
+                        ),
+                    dcc.Checklist(id = 'method_sel_img',
+                        options = [{'label': 'RISE', 'value': 'RISE'},
+                                {'label': 'LIME', 'value': 'LIME'}],
+                        inline=True,
+                        inputStyle={"margin-left": "50px", "margin-right": "5px"},
+                        style={
+                                'margin-left': '0px',
+                                'margin-top': '10px',
+                                'textAlign' : 'center',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    )
+                ], className = 'six columns'
+                ),
 
             # printing predictions
             html.Div(
