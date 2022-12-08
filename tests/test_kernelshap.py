@@ -53,9 +53,11 @@ class ShapOnImages(TestCase):
         onnx_model_path = "./tests/test_data/mnist_model.onnx"
         n_segments = 50
         explainer = KERNELSHAPImage()
+        labels = [0]
         shap_values, _ = explainer.explain(
             onnx_model_path,
             input_data,
+            labels,
             nsamples=1000,
             background=0,
             n_segments=n_segments,

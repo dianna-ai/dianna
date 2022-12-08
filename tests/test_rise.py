@@ -16,9 +16,10 @@ class RiseOnImages(TestCase):
         """Test if rise runs and outputs the correct shape given some data and a model function."""
         input_data = np.random.random((224, 224, 3))
         axis_labels = ['y', 'x', 'channels']
-
-        heatmaps = dianna.explain_image(run_model, input_data, method="RISE", axis_labels=axis_labels, n_masks=200, p_keep=.5)
+        labels = [1]
         heatmaps_expected = np.load('tests/test_data/heatmap_rise_function.npy')
+
+        heatmaps = dianna.explain_image(run_model, input_data, "RISE", labels, axis_labels=axis_labels, n_masks=200, p_keep=.5)
 
         assert heatmaps[0].shape == input_data.shape[:2]
         assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
@@ -27,11 +28,13 @@ class RiseOnImages(TestCase):
         """Test if rise runs and outputs the correct shape given some data and a model file."""
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1).astype(np.float32)[0]
-
-        heatmaps = dianna.explain_image(model_filename, input_data, method="RISE", n_masks=200, p_keep=.5)
         heatmaps_expected = np.load('tests/test_data/heatmap_rise_filename.npy')
+        labels = [1]
+
+        heatmaps = dianna.explain_image(model_filename, input_data, "RISE", labels, n_masks=200, p_keep=.5)
 
         assert heatmaps[0].shape == input_data.shape[1:]
+        print(heatmaps_expected.shape)
         assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
 
     def test_rise_determine_p_keep_for_images(self):
