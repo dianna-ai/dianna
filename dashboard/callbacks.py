@@ -180,26 +180,10 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
 # signaling
 @app.callback(
     dash.dependencies.Output('signal_image', 'data'),
-    [dash.dependencies.Input('method_sel_img', 'value'),
-     dash.dependencies.State("upload-model-img", "filename"),
-     dash.dependencies.State("upload-image", "filename"),
-     ])
-def compute_value_i(method_sel, fn_m, fn_i):
-    """Takes in the selected XAI method, the model and the image filenames, returns the selected XAI method."""
-    if (method_sel is None) or (fn_m is None) or (fn_i is None):
-        raise PreventUpdate
-
-    for m in method_sel:
-        # compute value and send a signal when done
-        data_path = os.path.join(folder_on_server, fn_i[0])
-        image_test, _ = utilities.open_image(data_path)
-
-        model_path = os.path.join(folder_on_server, fn_m[0])
-
-        try:
-            global_store_i(m, model_path, image_test)
-        except Exception:
-            return method_sel
+    dash.dependencies.Input('method_sel_img', 'value'),
+    )
+def select_method(method_sel):
+    """Takes in the user-selected XAI method, returns the selected XAI method."""
 
     return method_sel
 
@@ -233,20 +217,12 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    # if ((ctx.triggered[0]["prop_id"] == "upload-model-img.filename") or 
-    # (ctx.triggered[0]["prop_id"] == "upload-image.filename") or 
-    # (not ctx.triggered)):
-    #     cache.clear()
-    #     return html.Div(['']), utilities.blank_fig()
-    # if (not sel_methods):
-    #     return html.Div(['']), utilities.blank_fig()
     if (ctx.triggered[0]["prop_id"] == "stop_button.n_clicks"):
         return (html.Div(['Explanation stopped.'], style={'margin-top' : '60px'}),
             utilities.blank_fig())
     # update graph
     elif (ctx.triggered[0]["prop_id"] == "update_button.n_clicks"):
-        if (fn_m and fn_i and sel_methods) is not None:
-
+        if (fn_m and fn_i) is not None and (sel_methods != []):
             data_path = os.path.join(folder_on_server, fn_i[0])
             X_test, _ = utilities.open_image(data_path)
 
@@ -318,7 +294,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                                     z=utilities.fill_segmentation(shap_values[i][0],
                                         segments_slic), colorscale='Bluered',
                                     showscale=False, opacity=0.7), i+1, 2)
-                        else:
+                        elif m == "LIME":
                             relevances_lime = global_store_i(
                                 m, onnx_model_path, X_test, labels=[ind[i]],
                                 axis_labels=axis_labels, random_state=random_state)
@@ -330,6 +306,10 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                                 go.Heatmap(z=relevances_lime[0],
                                     colorscale='bluered', showscale=False,
                                     opacity=0.7), i+1, 3)
+                        else:
+                            return (html.Div(['Missing model, image or XAI method.'], style={'margin-top' : '60px'}),
+                utilities.blank_fig())
+
                 fig.update_layout(
                     width=650,
                     height=(200*n_rows+50),
