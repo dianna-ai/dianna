@@ -184,7 +184,6 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
     )
 def select_method(method_sel):
     """Takes in the user-selected XAI method, returns the selected XAI method."""
-
     return method_sel
 
 
@@ -221,7 +220,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
         return (html.Div(['Explanation stopped.'], style={'margin-top' : '60px'}),
             utilities.blank_fig())
     # update graph
-    elif (ctx.triggered[0]["prop_id"] == "update_button.n_clicks"):
+    if (ctx.triggered[0]["prop_id"] == "update_button.n_clicks"):
         if (fn_m and fn_i) is not None and (sel_methods != []):
             data_path = os.path.join(folder_on_server, fn_i[0])
             X_test, _ = utilities.open_image(data_path)
@@ -306,9 +305,6 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                                 go.Heatmap(z=relevances_lime[0],
                                     colorscale='bluered', showscale=False,
                                     opacity=0.7), i+1, 3)
-                        else:
-                            return (html.Div(['Missing model, image or XAI method.'], style={'margin-top' : '60px'}),
-                utilities.blank_fig())
 
                 fig.update_layout(
                     width=650,
