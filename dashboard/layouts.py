@@ -623,12 +623,13 @@ def get_uploads_text():
 
             # XAI methods selection row
             html.Div([
+                html.Div([
                     dcc.Markdown(children='**Select one/more XAI methods**',
                         style = {'margin-top': '20px', "margin-left": "50px",
                             'textAlign' : 'center',
                             'color' : colors['blue1']}
                         ),
-                    dcc.Checklist(id = 'method_sel_img',
+                    dcc.Checklist(id = 'method_sel_text',
                         options = [{'label': 'RISE', 'value': 'RISE'},
                                 {'label': 'LIME', 'value': 'LIME'}],
                         inline=True,
@@ -643,6 +644,132 @@ def get_uploads_text():
                     )
                 ], className = 'six columns'
                 ),
+            ],
+            className = 'row', style = {'padding-bottom' : '1%'}
+            ),
+            html.Div([
+                # update button
+                html.Div([
+                    html.Button('Update explanation',
+                            id='update_button_t',
+                            n_clicks=0,
+                            style={
+                                'margin-left': '0px',
+                                'margin-top': '0px',
+                                'width': '20%',
+                                'float': 'left',
+                                'backgroundColor': colors['blue2'],
+                                'color' : colors['white']
+                            }
+                        ),
+                    ],
+                ),
+                html.Div([
+                    html.Button('Stop Explanation',
+                            id='stop_button_t',
+                            n_clicks=0,
+                            style={
+                                'margin-left': '40px',
+                                'margin-top': '0px',
+                                'width': '20%',
+                                'float': 'left',
+                                'backgroundColor': colors['red1'],
+                                'color' : colors['white']
+                            }
+                        ),
+                    ],
+                ),
+            ],
+            className = 'row', style = {'padding-bottom' : '1%'}
+            ),
+            # Settings bar
+            html.Div([
+                html.Div([
+                    html.H6(children='XAI method specific settings',
+                        style={'font-weight': 'bold', 
+                        'margin-top': '30px',}),
+                ], className='nine columns'
+                ),
+            ],
+            className = 'row'
+            ),
+            # XAI method settings buttons
+            html.Div([
+                html.Div([
+                    dcc.Markdown(children='**Rise**',
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
+                        ),
+                    dcc.Markdown(children='Number of masks',
+                        style = {'margin-left': '5px', 'margin-top': '0px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'n_masks_text',
+                        placeholder = "Number of masks",
+                        type="number",
+                        value=1000,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    ),
+                    dcc.Markdown(children='Feature resolution',
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'feature_res_text',
+                        placeholder = "Feature res",
+                        type="number",
+                        value=6,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    ),
+                    dcc.Markdown(children='Probability to be kept unmasked',
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'p_keep_text',
+                        placeholder = "P keep",
+                        type="number",
+                        value=0.1,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    )
+                ], className = 'three columns'),
+                html.Div([
+                    dcc.Markdown(children='**Lime**',
+                        style = {'margin-top': '20px', 'textAlign' : 'center',
+                            'color' : colors['blue1']}
+                        ),
+                    dcc.Markdown(children='Random state',
+                        style = {'margin-left': '5px', 'margin-top': '5px',
+                            'textAlign' : 'left', 'color' : colors['blue1']}
+                        ),
+                    dcc.Input(id = 'random_state_text',
+                        placeholder = "Random state",
+                        type="number",
+                        value=2,
+                        style={
+                                'margin-right': '20px',
+                                'margin-top': '0px',
+                                'width': '100%',
+                                'color' : colors['blue1']
+                            }
+                    )
+                ], className = 'three columns')
+            ],
+            className = 'row'
+            ),
 
             # printing predictions
             html.Div(
@@ -654,7 +781,7 @@ def get_uploads_text():
                     }
                     ),
 
-            # plotting explainations
+            # plotting explanations
             html.Div([
                 dcc.Graph(
                     id='graph_text_lime',
