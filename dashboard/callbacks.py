@@ -228,7 +228,8 @@ def compute_value_i(method_sel, fn_m, fn_i):
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
 # pylint: disable=too-many-arguments
-def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2, n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
+def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2, 
+    n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
     background=0, n_segments=200, sigma=0, random_state=2, update_button=0, stop_button=0):
     """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
     ctx = dash.callback_context
@@ -367,7 +368,9 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
               dash.dependencies.State('upload-text', 'value'))
 def upload_text(clicks, input_value):
     """Takes in test text string, and print it on the dashboard."""
+    print('in upload text')
     if clicks is not None:
+        print('returning')
         return html.Div([
                     html.P('Input string for the model is:'),
                     html.Br(),
@@ -382,6 +385,7 @@ def upload_text(clicks, input_value):
               dash.dependencies.Input('upload-model-text', 'contents'),
               dash.dependencies.State('upload-model-text', 'filename'))
 def upload_model_text(contents, filename):
+    print('in upload model')
     """Takes in the model file, returns a print statement about its uploading state."""
     if contents is not None:
         try:
@@ -413,8 +417,10 @@ def upload_model_text(contents, filename):
 # redis memory store which is available across processes
 # and for all time.
 @cache.memoize()
-def global_store_t(method_sel, model_runner, input_text):
+def global_store_t(method_sel, model_runner, input_text,
+    n_masks=1000, feature_res=6, p_keep=.1, random_state=2):
     """Takes in the selected XAI method, the model path and the string to test, returns the explainations highlighted on the string itself."""
+    print('in global store t')
     predictions = model_runner(input_text)
     class_name = class_name_text
     pred_class = class_name[np.argmax(predictions)]
@@ -423,14 +429,29 @@ def global_store_t(method_sel, model_runner, input_text):
 
 
     # expensive query
-    relevances = dianna.explain_text(
+    '''    relevances = dianna.explain_text(
         model_runner,
         input_text,
         tokenizer,
         method_sel,
         labels=[pred_idx]
-        )
+        )'''
+    if method_sel == "RISE":
+        print('calculare rel rise')
+        relevances = dianna.explain_text(
+            model_runner, input_text, tokenizer,
+            method=method_sel,
+            labels=[pred_idx],
+            n_masks=n_masks, feature_res=feature_res, p_keep=p_keep)
 
+    else:
+        relevances = dianna.explain_text(
+            model_runner, input_text, tokenizer,
+            'LIME',
+            random_state=random_state,
+            labels=[pred_idx],
+            preprocess_function=utilities.preprocess_function)
+    print('calculated rel')
     return relevances
 
 
@@ -442,6 +463,7 @@ def global_store_t(method_sel, model_runner, input_text):
      dash.dependencies.State("upload-text", "value"),
      ])
 def compute_value_t(method_sel, fn_m, input_text):
+    print('in compute value t')
     """Takes in the selected XAI method, the model filename and the text, returns the selected XAI method."""
     if (method_sel is None) or (fn_m is None) or (input_text is None):
         raise PreventUpdate
@@ -467,121 +489,134 @@ def compute_value_t(method_sel, fn_m, input_text):
     dash.dependencies.Output("graph_text_rise", "figure"),
     dash.dependencies.State("upload-model-text", "filename"),
     dash.dependencies.State("upload-text", "value"),
-    dash.dependencies.Input("signal_text", "data"),
-    dash.dependencies.Input("upload-model-text", "filename"),
-    dash.dependencies.Input("upload-text", "value"),
+    dash.dependencies.State("signal_text", "data"),
+    dash.dependencies.State("upload-model-text", "filename"),
+    dash.dependencies.State("upload-text", "value"),
+    dash.dependencies.State("n_masks_text", "value"),
+    dash.dependencies.State("feature_res_text", "value"),
+    dash.dependencies.State("p_keep_text", "value"),
+    dash.dependencies.State("random_state_text", "value"),
+    dash.dependencies.Input("update_button_t", "n_clicks"),
+    dash.dependencies.Input("stop_button_t", "n_clicks")
 )
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
-def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text):
+def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, 
+    n_masks=1000, feature_res=6, p_keep=0.1,
+    random_state=2, update_button_t=0, stop_button_t=0):
     """Takes in the last model filename and text uploaded, the selected XAI method, and returns the selected XAI method."""
+    print('in update multi t')
     ctx = dash.callback_context
 
-    if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or 
-    (ctx.triggered[0]["prop_id"] == "upload-text.value") or
-    (not ctx.triggered)):
-        cache.clear()
-        return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
-    if (not sel_methods):
-        return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
+    # if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or 
+    # (ctx.triggered[0]["prop_id"] == "upload-text.value") or
+    # (not ctx.triggered)):
+    #     cache.clear()
+    #     return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
+    # if (not sel_methods):
+    #     return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
+    print('fn_m', fn_m, 'input_text', input_text, 'sel_methods', sel_methods)
+    if (ctx.triggered[0]["prop_id"] == "stop_button_t.n_clicks"):
+        return (html.Div(['Explanation stopped.'], style={'margin-top' : '60px'}),
+            utilities.blank_fig())
 
     # update text explainations
-    if (fn_m and input_text) is not None:
+    elif (ctx.triggered[0]["prop_id"] == "update_button_t.n_clicks"):
+        if (fn_m and input_text and sel_methods) is not None:
 
-        word_vector_path = '../tutorials/data/movie_reviews_word_vectors.txt'
-        onnx_model_path = os.path.join(folder_on_server, fn_m[0])
+            word_vector_path = '../tutorials/data/movie_reviews_word_vectors.txt'
+            onnx_model_path = os.path.join(folder_on_server, fn_m[0])
 
-        print(onnx_model_path)
+            print(onnx_model_path)
 
-        # define model runner. max_filter_size is a property of the model
-        model_runner = MovieReviewsModelRunner(onnx_model_path,
-            word_vector_path, max_filter_size=5)
+            # define model runner. max_filter_size is a property of the model
+            model_runner = MovieReviewsModelRunner(onnx_model_path,
+                word_vector_path, max_filter_size=5)
 
-        try:
-            input_tokens = tokenizer.tokenize(input_text)
-            predictions = model_runner(input_text)
-            class_name = class_name_text
-            pred_class = class_name[np.argmax(predictions)]
+            try:
+                input_tokens = tokenizer.tokenize(input_text)
+                predictions = model_runner(input_text)
+                class_name = class_name_text
+                pred_class = class_name[np.argmax(predictions)]
 
-            fig_l = utilities.blank_fig()
-            fig_r = utilities.blank_fig()
+                fig_l = utilities.blank_fig()
+                fig_r = utilities.blank_fig()
 
-            for m in sel_methods:
-                if m == "LIME":
+                for m in sel_methods:
+                    if m == "LIME":
+                        print('in lime')
+                        relevances_lime = global_store_t(
+                            m, model_runner, input_text, n_masks, feature_res, p_keep)
 
-                    relevances_lime = global_store_t(
-                        m, model_runner, input_text)
+                        output = _create_html(input_tokens, relevances_lime[0],
+                            max_opacity=0.8)
+                        hti = Html2Image()
+                        expl_path = 'text_expl.jpg'
 
-                    output = _create_html(input_tokens, relevances_lime[0],
-                        max_opacity=0.8)
-                    hti = Html2Image()
-                    expl_path = 'text_expl.jpg'
+                        hti.screenshot(output, save_as=expl_path)
 
-                    hti.screenshot(output, save_as=expl_path)
+                        im = Image.open(expl_path)
+                        im = np.asarray(im).astype(np.float32)
 
-                    im = Image.open(expl_path)
-                    im = np.asarray(im).astype(np.float32)
+                        fig_l = px.imshow(im)
+                        fig_l.update_xaxes(showgrid=False, range=[0, 1000],
+                            showticklabels=False, zeroline=False)
+                        fig_l.update_yaxes(showgrid=False, range=[200, 0],
+                            showticklabels=False, zeroline=False)
+                        fig_l.update_layout(
+                            title='LIME explaination:',
+                            title_font_color=layouts.colors['blue1'],
+                            paper_bgcolor=layouts.colors['blue4'],
+                            plot_bgcolor=layouts.colors['blue4'],
+                            height=200,
+                            width=500,
+                            margin_b=40,
+                            margin_t=40,
+                            margin_l=0,
+                            margin_r=0
+                            )
 
-                    fig_l = px.imshow(im)
-                    fig_l.update_xaxes(showgrid=False, range=[0, 1000],
-                        showticklabels=False, zeroline=False)
-                    fig_l.update_yaxes(showgrid=False, range=[200, 0],
-                        showticklabels=False, zeroline=False)
-                    fig_l.update_layout(
-                        title='LIME explaination:',
-                        title_font_color=layouts.colors['blue1'],
-                        paper_bgcolor=layouts.colors['blue4'],
-                        plot_bgcolor=layouts.colors['blue4'],
-                        height=200,
-                        width=500,
-                        margin_b=40,
-                        margin_t=40,
-                        margin_l=0,
-                        margin_r=0
-                        )
+                    elif m == "RISE":
+                        print('in rise')
+                        relevances_rise = global_store_t(
+                            m, model_runner, input_text, random_state)
+                        print('calculated relevances')
+                        output = _create_html(input_tokens, relevances_rise[0],
+                            max_opacity=0.8)
+                        hti = Html2Image()
+                        expl_path = 'text_expl.jpg'
+                        print('1')
+                        hti.screenshot(output, save_as=expl_path)
+                        print('2')
+                        im = Image.open(expl_path)
+                        im = np.asarray(im).astype(np.float32)
+                        fig_r = px.imshow(im)
+                        fig_r.update_xaxes(showgrid=False, range=[0, 1000],
+                            showticklabels=False, zeroline=False)
+                        fig_r.update_yaxes(showgrid=False, range=[200, 0],
+                            showticklabels=False, zeroline=False)
+                        fig_r.update_layout(
+                            title='RISE explaination:',
+                            title_font_color=layouts.colors['blue1'],
+                            paper_bgcolor=layouts.colors['blue4'],
+                            plot_bgcolor=layouts.colors['blue4'],
+                            height=200,
+                            width=500,
+                            margin_b=10,
+                            margin_t=40,
+                            margin_l=0,
+                            margin_r=0)
 
-                elif m == "RISE":
+                return (html.Div(['The predicted class is: ' + pred_class]), fig_l,
+                        fig_r)
 
-                    relevances_rise = global_store_t(
-                        m, model_runner, input_text)
-
-                    output = _create_html(input_tokens, relevances_rise[0],
-                        max_opacity=0.8)
-                    hti = Html2Image()
-                    expl_path = 'text_expl.jpg'
-
-                    hti.screenshot(output, save_as=expl_path)
-
-                    im = Image.open(expl_path)
-                    im = np.asarray(im).astype(np.float32)
-
-                    fig_r = px.imshow(im)
-                    fig_r.update_xaxes(showgrid=False, range=[0, 1000],
-                        showticklabels=False, zeroline=False)
-                    fig_r.update_yaxes(showgrid=False, range=[200, 0],
-                        showticklabels=False, zeroline=False)
-                    fig_r.update_layout(
-                        title='RISE explaination:',
-                        title_font_color=layouts.colors['blue1'],
-                        paper_bgcolor=layouts.colors['blue4'],
-                        plot_bgcolor=layouts.colors['blue4'],
-                        height=200,
-                        width=500,
-                        margin_b=10,
-                        margin_t=40,
-                        margin_l=0,
-                        margin_r=0)
-
-            return (html.Div(['The predicted class is: ' + pred_class]), fig_l,
-                    fig_r)
-
-        except Exception:
-            return html.Div([
-                'There was an error running the model. Check either the test' +
-                'text or the model.'
-                ]), utilities.blank_fig(), utilities.blank_fig()
-    else:
-        return (html.Div(['Missing either model or input text.']),
-            utilities.blank_fig(), utilities.blank_fig())
+            except Exception:
+                return html.Div([
+                    'There was an error running the model. Check either the test' +
+                    'text or the model.'
+                    ]), utilities.blank_fig(), utilities.blank_fig()
+        else:
+            return (html.Div(['Missing model, input text or XAI method.']),
+                utilities.blank_fig(), utilities.blank_fig())
 
 ###################################################################
