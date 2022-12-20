@@ -242,7 +242,7 @@ class RISEImage:
             input_idx (i,j,k): indices in the (raw) input  data
             feature_res (int): resolution of each feature
         """
-        return np.ceil(np.array(input_idx) / feature_res)
+        return np.ceil(np.array(input_idx) / feature_res).astype('int')
 
 
     def _generate_masks(self, input_size, p_keep, n_masks, center_generator):
