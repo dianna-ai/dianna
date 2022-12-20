@@ -145,7 +145,7 @@ class RISEImage:
         self.predictions = None
         self.axis_labels = axis_labels if axis_labels is not None else []
 
-    def explain(self, model_or_function, input_data, labels=None, batch_size=32):
+    def explain(self, model_or_function, input_data, labels=None, batch_size=32, center_generator=None):
         """Runs the RISE explainer on images.
 
            The model will be called with masked images,
@@ -168,14 +168,14 @@ class RISEImage:
         input_data, full_preprocess_function = self._prepare_image_data(input_data)
         runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
 
-        active_p_keep = self._determine_p_keep(input_data, runner) if self.p_keep is None else self.p_keep
+        active_p_keep = self._determine_p_keep(input_data, runner, center_generator=center_generator) if self.p_keep is None else self.p_keep
 
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:-1]
 
         last_step = False
         for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining', disable=True):
-            masks = self._generate_masks(img_shape, active_p_keep, batch_size)
+            masks = self._generate_masks(img_shape, active_p_keep, batch_size, center_generator)
             masked = input_data * masks
             predictions = runner(masked)
 
@@ -201,22 +201,22 @@ class RISEImage:
             result = result[list(labels)]
         return result
 
-    def _determine_p_keep(self, input_data, runner, n_masks=100):
+    def _determine_p_keep(self, input_data, runner, n_masks=100, center_generator=None):
         """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""
         p_keeps = np.arange(0.1, 1.0, 0.1)
         stds = []
         for p_keep in p_keeps:
-            std = self._calculate_mean_class_std(p_keep, runner, input_data, n_masks=n_masks)
+            std = self._calculate_mean_class_std(p_keep, runner, input_data, n_masks=n_masks, center_generator=center_generator)
             stds += [std]
         best_i = np.argmax(stds)
         best_p_keep = p_keeps[best_i]
         print(f'Rise parameter p_keep was automatically determined at {best_p_keep}')
         return best_p_keep
 
-    def _calculate_mean_class_std(self, p_keep, runner, input_data, n_masks):
+    def _calculate_mean_class_std(self, p_keep, runner, input_data, n_masks, center_generator):
         batch_size = 50
         img_shape = input_data.shape[1:-1]
-        masks = self._generate_masks(img_shape, p_keep, n_masks)
+        masks = self._generate_masks(img_shape, p_keep, n_masks, center_generator)
         masked = input_data * masks
         predictions = []
         for i in range(0, n_masks, batch_size):
@@ -227,7 +227,25 @@ class RISEImage:
         std_per_class = predictions.std()
         return np.mean(std_per_class)
 
-    def _generate_masks(self, input_size, p_keep, n_masks):
+    @staticmethod
+    def _default_center_generator(input_size):
+        while True:
+            yield (np.random.randint(0, input_size[0]),
+                   np.random.randint(0, input_size[1]),
+                   np.random.randint(0, input_size[2]))
+
+    @staticmethod
+    def _map_indices(input_idx, feature_res):
+        """Map the indexes from the input size to the cell size
+
+        Args:
+            input_idx (i,j,k): indices in the (raw) input  data
+            feature_res (int): resolution of each feature
+        """
+        return np.ceil(np.array(input_idx) / feature_res)
+
+
+    def _generate_masks(self, input_size, p_keep, n_masks, center_generator):
         """Generates a set of random masks to mask the input data.
 
         Args:
@@ -236,6 +254,9 @@ class RISEImage:
         Returns:
             The generated masks (np.ndarray)
         """
+        if center_generator is None:
+            center_generator = self._default_center_generator(input_size)
+
         cell_size = np.ceil(np.array(input_size) / self.feature_res)
         up_size = (self.feature_res + 1) * cell_size
 
@@ -246,9 +267,7 @@ class RISEImage:
         masks = np.empty((n_masks, *input_size), dtype=np.float32)
 
         for i in range(n_masks):
-            x = np.random.randint(0, cell_size[0])
-            y = np.random.randint(0, cell_size[1])
-            z = np.random.randint(0, cell_size[2])
+            (x,y,z) = self._map_indices(next(center_generator), self.feature_res)
             # Linear upsampling and cropping
             masks[i, ...] = _upscale(grid[i], up_size)[x:x + input_size[0], y:y + input_size[1], z:z + input_size[2]]
         masks = masks.reshape(-1, *input_size, 1)

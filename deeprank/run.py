@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 from time import perf_counter
-
+from generate_center import generate_interface_center 
 from dianna.methods.rise import RISEImage
 np.random.seed(42)
 
@@ -88,8 +88,11 @@ feature_res=1
 rise = RISEImage(n_masks=n_masks, feature_res=feature_res, p_keep=.4,
                  axis_labels=axis_labels, preprocess_function=prepare_input_data)
 
+
+gen = generate_interface_center(sample['mol'])
+
 t1 = perf_counter()
-heatmaps = rise.explain(run_model, feature_dianna, labels=(0, 1))
+heatmaps = rise.explain(run_model, feature_dianna, labels=(0, 1), center_generator=gen)
 t2 = perf_counter()
 print(f"Explaining took {t2-t1:.2f} seconds")
 
