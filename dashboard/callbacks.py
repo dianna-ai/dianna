@@ -100,14 +100,11 @@ def upload_protein(contents, filename):
         #create a cubefile
         feat_name = list(feat_dict.keys())[0]
         fname = utilities.export_cube_files(feat_name, feat_dict[feat_name], grid, folder_on_server)
-        # fname = os.path.join(folder_on_server,'benzene_homo.cube')
         with open(fname, 'r') as f:
             cube_data = f.readlines()
         cube_data = ''.join(cube_data)
 
-        # import urllib.request as urlreq
-        # cube_data = urlreq.urlopen('https://git.io/benzene-homo.cube').read().decode('utf-8')
-
+        # create the orbital attribute 
         orbital = {
             'cube_file': cube_data,
             'iso_val': 0.05,
