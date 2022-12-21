@@ -6,6 +6,7 @@ from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
 from scipy.special import expit as sigmoid
 import os
+import h5py 
 
 # colors
 colors = {
@@ -92,6 +93,12 @@ def blank_fig(text=None):
 
     return fig
 
+
+def open_deeprank_hdf5(path):
+    with h5py.File(path,'r') as f5:
+        mol_name = list(f5.keys())[0]
+        mol_complex = f5[mol_name]['complex'][()]
+    return mol_name, mol_complex
 
 def open_image(path):
     """Open an image from a path and returns it as a numpy array."""

@@ -1,6 +1,7 @@
 import base64
 from dash import dcc
 from dash import html
+import dash_bio as dashbio
 import utilities
 
 
@@ -107,6 +108,16 @@ def get_navbar(p = 'images'):
         ],
         className='one column'),
 
+
+        html.Div([
+            dcc.Link(
+                html.H4(children = 'Protein',
+                    style = navbarotherpage),
+                href='/apps/protein'
+                )
+        ],
+        className='one column'),
+
         html.Div([], className = 'five columns')
 
     ],
@@ -141,6 +152,58 @@ def get_navbar(p = 'images'):
         ],
         className='one column'),
 
+
+        html.Div([
+            dcc.Link(
+                html.H4(children = 'Protein',
+                    style = navbarotherpage),
+                href='/apps/protein'
+                )
+        ],
+        className='one column'),
+        html.Div([], className = 'five columns')
+
+    ],
+    
+    className = 'row',
+    style = {'background-color' : colors['blue2']
+            }
+    )
+
+    navbar_protein = html.Div([
+
+        html.Div(['b'],
+            className = 'five columns',
+            style = {'color' : colors['blue2']}
+        ),
+
+        html.Div([
+            dcc.Link(
+                html.H4(children = 'Images',
+                    style = navbarotherpage),
+                href='/apps/images'
+                )
+        ],
+        className='one column'),
+
+        html.Div([
+            dcc.Link(
+                html.H4(children = 'Text',
+                    style = navbarotherpage),
+                href='/apps/text'
+                )
+        ],
+        className='one column'),
+
+
+        html.Div([
+            dcc.Link(
+                html.H4(children = 'Protein',
+                    style = navbarcurrentpage),
+                href='/apps/protein'
+                )
+        ],
+        className='one column'),
         html.Div([], className = 'five columns')
 
     ],
@@ -152,8 +215,148 @@ def get_navbar(p = 'images'):
 
     if p == 'images':
         return navbar_images
-
+    elif p == 'protein':
+        return navbar_protein
     return navbar_text
+
+
+# uploads images bar        
+def get_uploads_protein():
+    """Creates layout for protein page."""
+    # uploads row
+    uploads = html.Div([
+
+        # uploads first col (3-col)
+        html.Div([
+
+            # select image row
+            html.Div([
+                dcc.Upload(
+                    id='upload-protein',
+                    children=html.Div([
+                        'Drag and Drop or ',
+                        html.A('Select Protein')
+                    ]),
+                    style={
+                        'width': '80%',
+                        'height': '40px',
+                        'lineHeight': '40px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '3px',
+                        'margin-left': '30px',
+                        'margin-top': '20px',
+                        'color' : colors['blue1']
+                    },
+                    # Allow multiple files to be uploaded
+                    multiple=False
+                )
+            ],
+            className = 'row',
+            ),
+
+            # plot selected protein row
+            html.Div(dashbio.Molecule3dViewer(
+                    id='protein_viewer',
+                    modelData={'atoms':[], 'bonds':[]}
+                    ),
+            className = 'row',
+            style = {
+                'height': '230px'
+                }
+            ), 
+        
+            # select model row
+            html.Div([
+                dcc.Upload(
+                    id='upload-model-prot',
+                    children=html.Div([
+                        'Drag and Drop or ',
+                        html.A('Select Model')
+                    ]),
+                    style={
+                        'width': '80%',
+                        'height': '40px',
+                        'lineHeight': '40px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '3px',
+                        'margin-left': '30px',
+                        'margin-top': '20px',
+                        'color' : colors['blue1']
+                    },
+                    # Allow multiple files to be uploaded
+                    multiple=False
+                ),
+            ],
+            className = 'row', 
+            ),
+
+            # print selected model row
+            html.Div(id='output-model-prot-upload',
+            className = 'row',
+            style = {
+                'height': '230px',
+                'margin-top': '20px',
+                #'margin-bottom': '50px',
+                #'fontSize': 8,
+                'color' : colors['blue1']}
+            )
+
+            ],
+            className = 'three columns',
+            style = {
+                'textAlign': 'center',
+                'align-items': 'center'
+            }),
+
+        # XAI methods col (9-col)
+        html.Div([
+
+            # XAI methods selection row
+            html.Div([
+                dcc.Dropdown(id = 'method_sel_prot',
+                    options = [{'label': 'RISE', 'value': 'RISE'}],
+                    placeholder = "Select one/more XAI methods",
+                    value=[""],
+                    multi = True,
+                    style={
+                            'margin-left': '155px',
+                            'margin-top': '20px',
+                            'width': '60%',
+                            'color' : colors['blue1']
+                        }
+                )
+            ],
+            className = 'row'
+            ),
+
+            # printing predictions
+            html.Div(
+                id='output-state-prot',
+                className = 'row'),
+
+            html.Div([
+                dcc.Graph(
+                    id='graph_prot',
+                    figure = utilities.blank_fig())],
+                    className = 'row',
+                    style = {
+                        'margin-left': '140px',
+                    })
+
+        ], 
+        className = 'nine columns')
+
+    ], className = 'row',
+    style = { 
+        'background-color' : colors['blue4'],
+        'textAlign': 'center',
+        'align-items': 'center'
+        })
+
+    return uploads
+
 
 # uploads images bar        
 def get_uploads_images():
@@ -474,6 +677,7 @@ images_page = html.Div([
     
     #Row 1 : Header
     get_header(),
+
     #Row 2 : Nav bar
     get_navbar("images"),
 
@@ -492,6 +696,21 @@ text_page = html.Div([
     get_navbar("text"),
 
     get_uploads_text(),
+
+    # hidden signal value
+    dcc.Store(id='signal_text'),
+    
+    ])
+
+protein_page = html.Div([
+    
+    #Row 1 : Header
+    get_header(),
+
+    #Row 2 : Nav bar
+    get_navbar("protein"),
+
+    get_uploads_protein(),
 
     # hidden signal value
     dcc.Store(id='signal_text'),

@@ -24,7 +24,17 @@ import utilities
 from utilities import MovieReviewsModelRunner, _create_html
 import numpy as np
 import warnings
+
+import h5py 
+from pdb2sql import pdb2sql
+from dash_bio.utils import PdbParser, create_mol3d_style
 warnings.filterwarnings('ignore')  # disable warnings relateds to versions of tf
+
+try:
+    spacy.load("en_core_web_sm")
+except Exception:  # If not present, we download
+    spacy.cli.download("en_core_web_sm")
+    spacy.load("en_core_web_sm")
 
 folder_on_server = "app_data"
 os.makedirs(folder_on_server, exist_ok=True)
@@ -49,11 +59,45 @@ cache.clear()
 class_name_mnist = ['digit 0', 'digit 1']
 class_name_text = ["negative", "positive"]
 
-try:
-    spacy.load("en_core_web_sm")
-except Exception:  # If not present, we download
-    spacy.cli.download("en_core_web_sm")
-    spacy.load("en_core_web_sm")
+
+
+
+# ########################## Protein page ###########################
+
+
+# uploading test image
+@app.callback(dash.dependencies.Output('protein_viewer', 'modelData'),
+              dash.dependencies.Output('protein_viewer', 'styles'),
+              dash.dependencies.Input('upload-protein', 'contents'),
+              dash.dependencies.State('upload-protein', 'filename'))
+def upload_protein(contents, filename):
+    """Takes in test image file, returns it as a Plotly figure."""
+
+    if contents is not None:
+
+        _, content_string = contents.split(',')
+
+        with open(os.path.join(folder_on_server, filename), 'wb') as f:
+            f.write(base64.b64decode(content_string))
+
+        data_path = os.path.join(folder_on_server, filename)
+        
+        mol_name, mol_complex = utilities.open_deeprank_hdf5(data_path)
+
+        db = pdb2sql(mol_complex)
+        pdb_filename = mol_name+'.pdb'
+        db.exportpdb(pdb_filename)
+
+        parser = PdbParser(pdb_filename)
+        data = parser.mol3d_data()
+        styles = create_mol3d_style(
+            data['atoms'], visualization_type='cartoon', color_element='chain'
+        )
+            
+        return data, styles
+
+    else:
+        return {'atoms':[], 'bonds':[]}, None
 
 # ########################## Images page ###########################
 
