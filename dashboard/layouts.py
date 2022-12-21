@@ -246,6 +246,7 @@ def get_uploads_protein():
                         'borderRadius': '3px',
                         'margin-left': '30px',
                         'margin-top': '20px',
+                        'display':'inline-block',
                         'color' : colors['blue1']
                     },
                     # Allow multiple files to be uploaded
@@ -255,16 +256,7 @@ def get_uploads_protein():
             className = 'row',
             ),
 
-            # plot selected protein row
-            html.Div(dashbio.Molecule3dViewer(
-                    id='protein_viewer',
-                    modelData={'atoms':[], 'bonds':[]}
-                    ),
-            className = 'row',
-            style = {
-                'height': '230px'
-                }
-            ), 
+
         
             # select model row
             html.Div([
@@ -283,6 +275,7 @@ def get_uploads_protein():
                         'borderRadius': '3px',
                         'margin-left': '30px',
                         'margin-top': '20px',
+                        'display':'inline-block',
                         'color' : colors['blue1']
                     },
                     # Allow multiple files to be uploaded
@@ -291,6 +284,18 @@ def get_uploads_protein():
             ],
             className = 'row', 
             ),
+
+            # plot selected protein row
+            html.Div(dashbio.Molecule3dViewer(
+                    id='protein_viewer',
+                    modelData={'atoms':[], 'bonds':[]},
+                    style={'display':'inline-block'},
+                    ),
+            className = 'row',
+            style = {
+                'height': '230px'
+                }
+            ), 
 
             # print selected model row
             html.Div(id='output-model-prot-upload',
