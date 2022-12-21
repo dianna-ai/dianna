@@ -70,8 +70,11 @@ class_name_text = ["negative", "positive"]
               dash.dependencies.Output('protein_viewer', 'styles'),
               dash.dependencies.Output('protein_viewer', 'orbital'),
               dash.dependencies.Input('upload-protein', 'contents'),
-              dash.dependencies.State('upload-protein', 'filename'))
-def upload_protein(contents, filename):
+              dash.dependencies.State('upload-protein', 'filename'),
+              dash.dependencies.Input('isosurface-level-prot', 'value'),
+              dash.dependencies.Input('feature-select-prot', 'value')
+              )
+def upload_protein(contents, filename, iso_value, feat_name):
     """Takes in  a hdf5 filename returns the data and styles of a Molecule3dViewer."""
 
     if contents is not None:
@@ -100,8 +103,8 @@ def upload_protein(contents, filename):
             color_element='chain', color_scheme={chain1: clr1, chain2: clr2}
         )
 
-        #create a cubefile
-        feat_name = list(feat_dict.keys())[0]
+        # create a cubefile
+        # feat_name = list(feat_dict.keys())[0]
         fname = utilities.export_cube_files(feat_name, feat_dict[feat_name], grid, folder_on_server)
         with open(fname, 'r') as f:
             cube_data = f.readlines()
@@ -110,7 +113,7 @@ def upload_protein(contents, filename):
         # create the orbital attribute 
         orbital = {
             'cube_file': cube_data,
-            'iso_val': 0.05,
+            'iso_val': iso_value,
             'opacity': 1.0,
             'positiveVolumetricColor': 'red',
             'negativeVolumetricColor': 'blue',
@@ -119,7 +122,6 @@ def upload_protein(contents, filename):
 
     else:
         return {'atoms':[], 'bonds':[]}, None, None
-
 
 # ########################## Images page ###########################
 

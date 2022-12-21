@@ -37,6 +37,40 @@ navbarotherpage = {
     'textAlign' : 'center'
     }
 
+feature_names = ['Edesolv_chain1', 'Edesolv_chain2', 
+                 'PSSM_ALA_chain1', 'PSSM_ALA_chain2', 
+                 'PSSM_ARG_chain1', 'PSSM_ARG_chain2', 
+                 'PSSM_ASN_chain1', 'PSSM_ASN_chain2', 
+                 'PSSM_ASP_chain1', 'PSSM_ASP_chain2', 
+                 'PSSM_CYS_chain1', 'PSSM_CYS_chain2', 
+                 'PSSM_GLN_chain1', 'PSSM_GLN_chain2', 
+                 'PSSM_GLU_chain1', 'PSSM_GLU_chain2', 
+                 'PSSM_GLY_chain1', 'PSSM_GLY_chain2', 
+                 'PSSM_HIS_chain1', 'PSSM_HIS_chain2', 
+                 'PSSM_ILE_chain1', 'PSSM_ILE_chain2', 
+                 'PSSM_LEU_chain1', 'PSSM_LEU_chain2', 
+                 'PSSM_LYS_chain1', 'PSSM_LYS_chain2', 
+                 'PSSM_MET_chain1', 'PSSM_MET_chain2', 
+                 'PSSM_PHE_chain1', 'PSSM_PHE_chain2', 
+                 'PSSM_PRO_chain1', 'PSSM_PRO_chain2', 
+                 'PSSM_SER_chain1', 'PSSM_SER_chain2', 
+                 'PSSM_THR_chain1', 'PSSM_THR_chain2', 
+                 'PSSM_TRP_chain1', 'PSSM_TRP_chain2', 
+                 'PSSM_TYR_chain1', 'PSSM_TYR_chain2', 
+                 'PSSM_VAL_chain1', 'PSSM_VAL_chain2', 
+                 'RCD_apolar-apolar_chain1', 'RCD_apolar-apolar_chain2', 
+                 'RCD_apolar-charged_chain1', 'RCD_apolar-charged_chain2', 
+                 'RCD_charged-charged_chain1', 'RCD_charged-charged_chain2', 
+                 'RCD_polar-apolar_chain1', 'RCD_polar-apolar_chain2', 
+                 'RCD_polar-charged_chain1', 'RCD_polar-charged_chain2', 
+                 'RCD_polar-polar_chain1', 'RCD_polar-polar_chain2', 
+                 'RCD_total_chain1', 'RCD_total_chain2', 
+                 'bsa_chain1', 'bsa_chain2', 
+                 'charge_chain1', 'charge_chain2', 
+                 'coulomb_chain1', 'coulomb_chain2', 
+                 'vdwaals_chain1', 'vdwaals_chain2']
+
+
 # app layout
 # In Bootstrap, the "row" class is used mainly to hold columns in it.
 # Bootstrap divides each row into a grid of 12 virtual columns.
@@ -255,9 +289,7 @@ def get_uploads_protein():
             ],
             className = 'row',
             ),
-
-
-        
+     
             # select model row
             html.Div([
                 dcc.Upload(
@@ -285,11 +317,33 @@ def get_uploads_protein():
             className = 'row', 
             ),
 
+            # isolevel control
+            html.Div([
+                dcc.Slider(min=0, max=1, step=0.001,
+                    id='isosurface-level-prot',
+                )
+            ],
+            className = 'row', 
+            ),
+
+            # select feature
+            html.Div([
+                dcc.Dropdown(feature_names, feature_names[0],
+                    id='feature-select-prot',
+                )
+            ],
+            className = 'row', 
+            ),
+
             # plot selected protein row
             html.Div(dashbio.Molecule3dViewer(
                     id='protein_viewer',
                     modelData={'atoms':[], 'bonds':[]},
-                    style={'display':'inline-block'},
+                    backgroundColor="#000000",
+                    backgroundOpacity=0,
+                    style={'display':'inline-block',
+                            'width': '500',
+                            'height': '500'},
                     ),
             className = 'row',
             style = {
