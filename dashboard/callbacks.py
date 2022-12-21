@@ -91,10 +91,13 @@ def upload_protein(contents, filename):
         db.exportpdb(pdb_filename)
         parser = PdbParser(pdb_filename)
         data = parser.mol3d_data()
+        chain1, chain2 = db.get_chains()
+        clr1, clr2 = "#ffa200", "#00ae34"
 
         # create the style
         styles = create_mol3d_style(
-            data['atoms'], visualization_type='cartoon', color_element='chain'
+            data['atoms'], visualization_type='cartoon', 
+            color_element='chain', color_scheme={chain1: clr1, chain2: clr2}
         )
 
         #create a cubefile
