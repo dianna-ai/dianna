@@ -94,11 +94,91 @@ def blank_fig(text=None):
     return fig
 
 
+def export_cube_files(feature_name, feature_values, grid, export_path):
+
+
+    bohr2ang = 0.52918
+
+    # individual axis of the grid
+    x,y,z = grid['x'], grid['y'], grid['z']
+
+    # extract grid_info
+    npts = np.array([len(x),len(y),len(z)])
+    res = np.array([x[1]-x[0],y[1]-y[0],z[1]-z[0]])
+
+    # the cuve file is apparently give in bohr
+    xmin,ymin,zmin = np.min(x)/bohr2ang,np.min(y)/bohr2ang,np.min(z)/bohr2ang
+    scale_res = res/bohr2ang
+
+    fname = os.path.join(export_path, '%s.cube' %(feature_name)) 
+    if not os.path.isfile(fname):
+        f = open(fname,'w')
+        f.write('CUBE FILE\n')
+        f.write("OUTER LOOP: X, MIDDLE LOOP: Y, INNER LOOP: Z\n")
+
+        f.write("%5i %11.6f %11.6f %11.6f\n" %  (1,xmin,ymin,zmin))
+        f.write("%5i %11.6f %11.6f %11.6f\n" %  (npts[0],scale_res[0],0,0))
+        f.write("%5i %11.6f %11.6f %11.6f\n" %  (npts[1],0,scale_res[1],0))
+        f.write("%5i %11.6f %11.6f %11.6f\n" %  (npts[2],0,0,scale_res[2]))
+
+
+        # the cube file require 1 atom
+        f.write("%5i %11.6f %11.6f %11.6f %11.6f\n" %  (0,0,0,0,0))
+
+        last_char_check = True
+        for i in range(npts[0]):
+            for j in range(npts[1]):
+                for k in range(npts[2]):
+                    f.write(" %11.5e" % feature_values[i,j,k])
+                    last_char_check = True
+                    if k % 6 == 5:
+                        f.write("\n")
+                        last_char_check = False
+                if last_char_check:
+                    f.write("\n")
+        f.close()
+    return fname
+
+def get_feature(molgrp):
+
+    from deeprank.tools import sparse
+
+    nx = len(molgrp['grid_points/x'])
+    ny = len(molgrp['grid_points/y'])
+    nz = len(molgrp['grid_points/z'])
+    shape = (nx,ny,nz)
+
+    mapgrp = molgrp['mapped_features']
+    data_dict = {}
+
+    # loop through all the features
+    for data_name in mapgrp.keys():
+
+        # create a dict of the feature {name : value}
+        featgrp = mapgrp[data_name]
+
+        for ff in featgrp.keys():
+            subgrp = featgrp[ff]
+            if not subgrp.attrs['sparse']:
+                data_dict[ff] =  subgrp['value'][()]
+            else:
+                spg = sparse.FLANgrid(sparse=True, index=subgrp['index'][()], 
+                                      value=subgrp['value'][()], shape=shape)
+                data_dict[ff] =  spg.to_dense()
+
+    return data_dict
+
 def open_deeprank_hdf5(path):
     with h5py.File(path,'r') as f5:
         mol_name = list(f5.keys())[0]
-        mol_complex = f5[mol_name]['complex'][()]
-    return mol_name, mol_complex
+        mol = f5[mol_name]
+        mol_complex = mol['complex'][()]
+        grid = {'x': mol['grid_points']['x'][()], 
+                'y': mol['grid_points']['y'][()], 
+                'z': mol['grid_points']['z'][()]}
+        feature_dict = get_feature(mol)
+
+    return mol_name, mol_complex, grid, feature_dict
 
 def open_image(path):
     """Open an image from a path and returns it as a numpy array."""

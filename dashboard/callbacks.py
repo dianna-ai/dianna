@@ -68,10 +68,11 @@ class_name_text = ["negative", "positive"]
 # uploading test image
 @app.callback(dash.dependencies.Output('protein_viewer', 'modelData'),
               dash.dependencies.Output('protein_viewer', 'styles'),
+              dash.dependencies.Output('protein_viewer', 'orbital'),
               dash.dependencies.Input('upload-protein', 'contents'),
               dash.dependencies.State('upload-protein', 'filename'))
 def upload_protein(contents, filename):
-    """Takes in test image file, returns it as a Plotly figure."""
+    """Takes in  a hdf5 filename returns the data and styles of a Molecule3dViewer."""
 
     if contents is not None:
 
@@ -79,25 +80,46 @@ def upload_protein(contents, filename):
 
         with open(os.path.join(folder_on_server, filename), 'wb') as f:
             f.write(base64.b64decode(content_string))
-
         data_path = os.path.join(folder_on_server, filename)
         
-        mol_name, mol_complex = utilities.open_deeprank_hdf5(data_path)
+        # read the local data
+        mol_name, mol_complex, grid, feat_dict = utilities.open_deeprank_hdf5(data_path)
 
+        # extract the pdb
         db = pdb2sql(mol_complex)
-        pdb_filename = mol_name+'.pdb'
+        pdb_filename = os.path.join(folder_on_server, mol_name+'.pdb')
         db.exportpdb(pdb_filename)
-
         parser = PdbParser(pdb_filename)
         data = parser.mol3d_data()
+
+        # create the style
         styles = create_mol3d_style(
             data['atoms'], visualization_type='cartoon', color_element='chain'
         )
-            
-        return data, styles
+
+        #create a cubefile
+        feat_name = list(feat_dict.keys())[0]
+        fname = utilities.export_cube_files(feat_name, feat_dict[feat_name], grid, folder_on_server)
+        # fname = os.path.join(folder_on_server,'benzene_homo.cube')
+        with open(fname, 'r') as f:
+            cube_data = f.readlines()
+        cube_data = ''.join(cube_data)
+
+        # import urllib.request as urlreq
+        # cube_data = urlreq.urlopen('https://git.io/benzene-homo.cube').read().decode('utf-8')
+
+        orbital = {
+            'cube_file': cube_data,
+            'iso_val': 0.05,
+            'opacity': 1.0,
+            'positiveVolumetricColor': 'red',
+            'negativeVolumetricColor': 'blue',
+        }
+        return data, styles, orbital
 
     else:
-        return {'atoms':[], 'bonds':[]}, None
+        return {'atoms':[], 'bonds':[]}, None, None
+
 
 # ########################## Images page ###########################
 
