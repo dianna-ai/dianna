@@ -498,6 +498,7 @@ def get_uploads_images():
                     className = 'row',
                     style = {
                         'margin-left': '140px',
+                        'height': '100px'
                     })
 
         ], 
@@ -793,7 +794,7 @@ def get_uploads_text():
                         'height': '100px'
                     }),
 
-            # plotting explainations
+            # plotting explanations
             html.Div([
                 dcc.Graph(
                     id='graph_text_rise',
@@ -802,7 +803,7 @@ def get_uploads_text():
                     style = {
                         'margin-top': '80',
                         'margin-left': '140px',
-                        'height': '100px'
+                        #'height': '100px'
                     })
 
         ], 
@@ -813,7 +814,7 @@ def get_uploads_text():
         'background-color' : colors['blue4'],
         'textAlign': 'center',
         'align-items': 'center',
-        'height': '600px'
+        #'height': '600px'
         })
 
     return uploads
