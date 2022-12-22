@@ -368,9 +368,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
               dash.dependencies.State('upload-text', 'value'))
 def upload_text(clicks, input_value):
     """Takes in test text string, and print it on the dashboard."""
-    print('in upload text')
     if clicks is not None:
-        print('returning')
         return html.Div([
                     html.P('Input string for the model is:'),
                     html.Br(),
@@ -385,7 +383,6 @@ def upload_text(clicks, input_value):
               dash.dependencies.Input('upload-model-text', 'contents'),
               dash.dependencies.State('upload-model-text', 'filename'))
 def upload_model_text(contents, filename):
-    print('in upload model')
     """Takes in the model file, returns a print statement about its uploading state."""
     if contents is not None:
         try:
@@ -420,7 +417,6 @@ def upload_model_text(contents, filename):
 def global_store_t(method_sel, model_runner, input_text,
     n_masks=1000, feature_res=6, p_keep=.1, random_state=2):
     """Takes in the selected XAI method, the model path and the string to test, returns the explainations highlighted on the string itself."""
-    print('in global store t')
     predictions = model_runner(input_text)
     class_name = class_name_text
     pred_class = class_name[np.argmax(predictions)]
@@ -437,7 +433,6 @@ def global_store_t(method_sel, model_runner, input_text,
         labels=[pred_idx]
         )'''
     if method_sel == "RISE":
-        print('calculare rel rise')
         relevances = dianna.explain_text(
             model_runner, input_text, tokenizer,
             method=method_sel,
@@ -449,9 +444,7 @@ def global_store_t(method_sel, model_runner, input_text,
             model_runner, input_text, tokenizer,
             'LIME',
             random_state=random_state,
-            labels=[pred_idx],
-            preprocess_function=utilities.preprocess_function)
-    print('calculated rel')
+            labels=[pred_idx])
     return relevances
 
 
@@ -463,7 +456,6 @@ def global_store_t(method_sel, model_runner, input_text,
      dash.dependencies.State("upload-text", "value"),
      ])
 def compute_value_t(method_sel, fn_m, input_text):
-    print('in compute value t')
     """Takes in the selected XAI method, the model filename and the text, returns the selected XAI method."""
     if (method_sel is None) or (fn_m is None) or (input_text is None):
         raise PreventUpdate
@@ -505,7 +497,6 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
     n_masks=1000, feature_res=6, p_keep=0.1,
     random_state=2, update_button_t=0, stop_button_t=0):
     """Takes in the last model filename and text uploaded, the selected XAI method, and returns the selected XAI method."""
-    print('in update multi t')
     ctx = dash.callback_context
 
     # if ((ctx.triggered[0]["prop_id"] == "upload-model-text.filename") or 
@@ -515,7 +506,6 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
     #     return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
     # if (not sel_methods):
     #     return html.Div(['']), utilities.blank_fig(), utilities.blank_fig()
-    print('fn_m', fn_m, 'input_text', input_text, 'sel_methods', sel_methods)
     if (ctx.triggered[0]["prop_id"] == "stop_button_t.n_clicks"):
         return (html.Div(['Explanation stopped.'], style={'margin-top' : '60px'}),
             utilities.blank_fig())
@@ -526,8 +516,6 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
 
             word_vector_path = '../tutorials/data/movie_reviews_word_vectors.txt'
             onnx_model_path = os.path.join(folder_on_server, fn_m[0])
-
-            print(onnx_model_path)
 
             # define model runner. max_filter_size is a property of the model
             model_runner = MovieReviewsModelRunner(onnx_model_path,
@@ -544,10 +532,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
 
                 for m in sel_methods:
                     if m == "LIME":
-                        print('in lime')
                         relevances_lime = global_store_t(
-                            m, model_runner, input_text, n_masks, feature_res, p_keep)
-
+                            m, model_runner, input_text, random_state = random_state)
                         output = _create_html(input_tokens, relevances_lime[0],
                             max_opacity=0.8)
                         hti = Html2Image()
@@ -577,17 +563,13 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                             )
 
                     elif m == "RISE":
-                        print('in rise')
                         relevances_rise = global_store_t(
                             m, model_runner, input_text, random_state)
-                        print('calculated relevances')
                         output = _create_html(input_tokens, relevances_rise[0],
                             max_opacity=0.8)
                         hti = Html2Image()
                         expl_path = 'text_expl.jpg'
-                        print('1')
                         hti.screenshot(output, save_as=expl_path)
-                        print('2')
                         im = Image.open(expl_path)
                         im = np.asarray(im).astype(np.float32)
                         fig_r = px.imshow(im)
