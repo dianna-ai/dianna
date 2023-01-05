@@ -487,7 +487,11 @@ def get_uploads_images():
             # printing predictions
             html.Div(
                 id='output-state-img',
-                className = 'row'),
+                className = 'row',
+                style = {
+                    'margin-top': '20px',
+                    'color' : colors['blue1']
+                    }),
 
             html.Div([
                 dcc.Loading(children=[
@@ -497,8 +501,7 @@ def get_uploads_images():
                     color=colors['blue1'], type="dot", fullscreen=False)],
                     className = 'row',
                     style = {
-                        'margin-left': '140px',
-                        'height': '100px'
+                        'margin-left': '140px'
                     })
 
         ], 
@@ -813,8 +816,7 @@ def get_uploads_text():
     style = { 
         'background-color' : colors['blue4'],
         'textAlign': 'center',
-        'align-items': 'center',
-        #'height': '600px'
+        'align-items': 'center'
         })
 
     return uploads
