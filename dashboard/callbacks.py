@@ -432,24 +432,6 @@ def select_method_t(method_sel):
     """Takes in the user-selected XAI method, returns the selected XAI method."""
     return method_sel
 
-'''def compute_value_t(method_sel, fn_m, input_text):
-    """Takes in the selected XAI method, the model filename and the text, returns the selected XAI method."""
-    if (method_sel is None) or (fn_m is None) or (input_text is None):
-        raise PreventUpdate
-
-    word_vector_path = '../tutorials/data/movie_reviews_word_vectors.txt'
-    model_path = os.path.join(folder_on_server, fn_m[0])
-    model_runner = MovieReviewsModelRunner(model_path, word_vector_path,
-        max_filter_size=5)
-
-    for m in method_sel:
-        # compute value and send a signal when done
-        try:
-            global_store_t(m, model_runner, input_text)
-        except Exception:
-            return method_sel
-    return method_sel'''
-
 
 # update text explanations
 @app.callback(
