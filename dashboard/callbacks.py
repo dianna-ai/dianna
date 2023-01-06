@@ -152,7 +152,7 @@ def upload_model_img(contents, filename):
 def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
     axis_labels={2: 'channels'}, n_masks=1000, feature_res=6, p_keep=.1,
     n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):
-    """Takes in the selected XAI method, the model path and the image to test, returns the explainations array."""
+    """Takes in the selected XAI method, the model path and the image to test, returns the explanations array."""
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
@@ -187,7 +187,7 @@ def select_method(method_sel):
     return method_sel
 
 
-# update image explainations
+# update image explanations
 @app.callback(
     dash.dependencies.Output('output-state-img', 'children'),
     dash.dependencies.Output('graph_img', 'figure'),
@@ -392,7 +392,7 @@ def upload_model_text(contents, filename):
 @cache.memoize()
 def global_store_t(method_sel, model_runner, input_text,
     n_masks=1000, feature_res=6, p_keep=.1, random_state=2):
-    """Takes in the selected XAI method, the model path and the string to test, returns the explainations highlighted on the string itself."""
+    """Takes in the selected XAI method, the model path and the string to test, returns the explanations highlighted on the string itself."""
     predictions = model_runner(input_text)
     class_name = class_name_text
     pred_class = class_name[np.argmax(predictions)]
@@ -451,7 +451,7 @@ def select_method_t(method_sel):
     return method_sel'''
 
 
-# update text explainations
+# update text explanations
 @app.callback(
     dash.dependencies.Output("output-state-text", "children"),
     dash.dependencies.Output("graph_text_lime", "figure"),
@@ -480,7 +480,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
         return (html.Div(['Explanation stopped.'], style={'margin-top' : '60px'}),
             utilities.blank_fig())
 
-    # update text explainations
+    # update text explanations
     if (fn_m and input_text) is not None and (sel_methods != []):
 
         word_vector_path = '../tutorials/data/movie_reviews_word_vectors.txt'
@@ -519,7 +519,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                     fig_l.update_yaxes(showgrid=False, range=[200, 0],
                         showticklabels=False, zeroline=False)
                     fig_l.update_layout(
-                        title='LIME explaination:',
+                        title='LIME explanation:',
                         title_font_color=layouts.colors['blue1'],
                         paper_bgcolor=layouts.colors['blue4'],
                         plot_bgcolor=layouts.colors['blue4'],
@@ -547,7 +547,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                     fig_r.update_yaxes(showgrid=False, range=[200, 0],
                         showticklabels=False, zeroline=False)
                     fig_r.update_layout(
-                        title='RISE explaination:',
+                        title='RISE explanation:',
                         title_font_color=layouts.colors['blue1'],
                         paper_bgcolor=layouts.colors['blue4'],
                         plot_bgcolor=layouts.colors['blue4'],
