@@ -527,7 +527,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                         width=500,
                         margin_b=40,
                         margin_t=40,
-                        margin_l=0,
+                        margin_l=20,
                         margin_r=0
                         )
 
@@ -555,7 +555,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                         width=500,
                         margin_b=10,
                         margin_t=40,
-                        margin_l=0,
+                        margin_l=20,
                         margin_r=0)
 
             return (html.Div(['The predicted class is: ' + pred_class], style={
@@ -563,6 +563,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                 'font-weight': 'bold',
                 'text-decoration': 'underline',
                 'margin-top': '60px',
+                'margin-bottom': '60px',
                 'textAlign' : 'center'
                 }), fig_r, fig_l)
 
