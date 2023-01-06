@@ -558,8 +558,13 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                         margin_l=0,
                         margin_r=0)
 
-            return (html.Div(['The predicted class is: ' + pred_class]), 
-                    fig_r, fig_l)
+            return (html.Div(['The predicted class is: ' + pred_class], style={
+                'fontSize': 18,
+                'font-weight': 'bold',
+                'text-decoration': 'underline',
+                'margin-top': '60px',
+                'textAlign' : 'center'
+                }), fig_r, fig_l)
 
         except Exception:
             return html.Div([
