@@ -558,8 +558,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                         margin_l=0,
                         margin_r=0)
 
-            return (html.Div(['The predicted class is: ' + pred_class]), fig_l,
-                    fig_r)
+            return (html.Div(['The predicted class is: ' + pred_class]), 
+                    fig_r, fig_l)
 
         except Exception:
             return html.Div([
