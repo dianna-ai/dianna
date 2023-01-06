@@ -535,7 +535,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                         plot_bgcolor=layouts.colors['blue4'],
                         height=200,
                         width=500,
-                        margin_b=10,
+                        margin_b=50,
                         margin_t=40,
                         margin_l=20,
                         margin_r=0)
