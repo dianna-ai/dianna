@@ -1,20 +1,21 @@
-import os
-os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
-
+"""Start dashboard"""
+# Others
+import warnings
 # debug
 from importlib import reload
 # Dash&Flask
 import dash
-from dash import html, dcc
+from dash import dcc
+from dash import html
 # Custom libraries
 from dianna import utils  # pylint: disable=unused-import
 import layouts
-from layouts import images_page, text_page
 import utilities
 from callbacks import app
-# Others
-import warnings
-warnings.filterwarnings('ignore') # disable warnings relateds to versions of tf
+from layouts import images_page
+from layouts import text_page
+
+warnings.filterwarnings('ignore') # disable warnings related to versions of tf
 
 reload(layouts)
 reload(utilities)
