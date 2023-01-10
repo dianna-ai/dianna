@@ -69,7 +69,7 @@ except Exception:  # If not present, we download
               dash.dependencies.Input('upload-image', 'contents'),
               dash.dependencies.State('upload-image', 'filename'))
 def upload_image(contents, filename):
-    """Takes in test image file, returns it as a Plotly figure."""
+    """Take in test image file, return it as a Plotly figure."""
     if contents is not None:
         try:
             extensions = ['.png', '.jpg', 'jpeg']
@@ -118,7 +118,7 @@ def upload_image(contents, filename):
               dash.dependencies.Input('upload-model-img', 'contents'),
               dash.dependencies.State('upload-model-img', 'filename'))
 def upload_model_img(contents, filename):
-    """Takes in the model file. Returns a print statement about its uploading state."""
+    """Take in the model file. Return a print statement about its uploading state."""
     if contents is not None:
         try:
             if 'onnx' in filename[0]:
@@ -153,8 +153,11 @@ def upload_model_img(contents, filename):
 def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
     axis_labels={2: 'channels'}, n_masks=1000, feature_res=6, p_keep=.1,
     n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):
-    """Takes in the selected XAI method, the model path and the image to test,
-    returns the explanations array."""
+    """Perform expensive computation.
+    
+    Takes in the selected XAI method, the model path and the image to test,
+    returns the explanations array.
+    """
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
@@ -185,7 +188,7 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
     dash.dependencies.Input('method_sel_img', 'value'),
     )
 def select_method(method_sel):
-    """Takes in the user-selected XAI method, returns the selected XAI method."""
+    """Take in the user-selected XAI method, return the selected XAI method."""
     return method_sel
 
 
@@ -216,8 +219,11 @@ def select_method(method_sel):
 def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2,
     n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
     background=0, n_segments=200, sigma=0, random_state=2, update_button=0, stop_button=0):
-    """Takes in the last model and image uploaded filenames, the selected XAI method,
-    and returns the selected XAI method."""
+    """Update multiple selection options.
+    
+    Take in the last model and image uploaded filenames, the selected XAI method,
+    and return the selected XAI method.
+    """
     ctx = dash.callback_context
 
     if ctx.triggered[0]["prop_id"] == "stop_button.n_clicks":
@@ -346,7 +352,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
               dash.dependencies.Input('submit-text', 'n_clicks'),
               dash.dependencies.State('upload-text', 'value'))
 def upload_text(clicks, input_value):
-    """Takes in test text string, and print it on the dashboard."""
+    """Take in test text string, and print it on the dashboard."""
     if clicks is not None:
         return html.Div([
                     html.P('Input string for the model is:'),
@@ -362,7 +368,7 @@ def upload_text(clicks, input_value):
               dash.dependencies.Input('upload-model-text', 'contents'),
               dash.dependencies.State('upload-model-text', 'filename'))
 def upload_model_text(contents, filename):
-    """Takes in the model file, returns a print statement about its uploading state."""
+    """Take in the model file, return a print statement about its uploading state."""
     if contents is not None:
         try:
             if 'onnx' in filename[0]:
@@ -395,8 +401,11 @@ def upload_model_text(contents, filename):
 @cache.memoize()
 def global_store_t(method_sel, model_runner, input_text,
     n_masks=1000, feature_res=6, p_keep=.1, random_state=2):
-    """Takes in the selected XAI method, the model path and the string to test,
-    returns the explanations highlighted on the string itself."""
+    """Perform expersive computation.
+    
+    Take in the selected XAI method, the model path and the string to test,
+    return the explanations highlighted on the string itself.
+    """
     predictions = model_runner(input_text)
     class_name = class_name_text
     pred_class = class_name[np.argmax(predictions)]
@@ -426,7 +435,7 @@ def global_store_t(method_sel, model_runner, input_text,
     dash.dependencies.Output('signal_text', 'data'),
     dash.dependencies.Input('method_sel_text', 'value'))
 def select_method_t(method_sel):
-    """Takes in the user-selected XAI method, returns the selected XAI method."""
+    """Take in the user-selected XAI method, return the selected XAI method."""
     return method_sel
 
 
@@ -452,8 +461,10 @@ def select_method_t(method_sel):
 def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
     n_masks=1000, feature_res=6, p_keep=0.1,
     random_state=2, update_button_t=0, stop_button_t=0):
-    """Takes in the last model filename and text uploaded, the selected XAI method,
-    and returns the selected XAI method."""
+    """Take in the last model filename, text uploaded, and the selected XAI method.
+
+    Return the selected XAI method.
+    """
     ctx = dash.callback_context
 
     if ctx.triggered[0]["prop_id"] == "stop_button_t.n_clicks":
