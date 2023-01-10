@@ -460,7 +460,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
 
     if (ctx.triggered[0]["prop_id"] == "stop_button_t.n_clicks"):
         return (html.Div(['Explanation stopped.'], style={'margin-top' : '60px'}),
-            utilities.blank_fig())
+            utilities.blank_fig(), utilities.blank_fig())
 
     # update text explanations
     if (fn_m and input_text) is not None and (sel_methods != []):
