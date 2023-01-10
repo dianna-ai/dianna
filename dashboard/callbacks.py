@@ -1,16 +1,16 @@
+"""Dashboard callback for dash."""
 import base64
 import os
 import warnings
-import dash
-import layouts
 import numpy as np
 # Onnx
 import onnx
-import plotly.express as px
 # Plotly
+import dash
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import plotly.express as px
 import spacy
-import utilities
 from dash import html
 from dash.exceptions import PreventUpdate
 from flask_caching import Cache
@@ -20,18 +20,19 @@ from jupyter_dash import JupyterDash
 from onnx_tf.backend import prepare
 # Others
 from PIL import Image
-from plotly.subplots import make_subplots
+import dianna
+from dianna.utils.tokenizers import SpacyTokenizer
+import utilities
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html
 from utilities import imagenet_class_name
-import dianna
-from dianna.utils.tokenizers import SpacyTokenizer
+import layouts
 
 
 warnings.filterwarnings('ignore')  # disable warnings relateds to versions of tf
 
-folder_on_server = "app_data"
-os.makedirs(folder_on_server, exist_ok=True)
+FOLDER_ON_SERVER = "app_data"
+os.makedirs(FOLDER_ON_SERVER, exist_ok=True)
 tokenizer = SpacyTokenizer()  # for now always use SpacyTokenizer, needs to be changed
 
 # Build App
@@ -75,11 +76,11 @@ def upload_image(contents, filename):
             if any(ext in filename[0] for ext in extensions):
                 _, content_string = contents[0].split(',')
 
-                with open(os.path.join(folder_on_server, filename[0]), 
+                with open(os.path.join(FOLDER_ON_SERVER, filename[0]),
                           'wb') as f:
                     f.write(base64.b64decode(content_string))
 
-                data_path = os.path.join(folder_on_server, filename[0])
+                data_path = os.path.join(FOLDER_ON_SERVER, filename[0])
 
                 _, img = utilities.open_image(data_path)
                 fig = px.imshow(img)
@@ -124,7 +125,7 @@ def upload_model_img(contents, filename):
 
                 _, content_string = contents[0].split(',')
 
-                with open(os.path.join(folder_on_server, filename[0]),
+                with open(os.path.join(FOLDER_ON_SERVER, filename[0]),
                           'wb') as f:
                     f.write(base64.b64decode(content_string))
 
@@ -152,7 +153,8 @@ def upload_model_img(contents, filename):
 def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
     axis_labels={2: 'channels'}, n_masks=1000, feature_res=6, p_keep=.1,
     n_samples=1000, background=0, n_segments=200, sigma=0, random_state=2):
-    """Takes in the selected XAI method, the model path and the image to test, returns the explanations array."""
+    """Takes in the selected XAI method, the model path and the image to test,
+    returns the explanations array."""
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
@@ -211,22 +213,23 @@ def select_method(method_sel):
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
 # pylint: disable=too-many-arguments
-def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2, 
+def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_top=2,
     n_masks=1000, feature_res=6, p_keep=0.1, n_samples=1000,
     background=0, n_segments=200, sigma=0, random_state=2, update_button=0, stop_button=0):
-    """Takes in the last model and image uploaded filenames, the selected XAI method, and returns the selected XAI method."""
+    """Takes in the last model and image uploaded filenames, the selected XAI method,
+    and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    if (ctx.triggered[0]["prop_id"] == "stop_button.n_clicks"):
+    if ctx.triggered[0]["prop_id"] == "stop_button.n_clicks":
         return (html.Div(['Explanation stopped.'], style={'margin-top' : '60px'}),
             utilities.blank_fig())
+
     # update graph
-    
     if (fn_m and fn_i) is not None and (sel_methods != []):
-        data_path = os.path.join(folder_on_server, fn_i[0])
+        data_path = os.path.join(FOLDER_ON_SERVER, fn_i[0])
         X_test, _ = utilities.open_image(data_path)
 
-        onnx_model_path = os.path.join(folder_on_server, fn_m[0])
+        onnx_model_path = os.path.join(FOLDER_ON_SERVER, fn_m[0])
         onnx_model = onnx.load(onnx_model_path)
         # get the output node
         output_node = prepare(onnx_model, gen_tensor_dict=True).outputs[0]
@@ -284,7 +287,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image, show_t
                             axis_labels=axis_labels, n_samples=n_samples,
                             background=background, n_segments=n_segments,
                             sigma=sigma)
-        
+
                         # KernelSHAP plot
                         fig.add_trace(
                             go.Heatmap(z=z_rise, colorscale='gray',
@@ -366,7 +369,7 @@ def upload_model_text(contents, filename):
 
                 _, content_string = contents[0].split(',')
 
-                with open(os.path.join(folder_on_server, filename[0]),
+                with open(os.path.join(FOLDER_ON_SERVER, filename[0]),
                     'wb') as f:
                     f.write(base64.b64decode(content_string))
 
@@ -392,7 +395,8 @@ def upload_model_text(contents, filename):
 @cache.memoize()
 def global_store_t(method_sel, model_runner, input_text,
     n_masks=1000, feature_res=6, p_keep=.1, random_state=2):
-    """Takes in the selected XAI method, the model path and the string to test, returns the explanations highlighted on the string itself."""
+    """Takes in the selected XAI method, the model path and the string to test,
+    returns the explanations highlighted on the string itself."""
     predictions = model_runner(input_text)
     class_name = class_name_text
     pred_class = class_name[np.argmax(predictions)]
@@ -401,13 +405,6 @@ def global_store_t(method_sel, model_runner, input_text,
 
 
     # expensive query
-    '''    relevances = dianna.explain_text(
-        model_runner,
-        input_text,
-        tokenizer,
-        method_sel,
-        labels=[pred_idx]
-        )'''
     if method_sel == "RISE":
         relevances = dianna.explain_text(
             model_runner, input_text, tokenizer,
@@ -452,13 +449,14 @@ def select_method_t(method_sel):
 )
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
-def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, 
+def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
     n_masks=1000, feature_res=6, p_keep=0.1,
     random_state=2, update_button_t=0, stop_button_t=0):
-    """Takes in the last model filename and text uploaded, the selected XAI method, and returns the selected XAI method."""
+    """Takes in the last model filename and text uploaded, the selected XAI method,
+    and returns the selected XAI method."""
     ctx = dash.callback_context
 
-    if (ctx.triggered[0]["prop_id"] == "stop_button_t.n_clicks"):
+    if ctx.triggered[0]["prop_id"] == "stop_button_t.n_clicks":
         return (html.Div(['Explanation stopped.'], style={'margin-top' : '60px'}),
             utilities.blank_fig(), utilities.blank_fig())
 
@@ -466,7 +464,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
     if (fn_m and input_text) is not None and (sel_methods != []):
 
         word_vector_path = '../tutorials/data/movie_reviews_word_vectors.txt'
-        onnx_model_path = os.path.join(folder_on_server, fn_m[0])
+        onnx_model_path = os.path.join(FOLDER_ON_SERVER, fn_m[0])
 
         # define model runner. max_filter_size is a property of the model
         model_runner = MovieReviewsModelRunner(onnx_model_path,
