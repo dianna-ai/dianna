@@ -1,4 +1,4 @@
-"""Start dashboard"""
+"""Start dashboard."""
 # Others
 import warnings
 # debug
@@ -15,7 +15,7 @@ from callbacks import app
 from layouts import images_page
 from layouts import text_page
 
-warnings.filterwarnings('ignore') # disable warnings related to versions of tf
+warnings.filterwarnings('ignore')  # disable warnings related to versions of tf
 
 reload(layouts)
 reload(utilities)
@@ -25,13 +25,14 @@ app.layout = html.Div([
     html.Div(id='page-content')
 ])
 
+
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
     """Load content of dashboard."""
     if pathname == '/apps/text':
         return text_page
-    return images_page # home page
+    return images_page  # home page
 
 
 if __name__ == '__main__':
