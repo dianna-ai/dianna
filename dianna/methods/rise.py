@@ -44,7 +44,7 @@ class RISEText:
         self.masks = None
         self.predictions = None
 
-    def explain(self, model_or_function, input_text, labels=(0,), tokenizer=None, batch_size=100):
+    def explain(self, model_or_function, input_text, labels, tokenizer=None, batch_size=100):
         """Runs the RISE explainer on text.
 
            The model will be called with masked versions of the input text.
@@ -54,7 +54,7 @@ class RISEText:
                                                  the path to a ONNX model on disk.
             input_text (np.ndarray): Text to be explained
             tokenizer: Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
-            labels (list(int)): Labels to be explained
+            labels (Iterable(int)): Labels to be explained
             batch_size (int): Batch size to use for running the model.
 
         Returns:
@@ -147,7 +147,7 @@ class RISEImage:
         self.predictions = None
         self.axis_labels = axis_labels if axis_labels is not None else []
 
-    def explain(self, model_or_function, input_data, labels=None, batch_size=100):
+    def explain(self, model_or_function, input_data, labels, batch_size=100):
         """Runs the RISE explainer on images.
 
            The model will be called with masked images,
@@ -158,7 +158,7 @@ class RISEImage:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Image to be explained
             batch_size (int): Batch size to use for running the model.
-            labels (tuple): Labels to be explained
+            labels (Iterable(int)): Labels to be explained
 
         Returns:
             Explanation heatmap for each class (np.ndarray).
