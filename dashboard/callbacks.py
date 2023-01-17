@@ -163,10 +163,10 @@ def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
     elif method_sel == "KernelSHAP":
         relevances = dianna.explain_image(
             model_path, image_test,
+            labels=labels,
             method=method_sel, nsamples=n_samples,
             background=background, n_segments=n_segments, sigma=sigma,
             axis_labels=axis_labels)
-
     else:
         relevances = dianna.explain_image(
             model_path, image_test * 256, 'LIME',
