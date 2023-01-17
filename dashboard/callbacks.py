@@ -150,10 +150,11 @@ def upload_model_img(contents, filename):
 # pylint: disable=dangerous-default-value
 # pylint: disable=too-many-arguments
 @cache.memoize()
-def global_store_i(method_sel, model_path, image_test, labels=list(range(2)),
-                   axis_labels={2: 'channels'}, n_masks=1000, feature_res=6,
-                   p_keep=.1, n_samples=1000, background=0, n_segments=200,
-                   sigma=0, random_state=2):
+def global_store_i(method_sel, model_path, image_test,
+                   labels=list(range(2)), axis_labels={2: 'channels'},
+                   n_masks=1000, feature_res=6, p_keep=.1,
+                   n_samples=1000, background=0, n_segments=200, sigma=0,
+                   random_state=2):
     """Perform expensive computation.
 
     Takes in the selected XAI method, the model path and the image to test,
@@ -413,8 +414,9 @@ def upload_model_text(contents, filename):
 # redis memory store which is available across processes
 # and for all time.
 @cache.memoize()
-def global_store_t(method_sel, model_runner, input_text, n_masks=1000,
-                   feature_res=6, p_keep=.1, random_state=2):
+def global_store_t(method_sel, model_runner, input_text, 
+                   n_masks=1000, feature_res=6, p_keep=.1,
+                   random_state=2):
     """Perform expersive computation.
 
     Take in the selected XAI method, the model path and the string to test,
@@ -437,9 +439,9 @@ def global_store_t(method_sel, model_runner, input_text, n_masks=1000,
     else:
         relevances = dianna.explain_text(
             model_runner, input_text, tokenizer,
-            'LIME',
-            random_state=random_state,
-            labels=[pred_idx])
+            method=method_sel,
+            labels=[pred_idx],
+            random_state=random_state)
     return relevances
 
 
@@ -455,8 +457,8 @@ def select_method_t(method_sel):
 # update text explanations
 @app.callback(
     dash.dependencies.Output("output-state-text", "children"),
-    dash.dependencies.Output("graph_text_lime", "figure"),
     dash.dependencies.Output("graph_text_rise", "figure"),
+    dash.dependencies.Output("graph_text_lime", "figure"),
     dash.dependencies.State("upload-model-text", "filename"),
     dash.dependencies.State("upload-text", "value"),
     dash.dependencies.State("signal_text", "data"),
@@ -507,7 +509,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
             for m in sel_methods:
                 if m == "LIME":
                     relevances_lime = global_store_t(
-                        m, model_runner, input_text, random_state=random_state)
+                        m, model_runner, input_text,
+                        random_state=random_state)
                     output = _create_html(
                         input_tokens, relevances_lime[0], max_opacity=0.8)
                     hti = Html2Image()
@@ -540,7 +543,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
 
                 elif m == "RISE":
                     relevances_rise = global_store_t(
-                        m, model_runner, input_text, random_state)
+                        m, model_runner, input_text,
+                        n_masks=n_masks, feature_res=feature_res, p_keep=p_keep)
                     output = _create_html(
                         input_tokens, relevances_rise[0], max_opacity=0.8)
                     hti = Html2Image()
@@ -576,7 +580,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
                 'textAlign': 'center'
                 }), fig_r, fig_l)
 
-        except Exception:
+        except Exception as e:
+            print(e)
             return html.Div([
                 'There was an error running the model. Check either the test' +
                 'text or the model.'
