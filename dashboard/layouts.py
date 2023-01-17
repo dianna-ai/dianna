@@ -501,7 +501,7 @@ def get_uploads_images():
                     color=colors['blue1'], type="dot", fullscreen=False)],
                     className = 'row',
                     style = {
-                        'margin-left': '140px'
+                        'margin-left': '140px',
                     })
 
         ], 
@@ -788,18 +788,6 @@ def get_uploads_text():
             # plotting explanations
             html.Div([
                 dcc.Graph(
-                    id='graph_text_lime',
-                    figure = utilities.blank_fig())],
-                    className = 'row',
-                    style = {
-                        'margin-top': '80',
-                        'margin-left': '140px',
-                        'height': '100px'
-                    }),
-
-            # plotting explanations
-            html.Div([
-                dcc.Graph(
                     id='graph_text_rise',
                     figure = utilities.blank_fig())],
                     className = 'row',
@@ -807,7 +795,19 @@ def get_uploads_text():
                         'margin-top': '80',
                         'margin-left': '140px',
                         #'height': '100px'
-                    })
+                    }),
+
+            # plotting explanations
+            html.Div([
+                dcc.Graph(
+                    id='graph_text_lime',
+                    figure = utilities.blank_fig())],
+                    className = 'row',
+                    style = {
+                        'margin-top': '80',
+                        'margin-left': '140px',
+                        'height': '100px'
+                    })   
 
         ], 
         className = 'nine columns')
