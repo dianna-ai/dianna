@@ -806,8 +806,8 @@ def get_uploads_text():
                     style = {
                         'margin-top': '80',
                         'margin-left': '140px',
-                        'height': '100px'
-                    })   
+                        #'height': '100px'
+                    })
 
         ], 
         className = 'nine columns')
