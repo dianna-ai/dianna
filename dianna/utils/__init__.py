@@ -1,4 +1,5 @@
 # flake8: noqa: F401
+"""DIANNA utilities."""
 from .misc import get_function
 from .misc import get_kwargs_applicable_to_function
 from .misc import locate_channels_axis
