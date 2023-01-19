@@ -1,6 +1,6 @@
 import numpy as np
-from lime.lime_image import LimeImageExplainer
-from lime.lime_text import LimeTextExplainer
+from lime.lime_image import LimeImageExplainer  # pylint: disable=old-import-error
+from lime.lime_text import LimeTextExplainer  # pylint: disable=old-import-error
 from dianna import utils
 
 
