@@ -148,23 +148,27 @@ def upload_model_img(contents, filename):
               dash.dependencies.Input('upload-label', 'filename'))
 def upload_label(filename):
     """Take in the label file. Return a print statement about upload state."""
+    labelnames = []
     if filename is not None:
         try:
             if 'txt' in filename:
                 with open(os.path.join(FOLDER_ON_SERVER, filename),'r') as f:
-                    labelnames = f.readlines()
+                    lnames = f.readlines()
                 
-                labelnames = [item.rstrip() for item in labelnames]
+                labelnames = [item.rstrip() for item in lnames]
+                print (labelnames)
+                if labelnames is None or labelnames == ['']:
+                    return html.Div(['Label file is empty, please upload a valid file']), labelnames
                 return html.Div([f'{filename} uploaded']), labelnames
 
             return html.Div([
                 html.P('File format error!'),
                 html.Br(),
-                html.P('Please upload labels in a .txt file.')
-                ])
+                html.P('Please upload labels in a .txt file.'), labelnames
+                ]), []
         except Exception as e:
             print(e)
-            return html.Div(['There was an error processing this file.'])
+            return html.Div(['There was an error processing this file.']), labelnames
     else:
         raise PreventUpdate
 
