@@ -152,7 +152,7 @@ def upload_label(filename):
     if filename is not None:
         try:
             if 'txt' in filename:
-                with open(os.path.join(FOLDER_ON_SERVER, filename),'r') as f:
+                with open(os.path.join(FOLDER_ON_SERVER, filename),'r',encoding="utf-8") as f:
                     lnames = f.readlines()
                 
                 labelnames = [item.rstrip() for item in lnames]
