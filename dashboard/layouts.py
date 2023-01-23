@@ -550,6 +550,30 @@ def get_uploads_text():
             ],
             className = 'row',
             ),
+            # insert second text row
+            html.Div([
+                dcc.Input(
+                    id='upload-text_2',
+                    placeholder='Type 2nd input string (optional)',
+                    value='',
+                    type='text',
+                    style={
+                        'width': '80%',
+                        'height': '40px',
+                        'lineHeight': '40px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '3px',
+                        'margin-left': '30px',
+                        'margin-top': '20px',
+                        'textAlign': 'center',
+                        'align-items': 'center',
+                        'color' : colors['blue1']
+                    },
+                ),
+            ],
+            className = 'row',
+            ),
 
             # submit text row
             html.Div([
