@@ -365,15 +365,18 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
 # uploading test text
 @app.callback(dash.dependencies.Output('text_test', 'children'),
               dash.dependencies.Input('submit-text', 'n_clicks'),
-              dash.dependencies.State('upload-text', 'value'))
-def upload_text(clicks, input_value):
+              dash.dependencies.State('upload-text', 'value'),
+              dash.dependencies.State('upload-text_2', 'value'))
+def upload_text(clicks, input_value, input_value_2):
     """Take in test text string, and print it on the dashboard."""
     if clicks is not None:
         return html.Div([
                     html.P('Input string for the model is:'),
-                    html.Br(),
-                    html.P(f'"{input_value}"')
-                    ])
+                    html.B(f'"{input_value}"')
+                    ]), html.Div([
+                    html.P('Second input string for the model is:'),
+                    html.B(f'"{input_value_2}"',)
+                    ], style={'margin-top': '15px'})
 
     return html.Div(['No string uploaded.'])
 
