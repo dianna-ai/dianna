@@ -1,13 +1,13 @@
 import numpy as np
-from lime.lime_image import LimeImageExplainer
-from lime.lime_text import LimeTextExplainer
+from lime.lime_image import LimeImageExplainer  # pylint: disable=old-import-error
+from lime.lime_text import LimeTextExplainer  # pylint: disable=old-import-error
 from dianna import utils
 
 
 class LIMEText:
     """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
 
-    def __init__(self,
+    def __init__(self,  # pylint: disable=too-many-arguments
                  kernel_width=25,
                  kernel=None,
                  verbose=False,
@@ -110,7 +110,7 @@ class LIMEText:
 class LIMEImage:
     """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
 
-    def __init__(self,
+    def __init__(self,  # pylint: disable=too-many-arguments
                  kernel_width=25,
                  kernel=None,
                  verbose=False,
