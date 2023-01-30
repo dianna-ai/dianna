@@ -160,7 +160,7 @@ def preprocess_function(image):
 
 
 def _create_html(input_tokens, explanation, max_opacity):
-    """Creates text explaination map using html format."""
+    """Creates text explanation map using html format."""
     max_importance = max(abs(item[2]) for item in explanation)
     explained_indices = [index for _, index, _ in explanation]
     highlighted_words = []

@@ -30,10 +30,10 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = "DIANNA Team"
 __email__ = "dianna-ai@esciencecenter.nl"
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 
-def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
+def explain_image(model_or_function, input_data, method, labels, **kwargs):
     """
     Explain an image (input_data) given a model and a chosen method.
 
@@ -42,7 +42,7 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
                                              the path to a ONNX model on disk.
         input_data (np.ndarray): Image data to be explained
         method (string): One of the supported methods: RISE, LIME or KernelSHAP
-        labels (tuple): Labels to be explained
+        labels (Iterable(int)): Labels to be explained
 
     Returns:
         One heatmap (2D array) per class.
@@ -56,7 +56,7 @@ def explain_image(model_or_function, input_data, method, labels=(1,), **kwargs):
     return explainer.explain(model_or_function, input_data, labels, **explain_image_kwargs)
 
 
-def explain_text(model_or_function, input_text, tokenizer, method, labels=(1,), **kwargs):
+def explain_text(model_or_function, input_text, tokenizer, method, labels, **kwargs):
     """
     Explain text (input_text) given a model and a chosen method.
 
@@ -66,7 +66,7 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels=(1,), 
         input_text (string): Text to be explained
         tokenizer : Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
         method (string): One of the supported methods: RISE or LIME
-        labels (tuple): Labels to be explained
+        labels (Iterable(int)): Labels to be explained
 
     Returns:
         List of (word, index of word in raw text, importance for target class) tuples.

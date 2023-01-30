@@ -1,13 +1,13 @@
 import numpy as np
-from lime.lime_image import LimeImageExplainer
-from lime.lime_text import LimeTextExplainer
+from lime.lime_image import LimeImageExplainer  # pylint: disable=old-import-error
+from lime.lime_text import LimeTextExplainer  # pylint: disable=old-import-error
 from dianna import utils
 
 
 class LIMEText:
     """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
 
-    def __init__(self,
+    def __init__(self,  # pylint: disable=too-many-arguments
                  kernel_width=25,
                  kernel=None,
                  verbose=False,
@@ -52,7 +52,7 @@ class LIMEText:
     def explain(self,
                 model_or_function,
                 input_text,
-                labels=(0,),
+                labels,
                 tokenizer=None,
                 top_labels=None,
                 num_features=10,
@@ -67,7 +67,7 @@ class LIMEText:
                                                  the path to a ONNX model on disk.
             tokenizer : Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
             input_text (np.ndarray): Data to be explained
-            labels ([int], optional): Iterable of indices of class to be explained
+            labels (Iterable(int)): Iterable of indices of class to be explained
 
         Other keyword arguments: see the LIME documentation for LimeTextExplainer.explain_instance:
         https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_text.LimeTextExplainer.explain_instance.
@@ -109,10 +109,8 @@ class LIMEText:
 
 class LIMEImage:
     """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
-    # axis labels required to be present in input image data
-    required_labels = ('channels', )
 
-    def __init__(self,
+    def __init__(self,  # pylint: disable=too-many-arguments
                  kernel_width=25,
                  kernel=None,
                  verbose=False,
@@ -147,7 +145,7 @@ class LIMEImage:
     def explain(self,
                 model_or_function,
                 input_data,
-                labels=(1,),
+                labels,
                 top_labels=None,
                 num_features=10,
                 num_samples=5000,
@@ -163,7 +161,7 @@ class LIMEImage:
                                                  the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained. Must be an "RGB image", i.e. with values in
                                      the [0,255] range.
-            labels (tuple): Indices of classes to be explained
+            labels (Iterable(int)): Indices of classes to be explained
         Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance and
         ImageExplanation.get_image_and_mask:
 
@@ -203,7 +201,16 @@ class LIMEImage:
         Returns:
             transformed input data, preprocessing function to use with utils.get_function()
         """
-        input_data = utils.to_xarray(input_data, self.axis_labels, LIMEImage.required_labels)
+        # automatically determine the location of the channels axis if no axis_labels were provided
+        axis_label_names = self.axis_labels.values() if isinstance(self.axis_labels, dict) else self.axis_labels
+        if not axis_label_names:
+            channels_axis_index = utils.locate_channels_axis(input_data.shape)
+            self.axis_labels = {channels_axis_index: 'channels'}
+        elif 'channels' not in axis_label_names:
+            raise ValueError("When providing axis_labels it is required to provide the location"
+                             " of the channels axis")
+
+        input_data = utils.to_xarray(input_data, self.axis_labels)
         # ensure channels axis is last and keep track of where it was so we can move it back
         channels_axis_index = input_data.dims.index('channels')
         input_data = utils.move_axis(input_data, 'channels', -1)

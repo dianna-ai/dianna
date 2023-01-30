@@ -34,11 +34,14 @@ authors:
   -
     family-names: Ootes
     given-names: Laura
-    orcid: "https://orcid.org/0000-0002-2800-8309"    
+    orcid: "https://orcid.org/0000-0002-2800-8309"
+  -
+    family-names: Chandramouli
+    given-names: Pranav
+    orcid: "https://orcid.org/0000-0002-7896-2969"
 
-# date-released: 2021-12-23
 doi: 10.5281/zenodo.5801485
-version: "0.5.0"
+version: "0.6.0"
 repository-code: "https://github.com/dianna-ai/dianna"
 keywords:
   - XAI

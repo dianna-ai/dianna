@@ -7,8 +7,6 @@ from dianna import utils
 
 class KERNELSHAPImage:
     """Kernel SHAP implementation based on shap https://github.com/slundberg/shap."""
-    # axis labels required to be present in input image data
-    required_labels = ('channels', )
 
     def __init__(self, axis_labels=None, preprocess_function=None):
         """Kernelshap initializer.
@@ -64,7 +62,7 @@ class KERNELSHAPImage:
         self,
         model,
         input_data,
-        labels=(0,),
+        labels,
         nsamples="auto",
         background=None,
         n_segments=100,
@@ -86,7 +84,7 @@ class KERNELSHAPImage:
                                      example. The input dimension must be
                                      [batch, height, width, color_channels] or
                                      [batch, color_channels, height, width] (see axis_labels)
-            labels (tuple): Indices of classes to be explained
+            labels (Iterable(int)): Indices of classes to be explained
             nsamples ("auto" or int): Number of times to re-evaluate the model when
                                       explaining each prediction. More samples lead
                                       to lower variance estimates of the SHAP values.
@@ -149,8 +147,16 @@ class KERNELSHAPImage:
         Returns:
             transformed input data
         """
-        input_data = utils.to_xarray(
-            input_data, self.axis_labels, KERNELSHAPImage.required_labels)
+        # automatically determine the location of the channels axis if no axis_labels were provided
+        axis_label_names = self.axis_labels.values() if isinstance(self.axis_labels, dict) else self.axis_labels
+        if not axis_label_names:
+            channels_axis_index = utils.locate_channels_axis(input_data.shape)
+            self.axis_labels = {channels_axis_index: 'channels'}
+        elif 'channels' not in axis_label_names:
+            raise ValueError("When providing axis_labels it is required to provide the location"
+                             " of the channels axis")
+
+        input_data = utils.to_xarray(input_data, self.axis_labels)
         # ensure channels axis is last and keep track of where it was so we can move it back
         self.channels_axis_index = input_data.dims.index('channels')
         input_data = utils.move_axis(input_data, 'channels', -1)

@@ -14,11 +14,11 @@ class LimeOnImages(TestCase):
         """Test if lime runs and outputs are correct given some data and a model function."""
         np.random.seed(42)
         input_data = np.random.random((224, 224, 3))
-        labels = ('y', 'x', 'channels')
         heatmap_expected = np.load('tests/test_data/heatmap_lime_function.npy')
+        labels = [1]
 
-        explainer = LIMEImage(random_state=42, axis_labels=labels)
-        heatmap = explainer.explain(run_model, input_data, num_samples=100)
+        explainer = LIMEImage(random_state=42)
+        heatmap = explainer.explain(run_model, input_data, labels, num_samples=100)
 
         assert heatmap[0].shape == input_data.shape[:2]
         assert np.allclose(heatmap, heatmap_expected, atol=1e-5)
@@ -28,10 +28,11 @@ class LimeOnImages(TestCase):
         np.random.seed(42)
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1)[0].astype(np.float32)
-        labels = ('channels', 'y', 'x')
+        axis_labels = ('channels', 'y', 'x')
+        labels = [1]
 
-        heatmap = dianna.explain_image(model_filename, input_data, method="LIME", random_state=42,
-                                       axis_labels=labels)
+        heatmap = dianna.explain_image(model_filename, input_data, method="LIME", labels=labels, random_state=42,
+                                       axis_labels=axis_labels)
 
         heatmap_expected = np.load('tests/test_data/heatmap_lime_filename.npy')
         assert heatmap[0].shape == input_data[0].shape
