@@ -550,6 +550,30 @@ def get_uploads_text():
             ],
             className = 'row',
             ),
+            # insert second text row
+            html.Div([
+                dcc.Input(
+                    id='upload-text_2',
+                    placeholder='Type 2nd input string (optional)',
+                    value='',
+                    type='text',
+                    style={
+                        'width': '80%',
+                        'height': '40px',
+                        'lineHeight': '40px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '3px',
+                        'margin-left': '30px',
+                        'margin-top': '20px',
+                        'textAlign': 'center',
+                        'align-items': 'center',
+                        'color' : colors['blue1']
+                    },
+                ),
+            ],
+            className = 'row',
+            ),
 
             # submit text row
             html.Div([
@@ -776,38 +800,77 @@ def get_uploads_text():
             ),
 
             # printing predictions
-            html.Div(
-                id='output-state-text',
-                className = 'row',
-                style = {
+            html.Div([
+                # prediction 1
+                html.Div(
+                    id='output-state-text',
+                    className = 'five columns',
+                    style = {
+                        'margin-top': '20px',
+                        'color' : colors['blue1']
+                    }
+                ),
+                # prediction 2
+                html.Div(
+                    id='output-state-text2',
+                    className = 'five columns',
+                    style = {
                     'margin-top': '20px',
                     'color' : colors['blue1']
                     }
-                    ),
+                ),
+            ],
+            className = 'row', style = {'padding-bottom' : '1%'}
+            ),
 
-            # plotting explanations
+            # plotting explanations Rise
             html.Div([
+                # prediction 1
                 dcc.Graph(
                     id='graph_text_rise',
-                    figure = utilities.blank_fig())],
-                    className = 'row',
+                    figure = utilities.blank_fig(),
+                    className = 'five columns',
                     style = {
                         'margin-top': '80',
-                        'margin-left': '140px',
                         #'height': '100px'
-                    }),
+                    }
+                    ),
+                # prediction 2
+                dcc.Graph(
+                    id='graph_text_rise2',
+                    figure = utilities.blank_fig(),
+                    className = 'five columns',
+                    style = {
+                        'margin-top': '80',
+                        #'height': '100px'
+                    })
+            ],
+            className = 'row', style = {'padding-bottom' : '1%'}
+            ),
+
 
             # plotting explanations
             html.Div([
                 dcc.Graph(
                     id='graph_text_lime',
-                    figure = utilities.blank_fig())],
-                    className = 'row',
+                    figure = utilities.blank_fig(),
+                    className = 'five columns',
                     style = {
                         'margin-top': '80',
-                        'margin-left': '140px',
                         #'height': '100px'
                     })
+                ,
+                dcc.Graph(
+                    id='graph_text_lime2',
+                    figure = utilities.blank_fig(),
+                    className = 'five columns',
+                    style = {
+                        'margin-top': '80',
+                        #'height': '100px'
+                    })
+                ], 
+            className = 'row', style = {'padding-bottom' : '1%'}
+            ),
 
         ], 
         className = 'nine columns')
