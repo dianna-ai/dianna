@@ -349,7 +349,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
         except Exception as e:
             print(e)
             return (html.Div(
-                ['There was an error running the model. Check' +
+                ['There was an error running the model. Check ' +
                  'either the test image or the model.']),
                 utilities.blank_fig())
     else:
