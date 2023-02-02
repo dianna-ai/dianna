@@ -72,7 +72,6 @@ def test_lime_text_special_chars():
 
     explanation = dianna.explain_text(runner, review, tokenizer=runner.tokenizer,
                                       labels=[0], method='LIME', random_state=42)[0]
-    print(f'{len(explanation)=}')
     words = [element[0] for element in explanation]
     word_indices = [element[1] for element in explanation]
     scores = [element[2] for element in explanation]
