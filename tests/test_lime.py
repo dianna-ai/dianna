@@ -65,10 +65,10 @@ def test_lime_text_special_chars():
     model_path = 'tests/test_data/movie_review_model.onnx'
     word_vector_file = 'tests/test_data/word_vectors.txt'
     runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)
-    review = 'such a bad movie \"!?\'\"'
-    expected_words = ['bad', 'such', 'movie', 'a']
-    expected_word_indices = [2, 0, 3, 1]
-    expected_scores = [0.49226245, -0.04637814, 0.03648112, -0.00837716]
+    review = 'such a bad movie "!?\'"'
+    expected_words = ['bad', 'such', 'movie', 'a', '"!?\'"']
+    expected_word_indices = [2, 0, 3, 1, 4]
+    expected_scores = [0.49421639, -0.04616689, 0.04045723, -0.00912872, -0.00148593]
 
     explanation = dianna.explain_text(runner, review, tokenizer=runner.tokenizer,
                                       labels=[0], method='LIME', random_state=42)[0]
