@@ -54,7 +54,7 @@ class SpacyTokenizer(Tokenizer):
         # special characters in string.punctuation are !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~.
         # find indices of tokens that are a special character
         indices = np.where([token in string.punctuation for token in raw_tokens])[0]
-        if not len(indices):
+        if indices.size == 0:
             # no special characters at all
             return raw_tokens
 
