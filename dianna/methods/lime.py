@@ -78,10 +78,12 @@ class LIMEText:
         if tokenizer is None:
             raise ValueError('Please provide a tokenizer to explain_text.')
 
-        self.explainer.split_expression = tokenizer.tokenize  # lime accepts a callable as a split_expression
+        # lime splits text on whitespace by default. Make sure the input is given in a compatible way
+        lime_input_text = ' '.join(tokenizer.tokenize(input_text))
+
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.explainer.explain_instance, kwargs)
-        explanation = self.explainer.explain_instance(input_text,
+        explanation = self.explainer.explain_instance(lime_input_text,
                                                       runner,
                                                       labels=labels,
                                                       top_labels=top_labels,
