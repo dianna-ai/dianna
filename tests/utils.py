@@ -1,7 +1,7 @@
 import numpy as np
 import onnxruntime as ort
 import spacy
-from scipy.special import expit
+from scipy.special import expit as sigmoid
 from torchtext.vocab import Vectors
 
 from dianna.utils.tokenizers import SpacyTokenizer
@@ -78,32 +78,32 @@ class ModelRunner:
         self.max_filter_size = max_filter_size
 
     def __call__(self, sentences):
+        # ensure the input has a batch axis
         if isinstance(sentences, str):
             sentences = [sentences]
-
-        output = []
 
         sess = ort.InferenceSession(self.filename)
         input_name = sess.get_inputs()[0].name
         output_name = sess.get_outputs()[0].name
 
+        tokenized_sentences = []
         for sentence in sentences:
-            # get tokens
+            # tokenize and pad to minimum length
             tokens = self.tokenizer.tokenize(sentence)
             if len(tokens) < self.max_filter_size:
                 tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
 
-            # numericalize
-            tokens = [self.vocab.stoi[token] if token in self.vocab.stoi else self.vocab.stoi['<unk>'] for token in
-                      tokens]
-            # feed to model
-            onnx_input = {input_name: [tokens]}
-            pred = expit(sess.run([output_name], onnx_input)[0])
+            # numericalize the tokens
+            tokens_numerical = [self.vocab.stoi[token] if token in self.vocab.stoi else self.vocab.stoi['<unk>']
+                                for token in tokens]
+            tokenized_sentences.append(tokens_numerical)
 
-            # output 2 classes
-            positivity = pred[:, 0]
-            negativity = 1 - positivity
+        # run the model, applying a sigmoid because the model outputs logits
+        onnx_input = {input_name: tokenized_sentences}
+        logits = sess.run([output_name], onnx_input)[0]
+        pred = np.apply_along_axis(sigmoid, 1, logits)
 
-            output.append(np.transpose([negativity, positivity])[0])
-
-        return np.array(output)
+        # output pos/neg
+        positivity = pred[:, 0]
+        negativity = 1 - positivity
+        return np.transpose([negativity, positivity])
