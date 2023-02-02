@@ -47,7 +47,7 @@ class SpacyTokenizer(Tokenizer):
         self.spacy_tokenizer = get_tokenizer('spacy', name)
 
     def tokenize(self, sentence: str) -> List[str]:
-        tokens = self.spacy_tokenizer(sentence)
+        tokens = self.spacy_tokenizer(sentence.lower())
         return tokens
 
     def convert_tokens_to_string(self, tokens: List[str]) -> str:
