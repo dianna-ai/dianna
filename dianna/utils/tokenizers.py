@@ -1,7 +1,9 @@
 from abc import ABC
 from abc import abstractmethod
 from typing import List
+import string
 
+import numpy as np
 
 try:
     from torchtext.data import get_tokenizer
@@ -47,7 +49,28 @@ class SpacyTokenizer(Tokenizer):
         self.spacy_tokenizer = get_tokenizer('spacy', name)
 
     def tokenize(self, sentence: str) -> List[str]:
-        tokens = self.spacy_tokenizer(sentence)
+        raw_tokens = self.spacy_tokenizer(sentence)
+        # do not consider several special characters in a row as separate tokens
+        # special characters in string.punctuation are !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~.
+        # find indices of tokens that are a special character
+        indices = np.where([token in string.punctuation for token in raw_tokens])[0]
+        if not len(indices):
+            # no special characters at all
+            return raw_tokens
+
+        # reconstruct list of tokens, combining consecutive special characters
+        tokens = []
+        steps = np.diff(indices)
+        special_char_index = 0
+        for idx, token in enumerate(raw_tokens):
+            if idx not in indices:
+                tokens.append(token)
+            elif special_char_index == 0 or steps[special_char_index - 1] != 1:
+                tokens.append(token)
+                special_char_index += 1
+            else:
+                tokens[-1] = tokens[-1] + token
+                special_char_index += 1
         return tokens
 
     def convert_tokens_to_string(self, tokens: List[str]) -> str:
