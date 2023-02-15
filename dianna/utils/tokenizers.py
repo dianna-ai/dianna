@@ -53,22 +53,27 @@ class SpacyTokenizer(Tokenizer):
         # do not consider several special characters in a row as separate tokens
         # special characters in string.punctuation are !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~.
         # find indices of tokens that are a special character
-        indices = np.where([token in string.punctuation for token in raw_tokens])[0]
-        if indices.size == 0:
+        indices_in_tokens = np.where([token in string.punctuation for token in raw_tokens])[0]
+        indices_in_raw_string = np.where([character in string.punctuation for character in sentence])[0]
+        if indices_in_tokens.size == 0:
             # no special characters at all
             return raw_tokens
 
         # reconstruct list of tokens, combining consecutive special characters
         tokens = []
-        steps = np.diff(indices)
+        steps_in_raw_string = np.diff(indices_in_raw_string)
         special_char_index = 0
         for idx, token in enumerate(raw_tokens):
-            if idx not in indices:
+            if idx not in indices_in_tokens:
+                # not a special character
                 tokens.append(token)
-            elif special_char_index == 0 or steps[special_char_index - 1] != 1:
+            elif special_char_index == 0 or steps_in_raw_string[special_char_index - 1] != 1:
+                # create new token if this is the first special character, or it does not directly follow another special character
+                # in the original input
                 tokens.append(token)
                 special_char_index += 1
             else:
+                # add token to existing one if both are special characters and they are consecutive in the original input
                 tokens[-1] = tokens[-1] + token
                 special_char_index += 1
         return tokens
