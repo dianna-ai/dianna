@@ -5,6 +5,11 @@ on:
   push:
     branches:
     - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
   pull_request:
     branches:
     - main
