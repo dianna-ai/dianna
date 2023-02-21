@@ -32,4 +32,4 @@ runs:
       shell: bash {0}
       run: |
         python3 -m pip install --upgrade pip setuptools wheel
-        python3 -m pip install .[${{ inputs.extras-require }}]
+        python3 -m pip install -e .[${{ inputs.extras-require }}]
