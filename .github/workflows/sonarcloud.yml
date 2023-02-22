@@ -6,13 +6,13 @@ on:
     branches:
     - main
   pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
     branches:
     - main
+    types:
+    - opened
+    - reopened
+    - synchronize
+    - ready_for_review
 
 jobs:
 
