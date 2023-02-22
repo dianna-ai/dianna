@@ -107,3 +107,21 @@ class ModelRunner:
         positivity = pred[:, 0]
         negativity = 1 - positivity
         return np.transpose([negativity, positivity])
+
+
+def assert_explanation_satisfies_expectations(explanation, expected_scores, expected_word_indices, expected_words):
+    """Asserts that the explanation contains the expected values."""
+    words = [element[0] for element in explanation]
+    word_indices = [element[1] for element in explanation]
+    scores = [element[2] for element in explanation]
+
+    assert words == expected_words
+    assert word_indices == expected_word_indices
+    assert np.allclose(scores, expected_scores, atol=1e-2)
+
+
+def load_movie_review_model():
+    """Loads the movie review model"""
+    model_path = 'tests/test_data/movie_review_model.onnx'
+    word_vector_file = 'tests/test_data/word_vectors.txt'
+    return ModelRunner(model_path, word_vector_file, max_filter_size=5)
