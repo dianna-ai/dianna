@@ -31,7 +31,7 @@ class TextExample:
 
 class TextExampleWithExpectedHtml:
     """Short text and explanation and its expected html output after visualizing."""
-    expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.59)">Such</span> ' \
+    expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.59)">such</span> ' \
                     '<span style="background:rgba(255, 0, 0, 0.62)">a</span> ' \
                     '<span style="background:rgba(255, 0, 0, 0.80)">bad</span> ' \
                     '<span style="background:rgba(255, 0, 0, 0.63)">movie</span> ' \
@@ -40,7 +40,7 @@ class TextExampleWithExpectedHtml:
     original_text = 'Such a bad movie.'
     tokenizer = SpacyTokenizer()
     tokens = tokenizer.tokenize(original_text)
-    explanation =[
+    explanation = [
                     ('bad', 2, 0.9959058),
                     ('movie', 3, 0.78263557),
                     ('a', 1, 0.7753202),
