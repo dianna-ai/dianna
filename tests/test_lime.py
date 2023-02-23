@@ -48,6 +48,7 @@ class LimeOnImages(TestCase):
 
 
 class LimeOnText(TestCase):
+    """Suite of Lime tests for the text case."""
 
     def test_lime_text(self):
         """Tests exact expected output given a text and model for Lime."""
@@ -84,9 +85,10 @@ class LimeOnText(TestCase):
     'review with???!',
 ])
 class TestLimeOnTextSpecialCharacters:
+    """Regression tests for inputs with symbols for LIME (https://github.com/dianna-ai/dianna/issues/437)."""
     runner = load_movie_review_model()  # load model once for all tests in this class
 
     def test_lime_text_special_chars_regression_test(self, review):
-        """Don't raise an error on this input with special characters."""
+        """Just don't raise an error on this input with special characters."""
         _ = dianna.explain_text(self.runner, review, tokenizer=self.runner.tokenizer,
                                 labels=[0], method='LIME', random_state=0)

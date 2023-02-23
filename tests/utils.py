@@ -121,7 +121,7 @@ def assert_explanation_satisfies_expectations(explanation, expected_scores, expe
 
 
 def load_movie_review_model():
-    """Loads the movie review model"""
+    """Loads the movie review model."""
     model_path = 'tests/test_data/movie_review_model.onnx'
     word_vector_file = 'tests/test_data/word_vectors.txt'
     return ModelRunner(model_path, word_vector_file, max_filter_size=5)

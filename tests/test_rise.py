@@ -76,11 +76,11 @@ class RiseOnText(TestCase):
         runner = get_function(self.runner)
         input_tokens = np.asarray(runner.tokenizer.tokenize(input_text))
 
-        p_keep = RISEText()._determine_p_keep(input_tokens, runner,
-                                              runner.tokenizer)  # pylint: disable=protected-access
+        p_keep = RISEText()._determine_p_keep(input_tokens, runner,  # pylint: disable=protected-access
+                                              runner.tokenizer)
         assert np.isclose(p_keep, expected_p_exact_keep)
 
     def setUp(self) -> None:
-        """Set seed and load runner"""
+        """Set seed and load runner."""
         np.random.seed(0)
         self.runner = load_movie_review_model()
