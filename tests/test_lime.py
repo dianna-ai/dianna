@@ -1,5 +1,7 @@
 from unittest import TestCase
 import numpy as np
+import pytest
+
 import dianna
 import dianna.visualization
 from dianna.methods.lime import LIMEImage
@@ -70,3 +72,17 @@ class LimeOnText(TestCase):
     def setUp(self) -> None:
         """Load the movie review model."""
         self.runner = load_movie_review_model()
+
+
+@pytest.mark.parametrize("review", [
+    'review with !!!?',
+    'review with! ?',
+    'review with???!',
+])
+class TestLimeOnTextSpecialCharacters:
+    runner = load_movie_review_model()  # load model once for all tests in this class
+
+    def test_lime_text_special_chars_regression_test(self, review):
+        """Don't raise an error on this input with special characters."""
+        _ = dianna.explain_text(self.runner, review, tokenizer=self.runner.tokenizer,
+                                labels=[0], method='LIME', random_state=0)
