@@ -14,9 +14,9 @@ from tests.utils import run_model
 class LimeOnImages(TestCase):
     """Suite of Lime tests for the image case."""
 
-    def test_lime_function(self):
+    @staticmethod
+    def test_lime_function():
         """Test if lime runs and outputs are correct given some data and a model function."""
-        np.random.seed(42)
         input_data = np.random.random((224, 224, 3))
         heatmap_expected = np.load('tests/test_data/heatmap_lime_function.npy')
         labels = [1]
@@ -27,9 +27,9 @@ class LimeOnImages(TestCase):
         assert heatmap[0].shape == input_data.shape[:2]
         assert np.allclose(heatmap, heatmap_expected, atol=1e-5)
 
-    def test_lime_filename(self):
+    @staticmethod
+    def test_lime_filename():
         """Test if lime runs and outputs are correct given some data and a model file."""
-        np.random.seed(42)
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1)[0].astype(np.float32)
         axis_labels = ('channels', 'y', 'x')
@@ -41,6 +41,10 @@ class LimeOnImages(TestCase):
         heatmap_expected = np.load('tests/test_data/heatmap_lime_filename.npy')
         assert heatmap[0].shape == input_data[0].shape
         assert np.allclose(heatmap, heatmap_expected, atol=1e-5)
+
+    def setUp(self) -> None:
+        """Set seed."""
+        np.random.seed(42)
 
 
 class LimeOnText(TestCase):
