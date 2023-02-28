@@ -4,11 +4,11 @@ import numpy as np
 
 def test_plot_timeseries():
     segments = [
-        {'feature': 0, 'start': 0, 'stop': 2, 'weight':-0.6},
-        {'feature': 1, 'start': 2, 'stop': 4, 'weight':-0.3},
-        {'feature': 2, 'start': 4, 'stop': 6, 'weight': 0.0},
-        {'feature': 3, 'start': 6, 'stop': 8, 'weight': 0.4},
-        {'feature': 4, 'start': 8, 'stop': 10, 'weight': 0.7},
+        {'index': 0, 'start': 0, 'stop': 2, 'weight':-0.6},
+        {'index': 1, 'start': 2, 'stop': 4, 'weight':-0.3},
+        {'index': 2, 'start': 4, 'stop': 6, 'weight': 0.0},
+        {'index': 3, 'start': 6, 'stop': 8, 'weight': 0.4},
+        {'index': 4, 'start': 8, 'stop': 10, 'weight': 0.7},
     ]
 
     x = np.linspace(0, 10, 20)
