@@ -105,6 +105,11 @@ You need:
 - your trained ONNX model ([convert my pytorch/tensorflow/keras/scikit-learn model to ONNX](https://github.com/dianna-ai/dianna#onnx-models))
 - 1 data item to be explained
 
+ You get:
+ - a relevance map overlayed over the data item
+
+In the library's documentation, the general usage is explained in [How to use DIANNA](https://dianna.readthedocs.io/en/latest/usage.html)
+ 
 ### Demo movie
 
 [![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
