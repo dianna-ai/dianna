@@ -1,7 +1,8 @@
+from typing import Any, Dict, List, Optional
+
 import matplotlib.pyplot as plt
-from typing import List, Dict, Optional, Any
-from matplotlib import cm
 import numpy as np
+from matplotlib import cm
 
 
 def plot_timeseries(  # pylint: disable=too-many-arguments,too-many-locals
@@ -14,7 +15,7 @@ def plot_timeseries(  # pylint: disable=too-many-arguments,too-many-locals
     show_plot: bool = False,
     output_filename: Optional[str] = None,
     ax: Optional[plt.Axes] = None,
-) -> plt.Axes:  
+) -> plt.Axes:
     """Plot timeseries with segments highlighted.
 
     Args:
