@@ -3,6 +3,7 @@ import numpy as np
 
 
 def test_plot_timeseries():
+    """Test plot series."""
     segments = [
         {'index': 0, 'start': 0, 'stop': 2, 'weight':-0.6},
         {'index': 1, 'start': 2, 'stop': 4, 'weight':-0.3},
@@ -15,4 +16,3 @@ def test_plot_timeseries():
     y = np.sin(x)
 
     plot_timeseries(x=x, y=y, segments=segments, show_plot=False)
-

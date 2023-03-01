@@ -4,19 +4,19 @@ from matplotlib import cm
 import numpy as np
 
 
-def plot_timeseries(
+def plot_timeseries(  # pylint: disable=too-many-arguments,too-many-locals
     x: np.ndarray,
     y: np.ndarray,
     segments: List[Dict[str, Any]],
-    xlabel='x',
-    ylabel='y',
+    xlabel: str='x',
+    ylabel: str='y',
     cmap: Optional[str] = None,
     show_plot: bool = False,
     output_filename: Optional[str] = None,
     ax: Optional[plt.Axes] = None,
-) -> plt.Axes:
+) -> plt.Axes:  
     """Plot timeseries with segments highlighted.
-    
+
     Args:
         x (np.ndarray): X-values
         y (np.ndarray): Y-values
