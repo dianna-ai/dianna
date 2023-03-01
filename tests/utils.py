@@ -115,8 +115,8 @@ def assert_explanation_satisfies_expectations(explanation, expected_scores, expe
     word_indices = [element[1] for element in explanation]
     scores = [element[2] for element in explanation]
 
-    assert words == expected_words, f'{words=} not equal to {expected_words=}'
-    assert word_indices == expected_word_indices, f'{word_indices=} not equal to {expected_word_indices=}'
+    assert words == expected_words, f'{words} not equal to expected {expected_words}'
+    assert word_indices == expected_word_indices, f'{word_indices} not equal to expected {expected_word_indices}'
     assert np.allclose(scores, expected_scores, atol=1e-2)
 
 
