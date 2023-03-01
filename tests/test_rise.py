@@ -1,20 +1,21 @@
 from unittest import TestCase
 
+import numpy as np
+
 import dianna
 import dianna.visualization
-import numpy as np
 from dianna.methods.rise import RISEImage, RISEText
 from dianna.utils import get_function
-from tests.utils import ModelRunner, run_model, get_mnist_1_data, assert_explanation_satisfies_expectations, \
+from tests.utils import run_model, get_mnist_1_data, assert_explanation_satisfies_expectations, \
     load_movie_review_model
-
 from .test_onnx_runner import generate_data
 
 
 class RiseOnImages(TestCase):
     """Suite of RISE tests for the image case."""
 
-    def test_rise_function(self):
+    @staticmethod
+    def test_rise_function():
         """Test if rise runs and outputs the correct shape given some data and a model function."""
         input_data = np.random.random((224, 224, 3))
         axis_labels = ['y', 'x', 'channels']
@@ -27,7 +28,8 @@ class RiseOnImages(TestCase):
         assert heatmaps[0].shape == input_data.shape[:2]
         assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
 
-    def test_rise_filename(self):
+    @staticmethod
+    def test_rise_filename():
         """Test if rise runs and outputs the correct shape given some data and a model file."""
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1).astype(np.float32)[0]
@@ -40,7 +42,8 @@ class RiseOnImages(TestCase):
         print(heatmaps_expected.shape)
         assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
 
-    def test_rise_determine_p_keep_for_images(self):
+    @staticmethod
+    def test_rise_determine_p_keep_for_images():
         """Tests exact expected p_keep given an image and model."""
         np.random.seed(0)
         expected_p_exact_keep = .4
