@@ -1,10 +1,23 @@
 import numpy as np
 
 
-def mask_time_steps(input_data: np.array, number_of_masks: int, p_keep: float = 0.5, mask_type='mean'):
+def mask_time_steps(input_data: np.array, number_of_masks: int, p_keep: float = 0.5,
+                    masking_strategy: str = 'mean') -> np.array:
+    """
+    Mask random time steps in time series data.
+
+    Args:
+        input_data:
+        number_of_masks:
+        p_keep:
+        masking_strategy: strategy for filling masked parts
+
+    Returns:
+
+    """
     original_data = np.zeros([number_of_masks] + list(input_data.shape)) + input_data
+    series_length = input_data.shape[0]
     for i in range(number_of_masks):
-        series_length = input_data.shape[0]
         number_of_steps_masked = _determine_number_of_steps_masked(p_keep, series_length)
         steps_to_mask = np.random.choice(series_length, number_of_steps_masked, False)
         masked_value = np.mean(input_data)
