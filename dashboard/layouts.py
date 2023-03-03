@@ -232,13 +232,49 @@ def get_uploads_images():
             html.Div(id='output-model-img-upload',
             className = 'row',
             style = {
-                'height': '230px',
+                'height': '100px',
+                'margin-top': '20px',
+                #'margin-bottom': '50px',
+                #'fontSize': 8,
+                'color' : colors['blue1']}
+            ),
+
+            # select label row
+            html.Div([
+                dcc.Upload(
+                    id='upload-label',
+                    children=html.Div([
+                        'Drag and Drop or ',
+                        html.A('Select Label File')
+                    ]),
+                    style={
+                        'width': '80%',
+                        'height': '40px',
+                        'lineHeight': '40px',
+                        'borderWidth': '1px',
+                        'borderStyle': 'dashed',
+                        'borderRadius': '3px',
+                        'margin-left': '30px',
+                        'margin-top': '20px',
+                        'color' : colors['blue1']
+                    },
+                    # Allow multiple files to be uploaded
+                    multiple=False
+                ),
+            ],
+            className = 'row', 
+            ),
+
+            # print selected model row
+            html.Div(id='output-label-upload',
+            className = 'row',
+            style = {
+                'height': '100px',
                 'margin-top': '20px',
                 #'margin-bottom': '50px',
                 #'fontSize': 8,
                 'color' : colors['blue1']}
             )
-
             ],
             className = 'three columns',
             style = {

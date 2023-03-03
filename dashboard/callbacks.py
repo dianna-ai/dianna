@@ -142,6 +142,45 @@ def upload_model_img(contents, filename):
     else:
         raise PreventUpdate
 
+# uploading labels for model
+@app.callback(dash.dependencies.Output('output-label-upload', 'children'),
+              dash.dependencies.Output('upload-label', 'labelnames'),
+              dash.dependencies.Input('upload-label', 'filename'))
+def upload_label(filename):
+    """Take in the label file. Return a print statement about upload state."""
+    labelnames = []
+    if filename is not None:
+        try:
+            if 'txt' in filename:
+                with open(os.path.join(FOLDER_ON_SERVER, filename),'r',encoding="utf-8") as f:
+                    lnames = f.readlines()
+                
+                labelnames = [item.rstrip() for item in lnames]
+                print (labelnames)
+                if labelnames is None or labelnames == ['']:
+                    return html.Div(['Label file is empty, please upload a valid file']), labelnames
+                return html.Div([f'{filename} uploaded']), labelnames
+
+            return html.Div([
+                html.P('File format error!'),
+                html.Br(),
+                html.P('Please upload labels in a .txt file.'), labelnames
+                ]), []
+        except Exception as e:
+            print(e)
+            return html.Div(['There was an error processing this file.']), labelnames
+    else:
+        raise PreventUpdate
+
+# Parse labels for model
+# def parse_label(filename, labelnames):
+#     if filename is not None:
+#         try:
+            
+#         except Exception as e:
+#             print(e)
+#     else:
+#         raise PreventUpdate
 
 # perform expensive computations in this "global store"
 # these computations are cached in a globally available
@@ -203,6 +242,7 @@ def select_method(method_sel):
     dash.dependencies.State("signal_image", "data"),
     dash.dependencies.State("upload-model-img", "filename"),
     dash.dependencies.State("upload-image", "filename"),
+    dash.dependencies.State('upload-label', 'labelnames'),
     dash.dependencies.State("show_top", "value"),
     dash.dependencies.State("n_masks", "value"),
     dash.dependencies.State("feature_res", "value"),
@@ -218,18 +258,16 @@ def select_method(method_sel):
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
 # pylint: disable=too-many-arguments
-def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
+def update_multi_options_i(fn_m, fn_i, sel_methods,  new_model, new_image, labelnames,
                            show_top=2, n_masks=1000, feature_res=6, p_keep=0.1,
                            n_samples=1000, background=0, n_segments=200,
-                           sigma=0, random_state=2, update_button=0,
-                           stop_button=0):
+                           sigma=0, random_state=2, update_button=0, stop_button=0):
     """Update multiple selection options.
 
     Take in the last model and image uploaded filenames, the selected XAI
     method, and return the selected XAI method.
     """
     ctx = dash.callback_context
-
     if ctx.triggered[0]["prop_id"] == "stop_button.n_clicks":
         return (html.Div(['Explanation stopped.'],
                 style={'margin-top': '60px'}), utilities.blank_fig())
@@ -247,10 +285,11 @@ def update_multi_options_i(fn_m, fn_i, sel_methods, new_model, new_image,
         try:
             predictions = (prepare(onnx_model).run(X_test[None, ...])
                            [f'{output_node}'])
-            if len(predictions[0]) == 2:
-                class_name = class_name_mnist
-            else:
-                class_name = class_names_imagenet
+            # if len(predictions[0]) == 2:
+            #     class_name = class_name_mnist
+            # else:
+            #     class_name = class_names_imagenet
+            class_name = labelnames
             # get the predicted class
             preds = np.array(predictions[0])
             pred_class = class_name[np.argmax(preds)]
