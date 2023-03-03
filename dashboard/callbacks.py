@@ -150,7 +150,6 @@ def upload_label(filename):
                     lnames = f.readlines()
                 
                 labelnames = [item.rstrip() for item in lnames]
-                print (labelnames)
                 if labelnames is None or labelnames == ['']:
                     return html.Div(['Label file is empty, please upload a valid file']), labelnames
                 return html.Div([f'{filename} uploaded']), labelnames
