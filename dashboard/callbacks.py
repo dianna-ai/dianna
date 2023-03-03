@@ -49,11 +49,6 @@ cache = Cache(app.server, config={
 })
 cache.clear()
 
-# global variables # replace by generic label loader
-# class_name_mnist = ['digit 0', 'digit 1']
-# class_name_text = ["negative", "positive"]
-# class_names_imagenet = [imagenet_class_name(idx) for idx in range(1000)]
-
 try:
     spacy.load("en_core_web_sm")
 except Exception:  # If not present, we download
