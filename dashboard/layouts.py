@@ -652,7 +652,7 @@ def get_uploads_text():
                 'color' : colors['blue1']}
             ),
 
-                        # select label row
+            # select label row
             html.Div([
                 dcc.Upload(
                     id='upload-label-text',

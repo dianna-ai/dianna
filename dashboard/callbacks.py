@@ -25,7 +25,6 @@ from dianna.utils.tokenizers import SpacyTokenizer
 import utilities
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html
-from utilities import imagenet_class_name
 import layouts
 
 
