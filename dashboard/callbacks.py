@@ -530,8 +530,8 @@ def select_method_t(method_sel):
     dash.dependencies.State("upload-text", "value"),
     dash.dependencies.State("signal_text", "data"),
     dash.dependencies.State("upload-model-text", "filename"),
-    dash.dependencies.State('upload-label-text', 'labelnames'),
     dash.dependencies.State("upload-text", "value"),
+    dash.dependencies.State('upload-label-text', 'labelnames'),
     dash.dependencies.State("n_masks_text", "value"),
     dash.dependencies.State("feature_res_text", "value"),
     dash.dependencies.State("p_keep_text", "value"),
@@ -566,6 +566,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
             onnx_model_path, word_vector_path, max_filter_size=5)
 
         try:
+            print ('label:', labelnames)
             input_tokens = tokenizer.tokenize(input_text)
             predictions = model_runner(input_text)
             class_name = labelnames
