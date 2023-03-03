@@ -51,9 +51,9 @@ cache = Cache(app.server, config={
 cache.clear()
 
 # global variables # replace by generic label loader
-class_name_mnist = ['digit 0', 'digit 1']
-class_name_text = ["negative", "positive"]
-class_names_imagenet = [imagenet_class_name(idx) for idx in range(1000)]
+# class_name_mnist = ['digit 0', 'digit 1']
+# class_name_text = ["negative", "positive"]
+# class_names_imagenet = [imagenet_class_name(idx) for idx in range(1000)]
 
 try:
     spacy.load("en_core_web_sm")
@@ -447,13 +447,42 @@ def upload_model_text(contents, filename):
     else:
         raise PreventUpdate
 
+# uploading labels for model
+@app.callback(dash.dependencies.Output('output-label-text-upload', 'children'),
+              dash.dependencies.Output('upload-label-text', 'labelnames'),
+              dash.dependencies.Input('upload-label-text', 'filename'))
+def upload_label_text(filename):
+    """Take in the label file. Return a print statement about upload state."""
+    labelnames = []
+    if filename is not None:
+        try:
+            if 'txt' in filename:
+                with open(os.path.join(FOLDER_ON_SERVER, filename),'r',encoding="utf-8") as f:
+                    lnames = f.readlines()
+                
+                labelnames = [item.rstrip() for item in lnames]
+                print (labelnames)
+                if labelnames is None or labelnames == ['']:
+                    return html.Div(['Label file is empty, please upload a valid file']), labelnames
+                return html.Div([f'{filename} uploaded']), labelnames
+
+            return html.Div([
+                html.P('File format error!'),
+                html.Br(),
+                html.P('Please upload labels in a .txt file.'), labelnames
+                ]), []
+        except Exception as e:
+            print(e)
+            return html.Div(['There was an error processing this file.']), labelnames
+    else:
+        raise PreventUpdate
 
 # perform expensive computations in this "global store"
 # these computations are cached in a globally available
 # redis memory store which is available across processes
 # and for all time.
 @cache.memoize()
-def global_store_t(method_sel, model_runner, input_text, 
+def global_store_t(method_sel, model_runner, input_text, labelnames,
                    n_masks=1000, feature_res=6, p_keep=.1,
                    random_state=2):
     """Perform expersive computation.
@@ -462,9 +491,9 @@ def global_store_t(method_sel, model_runner, input_text,
     return the explanations highlighted on the string itself.
     """
     predictions = model_runner(input_text)
-    class_name = class_name_text
+    class_name = labelnames
     pred_class = class_name[np.argmax(predictions)]
-    labels = tuple(class_name_text)
+    labels = tuple(labelnames)
     pred_idx = labels.index(pred_class)
 
     # expensive query
@@ -502,6 +531,7 @@ def select_method_t(method_sel):
     dash.dependencies.State("upload-text", "value"),
     dash.dependencies.State("signal_text", "data"),
     dash.dependencies.State("upload-model-text", "filename"),
+    dash.dependencies.State('upload-label-text', 'labelnames'),
     dash.dependencies.State("upload-text", "value"),
     dash.dependencies.State("n_masks_text", "value"),
     dash.dependencies.State("feature_res_text", "value"),
@@ -512,7 +542,7 @@ def select_method_t(method_sel):
 )
 # pylint: disable=too-many-locals
 # pylint: disable=unused-argument
-def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
+def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, labelnames,
                            n_masks=1000, feature_res=6, p_keep=0.1,
                            random_state=2, update_button_t=0, stop_button_t=0):
     """Take in the last model filename, text uploaded, and selected XAI method.
@@ -539,7 +569,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
         try:
             input_tokens = tokenizer.tokenize(input_text)
             predictions = model_runner(input_text)
-            class_name = class_name_text
+            class_name = labelnames
             pred_class = class_name[np.argmax(predictions)]
 
             fig_l = utilities.blank_fig()
@@ -548,7 +578,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
             for m in sel_methods:
                 if m == "LIME":
                     relevances_lime = global_store_t(
-                        m, model_runner, input_text,
+                        m, model_runner, input_text, class_name,
                         random_state=random_state)
                     output = _create_html(
                         input_tokens, relevances_lime[0], max_opacity=0.8)
@@ -582,7 +612,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
 
                 elif m == "RISE":
                     relevances_rise = global_store_t(
-                        m, model_runner, input_text,
+                        m, model_runner, input_text, class_name,
                         n_masks=n_masks, feature_res=feature_res, p_keep=p_keep)
                     output = _create_html(
                         input_tokens, relevances_rise[0], max_opacity=0.8)
@@ -622,7 +652,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text,
         except Exception as e:
             print(e)
             return html.Div([
-                'There was an error running the model. Check either the test' +
+                'There was an error running the model. Check either the test ' +
                 'text or the model.'
                 ]), utilities.blank_fig(), utilities.blank_fig()
     else:
