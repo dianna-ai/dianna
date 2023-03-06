@@ -31,7 +31,7 @@ class TextExample:
 
 class TextExampleWithExpectedHtml:
     """Short text and explanation and its expected html output after visualizing."""
-    expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.59)">such</span> ' \
+    expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.59)">Such</span> ' \
                     '<span style="background:rgba(255, 0, 0, 0.62)">a</span> ' \
                     '<span style="background:rgba(255, 0, 0, 0.80)">bad</span> ' \
                     '<span style="background:rgba(255, 0, 0, 0.63)">movie</span> ' \
