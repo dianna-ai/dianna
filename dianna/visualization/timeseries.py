@@ -1,5 +1,7 @@
-from typing import Any, Dict, List, Optional
-
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
