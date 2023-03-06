@@ -9,13 +9,13 @@ from scipy.special import expit as sigmoid
 # keras model and preprocessing tools
 # pylint: disable=import-error
 from tensorflow.keras.applications.resnet50 import decode_predictions
-from torchtext.data import get_tokenizer
 from torchtext.vocab import Vectors
 # pylint: disable=unused-import
 import dianna
 from dianna import utils
 from dianna.utils import move_axis
 from dianna.utils import to_xarray
+from dianna.utils.tokenizers import SpacyTokenizer
 
 
 warnings.filterwarnings('ignore') # disable warnings relateds to versions of tf
@@ -40,7 +40,7 @@ class MovieReviewsModelRunner:
         self.run_model = utils.get_function(model)
         self.vocab = Vectors(word_vectors, cache=os.path.dirname(word_vectors))
         self.max_filter_size = max_filter_size
-        self.tokenizer = get_tokenizer('spacy', 'en_core_web_sm')
+        self.tokenizer = SpacyTokenizer()
 
     def __call__(self, sentences):
         # ensure the input has a batch axis
@@ -50,7 +50,7 @@ class MovieReviewsModelRunner:
         tokenized_sentences = []
         for sentence in sentences:
             # tokenize and pad to minimum length
-            tokens = self.tokenizer(sentence)
+            tokens = self.tokenizer.tokenize(sentence)
             if len(tokens) < self.max_filter_size:
                 tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
 
