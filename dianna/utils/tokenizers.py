@@ -49,13 +49,12 @@ class SpacyTokenizer(Tokenizer):
         self.spacy_tokenizer = get_tokenizer('spacy', name)
 
     def tokenize(self, sentence: str) -> List[str]:
-        lower_sentence = sentence.lower()
-        raw_tokens = self.spacy_tokenizer(lower_sentence)
+        raw_tokens = self.spacy_tokenizer(sentence)
         # do not consider several special characters in a row as separate tokens
         # special characters in string.punctuation are !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~.
         # find indices of tokens that are a special character
         indices_in_tokens = np.where([token in string.punctuation for token in raw_tokens])[0]
-        indices_in_raw_string = np.where([character in string.punctuation for character in lower_sentence])[0]
+        indices_in_raw_string = np.where([character in string.punctuation for character in (sentence)])[0]
         if indices_in_tokens.size == 0:
             # no special characters at all
             return raw_tokens

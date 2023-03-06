@@ -83,6 +83,7 @@ class LimeOnText(TestCase):
     'review with !!!?',
     'review with! ?',
     'review with???!',
+    'Review with Capital',
 ])
 class TestLimeOnTextSpecialCharacters:
     """Regression tests for inputs with symbols for LIME (https://github.com/dianna-ai/dianna/issues/437)."""
