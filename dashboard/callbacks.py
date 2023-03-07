@@ -3,7 +3,6 @@ import base64
 import os
 import warnings
 import dash
-import layouts
 import numpy as np
 import onnx
 import plotly.express as px
@@ -22,7 +21,6 @@ from PIL import Image
 from plotly.subplots import make_subplots
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html
-from utilities import imagenet_class_name
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer
 
@@ -650,4 +648,3 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
         return (html.Div(['Missing model, input text or XAI method.']),
                 blank_fig(), blank_fig())
 
-###################################################################

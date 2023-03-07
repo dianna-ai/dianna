@@ -1,6 +1,5 @@
 import base64
 from pathlib import Path
-from dash import dcc
 from dash import html
 from .styles import COLORS
 
