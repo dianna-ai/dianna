@@ -559,7 +559,6 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
             onnx_model_path, word_vector_path, max_filter_size=5)
 
         try:
-            print ('label:', labelnames)
             input_tokens = tokenizer.tokenize(input_text)
             predictions = model_runner(input_text)
             class_name = labelnames
