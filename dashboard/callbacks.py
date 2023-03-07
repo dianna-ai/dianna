@@ -10,7 +10,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import spacy
 import utilities
-from dash import html
+from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from flask_caching import Cache
 from html2image import Html2Image
@@ -22,6 +22,7 @@ from PIL import Image
 from plotly.subplots import make_subplots
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html
+import dash_bootstrap_components as dbc
 from utilities import imagenet_class_name
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer
@@ -34,7 +35,11 @@ os.makedirs(FOLDER_ON_SERVER, exist_ok=True)
 tokenizer = SpacyTokenizer()  # always use SpacyTokenizer, needs to be changed
 
 # Build App
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = [
+    dbc.themes.BOOTSTRAP,
+    'https://codepen.io/chriddyp/pen/bWLwgP.css',
+]
+
 app = JupyterDash(
     __name__,
     external_stylesheets=external_stylesheets,
@@ -650,4 +655,13 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
         return (html.Div(['Missing model, input text or XAI method.']),
                 blank_fig(), blank_fig())
 
-###################################################################
+
+@app.callback(
+    Output("collapse-parameters", "is_open"),
+    [Input("collapse-parameters-button", "n_clicks")],
+    [State("collapse-parameters", "is_open")],
+)
+def toggle_parameters_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open
