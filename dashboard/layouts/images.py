@@ -1,5 +1,5 @@
-from dash import dcc
 import dash_bootstrap_components as dbc
+from dash import dcc
 from dash import html
 from .fig import blank_fig
 from .styles import COLORS
@@ -214,10 +214,9 @@ def get_uploads_images():
             ],
             className = 'row', style = {'padding-bottom' : '1%'}
             ),
-            # Settings bar
-            html.Div(
-                [
-                    html.Button(
+                        # Settings bar
+            html.Div([
+                html.Button(
                         "Click to show XAI method specific settings",
                         id="collapse-parameters-button",
                         n_clicks=0,
@@ -228,156 +227,158 @@ def get_uploads_images():
                             'float': 'center',
                             'backgroundColor': COLORS['blue1'],
                             'color' : COLORS['white']
-                            }
+                        }
                     ),
-                    dbc.Collapse(
-                        html.Div([
-                            html.Div([
-                                dcc.Markdown(children='**Rise**',
-                                    style = {'margin-top': '20px', 'textAlign' : 'center',
-                                        'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Markdown(children='Number of masks',
-                                    style = {'margin-left': '5px', 'margin-top': '0px',
-                                        'textAlign' : 'left', 'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Input(id = 'n_masks',
-                                    placeholder = "Number of masks",
-                                    type="number",
-                                    value=1000,
-                                    style={
-                                            'margin-right': '20px',
-                                            'margin-top': '0px',
-                                            'width': '100%',
-                                            'color' : COLORS['blue1']
-                                        }
-                                ),
-                                dcc.Markdown(children='Feature resolution',
-                                    style = {'margin-left': '5px', 'margin-top': '5px',
-                                        'textAlign' : 'left', 'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Input(id = 'feature_res',
-                                    placeholder = "Feature res",
-                                    type="number",
-                                    value=6,
-                                    style={
-                                            'margin-right': '20px',
-                                            'margin-top': '0px',
-                                            'width': '100%',
-                                            'color' : COLORS['blue1']
-                                        }
-                                ),
-                                dcc.Markdown(children='Probability to be kept unmasked',
-                                    style = {'margin-left': '5px', 'margin-top': '5px',
-                                        'textAlign' : 'left', 'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Input(id = 'p_keep',
-                                    placeholder = "P keep",
-                                    type="number",
-                                    value=0.1,
-                                    style={
-                                            'margin-right': '20px',
-                                            'margin-top': '0px',
-                                            'width': '100%',
-                                            'color' : COLORS['blue1']
-                                        }
-                                )
-                            ], className = 'three columns'),
-                            html.Div([
-                                dcc.Markdown(children='**KernelShap**',
-                                    style = {'margin-top': '20px', 'textAlign' : 'center',
-                                        'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Markdown(children='Number of samples',
-                                    style = {'margin-left': '5px', 'margin-top': '0px',
-                                        'textAlign' : 'left', 'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Input(id = 'n_samples',
-                                    placeholder = "N samples",
-                                    type="number",
-                                    value=1000,
-                                    style={
-                                            'margin-right': '20px',
-                                            'margin-top': '0px',
-                                            'width': '100%',
-                                            'color' : COLORS['blue1']
-                                        }
-                                ),
-                                dcc.Markdown(children='Background',
-                                    style = {'margin-left': '5px', 'margin-top': '5px',
-                                        'textAlign' : 'left', 'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Input(id = 'background',
-                                    placeholder = "Background",
-                                    type="number",
-                                    value=0,
-                                    style={
-                                            'margin-right': '20px',
-                                            'margin-top': '0px',
-                                            'width': '100%',
-                                            'color' : COLORS['blue1']
-                                        }
-                                ),
-                                dcc.Markdown(children='Number of segments',
-                                    style = {'margin-left': '5px', 'margin-top': '5px',
-                                        'textAlign' : 'left', 'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Input(id = 'n_segments',
-                                    placeholder = "N segments",
-                                    type="number",
-                                    value=200,
-                                    style={
-                                            'margin-right': '20px',
-                                            'margin-top': '0px',
-                                            'width': '100%',
-                                            'color' : COLORS['blue1']
-                                        }
-                                ),
-                                # noqa: W605
-                                dcc.Markdown(children='$$\sigma$$', mathjax=True,  # noqa: W605
-                                    style = {'margin-left': '5px', 'margin-top': '5px',
-                                        'textAlign' : 'left', 'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Input(id = 'sigma',
-                                    placeholder = "sigma",
-                                    type="number",
-                                    value=0,
-                                    style={
-                                            'margin-right': '20px',
-                                            'margin-top': '0px',
-                                            'width': '100%',
-                                            'color' : COLORS['blue1']
-                                        }
-                                )
-                            ], className = 'three columns'),
-                            html.Div([
-                                dcc.Markdown(children='**Lime**',
-                                    style = {'margin-top': '20px', 'textAlign' : 'center',
-                                        'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Markdown(children='Random state',
-                                    style = {'margin-left': '5px', 'margin-top': '5px',
-                                        'textAlign' : 'left', 'color' : COLORS['blue1']}
-                                    ),
-                                dcc.Input(id = 'random_state',
-                                    placeholder = "Random state",
-                                    type="number",
-                                    value=2,
-                                    style={
-                                            'margin-right': '20px',
-                                            'margin-top': '0px',
-                                            'width': '100%',
-                                            'color' : COLORS['blue1']
-                                        }
-                                )
-                            ], className = 'three columns')
-                        ],
-                        className = 'row'
+                ],
+            className = 'row'
+            ),
+            # XAI method settings buttons
+            dbc.Collapse(
+                html.Div([
+                    html.Div([
+                        dcc.Markdown(children='**Rise**',
+                            style = {'margin-top': '20px', 'textAlign' : 'center',
+                                'color' : COLORS['blue1']}
+                            ),
+                        dcc.Markdown(children='Number of masks',
+                            style = {'margin-left': '5px', 'margin-top': '0px',
+                                'textAlign' : 'left', 'color' : COLORS['blue1']}
+                            ),
+                        dcc.Input(id = 'n_masks',
+                            placeholder = "Number of masks",
+                            type="number",
+                            value=1000,
+                            style={
+                                    'margin-right': '20px',
+                                    'margin-top': '0px',
+                                    'width': '100%',
+                                    'color' : COLORS['blue1']
+                                }
                         ),
-                        id="collapse-parameters",
-                        is_open=False,
-                    ),
-                ]
+                        dcc.Markdown(children='Feature resolution',
+                            style = {'margin-left': '5px', 'margin-top': '5px',
+                                'textAlign' : 'left', 'color' : COLORS['blue1']}
+                            ),
+                        dcc.Input(id = 'feature_res',
+                            placeholder = "Feature res",
+                            type="number",
+                            value=6,
+                            style={
+                                    'margin-right': '20px',
+                                    'margin-top': '0px',
+                                    'width': '100%',
+                                    'color' : COLORS['blue1']
+                                }
+                        ),
+                        dcc.Markdown(children='Probability to be kept unmasked',
+                            style = {'margin-left': '5px', 'margin-top': '5px',
+                                'textAlign' : 'left', 'color' : COLORS['blue1']}
+                            ),
+                        dcc.Input(id = 'p_keep',
+                            placeholder = "P keep",
+                            type="number",
+                            value=0.1,
+                            style={
+                                    'margin-right': '20px',
+                                    'margin-top': '0px',
+                                    'width': '100%',
+                                    'color' : COLORS['blue1']
+                                }
+                        )
+                    ], className = 'three columns'),
+                    html.Div([
+                        dcc.Markdown(children='**KernelShap**',
+                            style = {'margin-top': '20px', 'textAlign' : 'center',
+                                'color' : COLORS['blue1']}
+                            ),
+                        dcc.Markdown(children='Number of samples',
+                            style = {'margin-left': '5px', 'margin-top': '0px',
+                                'textAlign' : 'left', 'color' : COLORS['blue1']}
+                            ),
+                        dcc.Input(id = 'n_samples',
+                            placeholder = "N samples",
+                            type="number",
+                            value=1000,
+                            style={
+                                    'margin-right': '20px',
+                                    'margin-top': '0px',
+                                    'width': '100%',
+                                    'color' : COLORS['blue1']
+                                }
+                        ),
+                        dcc.Markdown(children='Background',
+                            style = {'margin-left': '5px', 'margin-top': '5px',
+                                'textAlign' : 'left', 'color' : COLORS['blue1']}
+                            ),
+                        dcc.Input(id = 'background',
+                            placeholder = "Background",
+                            type="number",
+                            value=0,
+                            style={
+                                    'margin-right': '20px',
+                                    'margin-top': '0px',
+                                    'width': '100%',
+                                    'color' : COLORS['blue1']
+                                }
+                        ),
+                        dcc.Markdown(children='Number of segments',
+                            style = {'margin-left': '5px', 'margin-top': '5px',
+                                'textAlign' : 'left', 'color' : COLORS['blue1']}
+                            ),
+                        dcc.Input(id = 'n_segments',
+                            placeholder = "N segments",
+                            type="number",
+                            value=200,
+                            style={
+                                    'margin-right': '20px',
+                                    'margin-top': '0px',
+                                    'width': '100%',
+                                    'color' : COLORS['blue1']
+                                }
+                        ),
+                        # noqa: W605
+                        dcc.Markdown(children='$$\sigma$$', mathjax=True,  # noqa: W605
+                            style = {'margin-left': '5px', 'margin-top': '5px',
+                                'textAlign' : 'left', 'color' : COLORS['blue1']}
+                            ),
+                        dcc.Input(id = 'sigma',
+                            placeholder = "sigma",
+                            type="number",
+                            value=0,
+                            style={
+                                    'margin-right': '20px',
+                                    'margin-top': '0px',
+                                    'width': '100%',
+                                    'color' : COLORS['blue1']
+                                }
+                        )
+                    ], className = 'three columns'),
+                    html.Div([
+                        dcc.Markdown(children='**Lime**',
+                            style = {'margin-top': '20px', 'textAlign' : 'center',
+                                'color' : COLORS['blue1']}
+                            ),
+                        dcc.Markdown(children='Random state',
+                            style = {'margin-left': '5px', 'margin-top': '5px',
+                                'textAlign' : 'left', 'color' : COLORS['blue1']}
+                            ),
+                        dcc.Input(id = 'random_state',
+                            placeholder = "Random state",
+                            type="number",
+                            value=2,
+                            style={
+                                    'margin-right': '20px',
+                                    'margin-top': '0px',
+                                    'width': '100%',
+                                    'color' : COLORS['blue1']
+                                }
+                        )
+                    ], className = 'three columns')
+                ],
+                className = 'row'
+                ),
+                id="collapse-parameters",
+                is_open=False,
             ),
             # printing predictions
             html.Div(

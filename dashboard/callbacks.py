@@ -3,6 +3,7 @@ import base64
 import os
 import warnings
 import dash
+import dash_bootstrap_components as dbc
 import layouts
 import numpy as np
 import onnx
@@ -10,7 +11,10 @@ import plotly.express as px
 import plotly.graph_objects as go
 import spacy
 import utilities
-from dash import Input, Output, State, html
+from dash import Input
+from dash import Output
+from dash import State
+from dash import html
 from dash.exceptions import PreventUpdate
 from flask_caching import Cache
 from html2image import Html2Image
@@ -22,7 +26,6 @@ from PIL import Image
 from plotly.subplots import make_subplots
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html
-import dash_bootstrap_components as dbc
 from utilities import imagenet_class_name
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer

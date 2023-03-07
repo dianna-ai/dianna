@@ -1,8 +1,8 @@
+import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 from .fig import blank_fig
 from .styles import COLORS
-import dash_bootstrap_components as dbc
 
 
 def get_uploads_text():
