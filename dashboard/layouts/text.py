@@ -178,37 +178,31 @@ def get_uploads_text():
             ),
             html.Div([
                 # update button
-                html.Div([
-                    html.Button('Update explanation',
-                            id='update_button_t',
-                            n_clicks=0,
-                            style={
-                                'margin-left': '0px',
-                                'margin-top': '0px',
-                                'width': '20%',
-                                'float': 'left',
-                                'backgroundColor': COLORS['blue2'],
-                                'color' : COLORS['white']
-                            }
-                        ),
-                    ],
-                ),
-                html.Div([
-                    html.Button('Stop Explanation',
-                            id='stop_button_t',
-                            n_clicks=0,
-                            style={
-                                'margin-left': '40px',
-                                'margin-top': '0px',
-                                'width': '20%',
-                                'float': 'left',
-                                'backgroundColor': COLORS['red1'],
-                                'color' : COLORS['white']
-                            }
-                        ),
-                    ],
-                ),
-            ],
+                html.Button('Update explanation',
+                        id='update_button',
+                        n_clicks=0,
+                        style={
+                            'margin-left': '0px',
+                            'margin-top': '0px',
+                            'width': '20%',
+                            'float': 'left',
+                            'backgroundColor': COLORS['blue2'],
+                            'color' : COLORS['white']
+                        }
+                    ),
+                html.Button('Stop Explanation',
+                        id='stop_button',
+                        n_clicks=0,
+                        style={
+                            'margin-left': '40px',
+                            'margin-top': '0px',
+                            'width': '20%',
+                            'float': 'left',
+                            'backgroundColor': COLORS['red1'],
+                            'color' : COLORS['white']
+                        }
+                    ),
+                ],
             className = 'row', style = {'padding-bottom' : '1%'}
             ),
             # Settings bar
