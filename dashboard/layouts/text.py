@@ -7,7 +7,6 @@ from .styles import COLORS
 
 def get_uploads_text():
     """Creates layout for text page."""
-    # uploads row
     uploads = html.Div([
 
         # uploads first col (3-col)
