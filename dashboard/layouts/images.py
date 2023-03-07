@@ -213,7 +213,7 @@ def get_uploads_images():
             ],
             className = 'row', style = {'padding-bottom' : '1%'}
             ),
-                        # Settings bar
+            # Settings bar
             html.Div([
                 html.Button(
                         "Click to show XAI method specific settings",

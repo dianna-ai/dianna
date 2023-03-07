@@ -1,4 +1,4 @@
-"""Layouts submodule."""
+"""Layout submodule."""
 import utilities
 from dash import dcc
 from dash import html

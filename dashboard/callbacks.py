@@ -656,7 +656,6 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
         return (html.Div(['Missing model, input text or XAI method.']),
                 blank_fig(), blank_fig())
 
-
 @app.callback(
     Output("collapse-parameters", "is_open"),
     [Input("collapse-parameters-button", "n_clicks")],
