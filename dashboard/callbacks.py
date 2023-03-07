@@ -4,7 +4,6 @@ import os
 import warnings
 import dash
 import dash_bootstrap_components as dbc
-import layouts
 import numpy as np
 import onnx
 import plotly.express as px
@@ -26,7 +25,6 @@ from PIL import Image
 from plotly.subplots import make_subplots
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html
-from utilities import imagenet_class_name
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer
 
@@ -665,6 +663,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
     [State("collapse-parameters", "is_open")],
 )
 def toggle_parameters_collapse(n, is_open):
+    """Toggle parameters."""
     if n:
         return not is_open
     return is_open
