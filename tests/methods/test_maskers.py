@@ -7,8 +7,18 @@ import pytest
 from dianna.utils.maskers import mask_time_steps
 
 
-def test_mask_has_correct_shape():
-    input_data = _get_input_data()
+def test_mask_has_correct_shape_univariate():
+    input_data = _get_univariate_input_data()
+    number_of_masks = 5
+
+    result = _call_masking_function(input_data, number_of_masks=number_of_masks)
+
+    assert result.shape[0] == number_of_masks, 'Should return the correct number of masks.'
+    assert result.shape[1:] == input_data.shape, 'Masked instances should each have the correct shape.'
+
+
+def test_mask_has_correct_shape_multivariate():
+    input_data = _get_multivariate_input_data()
     number_of_masks = 5
 
     result = _call_masking_function(input_data, number_of_masks=number_of_masks)
@@ -18,7 +28,7 @@ def test_mask_has_correct_shape():
 
 
 @pytest.mark.parametrize("p_keep_and_expected_rate", [
-    (0.0, 0.1),  # Mask all but one
+    (0.1, 0.1),  # Mask all but one
     (0.1, 0.1),
     (0.3, 0.3),
     (0.5, 0.5),
@@ -27,7 +37,7 @@ def test_mask_has_correct_shape():
 ])
 def test_mask_contains_correct_number_of_unmasked_parts(p_keep_and_expected_rate):
     p_keep, expected_rate = p_keep_and_expected_rate
-    input_data = _get_input_data()
+    input_data = _get_univariate_input_data()
 
     result = _call_masking_function(input_data, p_keep=p_keep)
 
@@ -35,7 +45,7 @@ def test_mask_contains_correct_number_of_unmasked_parts(p_keep_and_expected_rate
 
 
 def test_mask_contains_correct_parts_are_mean_masked():
-    input_data = _get_input_data()
+    input_data = _get_univariate_input_data()
     mean = numpy.mean(input_data)
 
     result = _call_masking_function(input_data, mask_type='mean')
@@ -44,8 +54,12 @@ def test_mask_contains_correct_parts_are_mean_masked():
     assert np.alltrue(masked_parts == mean), f'All elements in {masked_parts} should have value {mean}'
 
 
-def _get_input_data() -> np.array:
+def _get_univariate_input_data() -> np.array:
     return np.zeros((10, 1)) + np.arange(10).reshape(10, 1)
+
+
+def _get_multivariate_input_data() -> np.array:
+    return np.zeros((10, 6)) + np.arange(10).reshape(10, 1)
 
 
 def _call_masking_function(input_data, number_of_masks=5, p_keep=.3, mask_type='mean'):
