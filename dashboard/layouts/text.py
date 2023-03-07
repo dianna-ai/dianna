@@ -313,7 +313,7 @@ def get_uploads_text():
             html.Div([
                 dcc.Graph(
                     id='graph_text_rise',
-                    figure = Dlank_fig())],
+                    figure = blank_fig())],
                     className = 'row',
                     style = {
                         'margin-top': '80',
@@ -325,7 +325,7 @@ def get_uploads_text():
             html.Div([
                 dcc.Graph(
                     id='graph_text_lime',
-                    figure = Dlank_fig())],
+                    figure = blank_fig())],
                     className = 'row',
                     style = {
                         'margin-top': '80',
