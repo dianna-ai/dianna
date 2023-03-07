@@ -3,16 +3,25 @@ import warnings
 import numpy as np
 
 
-def mask_time_steps(input_data: np.array, number_of_masks: int, p_keep: float = 0.5, mask_type='mean'):
+def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0.5):
     masked_data_shape = [number_of_masks] + list(input_data.shape)
-    masked_data = np.zeros(masked_data_shape) + input_data
+    masks = np.zeros(masked_data_shape, dtype=np.bool)
     for i in range(number_of_masks):
         series_length = input_data.shape[0]
         number_of_steps_masked = _determine_number_of_steps_masked(p_keep, series_length)
         steps_to_mask = np.random.choice(series_length, number_of_steps_masked, False)
-        masked_value = np.mean(input_data)
-        masked_data[i, steps_to_mask] = masked_value
-    return masked_data
+        masked_value = 1
+        masks[i, steps_to_mask] = masked_value
+    return masks
+
+
+def mask_data(input_data, masks):
+    number_of_masks = masks.shape[0]
+    input_data_batch = np.repeat(np.expand_dims(input_data, 0), number_of_masks, axis=0)
+    result = np.empty(input_data_batch.shape)
+    result[~masks] = input_data_batch[~masks]
+    result[masks] = np.mean(input_data)
+    return result
 
 
 def _determine_number_of_steps_masked(p_keep: float, series_length: int) -> int:

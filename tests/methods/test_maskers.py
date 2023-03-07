@@ -4,7 +4,7 @@ import numpy
 import numpy as np
 import pytest
 
-from dianna.utils.maskers import mask_time_steps
+from dianna.utils.maskers import generate_masks, mask_data
 
 
 def test_mask_has_correct_shape_univariate():
@@ -13,8 +13,7 @@ def test_mask_has_correct_shape_univariate():
 
     result = _call_masking_function(input_data, number_of_masks=number_of_masks)
 
-    assert result.shape[0] == number_of_masks, 'Should return the correct number of masks.'
-    assert result.shape[1:] == input_data.shape, 'Masked instances should each have the correct shape.'
+    assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
 
 def test_mask_has_correct_shape_multivariate():
@@ -23,8 +22,7 @@ def test_mask_has_correct_shape_multivariate():
 
     result = _call_masking_function(input_data, number_of_masks=number_of_masks)
 
-    assert result.shape[0] == number_of_masks, 'Should return the correct number of masks.'
-    assert result.shape[1:] == input_data.shape, 'Masked instances should each have the correct shape.'
+    assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
 
 @pytest.mark.parametrize("p_keep_and_expected_rate", [
@@ -63,4 +61,5 @@ def _get_multivariate_input_data() -> np.array:
 
 
 def _call_masking_function(input_data, number_of_masks=5, p_keep=.3, mask_type='mean'):
-    return mask_time_steps(input_data, number_of_masks, p_keep=p_keep, mask_type=mask_type)
+    masks = generate_masks(input_data, number_of_masks, p_keep=p_keep)
+    return mask_data(input_data, masks)
