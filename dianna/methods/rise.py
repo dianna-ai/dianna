@@ -2,6 +2,7 @@ import numpy as np
 from skimage.transform import resize
 from tqdm import tqdm
 from dianna import utils
+from dianna.methods.rise_timeseries import RISETimeseries
 
 
 def normalize(saliency, n_masks, p_keep):

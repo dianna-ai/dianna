@@ -25,12 +25,20 @@ import importlib
 import logging
 from . import utils
 
-
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = "DIANNA Team"
 __email__ = "dianna-ai@esciencecenter.nl"
 __version__ = "0.7.0"
+
+
+def explain_timeseries(model_or_function, input_data, method, labels, **kwargs):
+    explainer = _get_explainer(method, kwargs, modality="Timeseries")
+    explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain, kwargs)
+    return explainer.explain(model_or_function,
+                             input_data,
+                             labels,
+                             **explain_image_kwargs)
 
 
 def explain_image(model_or_function, input_data, method, labels, **kwargs):
