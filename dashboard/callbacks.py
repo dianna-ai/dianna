@@ -2,30 +2,29 @@
 import base64
 import os
 import warnings
-import numpy as np
-# Onnx
-import onnx
-# Plotly
 import dash
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+import layouts
+import numpy as np
+import onnx
 import plotly.express as px
+import plotly.graph_objects as go
 import spacy
+import utilities
 from dash import html
 from dash.exceptions import PreventUpdate
 from flask_caching import Cache
 from html2image import Html2Image
-# Dash&Flask
 from jupyter_dash import JupyterDash
+from layouts.fig import blank_fig
+from layouts.styles import COLORS
 from onnx_tf.backend import prepare
-# Others
 from PIL import Image
-import dianna
-from dianna.utils.tokenizers import SpacyTokenizer
-import utilities
+from plotly.subplots import make_subplots
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html
-import layouts
+from utilities import imagenet_class_name
+import dianna
+from dianna.utils.tokenizers import SpacyTokenizer
 
 
 warnings.filterwarnings('ignore')  # disable warnings relateds to tf versions
@@ -84,27 +83,27 @@ def upload_image(contents, filename):
                     height=300,
                     title=f"{filename[0]} uploaded",
                     title_x=0.5,
-                    title_font_color=layouts.colors['blue1'])
+                    title_font_color=COLORS['blue1'])
 
                 fig.update_xaxes(showgrid=False, showticklabels=False,
                                  zeroline=False)
                 fig.update_yaxes(showgrid=False, showticklabels=False,
                                  zeroline=False)
 
-                fig.layout.paper_bgcolor = layouts.colors['blue4']
+                fig.layout.paper_bgcolor = COLORS['blue4']
 
                 return fig
 
-            return utilities.blank_fig(
+            return blank_fig(
                 text='File format error! <br><br>Please upload only images' +
                      'in one of the following formats:' + extensions)
 
         except Exception as e:
             print(e)
-            return utilities.blank_fig(
+            return blank_fig(
                     text='There was an error processing this file.')
     else:
-        return utilities.blank_fig()
+        return blank_fig()
 
 
 # uploading model for image
@@ -263,7 +262,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods,  new_model, new_image, label
     ctx = dash.callback_context
     if ctx.triggered[0]["prop_id"] == "stop_button.n_clicks":
         return (html.Div(['Explanation stopped.'],
-                style={'margin-top': '60px'}), utilities.blank_fig())
+                style={'margin-top': '60px'}), blank_fig())
 
     # update graph
     if (fn_m and fn_i) is not None and (sel_methods != []):
@@ -361,7 +360,7 @@ def update_multi_options_i(fn_m, fn_i, sel_methods,  new_model, new_image, label
             fig.update_layout(
                 width=650,
                 height=(200*n_rows+50),
-                paper_bgcolor=layouts.colors['blue4'])
+                paper_bgcolor=COLORS['blue4'])
 
             fig.update_xaxes(showgrid=False, showticklabels=False,
                              zeroline=False)
@@ -383,11 +382,11 @@ def update_multi_options_i(fn_m, fn_i, sel_methods,  new_model, new_image, label
             return (html.Div(
                 ['There was an error running the model. Check ' +
                  'either the test image or the model.']),
-                utilities.blank_fig())
+                blank_fig())
     else:
         return (html.Div(['Missing model, image or XAI method.'],
                 style={'margin-top': '60px'}),
-                utilities.blank_fig())
+                blank_fig())
 
 ###################################################################
 
@@ -546,7 +545,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
     if ctx.triggered[0]["prop_id"] == "stop_button_t.n_clicks":
         return (
             html.Div(['Explanation stopped.'], style={'margin-top': '60px'}),
-            utilities.blank_fig(), utilities.blank_fig())
+            blank_fig(), blank_fig())
 
     # update text explanations
     if (fn_m and input_text) is not None and (sel_methods != []):
@@ -564,8 +563,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
             class_name = labelnames
             pred_class = class_name[np.argmax(predictions)]
 
-            fig_l = utilities.blank_fig()
-            fig_r = utilities.blank_fig()
+            fig_l = blank_fig()
+            fig_r = blank_fig()
 
             for m in sel_methods:
                 if m == "LIME":
@@ -591,9 +590,9 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
                         showticklabels=False, zeroline=False)
                     fig_l.update_layout(
                         title='LIME explanation:',
-                        title_font_color=layouts.colors['blue1'],
-                        paper_bgcolor=layouts.colors['blue4'],
-                        plot_bgcolor=layouts.colors['blue4'],
+                        title_font_color=COLORS['blue1'],
+                        paper_bgcolor=COLORS['blue4'],
+                        plot_bgcolor=COLORS['blue4'],
                         height=200,
                         width=500,
                         margin_b=40,
@@ -622,9 +621,9 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
                         showticklabels=False, zeroline=False)
                     fig_r.update_layout(
                         title='RISE explanation:',
-                        title_font_color=layouts.colors['blue1'],
-                        paper_bgcolor=layouts.colors['blue4'],
-                        plot_bgcolor=layouts.colors['blue4'],
+                        title_font_color=COLORS['blue1'],
+                        paper_bgcolor=COLORS['blue4'],
+                        plot_bgcolor=COLORS['blue4'],
                         height=200,
                         width=500,
                         margin_b=50,
@@ -646,9 +645,9 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
             return html.Div([
                 'There was an error running the model. Check either the test ' +
                 'text or the model.'
-                ]), utilities.blank_fig(), utilities.blank_fig()
+                ]), blank_fig(), blank_fig()
     else:
         return (html.Div(['Missing model, input text or XAI method.']),
-                utilities.blank_fig(), utilities.blank_fig())
+                blank_fig(), blank_fig())
 
 ###################################################################

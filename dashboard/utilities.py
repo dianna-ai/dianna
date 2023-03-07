@@ -1,7 +1,6 @@
 import os
 import warnings
 import numpy as np
-import plotly.graph_objects as go
 from keras import utils as keras_utils
 from PIL import Image
 from PIL import ImageStat
@@ -19,18 +18,6 @@ from dianna.utils.tokenizers import SpacyTokenizer
 
 
 warnings.filterwarnings('ignore') # disable warnings relateds to versions of tf
-
-
-# colors
-colors = {
-    'white': '#FFFFFF',
-    'text': '#091D58',
-    'blue1': '#063446',  # dark blue
-    'blue2': '#0e749b',
-    'blue3': '#15b3f0',
-    'blue4': '#E4F3F9',  # light blue
-    'yellow1': '#f0d515'
-}
 
 
 class MovieReviewsModelRunner:
@@ -67,44 +54,6 @@ class MovieReviewsModelRunner:
         positivity = pred[:, 0]
         negativity = 1 - positivity
         return np.transpose([negativity, positivity])
-
-
-def blank_fig(text=None):
-    """Creates a blank figure."""
-    fig = go.Figure(data=go.Scatter(x=[], y=[]))
-    fig.update_layout(
-        paper_bgcolor=colors['blue4'],
-        plot_bgcolor=colors['blue4'],
-        width=300,
-        height=300)
-
-    fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False)
-    fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False)
-
-    if text is not None:
-        fig.update_layout(
-            width=300,
-            height=300,
-            annotations=[
-                        {
-                            "text": text,
-                            "xref": "paper",
-                            "yref": "paper",
-                            "showarrow": False,
-                            "font": {
-                                "size": 14,
-                                "color": colors['blue1']
-                            },
-                            "valign": "top",
-                            "yanchor": "top",
-                            "xanchor": "center",
-                            "yshift": 60,
-                            "xshift": 10
-                        }
-                    ]
-            )
-
-    return fig
 
 
 def open_image(path):
