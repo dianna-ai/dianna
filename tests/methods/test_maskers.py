@@ -1,5 +1,3 @@
-import unittest
-
 import numpy
 import numpy as np
 import pytest
@@ -8,6 +6,7 @@ from dianna.utils.maskers import generate_masks, mask_data
 
 
 def test_mask_has_correct_shape_univariate():
+    """Test masked data has the correct shape for a univariate input."""
     input_data = _get_univariate_input_data()
     number_of_masks = 5
 
@@ -17,6 +16,7 @@ def test_mask_has_correct_shape_univariate():
 
 
 def test_mask_has_correct_shape_multivariate():
+    """Test masked data has the correct shape for a multivariate input."""
     input_data = _get_multivariate_input_data()
     number_of_masks = 5
 
@@ -34,6 +34,7 @@ def test_mask_has_correct_shape_multivariate():
     (0.99, 0.9),  # Mask only 1
 ])
 def test_mask_contains_correct_number_of_unmasked_parts(p_keep_and_expected_rate):
+    """Number of unmasked parts should be conforming the given p_keep."""
     p_keep, expected_rate = p_keep_and_expected_rate
     input_data = _get_univariate_input_data()
 
@@ -43,6 +44,7 @@ def test_mask_contains_correct_number_of_unmasked_parts(p_keep_and_expected_rate
 
 
 def test_mask_contains_correct_parts_are_mean_masked():
+    """All parts that are masked should now contain the mean of the input."""
     input_data = _get_univariate_input_data()
     mean = numpy.mean(input_data)
 
@@ -62,4 +64,4 @@ def _get_multivariate_input_data() -> np.array:
 
 def _call_masking_function(input_data, number_of_masks=5, p_keep=.3, mask_type='mean'):
     masks = generate_masks(input_data, number_of_masks, p_keep=p_keep)
-    return mask_data(input_data, masks)
+    return mask_data(input_data, masks, mask_type='mean')

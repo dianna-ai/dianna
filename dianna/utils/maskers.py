@@ -4,6 +4,16 @@ import numpy as np
 
 
 def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0.5):
+    """
+    Generate a set of masks given a probability of keeping any time step unmasked.
+    Args:
+        input_data:
+        number_of_masks:
+        p_keep: the probability that any value remains unmasked.
+
+    Returns:
+    Single array containing all masks where the first dimension represents the batch.
+    """
     masked_data_shape = [number_of_masks] + list(input_data.shape)
     masks = np.zeros(masked_data_shape, dtype=np.bool)
     for i in range(number_of_masks):
@@ -15,12 +25,23 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
     return masks
 
 
-def mask_data(input_data, masks):
+def mask_data(data, masks, mask_type='mean'):
+    """
+    Mask data given using a set of masks.
+    Args:
+        data:
+        masks: an array with shape [number_of_masks] + data.shape
+        mask_type:
+
+    Returns:
+    Single array containing all masked input where the first dimension represents the batch.
+    """
     number_of_masks = masks.shape[0]
-    input_data_batch = np.repeat(np.expand_dims(input_data, 0), number_of_masks, axis=0)
+    input_data_batch = np.repeat(np.expand_dims(data, 0), number_of_masks, axis=0)
     result = np.empty(input_data_batch.shape)
     result[~masks] = input_data_batch[~masks]
-    result[masks] = np.mean(input_data)
+    masking_value = np.mean(data)
+    result[masks] = masking_value
     return result
 
 
