@@ -6,6 +6,7 @@ import numpy as np
 def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0.5):
     """
     Generate a set of masks given a probability of keeping any time step unmasked.
+
     Args:
         input_data:
         number_of_masks:
@@ -28,6 +29,7 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
 def mask_data(data, masks, mask_type='mean'):
     """
     Mask data given using a set of masks.
+
     Args:
         data:
         masks: an array with shape [number_of_masks] + data.shape
@@ -40,9 +42,15 @@ def mask_data(data, masks, mask_type='mean'):
     input_data_batch = np.repeat(np.expand_dims(data, 0), number_of_masks, axis=0)
     result = np.empty(input_data_batch.shape)
     result[~masks] = input_data_batch[~masks]
-    masking_value = np.mean(data)
-    result[masks] = masking_value
+    result[masks] = _get_mask_value(data, mask_type)
     return result
+
+
+def _get_mask_value(data: np.array, mask_type: str) -> int:
+    """Calculates a masking value of the given type for the data."""
+    if mask_type == 'mean':
+        return np.mean(data)
+    raise ValueError(f'Unknown mask_type selected: {mask_type}')
 
 
 def _determine_number_of_steps_masked(p_keep: float, series_length: int) -> int:

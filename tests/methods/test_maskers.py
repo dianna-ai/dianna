@@ -1,4 +1,3 @@
-import numpy
 import numpy as np
 import pytest
 
@@ -46,7 +45,7 @@ def test_mask_contains_correct_number_of_unmasked_parts(p_keep_and_expected_rate
 def test_mask_contains_correct_parts_are_mean_masked():
     """All parts that are masked should now contain the mean of the input."""
     input_data = _get_univariate_input_data()
-    mean = numpy.mean(input_data)
+    mean = np.mean(input_data)
 
     result = _call_masking_function(input_data, mask_type='mean')
 
@@ -64,4 +63,4 @@ def _get_multivariate_input_data() -> np.array:
 
 def _call_masking_function(input_data, number_of_masks=5, p_keep=.3, mask_type='mean'):
     masks = generate_masks(input_data, number_of_masks, p_keep=p_keep)
-    return mask_data(input_data, masks, mask_type='mean')
+    return mask_data(input_data, masks, mask_type=mask_type)
