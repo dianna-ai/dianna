@@ -1,10 +1,28 @@
 import numpy as np
 from tqdm import tqdm
 
-from dianna.utils.maskers import mask_time_steps
+from dianna import utils
+from dianna.utils.maskers import generate_masks
+from dianna.utils.maskers import mask_data
+
+
+def _make_predictions(input_data, runner, batch_size):
+    """Process the input_data with the model runner in batches and return the predictions."""
+    number_of_masks = input_data.shape[0]
+    batch_predictions = []
+    for i in tqdm(range(0, number_of_masks, batch_size), desc='Explaining'):
+        batch_predictions.append(runner(input_data[i:i + batch_size]))
+    return np.concatenate(batch_predictions)
+
+
+# Duplicate code from rise.py:
+def normalize(saliency, n_masks, p_keep):
+    """Normalizes salience by number of masks and keep probability."""
+    return saliency / n_masks / p_keep
 
 
 class RISETimeseries:
+    """RISE implementation for timeseries adapted from the image version of RISE."""
     def __init__(self, n_masks=1000, feature_res=8, p_keep=None,
                  preprocess_function=None):
         """RISE initializer.
@@ -22,25 +40,29 @@ class RISETimeseries:
         self.masks = None
         self.predictions = None
 
-    def explain(self, model_or_function, input_timeseries, labels, tokenizer=None,  # pylint: disable=too-many-arguments
-                batch_size=100):
-        masked = mask_time_steps(input_timeseries, number_of_masks=self.n_masks, p_keep=self.p_keep, mask_type='mean')
+    def explain(self, model_or_function, input_timeseries, labels, batch_size=100):
+        """Runs the RISE explainer on images.
 
-        _input_data, runner = self._prepare_input_data_and_model(input_timeseries, model_or_function)
+           The model will be called with masked timeseries,
+           with a shape defined by `batch_size` and the shape of `input_data`.
 
-        batch_predictions = []
-        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            batch_predictions.append(runner(masked[i:i + batch_size]))
-        self.predictions = np.concatenate(batch_predictions)
+        Args:
+            model_or_function (callable or str): The function that runs the model to be explained _or_
+                                                 the path to a ONNX model on disk.
+            input_timeseries (np.ndarray): Input timeseries data to be explained
+            batch_size (int): Batch size to use for running the model.
+            labels (Iterable(int)): Labels to be explained
 
-        sailancy_map = self.predictions.dot(masks)
-        return np.zeros([len(labels)] + list(input_timeseries.shape))
+        Returns:
+            Explanation heatmap for each class (np.ndarray).
+        """
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
+        self.masks = generate_masks(input_timeseries, number_of_masks=self.n_masks, p_keep=self.p_keep)
+        masked = mask_data(input_timeseries, self.masks)
 
-    def _prepare_input_data_and_model(self, input_data, model_or_function):
-        """Prepares the input data as an xarray with an added batch dimension and creates a preprocessing function."""
-        self._set_axis_labels(input_data)
-        input_data = utils.to_xarray(input_data, self.axis_labels)
-        input_data = input_data.expand_dims('batch', 0)
-        input_data, full_preprocess_function = self._prepare_image_data(input_data)
-        runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
-        return input_data, runner
+        self.predictions = _make_predictions(masked, runner, batch_size)
+        n_labels = self.predictions.shape[1]
+
+        saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(n_labels, *input_timeseries.shape)
+        selected_saliency = saliency[labels]
+        return normalize(selected_saliency, self.n_masks, self.p_keep)

@@ -32,11 +32,25 @@ __email__ = "dianna-ai@esciencecenter.nl"
 __version__ = "0.7.0"
 
 
-def explain_timeseries(model_or_function, input_data, method, labels, **kwargs):
+def explain_timeseries(model_or_function, timeseries_data, method, labels, **kwargs):
+    """
+    Explain timeseries data given a model and a chosen method.
+
+    Args:
+        model_or_function (callable or str): The function that runs the model to be explained _or_
+                                             the path to a ONNX model on disk.
+        input_data (np.ndarray): Image data to be explained
+        method (string): One of the supported methods: RISE, LIME or KernelSHAP
+        labels (Iterable(int)): Labels to be explained
+
+    Returns:
+        One heatmap per class.
+
+    """
     explainer = _get_explainer(method, kwargs, modality="Timeseries")
     explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain, kwargs)
     return explainer.explain(model_or_function,
-                             input_data,
+                             timeseries_data,
                              labels,
                              **explain_image_kwargs)
 
