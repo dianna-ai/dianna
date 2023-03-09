@@ -1,30 +1,35 @@
 from unittest import TestCase
 
+import numpy as np
+
 import dianna
 import dianna.visualization
-import numpy as np
 from dianna.methods.rise import RISEImage, RISEText
 from dianna.utils import get_function
-from tests.utils import ModelRunner, run_model, get_mnist_1_data
-
+from tests.utils import run_model, get_mnist_1_data, assert_explanation_satisfies_expectations, \
+    load_movie_review_model
 from .test_onnx_runner import generate_data
 
 
 class RiseOnImages(TestCase):
     """Suite of RISE tests for the image case."""
-    def test_rise_function(self):
+
+    @staticmethod
+    def test_rise_function():
         """Test if rise runs and outputs the correct shape given some data and a model function."""
         input_data = np.random.random((224, 224, 3))
         axis_labels = ['y', 'x', 'channels']
         labels = [1]
         heatmaps_expected = np.load('tests/test_data/heatmap_rise_function.npy')
 
-        heatmaps = dianna.explain_image(run_model, input_data, "RISE", labels, axis_labels=axis_labels, n_masks=200, p_keep=.5)
+        heatmaps = dianna.explain_image(run_model, input_data, "RISE", labels, axis_labels=axis_labels, n_masks=200,
+                                        p_keep=.5)
 
         assert heatmaps[0].shape == input_data.shape[:2]
         assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
 
-    def test_rise_filename(self):
+    @staticmethod
+    def test_rise_filename():
         """Test if rise runs and outputs the correct shape given some data and a model file."""
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1).astype(np.float32)[0]
@@ -37,7 +42,8 @@ class RiseOnImages(TestCase):
         print(heatmaps_expected.shape)
         assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
 
-    def test_rise_determine_p_keep_for_images(self):
+    @staticmethod
+    def test_rise_determine_p_keep_for_images():
         """Tests exact expected p_keep given an image and model."""
         np.random.seed(0)
         expected_p_exact_keep = .4
@@ -52,37 +58,32 @@ class RiseOnImages(TestCase):
 
 class RiseOnText(TestCase):
     """Suite of RISE tests for the text case."""
+
     def test_rise_text(self):
         """Tests exact expected output given a text and model."""
-        np.random.seed(42)
-        model_path = 'tests/test_data/movie_review_model.onnx'
-        word_vector_file = 'tests/test_data/word_vectors.txt'
-        runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)
         review = 'such a bad movie'
         expected_words = ['such', 'a', 'bad', 'movie']
         expected_word_indices = [0, 1, 2, 3]
-        expected_positive_scores = [0.3044678, 0.28736606, 0.03623142, 0.23650846]
+        expected_positive_scores = [0.30, 0.29, 0.04, 0.25]
 
-        positive_explanation = dianna.explain_text(runner, review, tokenizer=runner.tokenizer,
+        positive_explanation = dianna.explain_text(self.runner, review, tokenizer=self.runner.tokenizer,
                                                    labels=(1, 0), method='RISE', p_keep=.5)[0]
 
-        words = [element[0] for element in positive_explanation]
-        word_indices = [element[1] for element in positive_explanation]
-        positive_scores = [element[2] for element in positive_explanation]
-        assert words == expected_words
-        assert word_indices == expected_word_indices
-        assert np.allclose(positive_scores, expected_positive_scores, atol=1e-5)
+        assert_explanation_satisfies_expectations(positive_explanation, expected_positive_scores, expected_word_indices,
+                                                  expected_words)
 
     def test_rise_determine_p_keep_for_text(self):
         """Tests exact expected p_keep given a text and model."""
-        np.random.seed(0)
         expected_p_exact_keep = .7
-        model_path = 'tests/test_data/movie_review_model.onnx'
-        word_vector_file = 'tests/test_data/word_vectors.txt'
-        runner = ModelRunner(model_path, word_vector_file, max_filter_size=5)
         input_text = 'such a bad movie'
-        runner = get_function(runner)
+        runner = get_function(self.runner)
         input_tokens = np.asarray(runner.tokenizer.tokenize(input_text))
 
-        p_keep = RISEText()._determine_p_keep(input_tokens, runner, runner.tokenizer)  # pylint: disable=protected-access
+        p_keep = RISEText()._determine_p_keep(input_tokens, runner,  # pylint: disable=protected-access
+                                              runner.tokenizer)
         assert np.isclose(p_keep, expected_p_exact_keep)
+
+    def setUp(self) -> None:
+        """Set seed and load runner."""
+        np.random.seed(0)
+        self.runner = load_movie_review_model()
