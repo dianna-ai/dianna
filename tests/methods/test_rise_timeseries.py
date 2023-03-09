@@ -1,11 +1,7 @@
-from unittest import TestCase
-
 import numpy as np
 
 import dianna
-import dianna.visualization
 from tests.utils import run_model
-
 
 
 def test_rise_timeseries_correct_output_shape():
