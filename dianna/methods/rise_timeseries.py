@@ -23,7 +23,7 @@ def normalize(saliency, n_masks, p_keep):
 
 class RISETimeseries:
     """RISE implementation for timeseries adapted from the image version of RISE."""
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=None,
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,
                  preprocess_function=None):
         """RISE initializer.
 
