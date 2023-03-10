@@ -41,7 +41,7 @@ authors:
     orcid: "https://orcid.org/0000-0002-7896-2969"
 
 doi: 10.5281/zenodo.5801485
-version: "0.6.0"
+version: "0.7.0"
 repository-code: "https://github.com/dianna-ai/dianna"
 keywords:
   - XAI

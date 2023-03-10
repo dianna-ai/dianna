@@ -34,3 +34,6 @@ venv
 venv3
 
 .python-version
+
+cache/
+dashboard/cache/

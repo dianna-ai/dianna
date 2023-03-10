@@ -79,6 +79,7 @@ class LIMEText:
             raise ValueError('Please provide a tokenizer to explain_text.')
 
         self.explainer.split_expression = tokenizer.tokenize  # lime accepts a callable as a split_expression
+
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.explainer.explain_instance, kwargs)
         explanation = self.explainer.explain_instance(input_text,

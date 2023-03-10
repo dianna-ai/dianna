@@ -40,7 +40,7 @@ class TextExampleWithExpectedHtml:
     original_text = 'Such a bad movie.'
     tokenizer = SpacyTokenizer()
     tokens = tokenizer.tokenize(original_text)
-    explanation =[
+    explanation = [
                     ('bad', 2, 0.9959058),
                     ('movie', 3, 0.78263557),
                     ('a', 1, 0.7753202),

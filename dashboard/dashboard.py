@@ -1,19 +1,16 @@
 """Start dashboard."""
-# Others
 import warnings
-# debug
 from importlib import reload
-# Dash&Flask
 import dash
-from dash import dcc
-from dash import html
-# Custom libraries
-from dianna import utils  # pylint: disable=unused-import
 import layouts
 import utilities
 from callbacks import app
+from dash import dcc
+from dash import html
 from layouts import images_page
 from layouts import text_page
+from dianna import utils  # pylint: disable=unused-import
+
 
 warnings.filterwarnings('ignore')  # disable warnings related to versions of tf
 
