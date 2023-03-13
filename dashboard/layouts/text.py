@@ -178,7 +178,7 @@ def get_uploads_text():
             html.Div([
                 # update button
                 html.Button('Update explanation',
-                        id='update_button',
+                        id='update_button_t',
                         n_clicks=0,
                         style={
                             'margin-left': '0px',
@@ -190,7 +190,7 @@ def get_uploads_text():
                         }
                     ),
                 html.Button('Stop Explanation',
-                        id='stop_button',
+                        id='stop_button_t',
                         n_clicks=0,
                         style={
                             'margin-left': '40px',
