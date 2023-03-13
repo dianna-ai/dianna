@@ -89,11 +89,9 @@ The development environment will typically accumulate (old) packages during deve
 Running linters locally
 -----------------------
 
-For linting and import sorting we use `ruff <>`__, and to autoformat 
-the code we use `yapf <>`__
-`prospector <https://pypi.org/project/prospector/>`__ and to sort
-imports we use `isort <https://pycqa.github.io/isort/>`__. Running
-the linters requires `pre-commit <>`__
+For linting and import sorting we use `ruff <https://github.com/charliermarsh/ruff>`__, and to autoformat
+the code we use `yapf <https://github.com/google/yapf>`__
+Running the linters requires `pre-commit <https://pre-commit.com/>`__.
 
 .. code:: shell
 
