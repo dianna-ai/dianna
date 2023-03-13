@@ -47,8 +47,8 @@ def get_uploads_images():
             style = {
                 'height': '230px'
                 }
-            ), 
-        
+            ),
+
             # select model row
             html.Div([
                 dcc.Upload(
@@ -72,7 +72,7 @@ def get_uploads_images():
                     multiple=True
                 ),
             ],
-            className = 'row', 
+            className = 'row',
             ),
 
             # print selected model row
@@ -109,7 +109,7 @@ def get_uploads_images():
                     multiple=False
                 ),
             ],
-            className = 'row', 
+            className = 'row',
             ),
 
             # print selected model row
@@ -128,7 +128,7 @@ def get_uploads_images():
                 'textAlign': 'center',
                 'align-items': 'center'
             }),
-        
+
         # XAI methods col (9-col)
         html.Div([
 
@@ -215,7 +215,7 @@ def get_uploads_images():
             html.Div([
                 html.Div([
                     html.H6(children='XAI method specific settings',
-                        style={'font-weight': 'bold', 
+                        style={'font-weight': 'bold',
                         'margin-top': '30px',}),
                 ], className='nine columns'
                 ),
@@ -387,11 +387,11 @@ def get_uploads_images():
                         'margin-left': '140px',
                     })
 
-        ], 
+        ],
         className = 'nine columns')
 
     ], className = 'row',
-    style = { 
+    style = {
         'background-color' : COLORS['blue4'],
         'textAlign': 'center',
         'align-items': 'center'

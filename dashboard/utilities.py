@@ -26,6 +26,7 @@ class MovieReviewsModelRunner:
         self.tokenizer = SpacyTokenizer()
 
     def __call__(self, sentences):
+        """Call Runner."""
         # ensure the input has a batch axis
         if isinstance(sentences, str):
             sentences = [sentences]

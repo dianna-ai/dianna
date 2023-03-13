@@ -10,7 +10,7 @@ navbarcurrentpage = {
         'text-shadow': '0px 0px 1px rgb(251, 251, 252)',
         'textAlign' : 'center'
 }
-    
+
 navbarotherpage = {
     'text-decoration' : 'underline',
     'text-decoration-color' : COLORS['blue2'],
@@ -49,7 +49,7 @@ def get_navbar(p="images"):
         html.Div([], className = 'five columns')
 
     ],
-    
+
     className = 'row',
     style = {'background-color' : COLORS['blue2']
             }
@@ -83,7 +83,7 @@ def get_navbar(p="images"):
         html.Div([], className = 'five columns')
 
     ],
-    
+
     className = 'row',
     style = {'background-color' : COLORS['blue2']
             }

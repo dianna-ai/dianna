@@ -64,8 +64,8 @@ def get_uploads_text():
                 'height': '130px',
                 'margin-top': '20px',
                 }
-            ), 
-        
+            ),
+
             # select model row
             html.Div([
                 dcc.Upload(
@@ -89,7 +89,7 @@ def get_uploads_text():
                     multiple=True
                 ),
             ],
-            className = 'row', 
+            className = 'row',
             ),
 
 
@@ -125,7 +125,7 @@ def get_uploads_text():
                     multiple=False
                 ),
             ],
-            className = 'row', 
+            className = 'row',
             ),
 
             # print selected model row
@@ -139,7 +139,7 @@ def get_uploads_text():
                 'color' : COLORS['blue1']}
             )
             ],
-    
+
             className = 'three columns',
             style = {
                 'textAlign': 'center',
@@ -214,7 +214,7 @@ def get_uploads_text():
             html.Div([
                 html.Div([
                     html.H6(children='XAI method specific settings',
-                        style={'font-weight': 'bold', 
+                        style={'font-weight': 'bold',
                         'margin-top': '30px',}),
                 ], className='nine columns'
                 ),
@@ -333,11 +333,11 @@ def get_uploads_text():
                         #'height': '100px'
                     })
 
-        ], 
+        ],
         className = 'nine columns')
 
     ], className = 'row',
-    style = { 
+    style = {
         'background-color' : COLORS['blue4'],
         'textAlign': 'center',
         'align-items': 'center'
