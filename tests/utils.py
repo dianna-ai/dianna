@@ -3,7 +3,6 @@ import onnxruntime as ort
 import spacy
 from scipy.special import expit as sigmoid
 from torchtext.vocab import Vectors
-
 from dianna.utils.tokenizers import SpacyTokenizer
 
 
@@ -41,8 +40,7 @@ def get_mnist_1_data():
 
 
 def run_model(input_data):
-    """
-    Simulate a model that outputs 2-classes.
+    """Simulate a model that outputs 2-classes.
 
     Args:
         input_data: input data for the dummy model
@@ -61,8 +59,7 @@ class ModelRunner:
     """Example model runner for text models used for automated testing."""
 
     def __init__(self, model_path, word_vector_file, max_filter_size):
-        """
-        Initializes the model runner.
+        """Initializes the model runner.
 
         Args:
             model_path: path to the model file
@@ -78,6 +75,7 @@ class ModelRunner:
         self.max_filter_size = max_filter_size
 
     def __call__(self, sentences):
+        """Call function."""
         # ensure the input has a batch axis
         if isinstance(sentences, str):
             sentences = [sentences]

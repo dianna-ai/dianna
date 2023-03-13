@@ -1,5 +1,5 @@
-from dianna.visualization import plot_timeseries
 import numpy as np
+from dianna.visualization import plot_timeseries
 
 
 def test_plot_timeseries():

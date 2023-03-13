@@ -1,13 +1,14 @@
 from unittest import TestCase
-
 import numpy as np
-
 import dianna
 import dianna.visualization
-from dianna.methods.rise import RISEImage, RISEText
+from dianna.methods.rise import RISEImage
+from dianna.methods.rise import RISEText
 from dianna.utils import get_function
-from tests.utils import run_model, get_mnist_1_data, assert_explanation_satisfies_expectations, \
-    load_movie_review_model
+from tests.utils import assert_explanation_satisfies_expectations
+from tests.utils import get_mnist_1_data
+from tests.utils import load_movie_review_model
+from tests.utils import run_model
 from .test_onnx_runner import generate_data
 
 
@@ -50,7 +51,7 @@ class RiseOnImages(TestCase):
         model_filename = 'tests/test_data/mnist_model.onnx'
         data = get_mnist_1_data().astype(np.float32)
 
-        p_keep = RISEImage()._determine_p_keep(  # pylint: disable=protected-access
+        p_keep = RISEImage()._determine_p_keep(
             data, get_function(model_filename))
 
         assert np.isclose(p_keep, expected_p_exact_keep)
