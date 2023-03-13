@@ -44,7 +44,7 @@ class RISEText:
         self.masks = None
         self.predictions = None
 
-    def explain(self, model_or_function, input_text, labels, tokenizer=None,  # pylint: disable=too-many-arguments
+    def explain(self, model_or_function, input_text, labels, tokenizer=None,
                 batch_size=100):
         """Runs the RISE explainer on text.
 
@@ -87,7 +87,7 @@ class RISEText:
         print(f'Rise parameter p_keep was automatically determined at {best_p_keep}')
         return best_p_keep
 
-    def _calculate_mean_class_std(self, p_keep, runner, input_text, tokenizer,  # pylint: disable=too-many-arguments
+    def _calculate_mean_class_std(self, p_keep, runner, input_text, tokenizer,
                                   n_masks):
         masks = self._generate_masks(input_text.shape, p_keep, n_masks)
         masked = self._create_masked_sentences(input_text, masks, tokenizer)
@@ -99,7 +99,7 @@ class RISEText:
         masks = np.random.choice(a=(True, False), size=(n_masks,) + input_shape, p=(p_keep, 1 - p_keep))
         return masks
 
-    def _get_saliencies(self, runner, sentences, num_tokens, batch_size, p_keep):  # pylint: disable=too-many-arguments
+    def _get_saliencies(self, runner, sentences, num_tokens, batch_size, p_keep):
         self.predictions = self._get_predictions(sentences, runner, batch_size)
         unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, num_tokens)
         return normalize(unnormalized_saliency, self.n_masks, p_keep)
@@ -128,7 +128,7 @@ class RISEText:
 class RISEImage:
     """RISE implementation for images based on https://github.com/eclique/RISE/blob/master/Easy_start.ipynb."""
 
-    def __init__(self, n_masks=1000, feature_res=8, p_keep=None,  # pylint: disable=too-many-arguments
+    def __init__(self, n_masks=1000, feature_res=8, p_keep=None,
                  axis_labels=None, preprocess_function=None):
         """RISE initializer.
 
@@ -232,6 +232,8 @@ class RISEImage:
 
         Args:
             input_size (int): Size of a single sample of input data, for images without the channel axis.
+            p_keep: ?
+            n_masks: Number of masks
 
         Returns:
             The generated masks (np.ndarray)

@@ -1,5 +1,4 @@
-"""
-DIANNA: Deep Insight And Neural Network Analysis.
+"""DIANNA: Deep Insight And Neural Network Analysis.
 
 Modern scientific challenges are often tackled with (Deep) Neural Networks (DNN).
 Despite their high predictive accuracy, DNNs lack inherent explainability. Many DNN
@@ -34,8 +33,7 @@ __version__ = "0.7.0"
 
 
 def explain_image(model_or_function, input_data, method, labels, **kwargs):
-    """
-    Explain an image (input_data) given a model and a chosen method.
+    """Explain an image (input_data) given a model and a chosen method.
 
     Args:
         model_or_function (callable or str): The function that runs the model to be explained _or_
@@ -43,6 +41,7 @@ def explain_image(model_or_function, input_data, method, labels, **kwargs):
         input_data (np.ndarray): Image data to be explained
         method (string): One of the supported methods: RISE, LIME or KernelSHAP
         labels (Iterable(int)): Labels to be explained
+        kwargs: These keyword parameters are passed on
 
     Returns:
         One heatmap (2D array) per class.
@@ -50,15 +49,14 @@ def explain_image(model_or_function, input_data, method, labels, **kwargs):
     """
     if method.upper() == "KERNELSHAP":
         # To avoid Access Violation on Windows with SHAP:
-        from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel,unused-import
+        from onnx_tf.backend import prepare  # noqa: F401
     explainer = _get_explainer(method, kwargs, modality="Image")
     explain_image_kwargs = utils.get_kwargs_applicable_to_function(explainer.explain, kwargs)
     return explainer.explain(model_or_function, input_data, labels, **explain_image_kwargs)
 
 
 def explain_text(model_or_function, input_text, tokenizer, method, labels, **kwargs):
-    """
-    Explain text (input_text) given a model and a chosen method.
+    """Explain text (input_text) given a model and a chosen method.
 
     Args:
         model_or_function (callable or str): The function that runs the model to be explained _or_
@@ -67,6 +65,7 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels, **kwa
         tokenizer : Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
         method (string): One of the supported methods: RISE or LIME
         labels (Iterable(int)): Labels to be explained
+        kwargs: These keyword parameters are passed on
 
     Returns:
         List of (word, index of word in raw text, importance for target class) tuples.

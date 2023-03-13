@@ -104,8 +104,8 @@ def onnx_model_node_loader(model_path):
         loaded onnx model and the label of output node.
     """
     # these imports are done in the function because they are slow
-    import onnx  # pylint: disable=import-outside-toplevel
-    from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel
+    import onnx
+    from onnx_tf.backend import prepare
     onnx_model = onnx.load(model_path)  # load onnx model
     tf_model_rep = prepare(onnx_model, gen_tensor_dict=True)
     label_input_node = tf_model_rep.inputs[0]
