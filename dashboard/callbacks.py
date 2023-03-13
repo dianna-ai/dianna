@@ -145,7 +145,7 @@ def upload_label(filename):
             if 'txt' in filename:
                 with open(os.path.join(FOLDER_ON_SERVER, filename),'r',encoding="utf-8") as f:
                     lnames = f.readlines()
-                
+
                 labelnames = [item.rstrip() for item in lnames]
                 if labelnames is None or labelnames == ['']:
                     return html.Div(['Label file is empty, please upload a valid file']), labelnames
@@ -166,7 +166,7 @@ def upload_label(filename):
 # def parse_label(filename, labelnames):
 #     if filename is not None:
 #         try:
-            
+
 #         except Exception as e:
 #             print(e)
 #     else:
@@ -176,11 +176,9 @@ def upload_label(filename):
 # these computations are cached in a globally available
 # redis memory store which is available across processes
 # and for all time.
-# pylint: disable=dangerous-default-value
-# pylint: disable=too-many-arguments
 @cache.memoize()
 def global_store_i(method_sel, model_path, image_test,
-                   labels=list(range(2)), axis_labels={2: 'channels'},
+                   labels=(0, 1), axis_labels={2: 'channels'},
                    n_masks=1000, feature_res=6, p_keep=.1,
                    n_samples=1000, background=0, n_segments=200, sigma=0,
                    random_state=2):
@@ -189,6 +187,7 @@ def global_store_i(method_sel, model_path, image_test,
     Takes in the selected XAI method, the model path and the image to test,
     returns the explanations array.
     """
+    labels = list(labels)
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
@@ -245,9 +244,6 @@ def select_method(method_sel):
     dash.dependencies.Input("update_button", "n_clicks"),
     dash.dependencies.Input("stop_button", "n_clicks")
 )
-# pylint: disable=too-many-locals
-# pylint: disable=unused-argument
-# pylint: disable=too-many-arguments
 def update_multi_options_i(fn_m, fn_i, sel_methods,  new_model, new_image, labelnames,
                            show_top=2, n_masks=1000, feature_res=6, p_keep=0.1,
                            n_samples=1000, background=0, n_segments=200,
@@ -449,7 +445,7 @@ def upload_label_text(filename):
             if 'txt' in filename:
                 with open(os.path.join(FOLDER_ON_SERVER, filename),'r',encoding="utf-8") as f:
                     lnames = f.readlines()
-                
+
                 labelnames = [item.rstrip() for item in lnames]
                 if labelnames is None or labelnames == ['']:
                     return html.Div(['Label file is empty, please upload a valid file']), labelnames
@@ -529,8 +525,6 @@ def select_method_t(method_sel):
     dash.dependencies.Input("update_button_t", "n_clicks"),
     dash.dependencies.Input("stop_button_t", "n_clicks")
 )
-# pylint: disable=too-many-locals
-# pylint: disable=unused-argument
 def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, labelnames,
                            n_masks=1000, feature_res=6, p_keep=0.1,
                            random_state=2, update_button_t=0, stop_button_t=0):

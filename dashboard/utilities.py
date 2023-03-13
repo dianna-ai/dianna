@@ -5,12 +5,8 @@ from keras import utils as keras_utils
 from PIL import Image
 from PIL import ImageStat
 from scipy.special import expit as sigmoid
-# keras model and preprocessing tools
-# pylint: disable=import-error
 from tensorflow.keras.applications.resnet50 import decode_predictions
 from torchtext.vocab import Vectors
-# pylint: disable=unused-import
-import dianna
 from dianna import utils
 from dianna.utils import move_axis
 from dianna.utils import to_xarray
@@ -71,17 +67,17 @@ def open_image(path):
 
 def preprocess_img_resnet(path):
     """Resnet specific function for preprocessing.
-    
+
     Reshape figure to 224,224 and get colour channel at position 0.
     Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet.
     See: https://github.com/onnx/models/tree/main/vision/classification/resnet
-    
+
     """
     img = keras_utils.load_img(path, target_size=(224,224))
     img_data = keras_utils.img_to_array(img)
     if img_data.shape[0] != 3:
         # Colour channel is not in position 0; reshape the data
-        xarray = to_xarray(img_data, {0: 'height', 1: 'width', 2: 'channels'}) 
+        xarray = to_xarray(img_data, {0: 'height', 1: 'width', 2: 'channels'})
         reshaped_data = move_axis(xarray, 'channels', 0)
         img_data = np.array(reshaped_data)
     # definitions for normalisation (for ImageNet)
@@ -89,7 +85,7 @@ def preprocess_img_resnet(path):
     stddev_vec = np.array([0.229, 0.224, 0.225])
     norm_img_data = np.zeros(img_data.shape).astype('float32')
     for i in range(img_data.shape[0]):
-        # for each pixel in each channel, divide the values by 255 ([0,1]), and normalize 
+        # for each pixel in each channel, divide the values by 255 ([0,1]), and normalize
         # using mean and standard deviation from values above
         norm_img_data[i,:,:] = (img_data[i,:,:]/255 - mean_vec[i]) / stddev_vec[i]
     return norm_img_data, img
