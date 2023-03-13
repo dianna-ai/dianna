@@ -89,33 +89,26 @@ The development environment will typically accumulate (old) packages during deve
 Running linters locally
 -----------------------
 
-For linting we use
+For linting and import sorting we use `ruff <>`__, and to autoformat 
+the code we use `yapf <>`__
 `prospector <https://pypi.org/project/prospector/>`__ and to sort
 imports we use `isort <https://pycqa.github.io/isort/>`__. Running
-the linters requires an activated virtual environment with the
-development tools installed.
+the linters requires `pre-commit <>`__
 
 .. code:: shell
 
-   # linter
-   prospector
+   # staged files only
+   pre-commit
 
-   # recursively check import style for the dianna module only
-   isort --recursive --check-only dianna
+   # all files
+   pre-commit run --all-files
 
-   # recursively check import style for the dianna module only and show
-   # any proposed changes as a diff
-   isort --recursive --check-only --diff dianna
-
-   # recursively fix import style for the dianna module only
-   isort --recursive dianna
-
-You can enable automatic linting with ``prospector`` and ``isort`` on
-commit by enabling the git hook from ``.githooks/pre-commit``, like so:
+You can enable automatic linting and code formatting with ``pre-commit``
+on each commit by enabling the git hook, like so:
 
 .. code:: shell
 
-   git config --local core.hooksPath .githooks
+   pre-commit install
 
 We also check linting errors in a GitHub Actions CI workflow.
 
