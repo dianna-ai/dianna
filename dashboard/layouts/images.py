@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 from .fig import blank_fig
-from .styles import COLORS
+from .styles import COLORS, astyle
 
 
 def get_uploads_images():
@@ -18,7 +18,7 @@ def get_uploads_images():
                     id='upload-image',
                     children=html.Div([
                         'Drag and Drop or ',
-                        html.A('Select Image')
+                        html.A('Select Image', style=astyle)
                     ]),
                     style={
                         'width': '80%',
@@ -55,7 +55,7 @@ def get_uploads_images():
                     id='upload-model-img',
                     children=html.Div([
                         'Drag and Drop or ',
-                        html.A('Select Model')
+                        html.A('Select Model', style=astyle)
                     ]),
                     style={
                         'width': '80%',
@@ -92,7 +92,7 @@ def get_uploads_images():
                     id='upload-label',
                     children=html.Div([
                         'Drag and Drop or ',
-                        html.A('Select Label File')
+                        html.A('Select Label File', style=astyle)
                     ]),
                     style={
                         'width': '80%',

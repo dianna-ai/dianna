@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 from .fig import blank_fig
-from .styles import COLORS
+from .styles import COLORS, astyle
 
 
 def get_uploads_text():
@@ -51,7 +51,7 @@ def get_uploads_text():
             className = 'row',
             style={
                 'borderWidth': '1px',
-                'margin-top': '10px',
+                'margin': '10px',
                 'textAlign': 'center',
                 'align-items': 'center'
                 }
@@ -72,7 +72,7 @@ def get_uploads_text():
                     id='upload-model-text',
                     children=html.Div([
                         'Drag and Drop or ',
-                        html.A('Select Model')
+                        html.A('Select Model', style=astyle)
                     ]),
                     style={
                         'width': '80%',
@@ -108,7 +108,7 @@ def get_uploads_text():
                     id='upload-label-text',
                     children=html.Div([
                         'Drag and Drop or ',
-                        html.A('Select Label File')
+                        html.A('Select Label File', style=astyle)
                     ]),
                     style={
                         'width': '80%',
