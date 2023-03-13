@@ -40,17 +40,17 @@ select = [
 ignore = [
     'D100',  # Missing module docstring
     # The following list excludes rules irrelevant to the Google style
-    'D203', 
-    'D204', 
-    'D213', 
-    'D215', 
-    'D400', 
-    'D401', 
-    'D404', 
-    'D406', 
-    'D407', 
-    'D408', 
-    'D409', 
+    'D203',
+    'D204',
+    'D213',
+    'D215',
+    'D400',
+    'D401',
+    'D404',
+    'D406',
+    'D407',
+    'D408',
+    'D409',
     'D413',
 ]
 
@@ -92,6 +92,6 @@ line-length = 120
 
 [tool.ruff.isort]
 known-first-party = ["dianna"]
-
-[tool.isort]
-profile = "black"
+force-single-line = true
+lines-after-imports = 2
+no-lines-before = ["future","standard-library","third-party","first-party","local-folder"]
