@@ -571,15 +571,15 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
                         random_state=random_state)
                     output = _create_html(
                         input_tokens, relevances_lime[0], max_opacity=0.8)
-                    hti = Html2Image()
-                    expl_path = 'text_expl.jpg'
+                    #hti = Html2Image()
+                    #expl_path = 'text_expl.jpg'
 
-                    hti.screenshot(output, save_as=expl_path)
+                    #hti.screenshot(output, save_as=expl_path)
 
-                    im = Image.open(expl_path)
-                    im = np.asarray(im).astype(np.float32)
+                    #im = Image.open(expl_path)
+                    #im = np.asarray(im).astype(np.float32)
 
-                    fig_l = px.imshow(im)
+                    fig_l = px.imshow(output) #px.imshow(im)
                     fig_l.update_xaxes(
                         showgrid=False, range=[0, 1000],
                         showticklabels=False, zeroline=False)
