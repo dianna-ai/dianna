@@ -8,3 +8,9 @@ COLORS = {
     'red1'  : '#FF0000',
     'yellow1' : '#f0d515'
 }
+
+astyle = {
+                                  'color': '#1EAEDB',
+                                  'text-decoration': 'underline',
+                                  'cursor': 'pointer',
+                         }
