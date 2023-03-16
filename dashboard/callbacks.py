@@ -36,7 +36,6 @@ FOLDER_ON_SERVER = str(Path(__file__).parent.absolute()) + "/app_data"
 os.makedirs(FOLDER_ON_SERVER, exist_ok=True)
 tokenizer = SpacyTokenizer()  # always use SpacyTokenizer, needs to be changed
 
-
 # Build App
 external_stylesheets = [
     dbc.themes.BOOTSTRAP,
@@ -458,7 +457,6 @@ def upload_label_text(filename):
         try:
             if 'txt' in filename:
                 with open(os.path.join(FOLDER_ON_SERVER, filename),'r',encoding="utf-8") as f:
-                    print(f)
                     lnames = f.readlines()
                 
                 labelnames = [item.rstrip() for item in lnames]
