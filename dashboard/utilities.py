@@ -125,11 +125,10 @@ def _create_html(input_tokens, explanation, max_opacity):
                 _highlight_word(word, importance, max_importance, max_opacity)
                 )
         except ValueError:
-            print('in vlaueerror')
             highlighted_words.append((html.Div([
                             html.Span(
                                 [word
-                                ], style={'background': f'rgba(128, 128, 128, 0.3)', 'display': 'inline-block'})
+                                ], style={'background': f'rgba(128, 128, 128, 0.3)'})
                             ], style={'fontsize':36, 'display': 'inline-block'})
                         ))
         highlighted_words.append(' ')
@@ -146,7 +145,7 @@ def _highlight_word(word, importance, max_importance, max_opacity):
     highlighted_word = (html.Div([
                             html.Span(
                                 [word
-                                ], style={'background': color, 'display': 'inline-block'})
+                                ], style={'background': color})
                             ], style={'display': 'inline-block'})
                         )
     return highlighted_word

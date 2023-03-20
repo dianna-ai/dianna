@@ -322,8 +322,7 @@ def get_uploads_text():
                     'margin-left': '140px',
                     'margin-right': '140px',
                     'height': '100px'
-                    },
-            ),
+                }),
 
             # plotting explanations
             html.Div(
@@ -334,8 +333,7 @@ def get_uploads_text():
                     'margin-left': '140px',
                     'margin-right': '140px',
                     'height': '100px'
-                }
-            )
+                })
 
         ], 
         className = 'nine columns')
