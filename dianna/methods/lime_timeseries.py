@@ -37,3 +37,27 @@ class LimeTimeseries:
         # TODO: scores =  lime_base.explain_instance_with_data()
         
         raise NotImplementedError
+
+    def _calculate_distance(self, input_data, masked_data, method="cosine"):
+        """Calcuate distance between perturbed data and the original samples."""
+        support_methods = ["cosine", "euclidean"]
+        if method == "dtw":
+            distance = self._dtw_distance(input_data, masked_data)
+        elif method in support_methods:
+            # TODO: implementation for reference
+            # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L175
+            # should understand why (* 100?) and if it is equivalent to dtw.
+            distance = sklearn.metrics.pairwise.pairwise_distances(
+                        masked_data, masked_data[0].reshape([1, -1]),
+                        metric = method).ravel() * 100
+        else:
+            raise ValueError(f"Given method {method} is not supported. Please "
+                             "choose from 'dtw', 'cosine' and 'euclidean'.")
+
+        return distance
+
+    def _dtw_distance(self, input_data, masked_data):
+        """Calculate distance based on dynamic time warping."""
+        # implementation for reference
+        # https://github.com/TortySivill/LIMESegment/blob/0a276e30f8d259642521407e7d51d07969169432/Utils/explanations.py#L111
+        raise NotImplementedError
