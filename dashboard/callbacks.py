@@ -514,8 +514,8 @@ def select_method_t(method_sel):
 # update text explanations
 @app.callback(
     dash.dependencies.Output("output-state-text", "children"),
-    dash.dependencies.Output("graph_text_rise", "figure"),
-    dash.dependencies.Output("graph_text_lime", "figure"),
+    dash.dependencies.Output("graph_text_rise", "children"),
+    dash.dependencies.Output("graph_text_lime", "children"),
     dash.dependencies.State("upload-model-text", "filename"),
     dash.dependencies.State("upload-text", "value"),
     dash.dependencies.State("signal_text", "data"),
@@ -561,8 +561,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
             class_name = labelnames
             pred_class = class_name[np.argmax(predictions)]
 
-            fig_l = blank_fig()
-            fig_r = blank_fig()
+            fig_l = ''
+            fig_r = ''
 
             for m in sel_methods:
                 if m == "LIME":
@@ -571,33 +571,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
                         random_state=random_state)
                     output = _create_html(
                         input_tokens, relevances_lime[0], max_opacity=0.8)
-                    #hti = Html2Image()
-                    #expl_path = 'text_expl.jpg'
-
-                    #hti.screenshot(output, save_as=expl_path)
-
-                    #im = Image.open(expl_path)
-                    #im = np.asarray(im).astype(np.float32)
-
-                    fig_l = px.imshow(output) #px.imshow(im)
-                    fig_l.update_xaxes(
-                        showgrid=False, range=[0, 1000],
-                        showticklabels=False, zeroline=False)
-                    fig_l.update_yaxes(
-                        showgrid=False, range=[200, 0],
-                        showticklabels=False, zeroline=False)
-                    fig_l.update_layout(
-                        title='LIME explanation:',
-                        title_font_color=COLORS['blue1'],
-                        paper_bgcolor=COLORS['blue4'],
-                        plot_bgcolor=COLORS['blue4'],
-                        height=200,
-                        width=500,
-                        margin_b=40,
-                        margin_t=40,
-                        margin_l=20,
-                        margin_r=0
-                        )
+                    fig_l = html.Div(tuple(list(output)), className='row')
 
                 elif m == "RISE":
                     relevances_rise = global_store_t(
@@ -605,29 +579,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
                         n_masks=n_masks, feature_res=feature_res, p_keep=p_keep)
                     output = _create_html(
                         input_tokens, relevances_rise[0], max_opacity=0.8)
-                    hti = Html2Image()
-                    expl_path = 'text_expl.jpg'
-                    hti.screenshot(output, save_as=expl_path)
-                    im = Image.open(expl_path)
-                    im = np.asarray(im).astype(np.float32)
-                    fig_r = px.imshow(im)
-                    fig_r.update_xaxes(
-                        showgrid=False, range=[0, 1000],
-                        showticklabels=False, zeroline=False)
-                    fig_r.update_yaxes(
-                        showgrid=False, range=[200, 0],
-                        showticklabels=False, zeroline=False)
-                    fig_r.update_layout(
-                        title='RISE explanation:',
-                        title_font_color=COLORS['blue1'],
-                        paper_bgcolor=COLORS['blue4'],
-                        plot_bgcolor=COLORS['blue4'],
-                        height=200,
-                        width=500,
-                        margin_b=50,
-                        margin_t=40,
-                        margin_l=20,
-                        margin_r=0)
+                    fig_r = html.Div(tuple(list(output)), className='row')
 
             return (html.Div(['The predicted class is: ' + pred_class], style={
                 'fontSize': 18,
@@ -640,10 +592,11 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
 
         except Exception as e:
             print(e)
-            return html.Div([
+            return (html.Div([
                 'There was an error running the model. Check either the test ' +
                 'text or the model.'
-                ]), blank_fig(), blank_fig()
+                ]), '', '')
     else:
-        return (html.Div(['Missing model, input text or XAI method.']),
-                blank_fig(), blank_fig())
+        return (html.Div([
+            'Missing model, input text or XAI method.'
+            ]), '', '')
