@@ -12,12 +12,10 @@ import utilities
 from dash import html
 from dash.exceptions import PreventUpdate
 from flask_caching import Cache
-from html2image import Html2Image
 from jupyter_dash import JupyterDash
 from layouts.fig import blank_fig
 from layouts.styles import COLORS
 from onnx_tf.backend import prepare
-from PIL import Image
 from plotly.subplots import make_subplots
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html

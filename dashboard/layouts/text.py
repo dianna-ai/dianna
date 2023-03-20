@@ -1,6 +1,5 @@
 from dash import dcc
 from dash import html
-from .fig import blank_fig
 from .styles import COLORS
 
 
