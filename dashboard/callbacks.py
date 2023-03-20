@@ -549,7 +549,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
     if ctx.triggered[0]["prop_id"] == "stop_button_t.n_clicks":
         return (
             html.Div(['Explanation stopped.'], style={'margin-top': '60px'}),
-            blank_fig(), blank_fig())
+            '', '')
 
     # update text explanations
     if (fn_m and input_text) is not None and (sel_methods != []):
@@ -577,7 +577,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
                         random_state=random_state)
                     output = _create_html(
                         input_tokens, relevances_lime[0], max_opacity=0.8)
-                    fig_l = html.Div(tuple(list(output)), className='row')
+                    fig_l = html.Div(tuple(list(output)))
 
                 elif m == "RISE":
                     relevances_rise = global_store_t(
@@ -585,7 +585,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
                         n_masks=n_masks, feature_res=feature_res, p_keep=p_keep)
                     output = _create_html(
                         input_tokens, relevances_rise[0], max_opacity=0.8)
-                    fig_r = html.Div(tuple(list(output)), className='row')
+                    fig_r = html.Div(tuple(list(output)))
 
             return (html.Div(['The predicted class is: ' + pred_class], style={
                 'fontSize': 18,
