@@ -3,12 +3,16 @@ import base64
 import os
 import warnings
 import dash
+import dash_bootstrap_components as dbc
 import numpy as np
 import onnx
 import plotly.express as px
 import plotly.graph_objects as go
 import spacy
 import utilities
+from dash import Input
+from dash import Output
+from dash import State
 from dash import html
 from dash.exceptions import PreventUpdate
 from flask_caching import Cache
@@ -32,7 +36,11 @@ os.makedirs(FOLDER_ON_SERVER, exist_ok=True)
 tokenizer = SpacyTokenizer()  # always use SpacyTokenizer, needs to be changed
 
 # Build App
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = [
+    dbc.themes.BOOTSTRAP,
+    'https://codepen.io/chriddyp/pen/bWLwgP.css',
+]
+
 app = JupyterDash(
     __name__,
     external_stylesheets=external_stylesheets,
@@ -647,3 +655,15 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
     else:
         return (html.Div(['Missing model, input text or XAI method.']),
                 blank_fig(), blank_fig())
+
+
+@app.callback(
+    Output("collapse-parameters", "is_open"),
+    [Input("collapse-parameters-button", "n_clicks")],
+    [State("collapse-parameters", "is_open")],
+)
+def toggle_parameters_collapse(n, is_open):
+    """Toggle parameters."""
+    if n:
+        return not is_open
+    return is_open
