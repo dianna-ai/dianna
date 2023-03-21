@@ -1,13 +1,17 @@
 import numpy as np
-from lime.lime_image import LimeImageExplainer  # pylint: disable=old-import-error
-from lime.lime_text import LimeTextExplainer  # pylint: disable=old-import-error
+from lime.lime_image import LimeImageExplainer
+from lime.lime_text import LimeTextExplainer
 from dianna import utils
 
 
 class LIMEText:
-    """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
+    """Wrapper around the LIME explainer.
 
-    def __init__(self,  # pylint: disable=too-many-arguments
+    See Lime explainer by Marco Tulio Correia Ribeiro
+    (https://github.com/marcotcr/lime).
+    """
+
+    def __init__(self,
                  kernel_width=25,
                  kernel=None,
                  verbose=False,
@@ -20,8 +24,7 @@ class LIMEText:
                  char_level=False,
                  preprocess_function=None,
                  ):
-        """
-        Initializes Lime explainer.
+        """Initializes Lime explainer.
 
         Args:
             kernel_width (int, optional): kernel width
@@ -58,9 +61,8 @@ class LIMEText:
                 num_features=10,
                 num_samples=5000,
                 **kwargs,
-                ):  # pylint: disable=too-many-arguments
-        """
-        Run the LIME explainer.
+                ):
+        """Run the LIME explainer.
 
         Args:
             model_or_function (callable or str): The function that runs the model to be explained _or_
@@ -68,6 +70,10 @@ class LIMEText:
             tokenizer : Tokenizer class with tokenize and convert_tokens_to_string methods, and mask_token attribute
             input_text (np.ndarray): Data to be explained
             labels (Iterable(int)): Iterable of indices of class to be explained
+            top_labels: Top labels
+            num_features (int): Number of features
+            num_samples (int): Number of samples
+            kwargs: These parameters are passed on
 
         Other keyword arguments: see the LIME documentation for LimeTextExplainer.explain_instance:
         https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_text.LimeTextExplainer.explain_instance.
@@ -81,7 +87,8 @@ class LIMEText:
         self.explainer.split_expression = tokenizer.tokenize  # lime accepts a callable as a split_expression
 
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
-        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(self.explainer.explain_instance, kwargs)
+        explain_instance_kwargs = utils.get_kwargs_applicable_to_function(
+            self.explainer.explain_instance, kwargs)
         explanation = self.explainer.explain_instance(input_text,
                                                       runner,
                                                       labels=labels,
@@ -93,12 +100,12 @@ class LIMEText:
 
         local_explanations = explanation.local_exp
         string_map = explanation.domain_mapper.indexed_string
-        return [self._reshape_result_for_single_label(local_explanations[label], string_map) for label in labels]
+        return [self._reshape_result_for_single_label(
+            local_explanations[label], string_map) for label in labels]
 
     @staticmethod
     def _reshape_result_for_single_label(local_explanation, string_map):
-        """
-        Get results for single label.
+        """Get results for single label.
 
         Args:
             local_explanation: Lime output, map of tuples (index, importance)
@@ -109,9 +116,13 @@ class LIMEText:
 
 
 class LIMEImage:
-    """Wrapper around the LIME explainer implemented by Marco Tulio Correia Ribeiro (https://github.com/marcotcr/lime)."""
+    """Wrapper around the LIME explainer.
 
-    def __init__(self,  # pylint: disable=too-many-arguments
+    Lime explainer byMarco Tulio Correia Ribeiro
+    (https://github.com/marcotcr/lime).
+    """
+
+    def __init__(self,
                  kernel_width=25,
                  kernel=None,
                  verbose=False,
@@ -120,8 +131,7 @@ class LIMEImage:
                  axis_labels=None,
                  preprocess_function=None,
                  ):
-        """
-        Initializes Lime explainer.
+        """Initializes Lime explainer.
 
         Args:
             kernel_width (int, optional): kernel width
@@ -133,6 +143,7 @@ class LIMEImage:
                                                If a list, the name of each axis where the index
                                                in the list is the axis index
             preprocess_function (callable, optional): Function to preprocess input data with
+
         """
         self.preprocess_function = preprocess_function
         self.axis_labels = axis_labels if axis_labels is not None else []
@@ -153,9 +164,8 @@ class LIMEImage:
                 positive_only=False,
                 hide_rest=True,
                 **kwargs,
-                ):  # pylint: disable=too-many-arguments,too-many-locals
-        """
-        Run the LIME explainer.
+                ):
+        """Run the LIME explainer.
 
         Args:
             model_or_function (callable or str): The function that runs the model to be explained _or_
@@ -163,6 +173,13 @@ class LIMEImage:
             input_data (np.ndarray): Data to be explained. Must be an "RGB image", i.e. with values in
                                      the [0,255] range.
             labels (Iterable(int)): Indices of classes to be explained
+            top_labels: Top labels
+            num_features (int): Number of features
+            num_samples (int): Number of samples
+            positive_only (bool): Positive only
+            hide_rest (bool): Hide rest
+            kwargs: These parameters are passed on
+
         Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance and
         ImageExplanation.get_image_and_mask:
 
@@ -193,8 +210,7 @@ class LIMEImage:
         return masks
 
     def _prepare_image_data(self, input_data):
-        """
-        Transforms the data to be of the shape and type LIME expects.
+        """Transforms the data to be of the shape and type LIME expects.
 
         Args:
             input_data (NumPy-compatible array): Data to be explained
@@ -229,8 +245,7 @@ class LIMEImage:
         return input_data.values.astype(np.float64), full_preprocess_function
 
     def _get_full_preprocess_function(self, channel_axis_index, dtype, greyscale=False):
-        """
-        Creates a full preprocessing function.
+        """Creates a full preprocessing function.
 
         Creates a preprocessing function that incorporates both the (optional) user's
         preprocessing function, as well as any needed dtype and shape conversions

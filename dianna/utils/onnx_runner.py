@@ -4,8 +4,7 @@ import onnxruntime as ort
 class SimpleModelRunner:
     """Runs an onnx model with a set of inputs and outputs."""
     def __init__(self, filename, preprocess_function=None):
-        """
-        Generates function to run ONNX model with one set of inputs and outputs.
+        """Generates function to run ONNX model with one set of inputs and outputs.
 
         Args:
             filename (str): Path to ONNX model on disk
@@ -22,7 +21,7 @@ class SimpleModelRunner:
         self.preprocess_function = preprocess_function
 
     def __call__(self, input_data):
-        # get ONNX predictions
+        """Get ONNX predictions."""
         sess = ort.InferenceSession(self.filename)
         input_name = sess.get_inputs()[0].name
         output_name = sess.get_outputs()[0].name

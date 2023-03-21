@@ -1,8 +1,8 @@
 import numpy as np
-
 import dianna
 import dianna.visualization
 from tests.utils import run_model
+
 
 input_data = np.random.random((224, 224, 3))
 axis_labels = {-1: 'channels'}

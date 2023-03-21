@@ -1,13 +1,12 @@
 from unittest import TestCase
 import numpy as np
 import pytest
-
 import dianna
 import dianna.visualization
 from dianna.methods.lime import LIMEImage
 from tests.test_onnx_runner import generate_data
-from tests.utils import load_movie_review_model, \
-    assert_explanation_satisfies_expectations
+from tests.utils import assert_explanation_satisfies_expectations
+from tests.utils import load_movie_review_model
 from tests.utils import run_model
 
 
