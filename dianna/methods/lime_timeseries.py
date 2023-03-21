@@ -3,6 +3,8 @@ from lime import lime_base
 import sklearn
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import mask_data
+import fastdtw
+import numpy as np
 
 
 class LimeTimeseries:
@@ -24,6 +26,7 @@ class LimeTimeseries:
                 num_samples,
                 num_slices,
                 mask_type='mean',
+                method='cosine'
                 ):  # pylint: disable=too-many-arguments,too-many-locals
         """Run the LIME explainer for timeseries.
         """
@@ -31,12 +34,12 @@ class LimeTimeseries:
         #       maskers function to LIME.
         masks = generate_masks(input_data, num_samples, p_keep=0.9)
         masked = mask_data(input_data, masks, mask_type='mean')
-        distance = self._calculate_distance(input_data, masked)
+        distance = self._calculate_distance(input_data, masked, method=method)
         # implementation for reference
         # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L130
         # TODO: scores =  lime_base.explain_instance_with_data()
         
-        raise NotImplementedError
+        return distance
 
     def _calculate_distance(self, input_data, masked_data, method="cosine"):
         """Calcuate distance between perturbed data and the original samples."""
@@ -60,4 +63,5 @@ class LimeTimeseries:
         """Calculate distance based on dynamic time warping."""
         # implementation for reference
         # https://github.com/TortySivill/LIMESegment/blob/0a276e30f8d259642521407e7d51d07969169432/Utils/explanations.py#L111
-        raise NotImplementedError
+        distance =  np.asarray(fastdtw(input_data, one_masked_data)[0] for one_masked_data in masked_data)
+        return distance
