@@ -25,11 +25,12 @@ from utilities import MovieReviewsModelRunner
 from utilities import _create_html
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer
+from pathlib import Path
 
 
 warnings.filterwarnings('ignore')  # disable warnings relateds to tf versions
 
-FOLDER_ON_SERVER = "app_data"
+FOLDER_ON_SERVER = str(Path(__file__).parent.absolute() / "app_data")
 os.makedirs(FOLDER_ON_SERVER, exist_ok=True)
 tokenizer = SpacyTokenizer()  # always use SpacyTokenizer, needs to be changed
 
