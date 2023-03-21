@@ -3,8 +3,8 @@ import shutil
 import unittest
 from pathlib import Path
 import spacy
-from dianna.visualization.text import highlight_text
 from dianna.utils.tokenizers import SpacyTokenizer
+from dianna.visualization.text import highlight_text
 
 
 spacy.cli.download('en_core_web_sm')
@@ -88,7 +88,9 @@ class TextVisualizationTestCase(unittest.TestCase):
                        show_plot=True)
 
     def setUp(self) -> None:
+        """Setup."""
         os.mkdir(self.temp_folder)
 
     def tearDown(self) -> None:
+        """Tear down."""
         shutil.rmtree(self.temp_folder, ignore_errors=True)
