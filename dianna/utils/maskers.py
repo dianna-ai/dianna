@@ -1,7 +1,5 @@
 import warnings
-
 import numpy as np
-
 
 
 def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float):
