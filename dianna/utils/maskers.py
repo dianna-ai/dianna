@@ -29,9 +29,9 @@ def mask_data(data, masks, mask_type='mean'):
     """Mask data given using a set of masks.
 
     Args:
-        data:
+        data: ?
         masks: an array with shape [number_of_masks] + data.shape
-        mask_type:
+        mask_type: ?
 
     Returns:
     Single array containing all masked input where the first dimension represents the batch.
