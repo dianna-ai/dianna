@@ -7,8 +7,8 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
     Generate a set of masks given a probability of keeping any time step unmasked.
 
     Args:
-        input_data:
-        number_of_masks:
+        input_data: Timeseries data to be explained.
+        number_of_masks: Number of masks to generate.
         p_keep: the probability that any value remains unmasked.
 
     Returns:
