@@ -1,11 +1,11 @@
 import os
 import warnings
 import numpy as np
+from dash import html
 from keras import utils as keras_utils
 from PIL import Image
 from PIL import ImageStat
 from scipy.special import expit as sigmoid
-from dash import html
 from tensorflow.keras.applications.resnet50 import decode_predictions
 from torchtext.vocab import Vectors
 from dianna import utils
