@@ -2,7 +2,8 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 from .fig import blank_fig
-from .styles import COLORS, astyle
+from .styles import COLORS
+from .styles import astyle
 
 
 def get_uploads_images():

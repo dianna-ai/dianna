@@ -14,7 +14,7 @@ def get_function(model_or_function, preprocess_function=None):
         preprocess_function: function to be run to preprocess the data
     """
     from dianna.utils.onnx_runner import SimpleModelRunner  # pylint: disable=import-outside-toplevel
-    
+
     if isinstance(model_or_function, Path):
         model_or_function = str(model_or_function)
 

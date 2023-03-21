@@ -2,6 +2,7 @@
 import base64
 import os
 import warnings
+from pathlib import Path
 import dash
 import dash_bootstrap_components as dbc
 import numpy as np
@@ -27,7 +28,6 @@ from utilities import MovieReviewsModelRunner
 from utilities import _create_html
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer
-from pathlib import Path
 
 
 warnings.filterwarnings('ignore')  # disable warnings relateds to tf versions

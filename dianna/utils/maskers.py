@@ -12,10 +12,10 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
 
     Returns:
     Single array containing all masks where the first dimension represents the batch.
-    """    
+    """
     series_length = input_data.shape[0]
     number_of_steps_masked = _determine_number_of_steps_masked(p_keep, series_length)
-    
+
     masked_data_shape = [number_of_masks] + list(input_data.shape)
     masks = np.zeros(masked_data_shape, dtype=np.bool)
     for i in range(number_of_masks):
@@ -26,8 +26,7 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
 
 
 def mask_data(data, masks, mask_type='mean'):
-    """
-    Mask data given using a set of masks.
+    """Mask data given using a set of masks.
 
     Args:
         data:
