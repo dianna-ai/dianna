@@ -128,7 +128,7 @@ def _create_html(input_tokens, explanation, max_opacity):
             highlighted_words.append((html.Div([
                             html.Span(
                                 [word
-                                ], style={'background': f'rgba(128, 128, 128, 0.3)'})
+                                ], style={'background': 'rgba(128, 128, 128, 0.3)'})
                             ], style={'fontsize':36, 'display': 'inline-block'})
                         ))
         highlighted_words.append(' ')
