@@ -2,7 +2,6 @@ import warnings
 import numpy as np
 
 
-
 def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0.5):
     """
     Generate a set of masks given a probability of keeping any time step unmasked.
