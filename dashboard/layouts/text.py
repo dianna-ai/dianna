@@ -2,7 +2,8 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 from .fig import blank_fig
-from .styles import COLORS, astyle
+from .styles import COLORS
+from .styles import astyle
 
 
 def get_uploads_text():
@@ -64,8 +65,8 @@ def get_uploads_text():
                 'height': '130px',
                 'margin-top': '20px',
                 }
-            ), 
-        
+            ),
+
             # select model row
             html.Div([
                 dcc.Upload(
@@ -89,7 +90,7 @@ def get_uploads_text():
                     multiple=True
                 ),
             ],
-            className = 'row', 
+            className = 'row',
             ),
 
 
@@ -125,7 +126,7 @@ def get_uploads_text():
                     multiple=False
                 ),
             ],
-            className = 'row', 
+            className = 'row',
             ),
 
             # print selected model row
@@ -139,7 +140,7 @@ def get_uploads_text():
                 'color' : COLORS['blue1']}
             )
             ],
-    
+
             className = 'three columns',
             style = {
                 'textAlign': 'center',
@@ -338,11 +339,11 @@ def get_uploads_text():
                         #'height': '100px'
                     })
 
-        ], 
+        ],
         className = 'nine columns')
 
     ], className = 'row',
-    style = { 
+    style = {
         'background-color' : COLORS['blue4'],
         'textAlign': 'center',
         'align-items': 'center'

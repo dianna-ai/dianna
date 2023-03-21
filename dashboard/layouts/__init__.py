@@ -1,5 +1,4 @@
 """Layout submodule."""
-import utilities
 from dash import dcc
 from dash import html
 from .header import get_header
@@ -15,16 +14,16 @@ images_page = html.Div([
 
     # hidden signal value
     dcc.Store(id='signal_image'),
-    
+
     ])
 
 text_page = html.Div([
-    
+
     get_header(),
     get_navbar(p="text"),
     get_uploads_text(),
 
     # hidden signal value
     dcc.Store(id='signal_text'),
-    
+
     ])

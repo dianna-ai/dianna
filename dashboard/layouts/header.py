@@ -7,7 +7,6 @@ from .styles import COLORS
 this_dir = Path(__file__).parents[1]
 
 image_filename = this_dir / 'app_data' / 'logo.png' # replace with your own image
-# pylint: disable=consider-using-with
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 
