@@ -39,7 +39,7 @@ class RISETimeseries:
         self.masks = None
         self.predictions = None
 
-    def explain(self, model_or_function, input_timeseries, labels, batch_size=100):
+    def explain(self, model_or_function, input_timeseries, labels, batch_size=100, mask_type='mean'):
         """Runs the RISE explainer on images.
 
            The model will be called with masked timeseries,
@@ -51,13 +51,14 @@ class RISETimeseries:
             input_timeseries (np.ndarray): Input timeseries data to be explained
             batch_size (int): Batch size to use for running the model.
             labels (Iterable(int)): Labels to be explained
+            mask_type: Masking strategy for masked values. Choose from 'mean' or a callable(input_timeseries)
 
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         self.masks = generate_masks(input_timeseries, number_of_masks=self.n_masks, p_keep=self.p_keep)
-        masked = mask_data(input_timeseries, self.masks)
+        masked = mask_data(input_timeseries, self.masks, mask_type=mask_type)
 
         self.predictions = _make_predictions(masked, runner, batch_size)
         n_labels = self.predictions.shape[1]
