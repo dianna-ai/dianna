@@ -1,6 +1,7 @@
 import os
 import warnings
 import numpy as np
+from dash import html
 from keras import utils as keras_utils
 from PIL import Image
 from PIL import ImageStat
@@ -113,6 +114,7 @@ def _create_html(input_tokens, explanation, max_opacity):
     for index, word in enumerate(input_tokens):
         # if word has an explanation, highlight based on that, otherwise
         # make it grey
+        # add spaces between words
         try:
             explained_index = explained_indices.index(index)
             importance = explanation[explained_index][2]
@@ -120,21 +122,30 @@ def _create_html(input_tokens, explanation, max_opacity):
                 _highlight_word(word, importance, max_importance, max_opacity)
                 )
         except ValueError:
-            highlighted_words.append(f'<span style="background:rgba(128, 128, 128, 0.3)">{word}</span>')
-
-    return '<html><body>' + ' '.join(highlighted_words) + '</body></html>'
+            highlighted_words.append((html.Div([
+                            html.Span(
+                                [word
+                                ], style={'background': 'rgba(128, 128, 128, 0.3)'})
+                            ], style={'fontsize':36, 'display': 'inline-block'})
+                        ))
+        highlighted_words.append(' ')
+    return tuple(highlighted_words)
 
 
 def _highlight_word(word, importance, max_importance, max_opacity):
-    """Defines how to highlight words according to importance."""
+    """Defines how to highlight individual words according to importance."""
     opacity = max_opacity * abs(importance) / max_importance
     if importance > 0:
         color = f'rgba(255, 0, 0, {opacity:.2f})'
     else:
         color = f'rgba(0, 0, 255, {opacity:2f})'
-    highlighted_word = f'<span style="background:{color}">{word}</span>'
+    highlighted_word = (html.Div([
+                            html.Span(
+                                [word
+                                ], style={'background': color})
+                            ], style={'display': 'inline-block'})
+                        )
     return highlighted_word
-
 
 
 def imagenet_class_name(idx):

@@ -1,7 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
-from .fig import blank_fig
 from .styles import COLORS
 from .styles import astyle
 
@@ -316,28 +315,26 @@ def get_uploads_text():
                     ),
 
             # plotting explanations
-            html.Div([
-                dcc.Graph(
-                    id='graph_text_rise',
-                    figure = blank_fig())],
-                    className = 'row',
-                    style = {
-                        'margin-top': '80',
-                        'margin-left': '140px',
-                        #'height': '100px'
-                    }),
+            html.Div(
+                id='graph_text_rise',
+                className = 'row',
+                style = {
+                    'margin-top': '80',
+                    'margin-left': '140px',
+                    'margin-right': '140px',
+                    'height': '100px'
+                }),
 
             # plotting explanations
-            html.Div([
-                dcc.Graph(
-                    id='graph_text_lime',
-                    figure = blank_fig())],
-                    className = 'row',
-                    style = {
-                        'margin-top': '80',
-                        'margin-left': '140px',
-                        #'height': '100px'
-                    })
+            html.Div(
+                id='graph_text_lime',
+                className = 'row',
+                style = {
+                    'margin-top': '80',
+                    'margin-left': '140px',
+                    'margin-right': '140px',
+                    'height': '100px'
+                })
 
         ],
         className = 'nine columns')
