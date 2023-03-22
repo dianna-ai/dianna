@@ -3,13 +3,12 @@ from typing import Union
 import numpy as np
 
 
-def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float):
-    """
-    Generate a set of masks given a probability of keeping any time step unmasked.
+def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0.5):
+    """Generate masks for time series data given a probability of keeping any time step unmasked.
 
     Args:
-        input_data:
-        number_of_masks:
+        input_data: Timeseries data to be explained.
+        number_of_masks: Number of masks to generate.
         p_keep: the probability that any value remains unmasked.
 
     Returns:
@@ -58,9 +57,9 @@ def _get_mask_value(data: np.array, mask_type: str) -> int:
 def _determine_number_of_steps_masked(p_keep: float, series_length: int) -> int:
     user_requested_steps = int(np.round(series_length * (1 - p_keep)))
     if user_requested_steps == series_length:
-        warnings.warn('Warning: p_keep chosen too low. Continuing with masking 1 time step per mask.')
+        warnings.warn('Warning: p_keep chosen too low. Continuing with leaving 1 time step unmasked per mask.')
         return series_length - 1
     if user_requested_steps == 0:
-        warnings.warn('Warning: p_keep chosen too high. Continuing with leaving 1 time step unmasked per mask.')
+        warnings.warn('Warning: p_keep chosen too high. Continuing with masking 1 time step per mask.')
         return 1
     return user_requested_steps
