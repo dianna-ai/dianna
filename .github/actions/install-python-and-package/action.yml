@@ -38,7 +38,7 @@ runs:
       if: runner.os == 'Linux'
       shell: bash {0}
       run: |
-        python3 -m pip install torch https://download.pytorch.org/whl/cpu
+        python3 -m pip install torch --index-url https://download.pytorch.org/whl/cpu
         python3 -m pip install tensorflow-cpu
 
     - name: Upgrade pip
