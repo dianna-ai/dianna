@@ -15,8 +15,21 @@ on:
     - ready_for_review
 
 jobs:
+  build_single:
+    name: Build
+    if: github.event.pull_request.draft == true
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/install-python-and-package
+        with:
+          python-version: '3.10'
+      - name: Run unit tests
+        run: pytest -v
+      - name: Verify that we can build the package
+        run: python3 setup.py sdist bdist_wheel
 
-  build:
+  build_all:
     name: Build for (${{ matrix.python-version }}, ${{ matrix.os }})
     if: github.event.pull_request.draft == false
     runs-on: ${{ matrix.os }}
