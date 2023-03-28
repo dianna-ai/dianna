@@ -93,5 +93,5 @@ line-length = 120
 [tool.ruff.isort]
 known-first-party = ["dianna"]
 force-single-line = true
-lines-after-imports = 1
+lines-after-imports = 2
 no-lines-before = ["future","standard-library","third-party","first-party","local-folder"]

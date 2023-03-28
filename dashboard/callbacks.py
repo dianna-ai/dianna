@@ -27,6 +27,7 @@ from utilities import _create_html
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer
 
+
 warnings.filterwarnings('ignore')  # disable warnings relateds to tf versions
 
 FOLDER_ON_SERVER = str(Path(__file__).parent.absolute() / 'app_data')
