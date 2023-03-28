@@ -26,8 +26,7 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
 
 
 def mask_data(data: np.array, masks: np.array, mask_type: Union[object, str]):
-    """
-    Mask data given using a set of masks.
+    """Mask data given using a set of masks.
 
     Args:
         data: ?

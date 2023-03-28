@@ -1,8 +1,8 @@
 import numpy as np
-
 import dianna
-from tests.methods.time_series_test_case import input_train_mean, \
-    average_temperature_timeseries_with_1_cold_and_1_hot_day, run_expert_model
+from tests.methods.time_series_test_case import average_temperature_timeseries_with_1_cold_and_1_hot_day
+from tests.methods.time_series_test_case import input_train_mean
+from tests.methods.time_series_test_case import run_expert_model
 from tests.utils import run_model
 
 
@@ -19,6 +19,7 @@ def test_rise_timeseries_correct_output_shape():
 
 
 def test_rise_timeseries_with_expert_model_for_correct_max_and_min():
+    """Test if RISE highlights the correct areas for this artificial example."""
     hot_day_index = 6
     cold_day_index = 12
     temperature_timeseries = average_temperature_timeseries_with_1_cold_and_1_hot_day(cold_day_index, hot_day_index)

@@ -33,15 +33,15 @@ __version__ = "0.7.0"
 
 
 def explain_timeseries(model_or_function, timeseries_data, method, labels, **kwargs):
-    """
-    Explain timeseries data given a model and a chosen method.
+    """Explain timeseries data given a model and a chosen method.
 
     Args:
         model_or_function (callable or str): The function that runs the model to be explained _or_
                                              the path to a ONNX model on disk.
-        input_data (np.ndarray): Image data to be explained
+        timeseries_data (np.ndarray): Image data to be explained
         method (string): One of the supported methods: RISE, LIME or KernelSHAP
         labels (Iterable(int)): Labels to be explained
+        **kwargs: key word arguments
 
     Returns:
         One heatmap per class.

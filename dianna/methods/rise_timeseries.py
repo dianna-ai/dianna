@@ -22,6 +22,7 @@ def normalize(saliency, n_masks, p_keep):
 
 class RISETimeseries:
     """RISE implementation for timeseries adapted from the image version of RISE."""
+
     def __init__(self, n_masks=1000, feature_res=8, p_keep=0.5,
                  preprocess_function=None):
         """RISE initializer.
@@ -63,6 +64,7 @@ class RISETimeseries:
         self.predictions = _make_predictions(masked, runner, batch_size)
         n_labels = self.predictions.shape[1]
 
-        saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(n_labels, *input_timeseries.shape)
+        saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(n_labels,
+                                                                                        *input_timeseries.shape)
         selected_saliency = saliency[labels]
         return normalize(selected_saliency, self.n_masks, self.p_keep)
