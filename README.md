@@ -193,7 +193,7 @@ And here are links to notebooks showing how we created our models on the benchma
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
 
 ## Tutorials
-DIANNA supports different data modalities and XAI methods. The table contains links to the relevant XAI method's papers. There are DIANNA [tutorials](./tutorials) covering each supported method and data modality on a least one dataset. Our future plans to expand DIANNA with more data modalities and XAI methods are given in the [ROADMAP](https://dianna.readthedocs.io/en/latest/ROADMAP.html).
+DIANNA supports different data modalities and XAI methods. The table contains links to the relevant XAI method's papers (for some explanatory videos on the methods, please see [tutorials](./tutorials)). The DIANNA [tutorials](./tutorials) cover each supported method and data modality on a least one dataset. Our future plans to expand DIANNA with more data modalities and XAI methods are given in the [ROADMAP](https://dianna.readthedocs.io/en/latest/ROADMAP.html).
 
 <!-- see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
 
@@ -201,10 +201,11 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 |:-----|:---|:---|:---|
 |Images|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 |Text|:white_check_mark:|:white_check_mark:|planned|
-|Embedding|coming soon|coming soon|coming soon|
 |Timeseries|work in progress|work in progress|work in progress|
+|Embedding|coming soon|coming soon|coming soon|
+|Graphs |planned|planned|planned |
 |Tabular||||
-|Graphs | | | |
+
 
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective criteria (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
 

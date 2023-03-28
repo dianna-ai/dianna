@@ -1,5 +1,4 @@
 from unittest import TestCase
-
 import numpy as np
 from dianna.methods.kernelshap import KERNELSHAPImage
 
@@ -16,7 +15,7 @@ class ShapOnImages(TestCase):
         n_segments = 50
         compactness = 10.0
         sigma = 0
-        image_segments = explainer._segment_image(  # pylint: disable=protected-access
+        image_segments = explainer._segment_image(
             input_data,
             n_segments,
             compactness,
@@ -35,13 +34,13 @@ class ShapOnImages(TestCase):
         compactness = 10.0
         sigma = 0
         background = 0
-        segments_slic = explainer._segment_image(  # pylint: disable=protected-access
+        segments_slic = explainer._segment_image(
             input_data,
             n_segments,
             compactness,
             sigma,
         )
-        masked_image = explainer._mask_image(  # pylint: disable=protected-access
+        masked_image = explainer._mask_image(
             np.zeros((1, n_segments)), segments_slic, input_data, background,
         )
         # check if all points are masked

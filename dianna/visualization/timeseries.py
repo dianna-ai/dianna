@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib import cm
 
 
-def plot_timeseries(  # pylint: disable=too-many-arguments,too-many-locals
+def plot_timeseries(
     x: np.ndarray,
     y: np.ndarray,
     segments: List[Dict[str, Any]],

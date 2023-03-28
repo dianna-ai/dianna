@@ -1,5 +1,4 @@
 import numpy as np
-
 import dianna
 import dianna.visualization
 from tests.utils import run_model

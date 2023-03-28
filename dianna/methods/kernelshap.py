@@ -20,7 +20,7 @@ class KERNELSHAPImage:
         self.preprocess_function = preprocess_function
         self.axis_labels = axis_labels if axis_labels is not None else []
         # import here because it's slow
-        from onnx_tf.backend import prepare  # pylint: disable=import-outside-toplevel
+        from onnx_tf.backend import prepare
         self.onnx_to_tf = prepare
 
     @staticmethod
@@ -43,10 +43,11 @@ class KERNELSHAPImage:
             n_segments (int): The (approximate) number of labels in the segmented output image
             compactness (int): Balances color proximity and space proximity.
             sigma (float): Width of Gaussian smoothing kernel
+            kwargs: These keyword parameters are passed on
 
-            Check keyword arguments for the skimage.segmentation.slic function
-            via the following link:
-            https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
+        Check keyword arguments for the skimage.segmentation.slic function
+        via the following link:
+        https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
         """
         image_segments = skimage.segmentation.slic(
             image=image,
@@ -69,7 +70,7 @@ class KERNELSHAPImage:
         compactness=10.0,
         sigma=0,
         **kwargs,
-    ):  # pylint: disable=too-many-arguments
+    ):
         """Run the KernelSHAP explainer.
 
         The model will be called with the function of image segmentation.
@@ -97,6 +98,7 @@ class KERNELSHAPImage:
                                square/cubic.
             sigma (float): Width of Gaussian smoothing kernel for pre-processing for
                            each dimension of the image. Zero means no smoothing.
+            kwargs: These keyword parameters are passed on
 
         Other keyword arguments: see the documentation of kernel explainer of SHAP
                                  (also in function "shap_values") via:
@@ -166,7 +168,7 @@ class KERNELSHAPImage:
     def _mask_image(
         self, features, segmentation, image, background=None,
         channels_axis_index=2, datatype=np.float32
-    ):  # pylint: disable=too-many-arguments
+    ):
         """Define a function that depends on a binary mask representing if an image region is hidden.
 
         Args:
