@@ -6,7 +6,6 @@ from keras import utils as keras_utils
 from PIL import Image
 from PIL import ImageStat
 from scipy.special import expit as sigmoid
-from tensorflow.keras.applications.resnet50 import decode_predictions
 from torchtext.vocab import Vectors
 from dianna import utils
 from dianna.utils import move_axis
@@ -146,8 +145,3 @@ def _highlight_word(word, importance, max_importance, max_opacity):
                             ], style={'display': 'inline-block'})
                         )
     return highlighted_word
-
-
-def imagenet_class_name(idx):
-    """Returns label of class index."""
-    return decode_predictions(np.eye(1, 1000, idx))[0][0][1]
