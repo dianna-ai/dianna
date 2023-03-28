@@ -16,8 +16,9 @@ on:
 
 jobs:
 
-  notebooks:  
+  notebooks:
     name: Run notebooks on (3.9, ${{ matrix.os }})
+    if: github.event.pull_request.draft == false
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
