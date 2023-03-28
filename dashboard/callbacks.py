@@ -143,15 +143,23 @@ def upload_model_img(contents, filename):
 # uploading labels for model
 @app.callback(dash.dependencies.Output('output-label-upload', 'children'),
               dash.dependencies.Output('upload-label', 'labelnames'),
-              dash.dependencies.Input('upload-label', 'filename'))
-def upload_label(filename):
+              dash.dependencies.Input('upload-label', 'contents'),
+              dash.dependencies.State('upload-label', 'filename'))
+def upload_label(contents,filename):
     """Take in the label file. Return a print statement about upload state."""
     labelnames = []
+
     if filename is not None:
         try:
             if 'txt' in filename:
-                with open(os.path.join(FOLDER_ON_SERVER, filename),'r',encoding="utf-8") as f:
-                    lnames = f.readlines()
+                _, content_string = contents.split(',')
+                content = base64.b64decode(content_string)
+
+                with open(os.path.join(FOLDER_ON_SERVER, filename),
+                          'wb') as f:
+                    f.write(content)
+
+                lnames = content.decode().splitlines()
 
                 labelnames = [item.rstrip() for item in lnames]
                 if labelnames is None or labelnames == ['']:
