@@ -5,7 +5,7 @@ This folder contains DIANNA tutorial notebooks.
 
 To install the dependencies for the tutorials, run
 ```
-pip install .[tutorials]
+pip install .[notebooks]
 ```
 
 Use the cleckable XAI methods (explainers) names to watch explanatory videos for the respective method.
