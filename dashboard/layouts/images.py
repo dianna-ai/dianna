@@ -2,7 +2,8 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 from .fig import blank_fig
-from .styles import COLORS, astyle
+from .styles import COLORS
+from .styles import astyle
 
 
 def get_uploads_images():
@@ -47,8 +48,8 @@ def get_uploads_images():
             style = {
                 'height': '230px'
                 }
-            ), 
-        
+            ),
+
             # select model row
             html.Div([
                 dcc.Upload(
@@ -72,7 +73,7 @@ def get_uploads_images():
                     multiple=True
                 ),
             ],
-            className = 'row', 
+            className = 'row',
             ),
 
             # print selected model row
@@ -109,7 +110,7 @@ def get_uploads_images():
                     multiple=False
                 ),
             ],
-            className = 'row', 
+            className = 'row',
             ),
 
             # print selected model row
@@ -128,7 +129,7 @@ def get_uploads_images():
                 'textAlign': 'center',
                 'align-items': 'center'
             }),
-        
+
         # XAI methods col (9-col)
         html.Div([
 
@@ -391,11 +392,11 @@ def get_uploads_images():
                         'margin-left': '140px',
                     })
 
-        ], 
+        ],
         className = 'nine columns')
 
     ], className = 'row',
-    style = { 
+    style = {
         'background-color' : COLORS['blue4'],
         'textAlign': 'center',
         'align-items': 'center'

@@ -13,14 +13,12 @@ except ImportError as err:
 
 
 class Tokenizer(ABC):
-    """
-    Abstract base class for tokenizing.
+    """Abstract base class for tokenizing.
 
     Has the same interface as (part of) the transformers Tokenizer class.
     """
     def __init__(self, mask_token: str):
-        """
-        Tokenizer initializer.
+        """Tokenizer initializer.
 
         Args:
             mask_token (str): Token used as mask
@@ -49,6 +47,7 @@ class SpacyTokenizer(Tokenizer):
         self.spacy_tokenizer = get_tokenizer('spacy', name)
 
     def tokenize(self, sentence: str) -> List[str]:
+        """Tokenize sentence."""
         raw_tokens = self.spacy_tokenizer(sentence)
         # do not consider several special characters in a row as separate tokens
         # special characters in string.punctuation are !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~.
@@ -68,12 +67,14 @@ class SpacyTokenizer(Tokenizer):
                 # not a special character
                 tokens.append(token)
             elif special_char_index == 0 or steps_in_raw_string[special_char_index - 1] != 1:
-                # create new token if this is the first special character, or it does not directly follow another special character
+                # create new token if this is the first special character,
+                # or it does not directly follow another special character
                 # in the original input
                 tokens.append(token)
                 special_char_index += 1
             else:
-                # add token to existing one if both are special characters and they are consecutive in the original input
+                # add token to existing one if both are special characters and
+                # they are consecutive in the original input
                 tokens[-1] = tokens[-1] + token
                 special_char_index += 1
         return tokens

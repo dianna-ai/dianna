@@ -2,6 +2,7 @@
 import base64
 import os
 import warnings
+from pathlib import Path
 import dash
 import dash_bootstrap_components as dbc
 import numpy as np
@@ -16,18 +17,15 @@ from dash import State
 from dash import html
 from dash.exceptions import PreventUpdate
 from flask_caching import Cache
-from html2image import Html2Image
 from jupyter_dash import JupyterDash
 from layouts.fig import blank_fig
 from layouts.styles import COLORS
 from onnx_tf.backend import prepare
-from PIL import Image
 from plotly.subplots import make_subplots
 from utilities import MovieReviewsModelRunner
 from utilities import _create_html
 import dianna
 from dianna.utils.tokenizers import SpacyTokenizer
-from pathlib import Path
 
 
 warnings.filterwarnings('ignore')  # disable warnings relateds to tf versions
@@ -154,7 +152,7 @@ def upload_label(filename):
             if 'txt' in filename:
                 with open(os.path.join(FOLDER_ON_SERVER, filename),'r',encoding="utf-8") as f:
                     lnames = f.readlines()
-                
+
                 labelnames = [item.rstrip() for item in lnames]
                 if labelnames is None or labelnames == ['']:
                     return html.Div(['Label file is empty, please upload a valid file']), labelnames
@@ -175,7 +173,7 @@ def upload_label(filename):
 # def parse_label(filename, labelnames):
 #     if filename is not None:
 #         try:
-            
+
 #         except Exception as e:
 #             print(e)
 #     else:
@@ -185,11 +183,9 @@ def upload_label(filename):
 # these computations are cached in a globally available
 # redis memory store which is available across processes
 # and for all time.
-# pylint: disable=dangerous-default-value
-# pylint: disable=too-many-arguments
 @cache.memoize()
 def global_store_i(method_sel, model_path, image_test,
-                   labels=list(range(2)), axis_labels={2: 'channels'},
+                   labels=(0, 1), axis_labels={2: 'channels'},
                    n_masks=1000, feature_res=6, p_keep=.1,
                    n_samples=1000, background=0, n_segments=200, sigma=0,
                    random_state=2):
@@ -198,6 +194,7 @@ def global_store_i(method_sel, model_path, image_test,
     Takes in the selected XAI method, the model path and the image to test,
     returns the explanations array.
     """
+    labels = list(labels)
     # expensive query
     if method_sel == "RISE":
         relevances = dianna.explain_image(
@@ -254,9 +251,6 @@ def select_method(method_sel):
     dash.dependencies.Input("update_button", "n_clicks"),
     dash.dependencies.Input("stop_button", "n_clicks")
 )
-# pylint: disable=too-many-locals
-# pylint: disable=unused-argument
-# pylint: disable=too-many-arguments
 def update_multi_options_i(fn_m, fn_i, sel_methods,  new_model, new_image, labelnames,
                            show_top=2, n_masks=1000, feature_res=6, p_keep=0.1,
                            n_samples=1000, background=0, n_segments=200,
@@ -458,7 +452,7 @@ def upload_label_text(filename):
             if 'txt' in filename:
                 with open(os.path.join(FOLDER_ON_SERVER, filename),'r',encoding="utf-8") as f:
                     lnames = f.readlines()
-                
+
                 labelnames = [item.rstrip() for item in lnames]
                 if labelnames is None or labelnames == ['']:
                     return html.Div(['Label file is empty, please upload a valid file']), labelnames
@@ -523,8 +517,8 @@ def select_method_t(method_sel):
 # update text explanations
 @app.callback(
     dash.dependencies.Output("output-state-text", "children"),
-    dash.dependencies.Output("graph_text_rise", "figure"),
-    dash.dependencies.Output("graph_text_lime", "figure"),
+    dash.dependencies.Output("graph_text_rise", "children"),
+    dash.dependencies.Output("graph_text_lime", "children"),
     dash.dependencies.State("upload-model-text", "filename"),
     dash.dependencies.State("upload-text", "value"),
     dash.dependencies.State("signal_text", "data"),
@@ -538,8 +532,6 @@ def select_method_t(method_sel):
     dash.dependencies.Input("update_button_t", "n_clicks"),
     dash.dependencies.Input("stop_button_t", "n_clicks")
 )
-# pylint: disable=too-many-locals
-# pylint: disable=unused-argument
 def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, labelnames,
                            n_masks=1000, feature_res=6, p_keep=0.1,
                            random_state=2, update_button_t=0, stop_button_t=0):
@@ -552,7 +544,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
     if ctx.triggered[0]["prop_id"] == "stop_button_t.n_clicks":
         return (
             html.Div(['Explanation stopped.'], style={'margin-top': '60px'}),
-            blank_fig(), blank_fig())
+            '', '')
 
     # update text explanations
     if (fn_m and input_text) is not None and (sel_methods != []):
@@ -570,8 +562,8 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
             class_name = labelnames
             pred_class = class_name[np.argmax(predictions)]
 
-            fig_l = blank_fig()
-            fig_r = blank_fig()
+            fig_l = ''
+            fig_r = ''
 
             for m in sel_methods:
                 if m == "LIME":
@@ -580,33 +572,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
                         random_state=random_state)
                     output = _create_html(
                         input_tokens, relevances_lime[0], max_opacity=0.8)
-                    hti = Html2Image()
-                    expl_path = 'text_expl.jpg'
-
-                    hti.screenshot(output, save_as=expl_path)
-
-                    im = Image.open(expl_path)
-                    im = np.asarray(im).astype(np.float32)
-
-                    fig_l = px.imshow(im)
-                    fig_l.update_xaxes(
-                        showgrid=False, range=[0, 1000],
-                        showticklabels=False, zeroline=False)
-                    fig_l.update_yaxes(
-                        showgrid=False, range=[200, 0],
-                        showticklabels=False, zeroline=False)
-                    fig_l.update_layout(
-                        title='LIME explanation:',
-                        title_font_color=COLORS['blue1'],
-                        paper_bgcolor=COLORS['blue4'],
-                        plot_bgcolor=COLORS['blue4'],
-                        height=200,
-                        width=500,
-                        margin_b=40,
-                        margin_t=40,
-                        margin_l=20,
-                        margin_r=0
-                        )
+                    fig_l = html.Div(tuple(list(output)))
 
                 elif m == "RISE":
                     relevances_rise = global_store_t(
@@ -614,29 +580,7 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
                         n_masks=n_masks, feature_res=feature_res, p_keep=p_keep)
                     output = _create_html(
                         input_tokens, relevances_rise[0], max_opacity=0.8)
-                    hti = Html2Image()
-                    expl_path = 'text_expl.jpg'
-                    hti.screenshot(output, save_as=expl_path)
-                    im = Image.open(expl_path)
-                    im = np.asarray(im).astype(np.float32)
-                    fig_r = px.imshow(im)
-                    fig_r.update_xaxes(
-                        showgrid=False, range=[0, 1000],
-                        showticklabels=False, zeroline=False)
-                    fig_r.update_yaxes(
-                        showgrid=False, range=[200, 0],
-                        showticklabels=False, zeroline=False)
-                    fig_r.update_layout(
-                        title='RISE explanation:',
-                        title_font_color=COLORS['blue1'],
-                        paper_bgcolor=COLORS['blue4'],
-                        plot_bgcolor=COLORS['blue4'],
-                        height=200,
-                        width=500,
-                        margin_b=50,
-                        margin_t=40,
-                        margin_l=20,
-                        margin_r=0)
+                    fig_r = html.Div(tuple(list(output)))
 
             return (html.Div(['The predicted class is: ' + pred_class], style={
                 'fontSize': 18,
@@ -649,13 +593,14 @@ def update_multi_options_t(fn_m, input_text, sel_methods, new_model, new_text, l
 
         except Exception as e:
             print(e)
-            return html.Div([
+            return (html.Div([
                 'There was an error running the model. Check either the test ' +
                 'text or the model.'
-                ]), blank_fig(), blank_fig()
+                ]), '', '')
     else:
-        return (html.Div(['Missing model, input text or XAI method.']),
-                blank_fig(), blank_fig())
+        return (html.Div([
+            'Missing model, input text or XAI method.'
+            ]), '', '')
 
 
 @app.callback(
