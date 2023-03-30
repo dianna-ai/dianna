@@ -50,7 +50,7 @@ class LimeTimeseries:
         # implementation for reference
         # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L130
         # TODO: scores =  lime_base.explain_instance_with_data()
-        predictions = model_or_function.predict_proba(masked)       
+        predictions = model_or_function(masked)       
         exp = explanation.Explanation(domain_mapper = self.domain_mapper, class_names = class_names)
 
         # TODO: The current form of explanation follows lime-for-time. Would be good to merge formatting with DIANNA.
