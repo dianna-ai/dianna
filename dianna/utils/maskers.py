@@ -29,7 +29,7 @@ def mask_data(data: np.array, masks: np.array, mask_type: Union[object, str]):
     """Mask data given using a set of masks.
 
     Args:
-        data: ?
+        data: Input data.
         masks: an array with shape [number_of_masks] + data.shape
         mask_type: Masking strategy.
 

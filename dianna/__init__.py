@@ -38,10 +38,10 @@ def explain_timeseries(model_or_function, timeseries_data, method, labels, **kwa
     Args:
         model_or_function (callable or str): The function that runs the model to be explained _or_
                                              the path to a ONNX model on disk.
-        timeseries_data (np.ndarray): Image data to be explained
+        timeseries_data (np.ndarray): Timeseries data to be explained
         method (string): One of the supported methods: RISE, LIME or KernelSHAP
         labels (Iterable(int)): Labels to be explained
-        **kwargs: key word arguments
+        kwargs: key word arguments
 
     Returns:
         One heatmap per class.
