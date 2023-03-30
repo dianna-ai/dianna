@@ -1,4 +1,5 @@
 import warnings
+from typing import Union
 import numpy as np
 
 
@@ -17,21 +18,20 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
     number_of_steps_masked = _determine_number_of_steps_masked(p_keep, series_length)
 
     masked_data_shape = [number_of_masks] + list(input_data.shape)
-    masks = np.zeros(masked_data_shape, dtype=np.bool)
+    masks = np.ones(masked_data_shape, dtype=np.bool)
     for i in range(number_of_masks):
         steps_to_mask = np.random.choice(series_length, number_of_steps_masked, False)
-        masked_value = 1
-        masks[i, steps_to_mask] = masked_value
+        masks[i, steps_to_mask] = False
     return masks
 
 
-def mask_data(data, masks, mask_type='mean'):
+def mask_data(data: np.array, masks: np.array, mask_type: Union[object, str]):
     """Mask data given using a set of masks.
 
     Args:
-        data: ?
+        data: Input data.
         masks: an array with shape [number_of_masks] + data.shape
-        mask_type: ?
+        mask_type: Masking strategy.
 
     Returns:
     Single array containing all masked input where the first dimension represents the batch.
@@ -39,13 +39,15 @@ def mask_data(data, masks, mask_type='mean'):
     number_of_masks = masks.shape[0]
     input_data_batch = np.repeat(np.expand_dims(data, 0), number_of_masks, axis=0)
     result = np.empty(input_data_batch.shape)
-    result[~masks] = input_data_batch[~masks]
-    result[masks] = _get_mask_value(data, mask_type)
+    result[masks] = input_data_batch[masks]
+    result[~masks] = _get_mask_value(data, mask_type)
     return result
 
 
 def _get_mask_value(data: np.array, mask_type: str) -> int:
     """Calculates a masking value of the given type for the data."""
+    if callable(mask_type):
+        return mask_type(data)
     if mask_type == 'mean':
         return np.mean(data)
     raise ValueError(f'Unknown mask_type selected: {mask_type}')
