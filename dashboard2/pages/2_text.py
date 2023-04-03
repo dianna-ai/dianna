@@ -89,7 +89,5 @@ for col, method in zip(columns, methods):
         with st.spinner(f'Running {method}'):
             relevances = func(model_runner, text_input, **kwargs)
 
-        weight_map = {r[0]: r[2] for r in relevances[0]}
-
-        html = format_word_importances(text_input, weight_map)
+        html = format_word_importances(text_input, relevances[0])
         st.write(html, unsafe_allow_html=True)
