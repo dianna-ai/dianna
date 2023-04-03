@@ -30,6 +30,7 @@ class LIMETimeseries:
         self.feature_selection = feature_selection
         self.domain_mapper = explanation.DomainMapper()
         self.preprocess_function = preprocess_function
+        self._is_multivariate = False
 
     def explain(self,
                 model_or_function,
@@ -44,18 +45,27 @@ class LIMETimeseries:
                 ):  # pylint: disable=too-many-arguments,too-many-locals
         """Run the LIME explainer for timeseries.
         """
-        # TODO: p_keep does not exist in LIME, we should remove it after adapting
-        #       maskers function to LIME.
+        # TODO: p_keep does not exist in LIME. LIME will mask every point, which means the number
+        #       of steps masked is 1. We should updating it after adapting maskers function to LIME.
+        if input_data.ndim > 2:
+            raise ValueError("LIME for timeseries only supports input timeseries with shape"
+                             "[timeseries, variables]")
+        elif input_data.ndim > 1:
+            self._is_multivariate = True
+            sequence, n_var = input_data.shape
+        else:
+            pass
         runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         masks = generate_masks(input_data, num_samples, p_keep=0.9)
         masked = mask_data(input_data, masks, mask_type='mean')
+        predictions = runner(masked)
+        if self._is_multivariate:
+            masked = masked.reshape((num_samples, sequence * n_var))
         distance = self._calculate_distance(input_data, masked, distance_method=distance_method)
         # implementation for reference
         # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L130
         # TODO: scores =  lime_base.explain_instance_with_data()
-        predictions = runner(masked)
         exp = explanation.Explanation(domain_mapper = self.domain_mapper, class_names = class_names)
-
         # TODO: The current form of explanation follows lime-for-time. Would be good to merge formatting with DIANNA.
         # run the explanation.
         for label in labels:
@@ -77,6 +87,9 @@ class LIMETimeseries:
         if distance_method == "dtw":
             distance = self._dtw_distance(input_data, masked_data)
         elif distance_method in support_methods:
+            # if self._is_multivariate:
+            #     _, sequence, n_var = masked_data.shape
+            #     masked_data = masked_data.reshape((-1, sequence * n_var))
             # TODO: implementation for reference
             # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L175
             # should understand why (* 100?) and if it is equivalent to dtw.
