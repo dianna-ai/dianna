@@ -3,7 +3,7 @@ import streamlit as st
 from _image_utils import open_image
 from _model_utils import load_labels
 from _model_utils import load_model
-from _models import explain_image_dispatcher
+from _models_image import explain_image_dispatcher
 from dianna.visualization import plot_image
 
 

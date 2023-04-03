@@ -5,7 +5,7 @@ from dianna import explain_image
 
 
 @st.cache_data
-def _run_rise(model, image, i, **kwargs):
+def _run_rise_image(model, image, i, **kwargs):
     relevances = explain_image(
         model,
         image,
@@ -15,7 +15,7 @@ def _run_rise(model, image, i, **kwargs):
 
 
 @st.cache_data
-def _run_lime(model, image, i, **kwargs):
+def _run_lime_image(model, image, i, **kwargs):
     relevances = explain_image(
         model,
         image * 256,
@@ -26,7 +26,7 @@ def _run_lime(model, image, i, **kwargs):
 
 
 @st.cache_data
-def _run_kernelshap(model, image, i, **kwargs):
+def _run_kernelshap_image(model, image, i, **kwargs):
     st.warning('Kernelshap requires model as a path to the onnx file.')
     return [[0]]
     shap_values, segments_slic = explain_image(model, image, **kwargs)
@@ -34,7 +34,7 @@ def _run_kernelshap(model, image, i, **kwargs):
 
 
 explain_image_dispatcher = {
-    'RISE': _run_rise,
-    'LIME': _run_lime,
-    'KernelSHAP': _run_kernelshap,
+    'RISE': _run_rise_image,
+    'LIME': _run_lime_image,
+    'KernelSHAP': _run_kernelshap_image,
 }

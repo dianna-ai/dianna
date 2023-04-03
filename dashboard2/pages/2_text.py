@@ -1,4 +1,11 @@
+from pathlib import Path
+import numpy as np
 import streamlit as st
+from _model_utils import load_labels
+from _model_utils import load_model
+from _models_text import explain_text_dispatcher
+from _movie_model import MovieReviewsModelRunner
+import dianna
 
 
 st.title("Dianna's dashboard")
@@ -6,15 +13,20 @@ st.title("Dianna's dashboard")
 with st.sidebar:
     st.header('Input data')
 
-    text = st.text_input('Input string')
+    text_input = st.text_input('Input string')
 
-    model = st.file_uploader('Model')
+    if text_input:
+        st.write(text_input)
 
-    labels = st.file_uploader('Labels')
+    model_file = st.file_uploader('Model', type='onnx')
 
-methods = st.multiselect('Select XAI methods', options=('Rise', 'KernelSHAP'))
+    label_file = st.file_uploader('Labels', type='txt')
 
-st.number_input('Number of top results to show', value=2)
+methods = st.multiselect('Select XAI methods', options=('RISE', 'LIME'))
+
+if not (text_input and model_file and label_file):
+    st.info('Add your input data in the left panel to continue')
+    st.stop()
 
 if not methods:
     st.info('Select a method to continue')
@@ -22,26 +34,59 @@ if not methods:
 
 tabs = st.tabs(methods)
 
+kws = {'RISE': {}, 'LIME': {}}
+
 for method, tab in zip(methods, tabs):
     with tab:
         c1, c2 = st.columns(2)
-        if method == 'Rise':
-
+        if method == 'RISE':
             with c1:
-                st.number_input('Number of masks', value=1000)
-                st.number_input('Feature resolution', value=6)
+                kws['RISE']['n_masks'] = st.number_input('Number of masks',
+                                                         value=1000)
+                kws['RISE']['feature_res'] = st.number_input(
+                    'Feature resolution', value=6)
             with c2:
-                st.number_input('Probability to be kept unmasked', value=0.1)
+                kws['RISE']['p_keep'] = st.number_input(
+                    'Probability to be kept unmasked', value=0.1)
 
         if method == 'LIME':
-
             with c1:
-                st.number_input('Random state', value=2)
+                kws['LIME']['rand_state'] = st.number_input('Random state',
+                                                            value=2)
 
-c1, c2 = st.columns(2)
+model = load_model(model_file)
+serialized_model = model.SerializeToString()
 
-with c1:
-    st.button('Update explanation', type='primary')
+labels = load_labels(label_file)
 
-with c2:
-    st.button('Stop explanation', type='secondary')
+dianna_root_dir = Path(dianna.__file__).parents[1]
+word_vector_path = dianna_root_dir / 'tutorials' / 'data' / 'movie_reviews_word_vectors.txt'
+
+model_runner = MovieReviewsModelRunner(serialized_model,
+                                       word_vector_path,
+                                       max_filter_size=5)
+
+with st.spinner('Preparing data'):
+    # TODO: Re-organize this mess
+    predictions = model_runner(text_input)
+    pred_class = labels[np.argmax(predictions)]
+    pred_idx = tuple(labels).index(pred_class)
+
+    st.info(f'The predicted class is: {pred_class}')
+
+columns = st.columns(len(methods))
+
+for col, method in zip(columns, methods):
+    kwargs = kws[method].copy()
+    kwargs['method'] = method
+    kwargs['labels'] = [pred_idx]
+
+    func = explain_text_dispatcher[method]
+
+    with col:
+        st.header(method)
+
+        with st.spinner(f'Running {method}'):
+            relevances = func(model_runner, text_input, **kwargs)
+
+        st.write(str(relevances))
