@@ -1,16 +1,13 @@
 import os
 import warnings
 import numpy as np
+from dash import html
 from keras import utils as keras_utils
 from PIL import Image
 from PIL import ImageStat
 from scipy.special import expit as sigmoid
-# keras model and preprocessing tools
-# pylint: disable=import-error
 from tensorflow.keras.applications.resnet50 import decode_predictions
 from torchtext.vocab import Vectors
-# pylint: disable=unused-import
-import dianna
 from dianna import utils
 from dianna.utils import move_axis
 from dianna.utils import to_xarray
@@ -30,6 +27,7 @@ class MovieReviewsModelRunner:
         self.tokenizer = SpacyTokenizer()
 
     def __call__(self, sentences):
+        """Call Runner."""
         # ensure the input has a batch axis
         if isinstance(sentences, str):
             sentences = [sentences]
@@ -71,17 +69,17 @@ def open_image(path):
 
 def preprocess_img_resnet(path):
     """Resnet specific function for preprocessing.
-    
+
     Reshape figure to 224,224 and get colour channel at position 0.
     Also: for resnet preprocessing: normalize the data. This works specifically for ImageNet.
     See: https://github.com/onnx/models/tree/main/vision/classification/resnet
-    
+
     """
     img = keras_utils.load_img(path, target_size=(224,224))
     img_data = keras_utils.img_to_array(img)
     if img_data.shape[0] != 3:
         # Colour channel is not in position 0; reshape the data
-        xarray = to_xarray(img_data, {0: 'height', 1: 'width', 2: 'channels'}) 
+        xarray = to_xarray(img_data, {0: 'height', 1: 'width', 2: 'channels'})
         reshaped_data = move_axis(xarray, 'channels', 0)
         img_data = np.array(reshaped_data)
     # definitions for normalisation (for ImageNet)
@@ -89,7 +87,7 @@ def preprocess_img_resnet(path):
     stddev_vec = np.array([0.229, 0.224, 0.225])
     norm_img_data = np.zeros(img_data.shape).astype('float32')
     for i in range(img_data.shape[0]):
-        # for each pixel in each channel, divide the values by 255 ([0,1]), and normalize 
+        # for each pixel in each channel, divide the values by 255 ([0,1]), and normalize
         # using mean and standard deviation from values above
         norm_img_data[i,:,:] = (img_data[i,:,:]/255 - mean_vec[i]) / stddev_vec[i]
     return norm_img_data, img
@@ -116,6 +114,7 @@ def _create_html(input_tokens, explanation, max_opacity):
     for index, word in enumerate(input_tokens):
         # if word has an explanation, highlight based on that, otherwise
         # make it grey
+        # add spaces between words
         try:
             explained_index = explained_indices.index(index)
             importance = explanation[explained_index][2]
@@ -123,21 +122,30 @@ def _create_html(input_tokens, explanation, max_opacity):
                 _highlight_word(word, importance, max_importance, max_opacity)
                 )
         except ValueError:
-            highlighted_words.append(f'<span style="background:rgba(128, 128, 128, 0.3)">{word}</span>')
-
-    return '<html><body>' + ' '.join(highlighted_words) + '</body></html>'
+            highlighted_words.append((html.Div([
+                            html.Span(
+                                [word
+                                ], style={'background': 'rgba(128, 128, 128, 0.3)'})
+                            ], style={'fontsize':36, 'display': 'inline-block'})
+                        ))
+        highlighted_words.append(' ')
+    return tuple(highlighted_words)
 
 
 def _highlight_word(word, importance, max_importance, max_opacity):
-    """Defines how to highlight words according to importance."""
+    """Defines how to highlight individual words according to importance."""
     opacity = max_opacity * abs(importance) / max_importance
     if importance > 0:
         color = f'rgba(255, 0, 0, {opacity:.2f})'
     else:
         color = f'rgba(0, 0, 255, {opacity:2f})'
-    highlighted_word = f'<span style="background:{color}">{word}</span>'
+    highlighted_word = (html.Div([
+                            html.Span(
+                                [word
+                                ], style={'background': color})
+                            ], style={'display': 'inline-block'})
+                        )
     return highlighted_word
-
 
 
 def imagenet_class_name(idx):
