@@ -1,7 +1,7 @@
-#from lime import explanation
 from lime import lime_base
 from lime import explanation
 import sklearn
+from dianna import utils
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import mask_data
 from fastdtw import fastdtw
@@ -9,7 +9,7 @@ import numpy as np
 from dianna import utils
 
 
-class LimeTimeseries:
+class LIMETimeseries:
     """LIME implementation for timeseries.
     
     This implementation is inspired by the paper:
@@ -18,19 +18,21 @@ class LimeTimeseries:
     """
     def __init__(self,
                  kernel_width=25,
-                 kernel=None,
                  verbose=False,
                  feature_selection='auto',
+                 preprocess_function=None,
                  ):
         """Initializes Lime explainer for timeseries."""
-        def kernel(d): return np.sqrt(np.exp(-(d ** 2) / kernel_width ** 2))
-        
+        def kernel(d):
+            return np.sqrt(np.exp(-(d ** 2) / kernel_width ** 2))
+
         self.explainer = lime_base.LimeBase(kernel, verbose)
         self.feature_selection = feature_selection
         self.domain_mapper = explanation.DomainMapper()
+        self.preprocess_function = preprocess_function
 
-    def explain(self, 
-                model_or_function, 
+    def explain(self,
+                model_or_function,
                 input_data,
                 labels,
                 class_names,
@@ -38,19 +40,20 @@ class LimeTimeseries:
                 num_samples,
                 num_slices,
                 mask_type='mean',
-                method='cosine'
+                distance_method='cosine'
                 ):  # pylint: disable=too-many-arguments,too-many-locals
         """Run the LIME explainer for timeseries.
         """
         # TODO: p_keep does not exist in LIME, we should remove it after adapting
         #       maskers function to LIME.
+        runner = utils.get_function(model_or_function, preprocess_function=self.preprocess_function)
         masks = generate_masks(input_data, num_samples, p_keep=0.9)
         masked = mask_data(input_data, masks, mask_type='mean')
-        distance = self._calculate_distance(input_data, masked, method=method)
+        distance = self._calculate_distance(input_data, masked, distance_method=distance_method)
         # implementation for reference
         # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L130
         # TODO: scores =  lime_base.explain_instance_with_data()
-        predictions = model_or_function(masked)       
+        predictions = runner(masked)
         exp = explanation.Explanation(domain_mapper = self.domain_mapper, class_names = class_names)
 
         # TODO: The current form of explanation follows lime-for-time. Would be good to merge formatting with DIANNA.
@@ -68,20 +71,20 @@ class LimeTimeseries:
                                                       )
         return exp
 
-    def _calculate_distance(self, input_data, masked_data, method="cosine"):
+    def _calculate_distance(self, input_data, masked_data, distance_method="cosine"):
         """Calcuate distance between perturbed data and the original samples."""
         support_methods = ["cosine", "euclidean"]
-        if method == "dtw":
+        if distance_method == "dtw":
             distance = self._dtw_distance(input_data, masked_data)
-        elif method in support_methods:
+        elif distance_method in support_methods:
             # TODO: implementation for reference
             # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L175
             # should understand why (* 100?) and if it is equivalent to dtw.
             distance = sklearn.metrics.pairwise.pairwise_distances(
                         masked_data, masked_data[0].reshape([1, -1]),
-                        metric = method).ravel() * 100
+                        metric = distance_method).ravel() * 100
         else:
-            raise ValueError(f"Given method {method} is not supported. Please "
+            raise ValueError(f"Given method {distance_method} is not supported. Please "
                              "choose from 'dtw', 'cosine' and 'euclidean'.")
 
         return distance
