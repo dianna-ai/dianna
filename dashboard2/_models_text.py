@@ -5,12 +5,11 @@ from dianna.utils.tokenizers import SpacyTokenizer
 
 tokenizer = SpacyTokenizer()
 
-st.cache_data
 
-
-def _run_rise_text(model, text, **kwargs):
+@st.cache_data
+def _run_rise_text(_model, text, **kwargs):
     relevances = explain_text(
-        model,
+        _model,
         text,
         tokenizer,
         **kwargs,
@@ -18,11 +17,9 @@ def _run_rise_text(model, text, **kwargs):
     return relevances
 
 
-st.cache_data
-
-
-def _run_lime_text(model, text, **kwargs):
-    relevances = explain_text(model, text, tokenizer, **kwargs)
+@st.cache_data
+def _run_lime_text(_model, text, **kwargs):
+    relevances = explain_text(_model, text, tokenizer, **kwargs)
     return relevances
 
 

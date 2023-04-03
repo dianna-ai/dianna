@@ -5,6 +5,7 @@ from _model_utils import load_labels
 from _model_utils import load_model
 from _models_text import explain_text_dispatcher
 from _movie_model import MovieReviewsModelRunner
+from _text_utils import format_word_importances
 import dianna
 
 
@@ -59,15 +60,14 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(label_file)
 
-dianna_root_dir = Path(dianna.__file__).parents[1]
-word_vector_path = dianna_root_dir / 'tutorials' / 'data' / 'movie_reviews_word_vectors.txt'
-
-model_runner = MovieReviewsModelRunner(serialized_model,
-                                       word_vector_path,
-                                       max_filter_size=5)
-
 with st.spinner('Preparing data'):
     # TODO: Re-organize this mess
+    dianna_root_dir = Path(dianna.__file__).parents[1]
+    word_vector_path = dianna_root_dir / 'tutorials' / 'data' / 'movie_reviews_word_vectors.txt'
+
+    model_runner = MovieReviewsModelRunner(serialized_model,
+                                           word_vector_path,
+                                           max_filter_size=5)
     predictions = model_runner(text_input)
     pred_class = labels[np.argmax(predictions)]
     pred_idx = tuple(labels).index(pred_class)
@@ -89,4 +89,7 @@ for col, method in zip(columns, methods):
         with st.spinner(f'Running {method}'):
             relevances = func(model_runner, text_input, **kwargs)
 
-        st.write(str(relevances))
+        weight_map = {r[0]: r[2] for r in relevances[0]}
+
+        html = format_word_importances(text_input, weight_map)
+        st.write(html, unsafe_allow_html=True)
