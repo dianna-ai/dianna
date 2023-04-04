@@ -3,6 +3,9 @@ from skimage.transform import resize
 from tqdm import tqdm
 from dianna import utils
 
+# To Do: remove this import when the method for different input type is splitted
+from dianna.methods.rise_timeseries import RISETimeseries  # noqa: F401 ignore unused import
+
 
 def normalize(saliency, n_masks, p_keep):
     """Normalizes salience by number of masks and keep probability."""
