@@ -1,9 +1,17 @@
 import streamlit as st
+from _movie_model import MovieReviewsModelRunner
 from dianna import explain_text
 from dianna.utils.tokenizers import SpacyTokenizer
 
 
 tokenizer = SpacyTokenizer()
+
+
+@st.cache_data
+def predict(*, model, text_input):
+    model_runner = MovieReviewsModelRunner(model)
+    predictions = model_runner(text_input)
+    return predictions
 
 
 @st.cache_data
