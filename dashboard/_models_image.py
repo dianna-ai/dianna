@@ -1,8 +1,24 @@
 import tempfile
+import numpy as np
 import streamlit as st
 from _model_utils import fill_segmentation
 from _model_utils import preprocess_function
+from onnx_tf.backend import prepare
 from dianna import explain_image
+
+
+def get_top_indices(predictions, n_top):
+    indices = np.array(np.argpartition(predictions, -n_top)[-n_top:])
+    indices = indices[np.argsort(predictions[indices])]
+    indices = np.flip(indices)
+    return indices
+
+
+@st.cache_data
+def predict(*, model, image):
+    output_node = prepare(model, gen_tensor_dict=True).outputs[0]
+    predictions = (prepare(model).run(image[None, ...])[str(output_node)])
+    return predictions[0]
 
 
 @st.cache_data

@@ -4,6 +4,8 @@ from _image_utils import open_image
 from _model_utils import load_labels
 from _model_utils import load_model
 from _models_image import explain_image_dispatcher
+from _models_image import get_top_indices
+from _models_image import predict
 from dianna.visualization import plot_image
 
 
@@ -21,14 +23,25 @@ with st.sidebar:
 
     label_file = st.file_uploader('Select labels', type='txt')
 
-methods = st.multiselect('Select XAI methods',
-                         options=('RISE', 'KernelSHAP', 'LIME'))
-
-show_top = st.number_input('Number of top results to show', value=2)
-
 if not (image_file and model_file and label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
+
+image, _ = open_image(image_file)
+assert isinstance(image, np.ndarray)
+
+model = load_model(model_file)
+serialized_model = model.SerializeToString()
+
+labels = load_labels(label_file)
+
+methods = st.multiselect('Select XAI methods',
+                         options=('RISE', 'KernelSHAP', 'LIME'))
+
+n_top = st.number_input('Number of top results to show',
+                        value=2,
+                        min_value=0,
+                        max_value=len(labels))
 
 if not methods:
     st.info('Select a method to continue')
@@ -67,43 +80,19 @@ for method, tab in zip(methods, tabs):
                 kws['LIME']['rand_state'] = st.number_input('Random state',
                                                             value=2)
 
-image, _ = open_image(image_file)
-assert isinstance(image, np.ndarray)
+with st.spinner('Predicting class'):
+    predictions = predict(model=model, image=image)
 
-model = load_model(model_file)
-serialized_model = model.SerializeToString()
+predicted_class = labels[np.argmax(predictions)]
 
-labels = load_labels(label_file)
+st.info(f'The predicted class is: {predicted_class}')
 
-with st.spinner('Preparing data'):
-    # TODO: Re-organize this mess
-    from onnx_tf.backend import prepare
+top_indices = get_top_indices(predictions, n_top)
+top_labels = [labels[i] for i in top_indices]
 
-    output_node = prepare(model, gen_tensor_dict=True).outputs[0]
-    predictions = (prepare(model).run(image[None, ...])[str(output_node)])
-
-    # get the predicted class
-    preds = np.array(predictions[0])
-    pred_class = labels[np.argmax(preds)]
-
-    st.info(f'The predicted class is: {pred_class}')
-
-    # get the top most likely results
-    show_top = min(show_top, len(labels))
-
-    # make sure the top results are ordered most to least likely
-    ind = np.array(np.argpartition(preds, -show_top)[-show_top:])
-    ind = ind[np.argsort(preds[ind])]
-    ind = np.flip(ind)
-    top = [labels[i] for i in ind]
-    n_rows = len(top)
-
-    if image.shape[2] <= 3:
-        original_data = image[:, :, 0]
-        axis_labels = {2: 'channels'}
-    else:
-        original_data = image[1, :, :]
-        axis_labels = {0: 'channels'}
+# check which axis is color channel
+original_data = image[:, :, 0] if image.shape[2] <= 3 else image[1, :, :]
+axis_labels = {2: 'channels'} if image.shape[2] <= 3 else {0: 'channels'}
 
 columns = st.columns(len(methods))
 
@@ -117,12 +106,12 @@ for col, method in zip(columns, methods):
     with col:
         st.header(method)
 
-        for i in range(n_rows):
+        for index, label in enumerate(top_labels):
             with st.spinner(f'Running {method}'):
-                kwargs['labels'] = [ind[i]]
-                heatmap = func(serialized_model, image, i, **kwargs)
+                kwargs['labels'] = [top_indices[index]]
+                heatmap = func(serialized_model, image, index, **kwargs)
 
-            st.write(f'index={i}, label={top[i]}')
+            st.write(f'index={index}, label={label}')
 
             fig = plot_image(heatmap,
                              original_data=original_data,
