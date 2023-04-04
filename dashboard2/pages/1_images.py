@@ -12,14 +12,14 @@ st.title("Dianna's dashboard")
 with st.sidebar:
     st.header('Input data')
 
-    image_file = st.file_uploader('Image', type=('png', 'jpg', 'jpeg'))
+    image_file = st.file_uploader('Select image', type=('png', 'jpg', 'jpeg'))
 
     if image_file:
         st.image(image_file)
 
-    model_file = st.file_uploader('Model', type='onnx')
+    model_file = st.file_uploader('Select model', type='onnx')
 
-    label_file = st.file_uploader('Labels', type='txt')
+    label_file = st.file_uploader('Select labels', type='txt')
 
 methods = st.multiselect('Select XAI methods',
                          options=('RISE', 'KernelSHAP', 'LIME'))

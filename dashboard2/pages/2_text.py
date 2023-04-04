@@ -19,9 +19,9 @@ with st.sidebar:
     if text_input:
         st.write(text_input)
 
-    model_file = st.file_uploader('Model', type='onnx')
+    model_file = st.file_uploader('Select model', type='onnx')
 
-    label_file = st.file_uploader('Labels', type='txt')
+    label_file = st.file_uploader('Select labels', type='txt')
 
 methods = st.multiselect('Select XAI methods', options=('RISE', 'LIME'))
 
