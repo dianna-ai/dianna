@@ -1,3 +1,4 @@
+import tempfile
 import streamlit as st
 from _model_utils import fill_segmentation
 from _model_utils import preprocess_function
@@ -27,9 +28,12 @@ def _run_lime_image(model, image, i, **kwargs):
 
 @st.cache_data
 def _run_kernelshap_image(model, image, i, **kwargs):
-    st.warning('Kernelshap requires model as a path to the onnx file.')
-    return [[0]]
-    shap_values, segments_slic = explain_image(model, image, **kwargs)
+    # Kernelshap interface is different. Write model to temporary file.
+    with tempfile.NamedTemporaryFile() as f:
+        f.write(model)
+        f.flush()
+        shap_values, segments_slic = explain_image(f.name, image, **kwargs)
+
     return fill_segmentation(shap_values[i][0], segments_slic)
 
 
