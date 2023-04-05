@@ -69,92 +69,86 @@ for method, tab in zip(methods, tabs):
                 kws['LIME']['rand_state'] = st.number_input('Random state',
                                                             value=2)
 
-c1, c2 = st.columns(2)
-
-with c1:
-    st.button('Update explanation', type='primary')
-
-with c2:
-    st.button('Stop explanation', type='secondary')
-
 image, _ = open_image(image_file)
 assert isinstance(image, np.ndarray)
 
 model = load_model(model_file)
+serialized_model = model.SerializeToString()
 
 labels = load_labels(label_file)
-labels = [0, 1]
-
-from onnx_tf.backend import prepare
-
 
 with st.spinner('Preparing data'):
-    output_node = prepare(model, gen_tensor_dict=True).outputs[0]
+    from onnx_tf.backend import prepare
 
+    output_node = prepare(model, gen_tensor_dict=True).outputs[0]
     predictions = (prepare(model).run(image[None, ...])[str(output_node)])
-    class_name = labels
+
     # get the predicted class
     preds = np.array(predictions[0])
-    pred_class = class_name[np.argmax(preds)]
+    pred_class = labels[np.argmax(preds)]
+
     # get the top most likely results
-    if show_top > len(class_name):
-        show_top = len(class_name)
+    show_top = min(show_top, len(labels))
+
     # make sure the top results are ordered most to least likely
     ind = np.array(np.argpartition(preds, -show_top)[-show_top:])
     ind = ind[np.argsort(preds[ind])]
     ind = np.flip(ind)
-    top = [class_name[i] for i in ind]
+    top = [labels[i] for i in ind]
     n_rows = len(top)
 
     if image.shape[2] <= 3:
-        z_rise = image[:, :, 0]
+        original_data = image[:, :, 0]
         axis_labels = {2: 'channels'}
-        colorscale = 'Bluered'
     else:
-        z_rise = image[1, :, :]
+        original_data = image[1, :, :]
         axis_labels = {0: 'channels'}
-        colorscale = 'jet'
 
-i = 0
+columns = st.columns(len(methods))
 
-if 'RISE' in methods:
-    print(method)
-    with st.spinner('Running RISE'):
-        relevances = explain_image(
-            model.SerializeToString(),
-            image,
-            method=method,
-            labels=[ind[i]],
-            axis_labels=axis_labels,
-            **kws['RISE'],
-        )
-    fig = plot_image(relevances[0], original_data=z_rise, heatmap_cmap='bwr')
-    st.pyplot(fig)
+for col, method in zip(columns, methods):
+    with col:
+        st.header(method)
 
-if 'KernelSHAP' in methods:
-    print(method)
-    with st.spinner('Running KernelSHAP'):
-        shap_values, segments_slic = explain_image(model.SerializeToString(),
-                                                   image,
-                                                   labels=[ind[i]],
-                                                   method=method,
-                                                   axis_labels=axis_labels,
-                                                   **kws['KernelSHAP'])
-    fill_segmentation(shap_values[i][0], segments_slic)
-    fig = plot_image(relevances[0], original_data=z_rise, heatmap_cmap='bwr')
-    st.pyplot(fig)
+        for i in range(n_rows):
+            if method == 'RISE':
+                with st.spinner('Running RISE'):
+                    relevances = explain_image(
+                        serialized_model,
+                        image,
+                        method=method,
+                        labels=[ind[i]],
+                        axis_labels=axis_labels,
+                        **kws['RISE'],
+                    )
+                heatmap = relevances[0]
 
-if 'LIME' in methods:
-    print(method)
-    with st.spinner('Running LIME'):
-        relevances = explain_image(
-            model.SerializeToString(),
-            image * 256,
-            method='LIME',
-            axis_labels=axis_labels,
-            labels=[ind[i]],
-            preprocess_function=preprocess_function,
-            **kws['LIME'],
-        )
-    fig = plot_image(relevances[0], original_data=z_rise, heatmap_cmap='bwr')
-    st.pyplot(fig)
+            if method == 'KernelSHAP':
+                with st.spinner('Running KernelSHAP'):
+                    shap_values, segments_slic = explain_image(
+                        serialized_model,
+                        image,
+                        labels=[ind[i]],
+                        method=method,
+                        axis_labels=axis_labels,
+                        **kws['KernelSHAP'])
+                heatmap = fill_segmentation(shap_values[i][0], segments_slic)
+
+            if method == 'LIME':
+                with st.spinner('Running LIME'):
+                    relevances = explain_image(
+                        serialized_model,
+                        image * 256,
+                        method='LIME',
+                        axis_labels=axis_labels,
+                        labels=[ind[i]],
+                        preprocess_function=preprocess_function,
+                        **kws['LIME'],
+                    )
+                heatmap = relevances[0]
+
+            st.write(f'index={i}, label={top[i]}')
+            fig = plot_image(heatmap,
+                             original_data=original_data,
+                             heatmap_cmap='bwr')
+            st.pyplot(fig)
