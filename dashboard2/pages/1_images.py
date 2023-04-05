@@ -1,4 +1,5 @@
 import streamlit as st
+from _image_utils import open_image
 from _shared import make_rise_plot
 
 
@@ -7,10 +8,10 @@ st.title("Dianna's dashboard")
 with st.sidebar:
     st.header('Input data')
 
-    image = st.file_uploader('Image')
+    image_file = st.file_uploader('Image')
 
-    if image:
-        st.image(image)
+    if image_file:
+        st.image(image_file)
 
     model = st.file_uploader('Model')
 
@@ -62,6 +63,13 @@ with c1:
 
 with c2:
     st.button('Stop explanation', type='secondary')
+
+image, _ = open_image(image_file)
+
+import numpy as np
+
+
+assert isinstance(image, np.ndarray)
 
 rise_fig = make_rise_plot(
     image=image,
