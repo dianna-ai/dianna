@@ -1,5 +1,5 @@
 # DIANNA dashboard
 
 ```
-streamlit run dash.py --server.headless True
+streamlit run dashboard.py --server.headless True
 ```

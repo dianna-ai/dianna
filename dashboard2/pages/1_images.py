@@ -1,4 +1,5 @@
 import streamlit as st
+from _shared import make_rise_plot
 
 
 st.title("Dianna's dashboard")
@@ -7,6 +8,9 @@ with st.sidebar:
     st.header('Input data')
 
     image = st.file_uploader('Image')
+
+    if image:
+        st.image(image)
 
     model = st.file_uploader('Model')
 
@@ -29,24 +33,27 @@ for method, tab in zip(methods, tabs):
         if method == 'Rise':
 
             with c1:
-                st.number_input('Number of masks', value=1000)
-                st.number_input('Feature resolution', value=6)
+                rise_n_masks = st.number_input('Number of masks', value=1000)
+                rise_feat_res = st.number_input('Feature resolution', value=6)
             with c2:
-                st.number_input('Probability to be kept unmasked', value=0.1)
+                rise_unmask_prob = st.number_input(
+                    'Probability to be kept unmasked', value=0.1)
 
         if method == 'KernelSHAP':
 
             with c1:
-                st.number_input('Number of samples', value=1000)
-                st.number_input('Background', value=0)
+                kshap_n_samples = st.number_input('Number of samples',
+                                                  value=1000)
+                kshap_background = st.number_input('Background', value=0)
             with c2:
-                st.number_input('Number of segments', value=200)
-                st.number_input('σ', value=0)
+                kshap_n_segments = st.number_input('Number of segments',
+                                                   value=200)
+                ksnap_sigma = st.number_input('σ', value=0)
 
         if method == 'LIME':
 
             with c1:
-                st.number_input('Random state', value=2)
+                lime_rand_state = st.number_input('Random state', value=2)
 
 c1, c2 = st.columns(2)
 
@@ -55,3 +62,14 @@ with c1:
 
 with c2:
     st.button('Stop explanation', type='secondary')
+
+rise_fig = make_rise_plot(
+    image=image,
+    model=model,
+    labels=labels,
+    rise_n_masks=rise_n_masks,
+    rise_feat_res=rise_feat_res,
+    rise_unmask_prob=rise_unmask_prob,
+)
+
+st.pyplot(rise_fig)
