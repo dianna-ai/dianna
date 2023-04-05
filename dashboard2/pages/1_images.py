@@ -1,11 +1,9 @@
 import numpy as np
 import streamlit as st
 from _image_utils import open_image
-from _model_utils import fill_segmentation
 from _model_utils import load_labels
 from _model_utils import load_model
-from _model_utils import preprocess_function
-from dianna import explain_image
+from _models import explain_image_dispatcher
 from dianna.visualization import plot_image
 
 
@@ -78,6 +76,7 @@ serialized_model = model.SerializeToString()
 labels = load_labels(label_file)
 
 with st.spinner('Preparing data'):
+    # TODO: Re-organize this mess
     from onnx_tf.backend import prepare
 
     output_node = prepare(model, gen_tensor_dict=True).outputs[0]
@@ -86,6 +85,8 @@ with st.spinner('Preparing data'):
     # get the predicted class
     preds = np.array(predictions[0])
     pred_class = labels[np.argmax(preds)]
+
+    st.info(f'The predicted class is: {pred_class}')
 
     # get the top most likely results
     show_top = min(show_top, len(labels))
@@ -106,47 +107,12 @@ with st.spinner('Preparing data'):
 
 columns = st.columns(len(methods))
 
-
-@st.cache_data
-def _run_rise(model, image, i, **kwargs):
-    relevances = explain_image(
-        serialized_model,
-        image,
-        **kwargs,
-    )
-    return relevances[0]
-
-
-@st.cache_data
-def _run_lime(model, image, i, **kwargs):
-    relevances = explain_image(
-        serialized_model,
-        image * 256,
-        preprocess_function=preprocess_function,
-        **kwargs,
-    )
-    return relevances[0]
-
-
-@st.cache_data
-def _run_kernelshap(model, image, i, **kwargs):
-    shap_values, segments_slic = explain_image(serialized_model, image,
-                                               **kwargs)
-    return fill_segmentation(shap_values[i][0], segments_slic)
-
-
-dispatcher = {
-    'RISE': _run_rise,
-    'LIME': _run_lime,
-    'KernelSHAP': _run_kernelshap,
-}
-
 for col, method in zip(columns, methods):
     kwargs = kws[method].copy()
     kwargs['method'] = method
     kwargs['axis_labels'] = axis_labels
 
-    func = dispatcher[method]
+    func = explain_image_dispatcher[method]
 
     with col:
         st.header(method)

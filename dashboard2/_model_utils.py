@@ -1,6 +1,5 @@
 import numpy as np
 import onnx
-from onnx_tf.backend import prepare
 
 
 def preprocess_function(image):
@@ -26,22 +25,3 @@ def load_labels(file):
     if labels is None or labels == ['']:
         raise ValueError(labels)
     return labels
-
-
-def predict(*, model, image, labels):
-    show_top = 2
-    output_node = prepare(model, gen_tensor_dict=True).outputs[0]
-    predictions = (prepare(model).run(image[None, ...])[output_node])
-    preds = np.array(predictions[0])
-
-    # get the predicted class
-    labels[np.argmax(preds)]
-    # get the top most likely results
-    if show_top > len(labels):
-        show_top = len(labels)
-    # make sure the top results are ordered most to least likely
-    ind = np.array(np.argpartition(preds, -show_top)[-show_top:])
-    ind = ind[np.argsort(preds[ind])]
-    ind = np.flip(ind)
-    top = [labels[i] for i in ind]
-    len(top)
