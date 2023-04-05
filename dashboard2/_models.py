@@ -27,6 +27,8 @@ def _run_lime(model, image, i, **kwargs):
 
 @st.cache_data
 def _run_kernelshap(model, image, i, **kwargs):
+    st.warning('Kernelshap requires model as a path to the onnx file.')
+    return [[0]]
     shap_values, segments_slic = explain_image(model, image, **kwargs)
     return fill_segmentation(shap_values[i][0], segments_slic)
 
