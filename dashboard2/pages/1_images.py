@@ -126,5 +126,6 @@ for col, method in zip(columns, methods):
 
             fig = plot_image(heatmap,
                              original_data=original_data,
-                             heatmap_cmap='bwr')
+                             heatmap_cmap='bwr',
+                             show_plot=False)
             st.pyplot(fig)
