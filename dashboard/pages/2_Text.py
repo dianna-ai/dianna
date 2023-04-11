@@ -18,18 +18,18 @@ with st.sidebar:
     if text_input:
         st.write(text_input)
 
-    model_file = st.file_uploader('Select model', type='onnx')
+    text_model_file = st.file_uploader('Select model', type='onnx')
 
-    label_file = st.file_uploader('Select labels', type='txt')
+    text_label_file = st.file_uploader('Select labels', type='txt')
 
-if not (text_input and model_file and label_file):
+if not (text_input and text_model_file and text_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
-model = load_model(model_file)
+model = load_model(text_model_file)
 serialized_model = model.SerializeToString()
 
-labels = load_labels(label_file)
+labels = load_labels(text_label_file)
 
 methods = st.multiselect('Select XAI methods', options=('RISE', 'LIME'))
 
@@ -37,25 +37,21 @@ if not methods:
     st.info('Select a method to continue')
     st.stop()
 
-tabs = st.tabs(methods)
-
 kws = {'RISE': {}, 'LIME': {}}
 
-for method, tab in zip(methods, tabs):
-    with tab:
-        c1, c2 = st.columns(2)
-        if method == 'RISE':
-            with c1:
+with st.expander('Click to modify method parameters'):
+    for method, col in zip(methods, st.columns(len(methods))):
+        with col:
+            st.header(method)
+            if method == 'RISE':
                 kws['RISE']['n_masks'] = st.number_input('Number of masks',
                                                          value=1000)
                 kws['RISE']['feature_res'] = st.number_input(
                     'Feature resolution', value=6)
-            with c2:
                 kws['RISE']['p_keep'] = st.number_input(
                     'Probability to be kept unmasked', value=0.1)
 
-        if method == 'LIME':
-            with c1:
+            if method == 'LIME':
                 kws['LIME']['rand_state'] = st.number_input('Random state',
                                                             value=2)
 
