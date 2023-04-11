@@ -1,35 +1,32 @@
-"""Start dashboard."""
-import warnings
-from importlib import reload
-import dash
-import layouts
-import utilities
-from callbacks import app
-from dash import dcc
-from dash import html
-from layouts import images_page
-from layouts import text_page
+import streamlit as st
 
 
-warnings.filterwarnings('ignore')  # disable warnings related to versions of tf
+st.set_page_config(page_title="Dianna's dashboard",
+                   page_icon='📊',
+                   layout='centered',
+                   initial_sidebar_state='auto',
+                   menu_items={
+                       'Get help':
+                       'https://dianna.readthedocs.org',
+                       'Report a bug':
+                       'https://github.com/dianna-ai/dianna/issues',
+                       'About':
+                       ("Dianna's dashboard. Created by the Dianna team: "
+                        'https://github.com/dianna-ai/dianna')
+                   })
 
-reload(layouts)
-reload(utilities)
+st.image(
+    'https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png'
+)
 
-app.layout = html.Div([
-    dcc.Location(id='url', refresh=False),
-    html.Div(id='page-content')
-])
+st.title("Dianna's dashboard")
 
+st.write("""
+DIANNA is a Python package that brings explainable AI (XAI) to your research project.
+It wraps carefully selected XAI methods in a simple, uniform interface. It's built by,
+with and for (academic) researchers and research software engineers working on machine
+learning projects.
 
-@app.callback(dash.dependencies.Output('page-content', 'children'),
-              [dash.dependencies.Input('url', 'pathname')])
-def display_page(pathname):
-    """Load content of dashboard."""
-    if pathname == '/apps/text':
-        return text_page
-    return images_page  # home page
-
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
+- [Images](/images)
+- [Text](/text)
+""")

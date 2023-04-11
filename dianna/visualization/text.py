@@ -22,14 +22,15 @@ def highlight_text(explanation,
     output = _create_html(input_tokens, explanation, max_opacity)
 
     if output_html_filename:
-        with open(output_html_filename, 'w', encoding='utf-8') as output_html_file:
+        with open(output_html_filename, 'w',
+                  encoding='utf-8') as output_html_file:
             print(output, file=output_html_file)
 
     if show_plot:
         display(HTML(output))
 
 
-def _create_html(input_tokens, explanation, max_opacity):
+def _create_html(input_tokens, explanation, max_opacity=0.8):
     max_importance = max(abs(item[2]) for item in explanation)
     explained_indices = [index for _, index, _ in explanation]
     highlighted_words = []
@@ -40,10 +41,11 @@ def _create_html(input_tokens, explanation, max_opacity):
             explained_index = explained_indices.index(index)
             importance = explanation[explained_index][2]
             highlighted_words.append(
-                _highlight_word(word, importance, max_importance, max_opacity)
-                )
+                _highlight_word(word, importance, max_importance, max_opacity))
         except ValueError:
-            highlighted_words.append(f'<span style="background:rgba(128, 128, 128, 0.3)">{word}</span>')
+            highlighted_words.append(
+                f'<span style="background:rgba(128, 128, 128, 0.3)">{word}</span>'
+            )
 
     return '<html><body>' + ' '.join(highlighted_words) + '</body></html>'
 
