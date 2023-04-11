@@ -3,6 +3,11 @@
 ## Tutorials
 This folder contains DIANNA tutorial notebooks. 
 
+To install the dependencies for the tutorials, run
+```
+pip install .[notebooks]
+```
+
 Use the cleckable XAI methods (explainers) names to watch explanatory videos for the respective method.
 
 Use the clickable logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset:
