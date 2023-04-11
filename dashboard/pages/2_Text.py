@@ -31,7 +31,11 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(text_label_file)
 
-methods = st.multiselect('Select XAI methods', options=('RISE', 'LIME'))
+methods = []
+for col, method in zip(st.columns(2), ('RISE', 'LIME')):
+    with col:
+        if st.checkbox(method):
+            methods.append(method)
 
 if not methods:
     st.info('Select a method to continue')
