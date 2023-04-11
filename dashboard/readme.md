@@ -6,7 +6,7 @@ A dashboard was created for DIANNA using [streamlit](https://streamlit.io/) that
 To open the dashboard, run
 
 ```console
-streamlit run dashboard.py
+streamlit run Home.py
 ```
 
 Open the link on which the app is running. Note that you are running the dashboard *only locally*. The data you use in the dashboard is your local data, and it is *not* uploaded to any server.
