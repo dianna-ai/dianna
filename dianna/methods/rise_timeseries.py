@@ -14,7 +14,7 @@ def _make_predictions(input_data, runner, batch_size):
     return np.concatenate(batch_predictions)
 
 
-# Duplicate code from rise.py:
+# TODO: Duplicate code from rise.py:
 def normalize(saliency, n_masks, p_keep):
     """Normalizes salience by number of masks and keep probability."""
     return saliency / n_masks / p_keep
