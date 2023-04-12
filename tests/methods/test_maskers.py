@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from dianna.utils.maskers import generate_masks
+from dianna.utils.maskers import generate_masks, generate_channel_masks
 from dianna.utils.maskers import mask_data
 
 
@@ -58,9 +58,19 @@ def _get_univariate_input_data() -> np.array:
 
 
 def _get_multivariate_input_data() -> np.array:
-    return np.zeros((10, 6)) + np.arange(10).reshape(10, 1)
+    return np.row_stack([np.zeros((10, 6)), np.ones((10, 6))])
 
 
 def _call_masking_function(input_data, number_of_masks=5, p_keep=.3, mask_type='mean'):
     masks = generate_masks(input_data, number_of_masks, p_keep=p_keep)
     return mask_data(input_data, masks, mask_type=mask_type)
+
+
+def test_channel_mask_has_correct_shape_multivariate():
+    number_of_masks = 15
+    input_data = _get_multivariate_input_data()
+
+    result = generate_channel_masks(input_data, number_of_masks, 0.5)
+
+    print(input_data)
+    assert result.shape == tuple([number_of_masks] + list(input_data.shape))

@@ -14,9 +14,25 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
     Returns:
     Single array containing all masks where the first dimension represents the batch.
     """
-    series_length = input_data.shape[0]
-    number_of_steps_masked = _determine_number_of_steps_masked(p_keep, series_length)
+    time_step_masks = generate_time_step_masks(input_data, number_of_masks, p_keep)
+    # channel_masks = generate_channel_masks(input_data, number_of_masks, p_keep)
+    # result = time_step_masks * channel_masks
+    return time_step_masks
 
+
+def generate_channel_masks(input_data: np.ndarray, number_of_masks:int, p_keep:float):
+    number_of_channels = input_data.shape[1]
+    number_of_channels_masked = _determine_number_masked(p_keep, number_of_channels)
+    masked_data_shape = [number_of_masks] + list(input_data.shape)
+    masks = np.ones(masked_data_shape, dtype=np.bool)
+    for i in range(number_of_masks):
+        channels_to_mask = np.random.choice(number_of_channels, number_of_channels_masked, False)
+        masks[i, :, channels_to_mask] = False
+    return masks
+
+def generate_time_step_masks(input_data:np.ndarray, number_of_masks:int, p_keep: float):
+    series_length = input_data.shape[0]
+    number_of_steps_masked = _determine_number_masked(p_keep, series_length)
     masked_data_shape = [number_of_masks] + list(input_data.shape)
     masks = np.ones(masked_data_shape, dtype=np.bool)
     for i in range(number_of_masks):
@@ -53,7 +69,7 @@ def _get_mask_value(data: np.array, mask_type: str) -> int:
     raise ValueError(f'Unknown mask_type selected: {mask_type}')
 
 
-def _determine_number_of_steps_masked(p_keep: float, series_length: int) -> int:
+def _determine_number_masked(p_keep: float, series_length: int) -> int:
     user_requested_steps = int(np.round(series_length * (1 - p_keep)))
     if user_requested_steps == series_length:
         warnings.warn('Warning: p_keep chosen too low. Continuing with leaving 1 time step unmasked per mask.')
