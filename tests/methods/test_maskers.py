@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
-
-from dianna.utils.maskers import (generate_channel_masks, generate_masks,
-                                  mask_data)
+from dianna.utils.maskers import generate_channel_masks
+from dianna.utils.maskers import generate_masks
+from dianna.utils.maskers import mask_data
 
 
 def test_mask_has_correct_shape_univariate():
