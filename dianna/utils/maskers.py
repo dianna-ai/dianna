@@ -4,7 +4,7 @@ import numpy as np
 
 
 def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0.5):
-    """Generate masks for time series data given a probability of keeping any time step unmasked.
+    """Generate masks for time series data given a probability of keeping any time step or channel unmasked.
 
     Args:
         input_data: Timeseries data to be explained.
@@ -14,10 +14,15 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
     Returns:
     Single array containing all masks where the first dimension represents the batch.
     """
-    time_step_masks = generate_time_step_masks(input_data, number_of_masks, p_keep)
-    # channel_masks = generate_channel_masks(input_data, number_of_masks, p_keep)
-    # result = time_step_masks * channel_masks
-    return time_step_masks
+    number_of_channel_masks = number_of_masks // 3
+    number_of_time_step_masks = number_of_channel_masks
+    number_of_combined_masks = number_of_masks - number_of_time_step_masks - number_of_channel_masks
+
+    time_step_masks = generate_time_step_masks(input_data, number_of_time_step_masks, p_keep)
+    channel_masks = generate_channel_masks(input_data, number_of_channel_masks, p_keep)
+    number_of_combined_masks = generate_time_step_masks(input_data, number_of_combined_masks, p_keep) * generate_channel_masks(input_data, number_of_combined_masks, p_keep)
+
+    return np.concatenate([time_step_masks,channel_masks,number_of_combined_masks], axis=0)
 
 
 def generate_channel_masks(input_data: np.ndarray, number_of_masks:int, p_keep:float):
