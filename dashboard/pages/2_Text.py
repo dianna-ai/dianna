@@ -1,4 +1,3 @@
-import numpy as np
 import streamlit as st
 from _model_utils import data_directory
 from _model_utils import load_labels
@@ -7,6 +6,7 @@ from _models_text import explain_text_dispatcher
 from _models_text import predict
 from _movie_model import MovieReviewsModelRunner
 from _shared import _methods_checkboxes
+from _shared import get_top_indices
 from _text_utils import format_word_importances
 
 
@@ -69,25 +69,43 @@ model_runner = MovieReviewsModelRunner(serialized_model)
 with st.spinner('Predicting class'):
     predictions = predict(model=serialized_model, text_input=text_input)
 
-predicted_class = labels[np.argmax(predictions)]
-predicted_index = labels.index(predicted_class)
+c1, _ = st.columns(2)
 
-st.info(f'The predicted class is: {predicted_class}')
+with c1:
+    n_top = st.number_input('Number of top results to show',
+                            value=2,
+                            min_value=0,
+                            max_value=len(labels))
 
-columns = st.columns(len(methods))
+top_indices = get_top_indices(predictions[0], n_top)
+top_labels = [labels[i] for i in top_indices]
 
+st.info(f'The predicted class is: {top_labels[0]}')
+
+weight = 0.8 / len(methods)
+column_spec = [0.2, *[weight for _ in methods]]
+
+_, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    kwargs = kws[method].copy()
-    kwargs['method'] = method
-    kwargs['labels'] = [predicted_index]
-
-    func = explain_text_dispatcher[method]
-
     with col:
         st.header(method)
 
-        with st.spinner(f'Running {method}'):
-            relevances = func(model_runner, text_input, **kwargs)
+for index, label in enumerate(top_labels):
+    index_col, *columns = st.columns(column_spec)
 
-        html = format_word_importances(text_input, relevances[0])
-        st.write(html, unsafe_allow_html=True)
+    with index_col:
+        st.header(label)
+
+    for col, method in zip(columns, methods):
+        kwargs = kws[method].copy()
+        kwargs['method'] = method
+        kwargs['labels'] = [index]
+
+        func = explain_text_dispatcher[method]
+
+        with col:
+            with st.spinner(f'Running {method}'):
+                relevances = func(model_runner, text_input, **kwargs)
+
+            html = format_word_importances(text_input, relevances[0])
+            st.write(html, unsafe_allow_html=True)

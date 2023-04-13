@@ -1,4 +1,5 @@
 from typing import Sequence
+import numpy as np
 import streamlit as st
 
 
@@ -16,3 +17,10 @@ def _methods_checkboxes(*, choices: Sequence):
         st.stop()
 
     return methods
+
+
+def get_top_indices(predictions, n_top):
+    indices = np.array(np.argpartition(predictions, -n_top)[-n_top:])
+    indices = indices[np.argsort(predictions[indices])]
+    indices = np.flip(indices)
+    return indices

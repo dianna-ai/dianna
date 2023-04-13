@@ -5,9 +5,9 @@ from _model_utils import data_directory
 from _model_utils import load_labels
 from _model_utils import load_model
 from _models_image import explain_image_dispatcher
-from _models_image import get_top_indices
 from _models_image import predict
 from _shared import _methods_checkboxes
+from _shared import get_top_indices
 from dianna.visualization import plot_image
 
 
@@ -90,35 +90,40 @@ with c1:
 with st.spinner('Predicting class'):
     predictions = predict(model=model, image=image)
 
-predicted_class = labels[np.argmax(predictions)]
-
-st.info(f'The predicted class is: {predicted_class}')
-
 top_indices = get_top_indices(predictions, n_top)
 top_labels = [labels[i] for i in top_indices]
+
+st.info(f'The predicted class is: {top_labels[0]}')
 
 # check which axis is color channel
 original_data = image[:, :, 0] if image.shape[2] <= 3 else image[1, :, :]
 axis_labels = {2: 'channels'} if image.shape[2] <= 3 else {0: 'channels'}
 
-columns = st.columns(len(methods))
+weight = 0.9 / len(methods)
+column_spec = [0.1, *[weight for _ in methods]]
 
+_, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    kwargs = kws[method].copy()
-    kwargs['method'] = method
-    kwargs['axis_labels'] = axis_labels
-
-    func = explain_image_dispatcher[method]
-
     with col:
         st.header(method)
 
-        for index, label in enumerate(top_labels):
+for index, label in enumerate(top_labels):
+    index_col, *columns = st.columns(column_spec)
+
+    with index_col:
+        st.header(label)
+
+    for col, method in zip(columns, methods):
+        kwargs = kws[method].copy()
+        kwargs['method'] = method
+        kwargs['axis_labels'] = axis_labels
+
+        func = explain_image_dispatcher[method]
+
+        with col:
             with st.spinner(f'Running {method}'):
                 kwargs['labels'] = [top_indices[index]]
                 heatmap = func(serialized_model, image, index, **kwargs)
-
-            st.write(f'index={index}, label={label}')
 
             fig = plot_image(heatmap,
                              original_data=original_data,
