@@ -6,7 +6,7 @@ from _models_text import explain_text_dispatcher
 from _models_text import predict
 from _movie_model import MovieReviewsModelRunner
 from _shared import _methods_checkboxes
-from _shared import get_top_indices
+from _shared import get_top_indices_and_labels
 from _text_utils import format_word_importances
 
 
@@ -69,18 +69,8 @@ model_runner = MovieReviewsModelRunner(serialized_model)
 with st.spinner('Predicting class'):
     predictions = predict(model=serialized_model, text_input=text_input)
 
-c1, _ = st.columns(2)
-
-with c1:
-    n_top = st.number_input('Number of top results to show',
-                            value=2,
-                            min_value=0,
-                            max_value=len(labels))
-
-top_indices = get_top_indices(predictions[0], n_top)
-top_labels = [labels[i] for i in top_indices]
-
-st.info(f'The predicted class is: {top_labels[0]}')
+top_indices, top_labels = get_top_indices_and_labels(
+    predictions=predictions[0], labels=labels)
 
 weight = 0.8 / len(methods)
 column_spec = [0.2, *[weight for _ in methods]]
@@ -98,7 +88,6 @@ for index, label in zip(top_indices, top_labels):
 
     for col, method in zip(columns, methods):
         kwargs = kws[method].copy()
-        kwargs['method'] = method
         kwargs['labels'] = [index]
 
         func = explain_text_dispatcher[method]

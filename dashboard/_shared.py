@@ -19,8 +19,25 @@ def _methods_checkboxes(*, choices: Sequence):
     return methods
 
 
-def get_top_indices(predictions, n_top):
+def _get_top_indices(predictions, n_top):
     indices = np.array(np.argpartition(predictions, -n_top)[-n_top:])
     indices = indices[np.argsort(predictions[indices])]
     indices = np.flip(indices)
     return indices
+
+
+def get_top_indices_and_labels(*, predictions, labels):
+    c1, _ = st.columns(2)
+
+    with c1:
+        n_top = st.number_input('Number of top results to show',
+                                value=2,
+                                min_value=0,
+                                max_value=len(labels))
+
+    top_indices = _get_top_indices(predictions, n_top)
+    top_labels = [labels[i] for i in top_indices]
+
+    st.info(f'The predicted class is: {top_labels[0]}')
+
+    return top_indices, top_labels

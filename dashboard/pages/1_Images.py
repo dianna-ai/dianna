@@ -7,7 +7,7 @@ from _model_utils import load_model
 from _models_image import explain_image_dispatcher
 from _models_image import predict
 from _shared import _methods_checkboxes
-from _shared import get_top_indices
+from _shared import get_top_indices_and_labels
 from dianna.visualization import plot_image
 
 
@@ -79,21 +79,11 @@ with st.expander('Click to modify method parameters'):
                 kws['LIME']['rand_state'] = st.number_input('Random state',
                                                             value=2)
 
-c1, _ = st.columns(2)
-
-with c1:
-    n_top = st.number_input('Number of top results to show',
-                            value=2,
-                            min_value=0,
-                            max_value=len(labels))
-
 with st.spinner('Predicting class'):
     predictions = predict(model=model, image=image)
 
-top_indices = get_top_indices(predictions, n_top)
-top_labels = [labels[i] for i in top_indices]
-
-st.info(f'The predicted class is: {top_labels[0]}')
+top_indices, top_labels = get_top_indices_and_labels(predictions=predictions,
+                                                     labels=labels)
 
 # check which axis is color channel
 original_data = image[:, :, 0] if image.shape[2] <= 3 else image[1, :, :]
@@ -115,14 +105,13 @@ for index, label in zip(top_indices, top_labels):
 
     for col, method in zip(columns, methods):
         kwargs = kws[method].copy()
-        kwargs['method'] = method
         kwargs['axis_labels'] = axis_labels
+        kwargs['labels'] = [index]
 
         func = explain_image_dispatcher[method]
 
         with col:
             with st.spinner(f'Running {method}'):
-                kwargs['labels'] = [index]
                 heatmap = func(serialized_model, image, index, **kwargs)
 
             fig = plot_image(heatmap,
