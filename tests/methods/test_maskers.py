@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
-from dianna.utils.maskers import generate_masks, generate_channel_masks, generate_time_step_masks
-from dianna.utils.maskers import mask_data
+
+from dianna.utils.maskers import (generate_channel_masks, generate_masks,
+                                  generate_time_step_masks, mask_data)
 
 
 def test_mask_has_correct_shape_univariate():
@@ -108,8 +109,8 @@ def test_channel_mask_masks_correct_number_of_cells():
     assert result.sum() / np.product(result.shape) == p_keep
 
 
-def test_channel_mask_has_correct_shape_multivariate():
-    """Test of the correct output shape."""
+def test_masking_has_correct_shape_multivariate():
+    """Test for the correct output shape for the general masking function."""
     number_of_masks = 15
     input_data = _get_multivariate_input_data()
 
@@ -118,7 +119,7 @@ def test_channel_mask_has_correct_shape_multivariate():
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
 
-def test_channel_mask_univariate_leaves_anything_unmasked():
+def test_masking_univariate_leaves_anything_unmasked():
     """Tests that something remains unmasked and some parts are masked for the univariate case."""
     number_of_masks = 1
     input_data = _get_univariate_input_data()
