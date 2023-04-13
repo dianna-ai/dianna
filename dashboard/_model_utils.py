@@ -3,9 +3,6 @@ import numpy as np
 import onnx
 
 
-data_directory = Path(__file__).parent / 'data'
-
-
 def preprocess_function(image):
     """For LIME: we divided the input data by 256 for the model (binary mnist) and LIME needs RGB values."""
     return (image / 256).astype(np.float32)

@@ -1,5 +1,6 @@
 import streamlit as st
-from _model_utils import data_directory
+from _shared import add_sidebar_logo
+from _shared import data_directory
 
 
 st.set_page_config(page_title="Dianna's dashboard",
@@ -15,6 +16,8 @@ st.set_page_config(page_title="Dianna's dashboard",
                        ("Dianna's dashboard. Created by the Dianna team: "
                         'https://github.com/dianna-ai/dianna')
                    })
+
+add_sidebar_logo()
 
 st.image(str(data_directory / 'logo.png'))
 

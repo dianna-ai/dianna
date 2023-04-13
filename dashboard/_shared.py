@@ -1,6 +1,49 @@
+import base64
+from pathlib import Path
 from typing import Sequence
 import numpy as np
 import streamlit as st
+
+
+data_directory = Path(__file__).parent / 'data'
+
+
+@st.cache_data
+def get_base64_of_bin_file(png_file):
+    with open(png_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+
+def build_markup_for_logo(
+    png_file,
+    background_position='50% 10%',
+    margin_top='10%',
+    image_width='60%',
+    image_height='',
+):
+    binary_string = get_base64_of_bin_file(png_file)
+    return f"""
+            <style>
+                [data-testid="stSidebarNav"] {{
+                    background-image: url("data:image/png;base64,{binary_string}");
+                    background-repeat: no-repeat;
+                    background-position: {background_position};
+                    margin-top: {margin_top};
+                    background-size: {image_width} {image_height};
+                }}
+            </style>
+            """
+
+
+def add_sidebar_logo():
+    """Based on: https://stackoverflow.com/a/73278825."""
+    png_file = data_directory / 'logo.png'
+    logo_markup = build_markup_for_logo(png_file)
+    st.markdown(
+        logo_markup,
+        unsafe_allow_html=True,
+    )
 
 
 def _methods_checkboxes(*, choices: Sequence):
