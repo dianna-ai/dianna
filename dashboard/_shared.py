@@ -1,5 +1,7 @@
 import base64
 from pathlib import Path
+from typing import Any
+from typing import Dict
 from typing import Sequence
 import numpy as np
 import streamlit as st
@@ -60,6 +62,46 @@ def _methods_checkboxes(*, choices: Sequence):
         st.stop()
 
     return methods
+
+
+def _get_params(method: str):
+    if method == 'RISE':
+        return {
+            'n_masks':
+            st.number_input('Number of masks', value=1000),
+            'feature_res':
+            st.number_input('Feature resolution', value=6),
+            'p_keep':
+            st.number_input('Probability to be kept unmasked', value=0.1),
+        }
+
+    elif method == 'KernelSHAP':
+        return {
+            'nsamples': st.number_input('Number of samples', value=1000),
+            'background': st.number_input('Background', value=0),
+            'n_segments': st.number_input('Number of segments', value=200),
+            'sigma': st.number_input('σ', value=0),
+        }
+
+    elif method == 'LIME':
+        return {
+            'rand_state': st.number_input('Random state', value=2),
+        }
+
+    else:
+        raise ValueError(f'No such method: {method}')
+
+
+def _get_method_params(methods: Sequence[str]) -> Dict[str, Dict[str, Any]]:
+    method_params = {}
+
+    with st.expander('Click to modify method parameters'):
+        for method, col in zip(methods, st.columns(len(methods))):
+            with col:
+                st.header(method)
+                method_params[method] = _get_params(method)
+
+    return method_params
 
 
 def _get_top_indices(predictions, n_top):

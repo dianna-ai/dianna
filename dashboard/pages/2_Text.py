@@ -4,6 +4,7 @@ from _model_utils import load_model
 from _models_text import explain_text_dispatcher
 from _models_text import predict
 from _movie_model import MovieReviewsModelRunner
+from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
@@ -47,25 +48,10 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(text_label_file)
 
-methods = _methods_checkboxes(choices=('RISE', 'LIME'))
+choices = ('RISE', 'LIME')
+methods = _methods_checkboxes(choices=choices)
 
-kws = {'RISE': {}, 'LIME': {}}
-
-with st.expander('Click to modify method parameters'):
-    for method, col in zip(methods, st.columns(len(methods))):
-        with col:
-            st.header(method)
-            if method == 'RISE':
-                kws['RISE']['n_masks'] = st.number_input('Number of masks',
-                                                         value=1000)
-                kws['RISE']['feature_res'] = st.number_input(
-                    'Feature resolution', value=6)
-                kws['RISE']['p_keep'] = st.number_input(
-                    'Probability to be kept unmasked', value=0.1)
-
-            if method == 'LIME':
-                kws['LIME']['rand_state'] = st.number_input('Random state',
-                                                            value=2)
+method_params = _get_method_params(methods)
 
 model_runner = MovieReviewsModelRunner(serialized_model)
 
@@ -90,7 +76,7 @@ for index, label in zip(top_indices, top_labels):
         st.header(label)
 
     for col, method in zip(columns, methods):
-        kwargs = kws[method].copy()
+        kwargs = method_params[method].copy()
         kwargs['labels'] = [index]
 
         func = explain_text_dispatcher[method]

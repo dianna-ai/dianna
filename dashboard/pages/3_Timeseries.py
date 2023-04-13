@@ -3,6 +3,7 @@ from _model_utils import load_labels
 from _model_utils import load_model
 from _models_ts import explain_ts_dispatcher
 from _models_ts import predict
+from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
@@ -48,16 +49,10 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(ts_label_file)
 
-methods = _methods_checkboxes(choices=('xxx'))
+choices = ()
+methods = _methods_checkboxes(choices=choices)
 
-kws = {}
-
-with st.expander('Click to modify method parameters'):
-    for method, col in zip(methods, st.columns(len(methods))):
-        with col:
-            st.header(method)
-            if method == 'xxx':
-                ...
+method_params = _get_method_params(methods)
 
 with st.spinner('Predicting class'):
     predictions = predict(model=model, ts_data=ts_data)
@@ -80,7 +75,7 @@ for index, label in zip(top_indices, top_labels):
         st.header(label)
 
     for col, method in zip(columns, methods):
-        kwargs = kws[method].copy()
+        kwargs = method_params[method].copy()
         kwargs['labels'] = [index]
 
         func = explain_ts_dispatcher[method]
