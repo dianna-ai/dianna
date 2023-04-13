@@ -16,12 +16,13 @@ class LIMETimeseries:
     Validation of XAI explanations for multivariate time series classification in
     the maritime domain. (https://doi.org/10.1016/j.jocs.2021.101539)
     """
+
     def __init__(
         self,
         kernel_width=25,
         verbose=False,
         preprocess_function=None,
-        # feature_selection="auto",
+        feature_selection="auto",
     ):
         """Initializes Lime explainer for timeseries.
 
@@ -29,7 +30,8 @@ class LIMETimeseries:
             kernel_width (int): Width of the kernel used in LIME explainer.
             verbose (bool): Whether to print progress messages during explanation.
             feature_selection (str): Feature selection method to be used by explainer.
-            preprocess_function (callable, optional): Function to preprocess the time series data before passing it to the explainer. Defaults to None.
+            preprocess_function (callable, optional): Function to preprocess the time series data before passing it
+                                                      to the explainer. Defaults to None.
         """
 
         def kernel(d):
@@ -37,7 +39,7 @@ class LIMETimeseries:
             return np.sqrt(np.exp(-(d**2) / kernel_width**2))
 
         self.explainer = lime_base.LimeBase(kernel, verbose)
-        # self.feature_selection = feature_selection
+        self.feature_selection = feature_selection
         self.domain_mapper = explanation.DomainMapper()
         self.preprocess_function = preprocess_function
         self._is_multivariate = False
@@ -46,11 +48,11 @@ class LIMETimeseries:
         self,
         model_or_function,
         input_timeseries,
-        labels,
-        class_names,
-        num_features,
-        num_samples,
-        num_slices,
+        labels=(1,),
+        class_names=None,
+        num_features=1,
+        num_samples=1,
+        num_slices=1,
         batch_size=1,
         mask_type="mean",
         distance_method="cosine",
@@ -60,18 +62,8 @@ class LIMETimeseries:
         Args:
             model_or_function (callable or str): The function that runs the model to be explained _or_
                                                  the path to a ONNX model on disk.
-            input_timeseries (np.ndarray): Input timeseries data to be explained, the shape must be []
-            class_names : Names of classes
-            distance_method : Methods for calculating distance
-            labels : Labels for different classes
-            mask_type : Type of masking
-            num_features : Number of features
-            num_samples : Number of samples
-            num_slices : Number of slices
-
-        Args:
-            model_or_function (callable or str): A function that runs the model to be explained or the path to a ONNX model on disk.
-            input_timeseries (np.ndarray): The input time series data to be explained, with shape [batch_size, sequence_length, num_features].
+            input_timeseries (np.ndarray): The input time series data to be explained, with shape
+                                           [batch_size, sequence_length, num_features].
             labels (list): The list of labels for different classes.
             class_names (list): The list of class names.
             num_features (int): The number of features to include in the explanation.
