@@ -16,6 +16,10 @@ add_sidebar_logo()
 
 st.title('Timeseries explanation')
 
+st.error(
+    'Timeseries explanation is still work in progress and not yet functioning!'
+)
+
 with st.sidebar:
     st.header('Input data')
 
