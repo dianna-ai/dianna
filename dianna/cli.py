@@ -8,7 +8,7 @@ else:
     from importlib.resources import files
 
 
-def dashboard(**kwargs):
+def dashboard():
     """Start streamlit dashboard."""
     from streamlit.web import cli as stcli
 
