@@ -9,7 +9,7 @@ from _movie_model import MovieReviewsModelRunner
 from _text_utils import format_word_importances
 
 
-st.title("Dianna's dashboard")
+st.title('Text explanation')
 
 with st.sidebar:
     st.header('Input data')

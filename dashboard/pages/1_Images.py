@@ -10,7 +10,7 @@ from _models_image import predict
 from dianna.visualization import plot_image
 
 
-st.title("Dianna's dashboard")
+st.title('Image explanation')
 
 with st.sidebar:
     st.header('Input data')
