@@ -79,10 +79,13 @@ with st.expander('Click to modify method parameters'):
                 kws['LIME']['rand_state'] = st.number_input('Random state',
                                                             value=2)
 
-n_top = st.number_input('Number of top results to show',
-                        value=2,
-                        min_value=0,
-                        max_value=len(labels))
+c1, _ = st.columns(2)
+
+with c1:
+    n_top = st.number_input('Number of top results to show',
+                            value=2,
+                            min_value=0,
+                            max_value=len(labels))
 
 with st.spinner('Predicting class'):
     predictions = predict(model=model, image=image)
