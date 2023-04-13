@@ -30,10 +30,13 @@ authors:
     affiliation: 1  
   - name: Pranav Chandramouli^[co-first author] # note this makes a footnote saying 'co-first author'
     orcid: 0000-0002-7896-2969
-    affiliation: 1    
+    affiliation: 1  
   - name: Aron Jansen^[co-first author] # note this makes a footnote saying 'co-first author'
     orcid: 0000-0002-4764-9347
-    affiliation: 1    
+    affiliation: 1  
+  - name: Stef Smeets^[co-first author] # note this makes a footnote saying 'co-first author'
+    orcid: 0000-0002-5413-9038
+    affiliation: 1  
 affiliations:
  - name: Netherlands eScience Center, Amsterdam, the Netherlands
    index: 1
@@ -55,8 +58,8 @@ affiliations:
 DIANNA is a Python package that brings explainable AI (XAI) to your research project. It wraps carefully selected XAI methods in a simple, uniform interface.
 It's built by, with and for (academic) researchers and research software engineers working on machine learning projects.
 
-## Why DIANNA? 
-DIANNA software is addressing needs of both (X)AI researchers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: one of the very few XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format. 
+## Why DIANNA?
+DIANNA software is addressing needs of both (X)AI researchers and mostly the various domains scientists who are using or will use AI models for their research without being experts in (X)AI. DIANNA is future-proof: one of the very few XAI library supporting the [Open Neural Network Exchange (ONNX)](https://onnx.ai/) format.
 
 After studying the vast XAI landscape we have made choices in the parts of the [XAI Taxonomy](https://doi.org/10.3390/make3030032) on which methods, data modalities and problems types to focus. Our choices, based on the largest usage in scientific literature, are shown graphically in the XAI taxonomy below:
 
@@ -69,12 +72,12 @@ The key points of DIANNA:
 * Supports the de-facto standard format for neural network models - ONNX.
 * Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and scikit-learn to ONNX.
 * Supports both images and text data modalities. Time series is work in progress, tabular data and even embeddings support is planned.
-* Comes with simple intuitive image and text benchmarks 
-* Easily extendable to other XAI methods 
+* Comes with simple intuitive image and text benchmarks
+* Easily extendable to other XAI methods
 
 For more information on the unique strengths of DIANNA with comparison to other tools, please see the [context landscape](https://dianna.readthedocs.io/en/latest/CONTEXT.html).
 
-## Installation 
+## Installation
 [![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
 [![supported python versions](https://img.shields.io/pypi/pyversions/dianna)](https://pypi.python.org/project/dianna/)
 
@@ -109,7 +112,7 @@ You need:
  - a relevance map overlayed over the data item
 
 In the library's documentation, the general usage is explained in [How to use DIANNA](https://dianna.readthedocs.io/en/latest/usage.html)
- 
+
 ### Demo movie
 
 [![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
@@ -158,7 +161,7 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 |Dataset|Description|Examples|Generation|
 |:-----|:----|:---|:----|
 |Binary MNIST <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152354583-d7b68902-d402-4098-922b-b1a33b07e3e1.png">| Greyscale images of the digits "1" and "0" - a 2-class subset from the famous [MNIST dataset](http://yann.lecun.com/exdb/mnist/) for handwritten digit classification. |<img width="120" alt="BinaryMNIST" src="https://user-images.githubusercontent.com/3244249/150808267-3d27eae0-78f2-45f8-8569-cb2561f2c2e9.png">| [Binary MNIST dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/MNIST)|
-|[Simple Geometric (circles and triangles)](https://doi.org/10.5281/zenodo.5012824) <img width="20" alt="Simple Geometric Logo" src="https://user-images.githubusercontent.com/3244249/150808842-d35d741e-294a-4ede-bbe9-58e859483589.png"> | Images of circles and triangles for 2-class geometric shape classificaiton. The shapes of varying size and orientation and the background have varying uniform gray levels.  | <img width="130" alt="SimpleGeometric" src="https://user-images.githubusercontent.com/3244249/150808125-e1576237-47fa-4e51-b01e-180904b7c7f6.png">| [Simple geometric shapes dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/geometric_shapes) | 
+|[Simple Geometric (circles and triangles)](https://doi.org/10.5281/zenodo.5012824) <img width="20" alt="Simple Geometric Logo" src="https://user-images.githubusercontent.com/3244249/150808842-d35d741e-294a-4ede-bbe9-58e859483589.png"> | Images of circles and triangles for 2-class geometric shape classificaiton. The shapes of varying size and orientation and the background have varying uniform gray levels.  | <img width="130" alt="SimpleGeometric" src="https://user-images.githubusercontent.com/3244249/150808125-e1576237-47fa-4e51-b01e-180904b7c7f6.png">| [Simple geometric shapes dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/geometric_shapes) |
 |[Simple Scientific (LeafSnap30)](https://zenodo.org/record/5061353/)<img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/150815639-2da560d4-8b26-4eeb-9ab4-dabf221a264a.png"> | Color images of tree leaves - a 30-class post-processed subset from the LeafSnap dataset for automatic identification of North American tree species.|<img width="600" alt="LeafSnap" src="https://user-images.githubusercontent.com/3244249/150804246-f714e517-641d-48b2-af26-2f04166870d6.png">| [LeafSnap30 dataset generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/dataset_preparation/LeafSnap/)|
 
 ### Text
@@ -209,7 +212,7 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective criteria (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
 
-## Reference documentation 
+## Reference documentation
 
 For detailed information on using specific DIANNA functions, please visit the [documentation page hosted at Readthedocs](https://dianna.readthedocs.io/en/latest).
 
@@ -219,15 +222,15 @@ If you want to contribute to the development of DIANNA,
 have a look at the [contribution guidelines](https://dianna.readthedocs.io/en/latest/CONTRIBUTING.html).
 See our [developer documentation](docs/developer_info.rst) for information on developer installation, running tests, generating documentation, versioning and making a release.
 
-## How to cite us 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592607.svg)](https://zenodo.org/record/5592607)
+## How to cite us
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592606.svg)](https://zenodo.org/record/5592606)
 [![RSD](https://img.shields.io/badge/rsd-dianna-00a3e3.svg)](https://www.research-software.nl/software/dianna)
 
 If you use this package for your scientific work, please consider citing it as:
 
-    Ranguelova, E., Bos, P., Liu, Y., Meijer, C., Oostrum, L., Crocioni, G., Ootes, L., Chandramouli, P., Jansen, A. (2022). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592607
+    Ranguelova, E., Bos, P., Liu, Y., Meijer, C., Oostrum, L., Crocioni, G., Ootes, L., Chandramouli, P., Jansen, A., Smeets, S. (2023). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592606
 
-See also the [Zenodo page](https://zenodo.org/record/5592607) for exporting the citation to BibTteX and other formats.
+See also the [Zenodo page](https://zenodo.org/record/5592606) for exporting the citation to BibTteX and other formats.
 
 ## Credits
 

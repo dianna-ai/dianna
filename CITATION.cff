@@ -39,6 +39,10 @@ authors:
     family-names: Chandramouli
     given-names: Pranav
     orcid: "https://orcid.org/0000-0002-7896-2969"
+  -
+    family-names: Smeets
+    given-names: Stef
+    orcid: "https://orcid.org/0000-0002-5413-9038"
 
 doi: 10.5281/zenodo.5801485
 version: "0.8.0"
