@@ -5,8 +5,8 @@ from _model_utils import load_model
 from _models_text import explain_text_dispatcher
 from _models_text import predict
 from _movie_model import MovieReviewsModelRunner
+from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
-from _shared import get_top_indices_and_labels
 from _text_utils import format_word_importances
 
 
@@ -69,7 +69,7 @@ model_runner = MovieReviewsModelRunner(serialized_model)
 with st.spinner('Predicting class'):
     predictions = predict(model=serialized_model, text_input=text_input)
 
-top_indices, top_labels = get_top_indices_and_labels(
+top_indices, top_labels = _get_top_indices_and_labels(
     predictions=predictions[0], labels=labels)
 
 weight = 0.8 / len(methods)
