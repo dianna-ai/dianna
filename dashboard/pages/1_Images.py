@@ -1,6 +1,7 @@
 import numpy as np
 import streamlit as st
 from _image_utils import open_image
+from _model_utils import data_directory
 from _model_utils import load_labels
 from _model_utils import load_model
 from _models_image import explain_image_dispatcher
@@ -14,14 +15,27 @@ st.title("Dianna's dashboard")
 with st.sidebar:
     st.header('Input data')
 
-    image_file = st.file_uploader('Select image', type=('png', 'jpg', 'jpeg'))
+    load_example = st.checkbox('Load example data', key='image_example_check')
+
+    image_file = st.file_uploader('Select image',
+                                  type=('png', 'jpg', 'jpeg'),
+                                  disabled=load_example)
 
     if image_file:
         st.image(image_file)
 
-    image_model_file = st.file_uploader('Select model', type='onnx')
+    image_model_file = st.file_uploader('Select model',
+                                        type='onnx',
+                                        disabled=load_example)
 
-    image_label_file = st.file_uploader('Select labels', type='txt')
+    image_label_file = st.file_uploader('Select labels',
+                                        type='txt',
+                                        disabled=load_example)
+
+    if load_example:
+        image_file = (data_directory / 'digit0.png')
+        image_model_file = (data_directory / 'mnist_model_tf.onnx')
+        image_label_file = (data_directory / 'labels_mnist.txt')
 
 if not (image_file and image_model_file and image_label_file):
     st.info('Add your input data in the left panel to continue')

@@ -1,5 +1,6 @@
 import numpy as np
 import streamlit as st
+from _model_utils import data_directory
 from _model_utils import load_labels
 from _model_utils import load_model
 from _models_text import explain_text_dispatcher
@@ -13,14 +14,25 @@ st.title("Dianna's dashboard")
 with st.sidebar:
     st.header('Input data')
 
-    text_input = st.text_input('Input string')
+    load_example = st.checkbox('Load example data', key='text_example_check')
+
+    text_input = st.text_input('Input string', disabled=load_example)
 
     if text_input:
         st.write(text_input)
 
-    text_model_file = st.file_uploader('Select model', type='onnx')
+    text_model_file = st.file_uploader('Select model',
+                                       type='onnx',
+                                       disabled=load_example)
 
-    text_label_file = st.file_uploader('Select labels', type='txt')
+    text_label_file = st.file_uploader('Select labels',
+                                       type='txt',
+                                       disabled=load_example)
+
+    if load_example:
+        text_input = 'The movie started out great but the ending was dissappointing'
+        text_model_file = data_directory / 'movie_review_model.onnx'
+        text_label_file = data_directory / 'labels_text.txt'
 
 if not (text_input and text_model_file and text_label_file):
     st.info('Add your input data in the left panel to continue')
