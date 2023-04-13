@@ -14,18 +14,25 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
     Returns:
     Single array containing all masks where the first dimension represents the batch.
     """
+    if input_data.shape[-1] == 1:  # univariate data
+        return generate_time_step_masks(input_data, number_of_masks, p_keep)
+
     number_of_channel_masks = number_of_masks // 3
     number_of_time_step_masks = number_of_channel_masks
     number_of_combined_masks = number_of_masks - number_of_time_step_masks - number_of_channel_masks
 
     time_step_masks = generate_time_step_masks(input_data, number_of_time_step_masks, p_keep)
     channel_masks = generate_channel_masks(input_data, number_of_channel_masks, p_keep)
-    number_of_combined_masks = generate_time_step_masks(input_data, number_of_combined_masks, p_keep) * generate_channel_masks(input_data, number_of_combined_masks, p_keep)
+    number_of_combined_masks = generate_time_step_masks(input_data, number_of_combined_masks,
+                                                        p_keep) * generate_channel_masks(input_data,
+                                                                                         number_of_combined_masks,
+                                                                                         p_keep)
 
-    return np.concatenate([time_step_masks,channel_masks,number_of_combined_masks], axis=0)
+    return np.concatenate([time_step_masks, channel_masks, number_of_combined_masks], axis=0)
 
 
-def generate_channel_masks(input_data: np.ndarray, number_of_masks:int, p_keep:float):
+def generate_channel_masks(input_data: np.ndarray, number_of_masks: int, p_keep: float):
+    """Generate masks that mask one or multiple channels at a time."""
     number_of_channels = input_data.shape[1]
     number_of_channels_masked = _determine_number_masked(p_keep, number_of_channels)
     masked_data_shape = [number_of_masks] + list(input_data.shape)
@@ -35,7 +42,9 @@ def generate_channel_masks(input_data: np.ndarray, number_of_masks:int, p_keep:f
         masks[i, :, channels_to_mask] = False
     return masks
 
-def generate_time_step_masks(input_data:np.ndarray, number_of_masks:int, p_keep: float):
+
+def generate_time_step_masks(input_data: np.ndarray, number_of_masks: int, p_keep: float):
+    """Generate masks that mask one or multiple time steps at a time."""
     series_length = input_data.shape[0]
     number_of_steps_masked = _determine_number_masked(p_keep, series_length)
     masked_data_shape = [number_of_masks] + list(input_data.shape)

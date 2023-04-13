@@ -54,19 +54,23 @@ def test_mask_contains_correct_parts_are_mean_masked():
 
 
 def _get_univariate_input_data() -> np.array:
+    """Get some univariate test data."""
     return np.zeros((10, 1)) + np.arange(10).reshape(10, 1)
 
 
 def _get_multivariate_input_data(number_of_channels: int = 6) -> np.array:
+    """Get some multivariate test data."""
     return np.row_stack([np.zeros((10, number_of_channels)), np.ones((10, number_of_channels))])
 
 
 def _call_masking_function(input_data, number_of_masks=5, p_keep=.3, mask_type='mean'):
-    masks = generate_time_step_masks(input_data, number_of_masks, p_keep=p_keep)
+    """Helper function with some defaults to call the code under test."""
+    masks = generate_masks(input_data, number_of_masks, p_keep=p_keep)
     return mask_data(input_data, masks, mask_type=mask_type)
 
 
 def test_channel_mask_has_correct_shape_multivariate():
+    """Tests the output has the correct shape."""
     number_of_masks = 15
     input_data = _get_multivariate_input_data()
 
@@ -75,7 +79,8 @@ def test_channel_mask_has_correct_shape_multivariate():
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
 
-def test_channel_mask_has_correct_shape_multivariate():
+def test_channel_mask_has_does_not_contain_conflicting_values():
+    """Tests that only complete channels are masked."""
     number_of_masks = 15
     input_data = _get_multivariate_input_data()
 
@@ -93,6 +98,7 @@ def test_channel_mask_has_correct_shape_multivariate():
 
 
 def test_channel_mask_masks_correct_number_of_cells():
+    """Tests whether the correct fraction of cells is masked."""
     number_of_masks = 1
     input_data = _get_multivariate_input_data(number_of_channels=10)
     p_keep = 0.3
@@ -103,6 +109,7 @@ def test_channel_mask_masks_correct_number_of_cells():
 
 
 def test_channel_mask_has_correct_shape_multivariate():
+    """Test of the correct output shape."""
     number_of_masks = 15
     input_data = _get_multivariate_input_data()
 
@@ -110,3 +117,13 @@ def test_channel_mask_has_correct_shape_multivariate():
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
+
+def test_channel_mask_univariate_leaves_anything_unmasked():
+    """Tests that something remains unmasked and some parts are masked for the univariate case."""
+    number_of_masks = 1
+    input_data = _get_univariate_input_data()
+
+    result = generate_masks(input_data, number_of_masks, 0.5)
+
+    assert np.any(result)
+    assert np.any(~result)
