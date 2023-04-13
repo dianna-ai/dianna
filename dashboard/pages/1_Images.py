@@ -107,7 +107,7 @@ for col, method in zip(columns, methods):
     with col:
         st.header(method)
 
-for index, label in enumerate(top_labels):
+for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
 
     with index_col:
@@ -122,11 +122,12 @@ for index, label in enumerate(top_labels):
 
         with col:
             with st.spinner(f'Running {method}'):
-                kwargs['labels'] = [top_indices[index]]
+                kwargs['labels'] = [index]
                 heatmap = func(serialized_model, image, index, **kwargs)
 
             fig = plot_image(heatmap,
                              original_data=original_data,
                              heatmap_cmap='bwr',
                              show_plot=False)
+
             st.pyplot(fig)

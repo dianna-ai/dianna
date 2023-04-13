@@ -90,7 +90,7 @@ for col, method in zip(columns, methods):
     with col:
         st.header(method)
 
-for index, label in enumerate(top_labels):
+for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
 
     with index_col:
