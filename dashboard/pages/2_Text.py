@@ -6,6 +6,7 @@ from _model_utils import load_model
 from _models_text import explain_text_dispatcher
 from _models_text import predict
 from _movie_model import MovieReviewsModelRunner
+from _shared import _methods_checkboxes
 from _text_utils import format_word_importances
 
 
@@ -43,15 +44,7 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(text_label_file)
 
-methods = []
-for col, method in zip(st.columns(2), ('RISE', 'LIME')):
-    with col:
-        if st.checkbox(method):
-            methods.append(method)
-
-if not methods:
-    st.info('Select a method to continue')
-    st.stop()
+methods = _methods_checkboxes(choices=('RISE', 'LIME'))
 
 kws = {'RISE': {}, 'LIME': {}}
 

@@ -7,6 +7,7 @@ from _model_utils import load_model
 from _models_image import explain_image_dispatcher
 from _models_image import get_top_indices
 from _models_image import predict
+from _shared import _methods_checkboxes
 from dianna.visualization import plot_image
 
 
@@ -49,15 +50,7 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(image_label_file)
 
-methods = []
-for col, method in zip(st.columns(3), ('RISE', 'KernelSHAP', 'LIME')):
-    with col:
-        if st.checkbox(method):
-            methods.append(method)
-
-if not methods:
-    st.info('Select a method to continue')
-    st.stop()
+methods = _methods_checkboxes(choices=('RISE', 'KernelSHAP', 'LIME'))
 
 kws = {'RISE': {}, 'KernelSHAP': {}, 'LIME': {}}
 
