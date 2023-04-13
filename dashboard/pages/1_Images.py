@@ -1,4 +1,3 @@
-import numpy as np
 import streamlit as st
 from _image_utils import open_image
 from _model_utils import load_labels
@@ -46,7 +45,6 @@ if not (image_file and image_model_file and image_label_file):
     st.stop()
 
 image, _ = open_image(image_file)
-assert isinstance(image, np.ndarray)
 
 model = load_model(image_model_file)
 serialized_model = model.SerializeToString()
