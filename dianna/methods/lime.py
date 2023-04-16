@@ -3,6 +3,9 @@ from lime.lime_image import LimeImageExplainer
 from lime.lime_text import LimeTextExplainer
 from dianna import utils
 
+# To Do: remove this import when the method for different input type is splitted
+from dianna.methods.lime_timeseries import LIMETimeseries  # noqa: F401 ignore unused import
+
 
 class LIMEText:
     """Wrapper around the LIME explainer.
