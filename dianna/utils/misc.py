@@ -18,16 +18,20 @@ def get_function(model_or_function, preprocess_function=None):
     if isinstance(model_or_function, Path):
         model_or_function = str(model_or_function)
 
-    if isinstance(model_or_function, (str, Path)):
-        runner = SimpleModelRunner(model_or_function, preprocess_function=preprocess_function)
+    if isinstance(model_or_function, (str, bytes, Path)):
+        runner = SimpleModelRunner(model_or_function,
+                                   preprocess_function=preprocess_function)
     elif callable(model_or_function):
         if preprocess_function is None:
             runner = model_or_function
         else:
+
             def runner(input_data):
                 return model_or_function(preprocess_function(input_data))
     else:
-        raise TypeError("model_or_function argument must be string (path to model) or function")
+        raise TypeError(
+            'model_or_function argument must be string (path to model), '
+            'bytes (serialized onnx model), or function')
     return runner
 
 
@@ -38,8 +42,11 @@ def get_kwargs_applicable_to_function(function, kwargs):
     argument, this function should not be necessary (provided the function
     handles `**kwargs` robustly).
     """
-    return {key: value for key, value in kwargs.items()
-            if key in inspect.getfullargspec(function).args}
+    return {
+        key: value
+        for key, value in kwargs.items()
+        if key in inspect.getfullargspec(function).args
+    }
 
 
 def to_xarray(data, axis_labels, required_labels=None):
@@ -53,7 +60,10 @@ def to_xarray(data, axis_labels, required_labels=None):
         for index in indices:
             if index < 0:
                 axis_labels[data.ndim + index] = axis_labels.pop(index)
-        labels = [axis_labels[index] if index in axis_labels else f'dim_{index}' for index in range(data.ndim)]
+        labels = [
+            axis_labels[index] if index in axis_labels else f'dim_{index}'
+            for index in range(data.ndim)
+        ]
     else:
         labels = list(axis_labels)
 
@@ -84,7 +94,8 @@ def move_axis(data, label, new_position):
     try:
         pos = data.dims.index(label)
     except ValueError as e:
-        raise ValueError(f"Axis name {label} does not exist in input data") from e
+        raise ValueError(
+            f'Axis name {label} does not exist in input data') from e
 
     # create list of labels with new ordering
     axis_labels = list(data.dims)
@@ -142,9 +153,11 @@ def locate_channels_axis(data_shape):
         channels_last = data_shape[-1] == size
         # if both are true, we cannot determine the location of the channels axis
         if channels_first and channels_last:
-            raise ValueError(f"Could not automatically determine the location of the colour channels axis"
-                             f" because both the first and last axis have size {size}. Please provide the"
-                             f" location of the channels axis using the axis_labels argument")
+            raise ValueError(
+                f'Could not automatically determine the location of the colour channels axis'
+                f' because both the first and last axis have size {size}. Please provide the'
+                f' location of the channels axis using the axis_labels argument'
+            )
         # if one of the two is true, we return the corresponding axis location
         if channels_first:
             channels_axis_index = 0
@@ -155,9 +168,12 @@ def locate_channels_axis(data_shape):
 
     # if channels_axis_index is still None, the location could not be determined
     if channels_axis_index is None:
-        raise ValueError("Could not automatically determine location of the colour channels axis."
-                         " Please provide the location of the channels axis using the axis_labels argument")
-    warnings.warn(f"The index of the colour channels axis in the input data was automatically determined"
-                  f" to be {channels_axis_index}. Use the axis_labels to manually specify the index of"
-                  f" the channels axis if this is incorrect.")
+        raise ValueError(
+            'Could not automatically determine location of the colour channels axis.'
+            ' Please provide the location of the channels axis using the axis_labels argument'
+        )
+    warnings.warn(
+        f'The index of the colour channels axis in the input data was automatically determined'
+        f' to be {channels_axis_index}. Use the axis_labels to manually specify the index of'
+        f' the channels axis if this is incorrect.')
     return channels_axis_index

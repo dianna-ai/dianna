@@ -10,7 +10,12 @@ def _determine_vmax(max_data_value):
     return vmax
 
 
-def plot_image(heatmap, original_data=None, heatmap_cmap=None, data_cmap=None, show_plot=True, output_filename=None):
+def plot_image(heatmap,
+               original_data=None,
+               heatmap_cmap=None,
+               data_cmap=None,
+               show_plot=True,
+               output_filename=None):
     """Plots a heatmap image.
 
     Optionally, the heatmap (typically a saliency map of an explainer) can be
@@ -35,14 +40,17 @@ def plot_image(heatmap, original_data=None, heatmap_cmap=None, data_cmap=None, s
     """
     # default cmap depends on shape: grayscale or colour
 
-    _, ax = plt.subplots()
+    fig, ax = plt.subplots()
     alpha = 1
     if original_data is not None:
         if len(original_data.shape) == 2 and data_cmap is None:
             # 2D array, grayscale
             data_cmap = 'gray'
 
-        ax.imshow(original_data, cmap=data_cmap, vmin=0, vmax=_determine_vmax(original_data.max()))
+        ax.imshow(original_data,
+                  cmap=data_cmap,
+                  vmin=0,
+                  vmax=_determine_vmax(original_data.max()))
         alpha = .5
 
     ax.imshow(heatmap, cmap=heatmap_cmap, alpha=alpha)
@@ -50,3 +58,5 @@ def plot_image(heatmap, original_data=None, heatmap_cmap=None, data_cmap=None, s
         plt.show()
     if output_filename:
         plt.savefig(output_filename)
+
+    return fig

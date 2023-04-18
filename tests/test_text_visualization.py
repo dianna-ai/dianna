@@ -1,32 +1,26 @@
 import os
+import re
 import shutil
 import unittest
 from pathlib import Path
-import spacy
-from dianna.utils.tokenizers import SpacyTokenizer
 from dianna.visualization.text import highlight_text
 
 
-spacy.cli.download('en_core_web_sm')
+tokenizer = re.compile(r'(\w+|\S)')
 
 
 class TextExample:
     """Text and explanation for running visualizing tests."""
     original_text = 'Doloremque aliquam totam ut. Aspernatur repellendus autem quia deleniti. Natus accusamus ' \
                     'doloribus et in quam officiis veniam et. '
-    tokenizer = SpacyTokenizer()
-    tokens = tokenizer.tokenize(original_text)
-    explanation = [
-                    ('aliquam', 1, 0.6450221),
-                    ('et', 19, 0.63976675),
-                    ('in', 15, 0.6397511),
-                    ('Aspernatur', 5, 0.6329795),
-                    ('totam', 2, 0.6242337),
-                    ('quia', 8, 0.61881626),
-                    ('quam', 16, 0.6173148),
-                    ('Natus', 11, 0.60527676),
-                    ('ut', 3, 0.60203224)
-                    ]
+
+    tokens = tokenizer.findall(original_text)
+
+    explanation = [('aliquam', 1, 0.6450221), ('et', 19, 0.63976675),
+                   ('in', 15, 0.6397511), ('Aspernatur', 5, 0.6329795),
+                   ('totam', 2, 0.6242337), ('quia', 8, 0.61881626),
+                   ('quam', 16, 0.6173148), ('Natus', 11, 0.60527676),
+                   ('ut', 3, 0.60203224)]
 
 
 class TextExampleWithExpectedHtml:
@@ -38,14 +32,11 @@ class TextExampleWithExpectedHtml:
                     '<span style="background:rgba(128, 128, 128, 0.3)">.</span></body></html>\n'
 
     original_text = 'Such a bad movie.'
-    tokenizer = SpacyTokenizer()
-    tokens = tokenizer.tokenize(original_text)
-    explanation = [
-                    ('bad', 2, 0.9959058),
-                    ('movie', 3, 0.78263557),
-                    ('a', 1, 0.7753202),
-                    ('Such', 0, 0.73788315)
-                    ]
+
+    tokens = tokenizer.findall(original_text)
+
+    explanation = [('bad', 2, 0.9959058), ('movie', 3, 0.78263557),
+                   ('a', 1, 0.7753202), ('Such', 0, 0.73788315)]
 
 
 class TextVisualizationTestCase(unittest.TestCase):
@@ -55,14 +46,16 @@ class TextVisualizationTestCase(unittest.TestCase):
 
     def test_text_visualization_html_output_exists(self):
         """Test if any output is generated at all."""
-        highlight_text(TextExample.explanation, TextExample.tokens,
+        highlight_text(TextExample.explanation,
+                       TextExample.tokens,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
 
     def test_text_visualization_html_output_contains_text(self):
         """Test if all words in the input are present in the output html."""
-        highlight_text(TextExample.explanation, TextExample.tokens,
+        highlight_text(TextExample.explanation,
+                       TextExample.tokens,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
@@ -73,7 +66,8 @@ class TextVisualizationTestCase(unittest.TestCase):
 
     def test_text_visualization_html_output_is_correct(self):
         """Test if exact html output of visualization is correct."""
-        highlight_text(TextExampleWithExpectedHtml.explanation, TextExampleWithExpectedHtml.tokens,
+        highlight_text(TextExampleWithExpectedHtml.explanation,
+                       TextExampleWithExpectedHtml.tokens,
                        output_html_filename=self.html_file_path)
 
         assert Path(self.html_file_path).exists()
@@ -84,7 +78,8 @@ class TextVisualizationTestCase(unittest.TestCase):
 
     def test_text_visualization_show_plot(self):
         """Test if it runs while showing the plot."""
-        highlight_text(TextExample.explanation, TextExample.tokens,
+        highlight_text(TextExample.explanation,
+                       TextExample.tokens,
                        show_plot=True)
 
     def setUp(self) -> None:
