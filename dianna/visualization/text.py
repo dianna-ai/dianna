@@ -30,31 +30,40 @@ def highlight_text(explanation,
         display(HTML(output))
 
 
-def _create_html(input_tokens, explanation, max_opacity=0.8):
-    max_importance = max(abs(item[2]) for item in explanation)
-    explained_indices = [index for _, index, _ in explanation]
-    highlighted_words = []
-    for index, word in enumerate(input_tokens):
-        # if word has an explanation, highlight based on that, otherwise
-        # make it grey
-        try:
-            explained_index = explained_indices.index(index)
-            importance = explanation[explained_index][2]
-            highlighted_words.append(
-                _highlight_word(word, importance, max_importance, max_opacity))
-        except ValueError:
-            highlighted_words.append(
-                f'<span style="background:rgba(128, 128, 128, 0.3)">{word}</span>'
-            )
+def _create_html(tokens, explanation, opacity: float = 0.8):
+    importance_map = {r[0]: r[2] for r in explanation}
 
-    return '<html><body>' + ' '.join(highlighted_words) + '</body></html>'
+    max_importance = max(abs(val) for val in importance_map.values())
+
+    tags = []
+    for token in tokens:
+        importance = importance_map.get(token)
+
+        if importance is None:
+            color = f'hsl(0, 0%, 75%, {opacity})'
+        else:
+            # normalize to max importance
+            importance = importance / max_importance
+            color = _get_color(importance, opacity)
+
+        tag = (f'<mark style="background-color: {color}; '
+               f'line-height:1.75">{token}</mark>')
+        tags.append(tag)
+
+    html = ' '.join(tags)
+
+    return html
 
 
-def _highlight_word(word, importance, max_importance, max_opacity):
-    opacity = max_opacity * abs(importance) / max_importance
+def _get_color(importance: float, opacity: float) -> str:
+    # clip values to prevent CSS errors (Values should be from [-1,1])
+    importance = max(-1, min(1, importance))
     if importance > 0:
-        color = f'rgba(255, 0, 0, {opacity:.2f})'
+        hue = 0
+        sat = 100
+        lig = 100 - int(50 * importance)
     else:
-        color = f'rgba(0, 0, 255, {opacity:2f})'
-    highlighted_word = f'<span style="background:{color}">{word}</span>'
-    return highlighted_word
+        hue = 240
+        sat = 100
+        lig = 100 - int(-50 * importance)
+    return f'hsl({hue}, {sat}%, {lig}%, {opacity})'
