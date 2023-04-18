@@ -54,6 +54,14 @@ def plot_image(heatmap,
         alpha = .5
 
     ax.imshow(heatmap, cmap=heatmap_cmap, alpha=alpha)
+    ax.tick_params(bottom=False,
+                   left=False,
+                   right=False,
+                   top=False,
+                   labelleft=False,
+                   labelbottom=False,
+                   labelright=False,
+                   labeltop=False)
     if show_plot:
         plt.show()
     if output_filename:
