@@ -25,7 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/install-python-and-package
-        extras-require: docs
+        with:
+          extras-require: docs
       - name: Install pandoc using apt
         run: sudo apt install pandoc
       - name: Build documentation
