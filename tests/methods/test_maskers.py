@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from dianna.utils.maskers import generate_channel_masks
+from dianna.utils.maskers import generate_channel_masks, generate_time_step_masks, generate_segmented_time_step_masks
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import mask_data
 
@@ -54,9 +54,9 @@ def test_mask_contains_correct_parts_are_mean_masked():
     assert np.alltrue(masked_parts == mean), f'All elements in {masked_parts} should have value {mean}'
 
 
-def _get_univariate_input_data() -> np.array:
+def _get_univariate_input_data(num_steps=10) -> np.array:
     """Get some univariate test data."""
-    return np.zeros((10, 1)) + np.arange(10).reshape(10, 1)
+    return np.zeros((num_steps, 1)) + np.arange(num_steps).reshape(num_steps, 1)
 
 
 def _get_multivariate_input_data(number_of_channels: int = 6) -> np.array:
@@ -128,3 +128,14 @@ def test_masking_univariate_leaves_anything_unmasked():
 
     assert np.any(result)
     assert np.any(~result)
+
+
+def test_segmented_masking():
+    input_data = _get_univariate_input_data(12)
+
+    masks, raw = generate_segmented_time_step_masks(input_data, 1, 0.5)
+
+    print()
+    print(raw[0].T)
+    print(masks[0].T)
+    raise Exception
