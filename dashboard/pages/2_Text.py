@@ -61,8 +61,8 @@ with st.spinner('Predicting class'):
 top_indices, top_labels = _get_top_indices_and_labels(
     predictions=predictions[0], labels=labels)
 
-weight = 0.8 / len(methods)
-column_spec = [0.2, *[weight for _ in methods]]
+weight = 0.85 / len(methods)
+column_spec = [0.15, *[weight for _ in methods]]
 
 _, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
@@ -73,7 +73,7 @@ for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
 
     with index_col:
-        st.header(label)
+        st.markdown(f'##### {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
@@ -87,3 +87,6 @@ for index, label in zip(top_indices, top_labels):
 
             html = format_word_importances(text_input, relevances[0])
             st.write(html, unsafe_allow_html=True)
+
+    # add some white space to separate rows
+    st.markdown('')

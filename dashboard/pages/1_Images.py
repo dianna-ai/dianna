@@ -79,7 +79,7 @@ for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
 
     with index_col:
-        st.header(label)
+        st.markdown(f'##### {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
