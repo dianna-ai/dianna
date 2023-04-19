@@ -3,7 +3,7 @@ import numpy as np
 import shap
 import skimage.segmentation
 from dianna import utils
-from .._logging_utils import LoggingContext
+from dianna._logging_utils import LoggingContext
 
 
 class KERNELSHAPImage:
