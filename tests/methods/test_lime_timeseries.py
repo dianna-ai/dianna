@@ -28,13 +28,13 @@ class LIMEOnTimeseries(TestCase):
 
     def test_cosine_distance(self):
         """Test cosine distance."""
-        dummy_timeseries = np.random.random((50))
+        dummy_timeseries = np.random.random((50, 1))
         number_of_masks = 50
         masks = generate_masks(dummy_timeseries, number_of_masks, p_keep=0.9)
         masked = mask_data(dummy_timeseries, masks, mask_type="mean")
         explainer = LIMETimeseries()
         distance = explainer._calculate_distance(
-            dummy_timeseries, masked, distance_method="cosine"
+            dummy_timeseries, masked.reshape((-1, 50)), distance_method="cosine"
         )
         assert len(distance) == number_of_masks
 
