@@ -96,18 +96,17 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
     return user_requested_steps
 
 
-def generate_segmented_time_step_masks(input_data: np.ndarray, number_of_masks: int, p_keep: float):
-    num_features = 5
-    # raw = np.ones((number_of_masks, num_features), dtype=np.bool)
-    # for i in range(number_of_masks):
-    #     steps_to_mask = np.random.choice(num_features, _determine_number_masked(p_keep, num_features), False)
-    #     raw[i, steps_to_mask] = False
+def generate_segmented_time_step_masks(input_data: np.ndarray, number_of_masks: int, p_keep: float, num_features=5):
     time_series_length = input_data.shape[0]
-    raw = _generate_interpolated_float_masks2([time_series_length, 1], p_keep, number_of_masks, num_features)[:, :, 0]
 
-    masked_data_shape = [number_of_masks] + list(input_data.shape)
-    masks = np.ones(masked_data_shape, dtype=np.bool)
-    return masks, raw
+    # Create float masks
+    masks = _generate_interpolated_float_masks2([time_series_length, 1], p_keep, number_of_masks, num_features)[:, :, 0]
+
+    # Convert float masks to bool masks using a dynamic threshold
+    for i in masks.shape[0]:
+        masks[i] = _mask_bottom_ratio(masks[i], p_keep)
+
+    return masks
 
 
 def _generate_interpolated_float_masks2(input_size, p_keep, n_masks, number_of_features):
@@ -122,6 +121,7 @@ def _generate_interpolated_float_masks2(input_size, p_keep, n_masks, number_of_f
     Returns:
         The generated masks (np.ndarray)
     """
+    #TODO duplicate code with _generate_interpolated_float_masks for images. Only the grid generation line is different.
     cell_size = np.ceil(np.array(input_size) / number_of_features)
     up_size = (number_of_features + 1) * cell_size
 
@@ -131,21 +131,38 @@ def _generate_interpolated_float_masks2(input_size, p_keep, n_masks, number_of_f
     masks = np.empty((n_masks, *input_size), dtype=np.float32)
 
     for i in range(n_masks):
+        # Linear upsampling and cropping
         y = np.random.randint(0, cell_size[0])
         x = np.random.randint(0, cell_size[1])
-        # Linear upsampling and cropping
-        upscaled = _upscale(grid[i], up_size)[y:y + input_size[0], x:x + input_size[1]]
-        flatten = upscaled.flatten()
-        print(f'{flatten=}')
-        l = list(range(len(flatten)))
-        number_of_unmasked_cells = int(round(len(l) * p_keep))
-        top_indices = heapq.nsmallest(number_of_unmasked_cells, l, key=lambda i: flatten[i])
-        print(top_indices)
-        mask = np.ones(flatten.shape, dtype=np.bool)
-        mask[top_indices] = False
-        masks[i, :, :] = mask.reshape(upscaled.shape)
+        float_mask = _upscale(grid[i], up_size)[y:y + input_size[0], x:x + input_size[1]]
+
+        masks[i, :, :] = float_mask
+
     masks = masks.reshape(-1, *input_size, 1)
     return masks
+
+
+def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
+    """Return a bool mask given a mask of floats and a ratio.
+
+    Return a mask containing bool values where the top p_keep values of the float mask remain unmasked and the rest is
+    masked.
+
+    Args:
+        float_mask: a mask containing float values
+        p_keep: the ratio of keeping cells unmasked
+
+    Returns:
+        a mask containing bool
+    """
+    flat = float_mask.flatten()
+    time_indices = list(range(len(flat)))
+    number_of_unmasked_cells = int(round(len(time_indices) * p_keep))
+    top_indices = heapq.nsmallest(number_of_unmasked_cells, time_indices, key=lambda time_step: flat[time_step])
+    flat_mask = np.ones(flat.shape, dtype=np.bool)
+    flat_mask[top_indices] = False
+    bool_mask = flat_mask.reshape(float_mask.shape)
+    return bool_mask
 
 
 def _generate_interpolated_float_masks(input_size, p_keep, n_masks, number_of_features):

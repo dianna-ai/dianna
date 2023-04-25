@@ -131,11 +131,11 @@ def test_masking_univariate_leaves_anything_unmasked():
 
 
 def test_segmented_masking():
-    input_data = _get_univariate_input_data(12)
+    # input_data = _get_univariate_input_data(12)
+    input_data = _get_multivariate_input_data(12)
 
-    masks, raw = generate_segmented_time_step_masks(input_data, 1, 0.5)
+    masks = generate_segmented_time_step_masks(input_data, 1, 0.5)
 
     print()
-    print(raw[0].T)
     print(masks[0].T)
     raise Exception
