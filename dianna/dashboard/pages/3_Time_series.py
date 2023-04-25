@@ -16,9 +16,7 @@ add_sidebar_logo()
 
 st.title('Time series explanation')
 
-st.error(
-    'Time series explanation is still work in progress and not yet functioning!'
-)
+st.error('Time series explanation is still work in progress.')
 
 with st.sidebar:
     st.header('Input data')
