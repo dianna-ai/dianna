@@ -63,7 +63,7 @@ DIANNA software is addressing needs of both (X)AI researchers and mostly the var
 
 After studying the vast XAI landscape we have made choices in the parts of the [XAI Taxonomy](https://doi.org/10.3390/make3030032) on which methods, data modalities and problems types to focus. Our choices, based on the largest usage in scientific literature, are shown graphically in the XAI taxonomy below:
 
-<img src="https://user-images.githubusercontent.com/33344129/234314669-a8415bc7-0072-4adf-b0c1-37f773366d87.png" alt="XAI_taxonomy" width="60%"/>
+<img src="https://user-images.githubusercontent.com/33344129/234316105-0bc5721f-c4b0-432d-88a7-7586f034ec2c.png" alt="XAI_taxonomy" width="60%"/>
 
 The key points of DIANNA:
 
