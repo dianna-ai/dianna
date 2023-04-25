@@ -17,7 +17,7 @@ def plot_timeseries(
     show_plot: bool = False,
     output_filename: Optional[str] = None,
     ax: Optional[plt.Axes] = None,
-) -> plt.Axes:
+) -> plt.Figure:
     """Plot timeseries with segments highlighted.
 
     Args:
@@ -40,7 +40,7 @@ def plot_timeseries(
     assert len(x) == len(y)
 
     if not ax:
-        _, ax = plt.subplots()
+        fig, ax = plt.subplots()
 
     ax.plot(x, y, label='Timeseries')
     ax.set_xlabel(xlabel)
@@ -70,4 +70,4 @@ def plot_timeseries(
     if output_filename:
         plt.savefig(output_filename)
 
-    return ax
+    return fig
