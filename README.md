@@ -51,7 +51,7 @@ affiliations:
 
 <img width="300" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
-<img align="left" src="https://user-images.githubusercontent.com/55382553/153408200-36c4de2e-7865-4934-956d-09eefd893e6a.png">
+<img align="left" src=https://user-images.githubusercontent.com/33344129/234314224-2ba989e0-3dee-4be0-8007-8a9af599862f.png">
 
 # Deep Insight And Neural Network Analysis
 
@@ -63,7 +63,7 @@ DIANNA software is addressing needs of both (X)AI researchers and mostly the var
 
 After studying the vast XAI landscape we have made choices in the parts of the [XAI Taxonomy](https://doi.org/10.3390/make3030032) on which methods, data modalities and problems types to focus. Our choices, based on the largest usage in scientific literature, are shown graphically in the XAI taxonomy below:
 
-<img src="https://user-images.githubusercontent.com/3244249/196441854-24c8c6b7-2364-4cb3-90b9-1c63e3bdc345.png" alt="XAI_taxonomy" width="60%"/>
+<img src="https://user-images.githubusercontent.com/33344129/234314669-a8415bc7-0072-4adf-b0c1-37f773366d87.png" alt="XAI_taxonomy" width="60%"/>
 
 The key points of DIANNA:
 
