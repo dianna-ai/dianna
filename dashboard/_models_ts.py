@@ -1,4 +1,3 @@
-from functools import partial
 import numpy as np
 import onnxruntime as ort
 import dianna
@@ -34,14 +33,24 @@ def _run_rise_timeseries(_model, ts_data, **kwargs):
 
 
 def _run_lime_timeseries(_model, ts_data, **kwargs):
-    run_model = partial(predict, model=_model)
-    explanation = dianna.explain_timeseries(
+
+    def run_model(ts_data):
+        return predict(model=_model, ts_data=ts_data)
+
+    exp = dianna.explain_timeseries(
         run_model,
         ts_data[0],
         method='LIME',
+        num_features=len(ts_data[0]),
+        num_slices=len(ts_data[0]),
+        distance_method='cosine',
         **kwargs,
     )
-    return explanation
+
+    label = kwargs['labels'][0]
+    explanation = [i[1] for i in exp.local_exp[label]]
+
+    return np.array(explanation).reshape(ts_data.shape)
 
 
 explain_ts_dispatcher = {
