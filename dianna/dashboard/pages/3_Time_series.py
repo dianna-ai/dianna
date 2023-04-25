@@ -37,11 +37,8 @@ with st.sidebar:
 
     if load_example:
         ts_file = (data_directory / 'weather_data.npy')
-        # ts_model_file = (data_directory / 'season_prediction_model_temp_max_binary.onnx')
-        from pathlib import Path
-        ts_model_file = Path(
-            '/home/stef/python/dianna/tutorials/models/season_prediction_model_temp_max_binary.onnx'
-        )
+        ts_model_file = (data_directory /
+                         'season_prediction_model_temp_max_binary.onnx')
         ts_label_file = (data_directory / 'weather_data_labels.txt')
 
 if not (ts_file and ts_model_file and ts_label_file):
