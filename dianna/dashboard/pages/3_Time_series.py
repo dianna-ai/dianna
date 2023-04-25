@@ -8,6 +8,7 @@ from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import data_directory
+from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
 from dianna.visualization import plot_timeseries
 
@@ -37,31 +38,35 @@ with st.sidebar:
                                      disabled=load_example)
 
     if load_example:
-        ts_file = (data_directory / 'xxx.suffix')
-        ts_model_file = (data_directory / 'xxx.onnx')
-        ts_label_file = (data_directory / 'xxx.txt')
+        ts_file = (data_directory / 'weather_data.npy')
+        # ts_model_file = (data_directory / 'season_prediction_model_temp_max_binary.onnx')
+        from pathlib import Path
+        ts_model_file = Path(
+            '/home/stef/python/dianna/tutorials/models/season_prediction_model_temp_max_binary.onnx'
+        )
+        ts_label_file = (data_directory / 'weather_data_labels.txt')
 
 if not (ts_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
-ts_data, _ = open_timeseries(ts_file)
+ts_data = open_timeseries(ts_file)
 
 model = load_model(ts_model_file)
 serialized_model = model.SerializeToString()
 
 labels = load_labels(ts_label_file)
 
-choices = ()
+choices = ('LIME', 'RISE')
 methods = _methods_checkboxes(choices=choices)
 
 method_params = _get_method_params(methods)
 
 with st.spinner('Predicting class'):
-    predictions = predict(model=model, ts_data=ts_data)
+    predictions = predict(model=serialized_model, ts_data=ts_data)
 
-top_indices, top_labels = _get_top_indices_and_labels(predictions=predictions,
-                                                      labels=labels)
+top_indices, top_labels = _get_top_indices_and_labels(
+    predictions=predictions[0], labels=labels)
 
 weight = 0.9 / len(methods)
 column_spec = [0.1, *[weight for _ in methods]]
@@ -85,8 +90,10 @@ for index, label in zip(top_indices, top_labels):
 
         with col:
             with st.spinner(f'Running {method}'):
-                segments = func(serialized_model, ..., **kwargs)
+                explanation = func(serialized_model, ts_data=ts_data, **kwargs)
 
-            fig = plot_timeseries(...)
+            segments = _convert_to_segments(explanation)
+
+            fig = plot_timeseries(range(len(ts_data[0])), ts_data[0], segments)
 
             st.pyplot(fig)
