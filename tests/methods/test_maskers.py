@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
-from dianna.utils.maskers import generate_channel_masks, generate_time_step_masks, generate_segmented_time_step_masks
+
+from dianna.utils.maskers import generate_channel_masks, generate_time_step_masks
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import mask_data
 
@@ -13,6 +14,7 @@ def test_mask_has_correct_shape_univariate():
     result = _call_masking_function(input_data, number_of_masks=number_of_masks)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
+
 
 def test_mask_has_correct_type_univariate():
     """Test masked data has the correct shape for a univariate input."""
@@ -137,3 +139,52 @@ def test_masking_univariate_leaves_anything_unmasked():
 
     assert np.any(result)
     assert np.any(~result)
+
+
+def test_mask_all():
+    """Generate and print all masks."""
+    input_data = _get_multivariate_input_data()
+    number_of_masks = 12
+
+    result = generate_masks(input_data, number_of_masks, p_keep=0.5)
+
+    print()
+    print('combined masks')
+    _print_masks(result)
+
+
+def test_mask_time_step():
+    """Generate and print time step masks."""
+    input_data = _get_multivariate_input_data()
+    number_of_masks = 3
+
+    result = generate_time_step_masks(input_data, number_of_masks, p_keep=0.5)
+
+    print()
+    print('time masks')
+    _print_masks(result)
+
+
+def test_mask_channel():
+    """Generate and print channel masks."""
+    input_data = _get_multivariate_input_data()
+    number_of_masks = 3
+
+    result = generate_channel_masks(input_data, number_of_masks, p_keep=0.5)
+
+    print()
+    print('channel masks')
+    _print_masks(result)
+
+
+def _print_masks(masks):
+    for mask in masks:
+        print('(0=masked, 1=unmasked)')
+        for channel in mask.T:
+            row_str = ''
+            for time_step in channel:
+                val = '1' if time_step else '0'
+                row_str += val + ' '
+            print(row_str)
+        print('^ channels/ time -->')
+        print()
