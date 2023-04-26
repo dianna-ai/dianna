@@ -17,7 +17,7 @@ def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0
     Single array containing all masks where the first dimension represents the batch.
     """
     if input_data.shape[-1] == 1:  # univariate data
-        return generate_time_step_masks(input_data, number_of_masks, p_keep)
+        return generate_segmented_time_step_masks(input_data, number_of_masks, p_keep)
 
     number_of_channel_masks = number_of_masks // 3
     number_of_time_step_masks = number_of_channel_masks
@@ -86,6 +86,7 @@ def _get_mask_value(data: np.array, mask_type: str) -> int:
 
 
 def _determine_number_masked(p_keep: float, series_length: int) -> int:
+    """Determine the number of time steps that need to be masked."""
     user_requested_steps = int(np.round(series_length * (1 - p_keep)))
     if user_requested_steps == series_length:
         warnings.warn('Warning: p_keep chosen too low. Continuing with leaving 1 time step unmasked per mask.')
@@ -99,14 +100,13 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
 def generate_segmented_time_step_masks(input_data: np.ndarray, number_of_masks: int, p_keep: float, num_features=5):
     time_series_length = input_data.shape[0]
 
-    # Create float masks
-    masks = _generate_interpolated_float_masks2([time_series_length, 1], p_keep, number_of_masks, num_features)[:, :, 0]
+    float_masks = _generate_interpolated_float_masks2([time_series_length, 1], p_keep, number_of_masks, num_features)[:, :, 0]
 
-    # Convert float masks to bool masks using a dynamic threshold
-    for i in masks.shape[0]:
-        masks[i] = _mask_bottom_ratio(masks[i], p_keep)
+    bool_masks = np.empty_like(float_masks, dtype=np.bool)
+    for i, _ in enumerate(float_masks):
+        bool_masks[i] = _mask_bottom_ratio(float_masks[i], p_keep)
 
-    return masks
+    return bool_masks
 
 
 def _generate_interpolated_float_masks2(input_size, p_keep, n_masks, number_of_features):
@@ -121,7 +121,7 @@ def _generate_interpolated_float_masks2(input_size, p_keep, n_masks, number_of_f
     Returns:
         The generated masks (np.ndarray)
     """
-    #TODO duplicate code with _generate_interpolated_float_masks for images. Only the grid generation line is different.
+    # TODO duplicate code with _generate_interpolated_float_masks for images. Only the grid generation line is different.
     cell_size = np.ceil(np.array(input_size) / number_of_features)
     up_size = (number_of_features + 1) * cell_size
 
@@ -157,7 +157,7 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
     """
     flat = float_mask.flatten()
     time_indices = list(range(len(flat)))
-    number_of_unmasked_cells = int(round(len(time_indices) * p_keep))
+    number_of_unmasked_cells = _determine_number_masked(p_keep, len(time_indices)) #int(round(len(time_indices) * p_keep))
     top_indices = heapq.nsmallest(number_of_unmasked_cells, time_indices, key=lambda time_step: flat[time_step])
     flat_mask = np.ones(flat.shape, dtype=np.bool)
     flat_mask[top_indices] = False

@@ -14,6 +14,15 @@ def test_mask_has_correct_shape_univariate():
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
+def test_mask_has_correct_type_univariate():
+    """Test masked data has the correct shape for a univariate input."""
+    input_data = _get_univariate_input_data()
+    number_of_masks = 5
+
+    result = generate_masks(input_data, number_of_masks=number_of_masks)
+
+    assert result.dtype == np.bool
+
 
 def test_mask_has_correct_shape_multivariate():
     """Test masked data has the correct shape for a multivariate input."""
@@ -128,14 +137,3 @@ def test_masking_univariate_leaves_anything_unmasked():
 
     assert np.any(result)
     assert np.any(~result)
-
-
-def test_segmented_masking():
-    # input_data = _get_univariate_input_data(12)
-    input_data = _get_multivariate_input_data(12)
-
-    masks = generate_segmented_time_step_masks(input_data, 1, 0.5)
-
-    print()
-    print(masks[0].T)
-    raise Exception
