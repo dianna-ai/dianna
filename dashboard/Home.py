@@ -1,4 +1,6 @@
 import streamlit as st
+from _shared import add_sidebar_logo
+from _shared import data_directory
 
 
 st.set_page_config(page_title="Dianna's dashboard",
@@ -15,18 +17,26 @@ st.set_page_config(page_title="Dianna's dashboard",
                         'https://github.com/dianna-ai/dianna')
                    })
 
-st.image(
-    'https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png'
-)
+add_sidebar_logo()
 
-st.title("Dianna's dashboard")
+st.image(str(data_directory / 'logo.png'))
 
-st.write("""
+st.markdown("""
 DIANNA is a Python package that brings explainable AI (XAI) to your research project.
 It wraps carefully selected XAI methods in a simple, uniform interface. It's built by,
 with and for (academic) researchers and research software engineers working on machine
 learning projects.
 
-- [Images](/images)
-- [Text](/text)
-""")
+### Pages
+
+- <a href="/Images" target="_parent">Images</a>
+- <a href="/Text" target="_parent">Text</a>
+- <a href="/Time series" target="_parent">Time series</a>
+
+
+### More information
+
+- [Source code](https://github.com/dianna-ai/dianna)
+- [Documentation](https://dianna.readthedocs.io/)
+""",
+            unsafe_allow_html=True)

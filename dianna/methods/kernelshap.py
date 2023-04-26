@@ -1,8 +1,9 @@
-import warnings
+import logging
 import numpy as np
 import shap
 import skimage.segmentation
 from dianna import utils
+from dianna._logging_utils import LoggingContext
 
 
 class KERNELSHAPImage:
@@ -24,13 +25,7 @@ class KERNELSHAPImage:
         self.onnx_to_tf = prepare
 
     @staticmethod
-    def _segment_image(
-        image,
-        n_segments,
-        compactness,
-        sigma,
-        **kwargs
-    ):
+    def _segment_image(image, n_segments, compactness, sigma, **kwargs):
         """Create segmentation to explain by segment, not every pixel.
 
         This could help speed-up the calculation when the input size is very large.
@@ -49,13 +44,11 @@ class KERNELSHAPImage:
         via the following link:
         https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
         """
-        image_segments = skimage.segmentation.slic(
-            image=image,
-            n_segments=n_segments,
-            compactness=compactness,
-            sigma=sigma,
-            **kwargs
-        )
+        image_segments = skimage.segmentation.slic(image=image,
+                                                   n_segments=n_segments,
+                                                   compactness=compactness,
+                                                   sigma=sigma,
+                                                   **kwargs)
 
         return image_segments
 
@@ -64,7 +57,7 @@ class KERNELSHAPImage:
         model,
         input_data,
         labels,
-        nsamples="auto",
+        nsamples='auto',
         background=None,
         n_segments=100,
         compactness=10.0,
@@ -120,24 +113,19 @@ class KERNELSHAPImage:
             skimage.segmentation.slic, kwargs)
 
         # call the segment method to create segmentation of input image
-        self.image_segments = self._segment_image(
-            self.input_data,
-            n_segments,
-            compactness,
-            sigma,
-            **slic_kwargs
-        )
+        self.image_segments = self._segment_image(self.input_data, n_segments,
+                                                  compactness, sigma,
+                                                  **slic_kwargs)
 
         # call the Kernel SHAP explainer
         explainer = shap.KernelExplainer(
             self._runner, np.zeros((len(self.labels), n_segments)))
 
-        with warnings.catch_warnings():
-            # avoid warnings due to version conflicts
-            warnings.simplefilter("ignore")
-            shap_values = explainer.shap_values(
-                np.ones((len(self.labels), n_segments)), nsamples=nsamples
-            )
+        # Temporarily hide warnings, because shap is very spammy
+        with LoggingContext(level=logging.CRITICAL):
+            shap_values = explainer.shap_values(np.ones(
+                (len(self.labels), n_segments)),
+                                                nsamples=nsamples)
 
         return shap_values, self.image_segments
 
@@ -150,13 +138,15 @@ class KERNELSHAPImage:
             transformed input data
         """
         # automatically determine the location of the channels axis if no axis_labels were provided
-        axis_label_names = self.axis_labels.values() if isinstance(self.axis_labels, dict) else self.axis_labels
+        axis_label_names = self.axis_labels.values() if isinstance(
+            self.axis_labels, dict) else self.axis_labels
         if not axis_label_names:
             channels_axis_index = utils.locate_channels_axis(input_data.shape)
             self.axis_labels = {channels_axis_index: 'channels'}
         elif 'channels' not in axis_label_names:
-            raise ValueError("When providing axis_labels it is required to provide the location"
-                             " of the channels axis")
+            raise ValueError(
+                'When providing axis_labels it is required to provide the location'
+                ' of the channels axis')
 
         input_data = utils.to_xarray(input_data, self.axis_labels)
         # ensure channels axis is last and keep track of where it was so we can move it back
@@ -165,10 +155,13 @@ class KERNELSHAPImage:
 
         return input_data
 
-    def _mask_image(
-        self, features, segmentation, image, background=None,
-        channels_axis_index=2, datatype=np.float32
-    ):
+    def _mask_image(self,
+                    features,
+                    segmentation,
+                    image,
+                    background=None,
+                    channels_axis_index=2,
+                    datatype=np.float32):
         """Define a function that depends on a binary mask representing if an image region is hidden.
 
         Args:
@@ -186,9 +179,8 @@ class KERNELSHAPImage:
             background = image.mean(axis=(0, 1))
 
         # Create an empty 4D array
-        out = np.zeros(
-            (features.shape[0], image.shape[0], image.shape[1], image.shape[2])
-        )
+        out = np.zeros((features.shape[0], image.shape[0], image.shape[1],
+                        image.shape[2]))
 
         for i in range(features.shape[0]):
             out[i] = image
@@ -209,13 +201,11 @@ class KERNELSHAPImage:
             features (np.ndarray): A matrix of samples (# samples x # features)
                                    on which to explain the model's output.
         """
-        model_input = self._mask_image(features,
-                                       self.image_segments,
-                                       self.input_data,
-                                       self.background,
+        model_input = self._mask_image(features, self.image_segments,
+                                       self.input_data, self.background,
                                        self.channels_axis_index,
-                                       self.input_node_dtype.as_numpy_dtype
-                                       )
+                                       self.input_node_dtype.as_numpy_dtype)
         if self.preprocess_function is not None:
             model_input = self.preprocess_function(model_input)
-        return self.onnx_to_tf(self.onnx_model).run(model_input)[f"{self.output_node}"]
+        return self.onnx_to_tf(
+            self.onnx_model).run(model_input)[f'{self.output_node}']

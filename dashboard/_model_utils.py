@@ -1,3 +1,4 @@
+from pathlib import Path
 import numpy as np
 import onnx
 
@@ -21,6 +22,9 @@ def load_model(file):
 
 
 def load_labels(file):
+    if isinstance(file, (str, Path)):
+        file = open(file, 'rb')
+
     labels = [line.decode().rstrip() for line in file.readlines()]
     if labels is None or labels == ['']:
         raise ValueError(labels)
