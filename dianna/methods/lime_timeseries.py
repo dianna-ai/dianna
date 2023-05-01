@@ -83,6 +83,10 @@ class LIMETimeseries:
             model_or_function, preprocess_function=self.preprocess_function
         )
         masks = generate_masks(input_timeseries, num_samples, p_keep=0.9)
+        # NOTE: Required by `lime_base` explainer since the first instance must be the original data
+        # For more details, check this link
+        # https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148
+        masks[0, :, :] = 1.0
         masked = mask_data(input_timeseries, masks, mask_type="mean")
         # generate predictions using the masked data.
         predictions = self._make_predictions(masked, runner, batch_size)
@@ -95,17 +99,8 @@ class LIMETimeseries:
         exp = explanation.Explanation(
             domain_mapper=self.domain_mapper, class_names=class_names
         )
-        # TODO: The current form of explanation follows lime-for-time. Would be good to merge formatting with DIANNA.
-        # run the explanation.
-        # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L130
-
-        # NOTE: the first instance in masked should be the original data, so it is with the predictions and
-        # distance (therefore 1). Check the following link for the explanation
-        # https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148
-        # expected shape of input
-        # masked: [num_samples, channels * num_slices]
-        # predictions: [num_samples, labels]
-        # distances: [num_samples]
+        # Expected shape of input: masked[num_samples, channels * num_slices],
+        # predictions[num_samples, labels], distances[num_samples]
         for label in labels:
             (
                 exp.intercept[int(label)],
