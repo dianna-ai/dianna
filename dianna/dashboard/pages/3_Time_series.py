@@ -18,28 +18,27 @@ st.title('Time series explanation')
 
 st.error('Time series explanation is still work in progress.')
 
-with st.sidebar:
-    st.header('Input data')
+st.sidebar.header('Input data')
 
-    load_example = st.checkbox('Load example data', key='ts_example_check')
+load_example = st.sidebar.checkbox('Load example data', key='ts_example_check')
 
-    ts_file = st.file_uploader('Select input data',
-                               type=(),
-                               disabled=load_example)
+ts_file = st.sidebar.file_uploader('Select input data',
+                                   type=(),
+                                   disabled=load_example)
 
-    ts_model_file = st.file_uploader('Select model',
-                                     type='onnx',
-                                     disabled=load_example)
+ts_model_file = st.sidebar.file_uploader('Select model',
+                                         type='onnx',
+                                         disabled=load_example)
 
-    ts_label_file = st.file_uploader('Select labels',
-                                     type='txt',
-                                     disabled=load_example)
+ts_label_file = st.sidebar.file_uploader('Select labels',
+                                         type='txt',
+                                         disabled=load_example)
 
-    if load_example:
-        ts_file = (data_directory / 'weather_data.npy')
-        ts_model_file = (data_directory /
-                         'season_prediction_model_temp_max_binary.onnx')
-        ts_label_file = (data_directory / 'weather_data_labels.txt')
+if load_example:
+    ts_file = (data_directory / 'weather_data.npy')
+    ts_model_file = (data_directory /
+                     'season_prediction_model_temp_max_binary.onnx')
+    ts_label_file = (data_directory / 'weather_data_labels.txt')
 
 if not (ts_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
@@ -68,14 +67,11 @@ column_spec = [0.1, *[weight for _ in methods]]
 
 _, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    with col:
-        st.header(method)
+    col.header(method)
 
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
-
-    with index_col:
-        st.markdown(f'##### {label}')
+    index_col.markdown(f'##### {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
@@ -83,12 +79,11 @@ for index, label in zip(top_indices, top_labels):
 
         func = explain_ts_dispatcher[method]
 
-        with col:
-            with st.spinner(f'Running {method}'):
-                explanation = func(serialized_model, ts_data=ts_data, **kwargs)
+        with col.spinner(f'Running {method}'):
+            explanation = func(serialized_model, ts_data=ts_data, **kwargs)
 
-            segments = _convert_to_segments(explanation)
+        segments = _convert_to_segments(explanation)
 
-            fig = plot_timeseries(range(len(ts_data[0])), ts_data[0], segments)
+        fig = plot_timeseries(range(len(ts_data[0])), ts_data[0], segments)
 
-            st.pyplot(fig)
+        col.pyplot(fig)
