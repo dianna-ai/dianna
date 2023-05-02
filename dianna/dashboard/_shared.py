@@ -1,5 +1,5 @@
 import base64
-from pathlib import Path
+import sys
 from typing import Any
 from typing import Dict
 from typing import Sequence
@@ -7,7 +7,13 @@ import numpy as np
 import streamlit as st
 
 
-data_directory = Path(__file__).parent / 'data'
+if sys.version_info < (3, 10):
+    from importlib_resources import files
+else:
+    from importlib.resources import files
+
+
+data_directory = files('dianna.data')
 
 
 @st.cache_data
