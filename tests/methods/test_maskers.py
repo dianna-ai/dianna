@@ -128,3 +128,19 @@ def test_masking_univariate_leaves_anything_unmasked():
 
     assert np.any(result)
     assert np.any(~result)
+
+def test_masking_keep_first_instance():
+    """First instance must be the original data for Lime timeseries.
+
+    Required by `lime_base` explainer, the first instance of masked (or perturbed)
+    data must be the original instance.
+
+    More details can be found in the code:
+    https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148
+    """
+    input_data = _get_multivariate_input_data()
+    number_of_masks = 5
+    masks = generate_masks(input_data, number_of_masks, p_keep=0.9)
+    masks[0, :, :] = 1.0
+    masked = mask_data(input_data, masks, mask_type="mean")
+    assert np.array_equal(masked[0,:,:], input_data)
