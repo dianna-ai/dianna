@@ -26,7 +26,7 @@ jobs:
           python-version: '3.10'
 
       - name: Run unit tests
-        run: pytest -v
+        run: pytest -v -m "not dashboard"
 
       - name: Verify that we can build the package
         run: python3 setup.py sdist bdist_wheel
@@ -35,7 +35,7 @@ jobs:
         if: matrix.python_version == '3.10' && matrix.os == 'ubuntu-latest'
         run: python -m playwright install --with-deps
 
-      - name: Ensure browsers are installed
+      - name: Test dashboard
         if: matrix.python_version == '3.10' && matrix.os == 'ubuntu-latest'
         run: pytest -v -m dashboard
 
