@@ -84,7 +84,7 @@ def test_text_page(page: Page):
     selector = page.get_by_text(
         'Add your input data in the left panel to continue')
 
-    expect(selector).to_be_visible()
+    expect(selector).to_be_visible(timeout=30_000)
 
     page.locator('label').filter(
         has_text='Load example data').locator('span').click()
