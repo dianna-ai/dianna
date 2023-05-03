@@ -26,6 +26,8 @@ LOCAL = False
 PORT = '8501' if LOCAL else '8502'
 BASE_URL = f'localhost:{PORT}'
 
+pytestmark = pytest.mark.dashboard
+
 
 @pytest.fixture(scope='module', autouse=True)
 def before_module():

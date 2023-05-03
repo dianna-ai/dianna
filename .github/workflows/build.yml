@@ -24,10 +24,20 @@ jobs:
       - uses: ./.github/actions/install-python-and-package
         with:
           python-version: '3.10'
+
       - name: Run unit tests
         run: pytest -v
+
       - name: Verify that we can build the package
         run: python3 setup.py sdist bdist_wheel
+
+      - name: Ensure browsers are installed
+        if: matrix.python_version == '3.10' && matrix.os == 'ubuntu-latest'
+        run: python -m playwright install --with-deps
+
+      - name: Ensure browsers are installed
+        if: matrix.python_version == '3.10' && matrix.os == 'ubuntu-latest'
+        run: pytest -v -m dashboard
 
   build_all:
     name: Build for (${{ matrix.python-version }}, ${{ matrix.os }})
@@ -40,10 +50,14 @@ jobs:
         python-version: ['3.7', '3.8', '3.9', '3.10']
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/install-python-and-package
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Run unit tests
-        run: pytest -v
+        run: pytest -v -m "not dashboard"
+
+
       - name: Verify that we can build the package
         run: python3 setup.py sdist bdist_wheel
