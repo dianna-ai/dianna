@@ -57,7 +57,7 @@ def run_streamlit():
         p.kill()
 
 
-def test_page_load(page: Page, assert_snapshot):
+def test_page_load(page: Page):
     """Test performance of landing page."""
     page.goto(BASE_URL)
 
@@ -73,7 +73,7 @@ def test_page_load(page: Page, assert_snapshot):
         expect(selector).to_be_visible()
 
 
-def test_text_page(page: Page, assert_snapshot):
+def test_text_page(page: Page):
     """Test performance of text page."""
     page.goto(f'{BASE_URL}/Text')
 
@@ -113,7 +113,7 @@ def test_text_page(page: Page, assert_snapshot):
         expect(selector).to_be_visible()
 
 
-def test_image_page(page: Page, assert_snapshot):
+def test_image_page(page: Page):
     """Test performance of image page."""
     page.goto(f'{BASE_URL}/Images')
 
