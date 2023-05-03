@@ -18,32 +18,19 @@ jobs:
   build_single:
     name: Build
     if: github.event.pull_request.draft == true
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ['ubuntu-latest']
-        python-version: ['3.10']
+    runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/install-python-and-package
         with:
-          python-version: ${{ matrix.python-version }}
-          extras-require: dashboard
+          python-version: '3.10'
 
       - name: Run unit tests
-        run: pytest -v -m "not dashboard"
+        run: pytest -v
 
       - name: Verify that we can build the package
         run: python3 setup.py sdist bdist_wheel
-
-      - name: Ensure browsers are installed
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
-        run: python -m playwright install chromium
-
-      - name: Test dashboard
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
-        run: pytest -v -m dashboard
 
   build_all:
     name: Build for (${{ matrix.python-version }}, ${{ matrix.os }})
@@ -64,6 +51,22 @@ jobs:
       - name: Run unit tests
         run: pytest -v -m "not dashboard"
 
-
       - name: Verify that we can build the package
         run: python3 setup.py sdist bdist_wheel
+
+  test_dashboard:
+    name: Test dashboard
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/install-python-and-package
+        with:
+          python-version: '3.10'
+          extras-require: dev,dashboard
+
+      - name: Ensure browser is installed
+        run: python -m playwright install chromium
+
+      - name: Test dashboard
+        run: pytest -v -m dashboard
