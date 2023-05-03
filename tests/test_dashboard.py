@@ -75,20 +75,23 @@ def test_text_page(page: Page, assert_snapshot):
     """Test performance of text page."""
     page.goto(f'{BASE_URL}/Text')
 
+    page.get_by_text('Running...').wait_for(state='detached')
+
     expect(page).to_have_title('Text · Streamlit')
 
-    expect(
-        page.get_by_text('Add your input data in the left panel to continue')
-    ).to_be_visible()
+    selector = page.get_by_text(
+        'Add your input data in the left panel to continue')
 
-    page.get_by_label('Load example data').click()
+    expect(selector).to_be_visible()
+
+    page.locator('label').filter(
+        has_text='Load example data').locator('span').click()
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible()
 
-    page.get_by_label('RISE').click()
+    page.locator('label').filter(has_text='RISE').locator('span').click()
 
-    selector = page.get_by_text('Running...')
-    selector.wait_for(state='detached', timeout=45_000)
+    page.get_by_text('Running...').wait_for(state='detached', timeout=45_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
@@ -112,20 +115,22 @@ def test_image_page(page: Page, assert_snapshot):
     """Test performance of image page."""
     page.goto(f'{BASE_URL}/Images')
 
+    page.get_by_text('Running...').wait_for(state='detached')
+
     expect(page).to_have_title('Images · Streamlit')
 
     expect(
         page.get_by_text('Add your input data in the left panel to continue')
     ).to_be_visible()
 
-    page.get_by_label('Load example data').click()
+    page.locator('label').filter(
+        has_text='Load example data').locator('span').click()
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible()
 
-    page.get_by_label('RISE').click()
+    page.locator('label').filter(has_text='RISE').locator('span').click()
 
-    selector = page.get_by_text('Running...')
-    selector.wait_for(state='detached', timeout=45_000)
+    page.get_by_text('Running...').wait_for(state='detached', timeout=45_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
