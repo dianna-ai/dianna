@@ -1,8 +1,19 @@
-# pip install pytest-playwright
-# playwright install --with-deps
-# playwright install firefox
-# pip install pytest-playwright-visual
-# pytest tests/test_dashboard.py --browser firefox
+"""Module to test the dashboard.
+
+This test module uses (playwright)[https://playwright.dev/python/]
+to test the user workflow.
+
+Installation:
+
+    pip install pytest-playwright
+    playwright install
+
+Code generation (https://playwright.dev/python/docs/codegen):
+
+    playwright codegen http://localhost:8501
+
+Set `LOCAL=True` to connect to local instance for debugging
+"""
 
 import time
 from contextlib import contextmanager
@@ -10,20 +21,10 @@ import pytest
 from playwright.sync_api import Page
 from playwright.sync_api import expect
 
-
 LOCAL = False
 
 PORT = '8501' if LOCAL else '8502'
 BASE_URL = f'localhost:{PORT}'
-
-
-def _wait_until_loaded(page: Page, timeout: int = 30):
-    """Wait until 'Running...' animation has dissappeared."""
-    selector = page.get_by_text('Running...')
-    for _ in range(timeout):
-        time.sleep(1)
-        if not selector.is_visible():
-            break
 
 
 @pytest.fixture(scope='module', autouse=True)
@@ -58,11 +59,16 @@ def test_page_load(page: Page, assert_snapshot):
     """Test performance of landing page."""
     page.goto(BASE_URL)
 
-    _wait_until_loaded(page)
+    selector = page.get_by_text('Running...')
+    selector.wait_for(state='detached')
 
     expect(page).to_have_title("Dianna's dashboard")
-
-    assert_snapshot(page.screenshot())
+    for selector in (
+            page.get_by_role('img', name='0'),
+            page.get_by_text('Pages'),
+            page.get_by_text('More information'),
+    ):
+        expect(selector).to_be_visible()
 
 
 def test_text_page(page: Page, assert_snapshot):
@@ -71,12 +77,35 @@ def test_text_page(page: Page, assert_snapshot):
 
     expect(page).to_have_title('Text · Streamlit')
 
+    expect(
+        page.get_by_text('Add your input data in the left panel to continue')
+    ).to_be_visible()
+
     page.get_by_label('Load example data').click()
+
+    expect(page.get_by_text('Select a method to continue')).to_be_visible()
+
     page.get_by_label('RISE').click()
 
-    _wait_until_loaded(page)
+    selector = page.get_by_text('Running...')
+    selector.wait_for(state='detached', timeout=45_000)
 
-    assert_snapshot(page.screenshot())
+    for selector in (
+            page.get_by_role('heading', name='RISE').get_by_text('RISE'),
+            # first text
+            page.get_by_role('heading',
+                             name='positive').get_by_text('positive'),
+            page.get_by_text(
+                'The movie started out great but the ending was dissappointing'
+            ).first,
+            # second text
+            page.get_by_role('heading',
+                             name='negative').get_by_text('negative'),
+            page.get_by_text(
+                'The movie started out great but the ending was dissappointing'
+            ).nth(1),
+    ):
+        expect(selector).to_be_visible()
 
 
 def test_image_page(page: Page, assert_snapshot):
@@ -85,9 +114,26 @@ def test_image_page(page: Page, assert_snapshot):
 
     expect(page).to_have_title('Images · Streamlit')
 
+    expect(
+        page.get_by_text('Add your input data in the left panel to continue')
+    ).to_be_visible()
+
     page.get_by_label('Load example data').click()
+
+    expect(page.get_by_text('Select a method to continue')).to_be_visible()
+
     page.get_by_label('RISE').click()
 
-    _wait_until_loaded(page, timeout=45)
+    selector = page.get_by_text('Running...')
+    selector.wait_for(state='detached', timeout=45_000)
 
-    assert_snapshot(page.screenshot())
+    for selector in (
+            page.get_by_role('heading', name='RISE').get_by_text('RISE'),
+            # first image
+            page.get_by_role('heading', name='0').get_by_text('0'),
+            page.get_by_role('img', name='0').first,
+            # second image
+            page.get_by_role('heading', name='1').get_by_text('1'),
+            page.get_by_role('img', name='0').nth(1),
+    ):
+        expect(selector).to_be_visible()

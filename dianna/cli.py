@@ -19,9 +19,12 @@ def dashboard():
 
     # https://docs.streamlit.io/library/advanced-features/configuration
     sys.argv = [
-        'streamlit', 'run', 'Home.py', '--theme.base', 'light',
-        '--theme.primaryColor', '7030a0', '--theme.secondaryBackgroundColor',
-        'e4f3f9', '--browser.gatherUsageStats', 'false', *args
+        *('streamlit', 'run', 'Home.py'),
+        *('--theme.base', 'light'),
+        *('--theme.primaryColor', '7030a0'),
+        *('--theme.secondaryBackgroundColor', 'e4f3f9'),
+        *('--browser.gatherUsageStats', 'false'),
+        *args,
     ]
 
     sys.exit(stcli.main())
