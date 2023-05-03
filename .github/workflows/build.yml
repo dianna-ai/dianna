@@ -18,7 +18,12 @@ jobs:
   build_single:
     name: Build
     if: github.event.pull_request.draft == true
-    runs-on: 'ubuntu-latest'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-latest']
+        python-version: ['3.10']
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/install-python-and-package
