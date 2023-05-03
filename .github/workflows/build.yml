@@ -38,7 +38,7 @@ jobs:
 
       - name: Ensure browsers are installed
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
-        run: python -m playwright install --with-deps
+        run: python -m playwright install chromium
 
       - name: Test dashboard
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
