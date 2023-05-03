@@ -29,6 +29,7 @@ jobs:
       - uses: ./.github/actions/install-python-and-package
         with:
           python-version: ${{ matrix.python-version }}
+          extras-require: dashboard
 
       - name: Run unit tests
         run: pytest -v -m "not dashboard"
