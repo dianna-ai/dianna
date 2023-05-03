@@ -11,7 +11,6 @@ from _shared import data_directory
 from _ts_utils import open_timeseries
 from dianna.visualization import plot_timeseries
 
-
 add_sidebar_logo()
 
 st.title('Time series explanation')

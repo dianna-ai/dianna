@@ -6,7 +6,6 @@ from typing import Sequence
 import numpy as np
 import streamlit as st
 
-
 data_directory = Path(__file__).parent / 'data'
 
 

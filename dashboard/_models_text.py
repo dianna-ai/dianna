@@ -3,7 +3,6 @@ from _movie_model import MovieReviewsModelRunner
 from dianna import explain_text
 from dianna.utils.tokenizers import SpacyTokenizer
 
-
 tokenizer = SpacyTokenizer()
 
 
