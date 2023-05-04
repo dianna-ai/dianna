@@ -1,4 +1,3 @@
-import os
 import sys
 
 
@@ -12,14 +11,13 @@ def dashboard():
     """Start streamlit dashboard."""
     from streamlit.web import cli as stcli
 
-    dashboard_dir = files('dianna').parent / 'dashboard'
-    os.chdir(dashboard_dir)
+    dashboard = files('dianna.dashboard') / 'Home.py'
 
     # https://docs.streamlit.io/library/advanced-features/configuration
     sys.argv = [
         'streamlit',
         'run',
-        'Home.py',
+        str(dashboard),
         '--theme.base',
         'light',
         '--theme.primaryColor',
