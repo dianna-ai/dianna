@@ -76,7 +76,7 @@ class LimeOnText(TestCase):
 
     def test_lime_text_special_chars(self):
         """Tests exact expected output given a text with special characters and model for Lime."""
-        review = 'such a bad movie "!?\'"'
+        review = 'such a bad movie "!?\'"'  # fails, assertion error in __call__
         expected_words = ['bad', 'such', 'movie', 'a', '"!?\'"']
         expected_word_indices = [2, 0, 3, 1, 4]
         expected_scores = [
@@ -99,13 +99,15 @@ class LimeOnText(TestCase):
         self.runner = load_movie_review_model()
 
 
-@pytest.mark.parametrize('text', [
-    'review with !!!?',
-    'review with! ?',
-    'review with???!',
-    'Review with Capital',
-    'Hello, to the world!',
-])
+@pytest.mark.parametrize(
+    'text',
+    [
+        'review with !!!?',  # fails, assertion error in __call__
+        'review with! ?',
+        'review with???!',  # fails, assertion error in __call__
+        'Review with Capital',
+        'Hello, to the world!',
+    ])
 class TestLimeOnTextSpecialCharacters:
     """Regression tests for inputs with symbols for LIME (https://github.com/dianna-ai/dianna/issues/437)."""
     runner = load_movie_review_model(
@@ -144,6 +146,7 @@ def tokenizer():
 def test_spacytokenizer(text, tokenizer):
     tokens = tokenizer.tokenize(text)
 
+    print()
     print(len(tokens), tokens)
 
     assert len(tokens) == 6
