@@ -99,12 +99,11 @@ class LimeOnText(TestCase):
         self.runner = load_movie_review_model()
 
 
-@pytest.mark.parametrize('review', [
+@pytest.mark.parametrize('text', [
     'review with !!!?',
     'review with! ?',
     'review with???!',
     'Review with Capital',
-    'Hello, world!',
     'Hello, to the world!',
 ])
 class TestLimeOnTextSpecialCharacters:
@@ -112,11 +111,39 @@ class TestLimeOnTextSpecialCharacters:
     runner = load_movie_review_model(
     )  # load model once for all tests in this class
 
-    def test_lime_text_special_chars_regression_test(self, review):
+    def test_lime_text_special_chars_regression_test(self, text):
         """Just don't raise an error on this input with special characters."""
         _ = dianna.explain_text(self.runner,
-                                review,
+                                text,
                                 tokenizer=self.runner.tokenizer,
                                 labels=[0],
                                 method='LIME',
                                 random_state=0)
+
+
+@pytest.fixture
+def tokenizer():
+    from dianna.utils.tokenizers import SpacyTokenizer
+    return SpacyTokenizer()
+
+
+@pytest.mark.parametrize(
+    'text',
+    [
+        'Hello, to the world!',  # [0, 3, 8, 2, 148, 571], length=6, passes
+        'HelloUNKWORDZ UNKWORDZ UNKWORDZ UNKWORDZUNKWORDZ',  # [0, 0, 0, 0, 1], length=4
+        'UNKWORDZUNKWORDZ UNKWORDZ UNKWORDZ UNKWORDZUNKWORDZ',  # [0, 0, 0, 0, 1], length=4
+        'Hello, to the UNKWORDZ!',  # [0, 3, 8, 2, 0, 571], length=6, passes
+        'UNKWORDZ, UNKWORDZ the UNKWORDZUNKWORDZ',  # [0, 3, 0, 2, 0], length=5
+        'UNKWORDZUNKWORDZ to the UNKWORDZUNKWORDZ',  # [0, 8, 2, 0, 1], length=4
+        'UNKWORDZUNKWORDZ to UNKWORDZ UNKWORDZ!',  # [0, 8, 0, 0, 571], length=5
+        'Hello, UNKWORDZ the worldUNKWORDZ',  # [0, 3, 0, 2, 0], length=5
+        'UNKWORDZUNKWORDZ to UNKWORDZ worldUNKWORDZ',  # [0, 8, 0, 0, 1], length=4
+        'UNKWORDZUNKWORDZ UNKWORDZ UNKWORDZ UNKWORDZUNKWORDZ',  # [0, 0, 0, 0, 1], length=4
+    ])
+def test_spacytokenizer(text, tokenizer):
+    tokens = tokenizer.tokenize(text)
+
+    print(len(tokens), tokens)
+
+    assert len(tokens) == 6

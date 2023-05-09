@@ -90,20 +90,11 @@ class ModelRunner:
         input_name = sess.get_inputs()[0].name
         output_name = sess.get_outputs()[0].name
 
-        tokenized_sentences = []
-        for sentence in sentences:
-            # tokenize and pad to minimum length
-            tokens = self.tokenizer.tokenize(sentence)
-            if len(tokens) < self.max_filter_size:
-                tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
+        tokenized_sentences = [
+            self.tokenize(sentence) for sentence in sentences
+        ]
 
-            # numericalize the tokens
-            tokens_numerical = [
-                self.vocab.stoi[token]
-                if token in self.vocab.stoi else self.vocab.stoi['<unk>']
-                for token in tokens
-            ]
-            tokenized_sentences.append(tokens_numerical)
+        assert len(set(len(tokens) for tokens in tokenized_sentences)) == 1
 
         # run the model, applying a sigmoid because the model outputs logits
         onnx_input = {input_name: tokenized_sentences}
@@ -114,6 +105,20 @@ class ModelRunner:
         positivity = pred[:, 0]
         negativity = 1 - positivity
         return np.transpose([negativity, positivity])
+
+    def tokenize(self, sentence):
+        # tokenize and pad to minimum length
+        tokens = self.tokenizer.tokenize(sentence)
+        if len(tokens) < self.max_filter_size:
+            tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
+
+        # numericalize the tokens
+        tokens_numerical = [
+            self.vocab.stoi[token]
+            if token in self.vocab.stoi else self.vocab.stoi['<unk>']
+            for token in tokens
+        ]
+        return tokens_numerical
 
 
 def assert_explanation_satisfies_expectations(explanation, expected_scores,
