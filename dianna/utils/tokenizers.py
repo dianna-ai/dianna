@@ -1,3 +1,4 @@
+import re
 from abc import ABC
 from abc import abstractmethod
 from typing import List
@@ -34,22 +35,6 @@ class Tokenizer(ABC):
         """Merge list of tokens back to sentence."""
 
 
-from itertools import tee
-
-
-def pairwise(iterable):
-    # pairwise('ABCDEFG') --> AB BC CD DE EF FG
-    a, b = tee(iterable)
-    next(b, None)
-    return zip(a, b)
-
-
-import re
-
-
-retokenizer = re.compile(r'(\w+|\S)')
-
-
 class SpacyTokenizer(Tokenizer):
     """Spacy tokenizer for natural language."""
 
@@ -67,10 +52,17 @@ class SpacyTokenizer(Tokenizer):
 
     def tokenize(self, sentence: str) -> List[str]:
         """Tokenize sentence."""
-        sentence1 = re.sub(r'(\w)(UNKWORDZ)(\s|$)', r'\1 \2\3', sentence)
-        sentence2 = re.sub(r'(^|\s)(UNKWORDZ)(\w)', r'\1\2 \3', sentence1)
+        # Regexes below fix the punctuation/special characters problem:
+        # https://github.com/dianna-ai/dianna/issues/531
 
-        tokens = self.spacy_tokenizer(sentence2)
+        # matches non-whitespace UNKWORDZ non-whitespace
+        sentence1 = re.sub(r'(\S)(UNKWORDZ)(\S)', r'\1 \2 \3', sentence)
+        # Matches non-whitespace UNKWORDZ whitespace/end-of-string
+        sentence2 = re.sub(r'(\S)(UNKWORDZ)(\s|$)', r'\1 \2\3', sentence1)
+        # Matches start-of-string/whitespace UNKWORDZ non-whitespace
+        sentence3 = re.sub(r'(^|\s)(UNKWORDZ)(\S)', r'\1\2 \3', sentence2)
+
+        tokens = self.spacy_tokenizer(sentence3)
 
         return tokens
 
