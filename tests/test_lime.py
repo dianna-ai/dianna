@@ -76,11 +76,12 @@ class LimeOnText(TestCase):
 
     def test_lime_text_special_chars(self):
         """Tests exact expected output given a text with special characters and model for Lime."""
-        review = 'such a bad movie "!?\'"'  # fails, assertion error in __call__
-        expected_words = ['bad', 'such', 'movie', 'a', '"!?\'"']
-        expected_word_indices = [2, 0, 3, 1, 4]
+        review = 'such a bad movie "!?\'"'
+        expected_words = ['bad', '?', '!', 'movie', 'such', 'a', "'", '"', '"']
+        expected_word_indices = [2, 6, 5, 3, 0, 1, 7, 4, 8]
         expected_scores = [
-            0.49421639, -0.04616689, 0.04045723, -0.00912872, -0.00148593
+            0.50032869, 0.06458735, -0.05793979, 0.01413776, -0.01246357,
+            -0.00528022, 0.00305347, 0.00185159, -0.00165128
         ]
 
         explanation = dianna.explain_text(self.runner,
