@@ -13,7 +13,7 @@ command_line = "-m pytest"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py37,py38,py39
+envlist = py38,py39,310
 skip_missing_interpreters = true
 
 [testenv]
