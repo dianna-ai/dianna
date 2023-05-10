@@ -69,4 +69,4 @@ jobs:
         run: python -m playwright install chromium
 
       - name: Test dashboard
-        run: pytest -v -m dashboard
+        run: pytest -v -m dashboard --dashboard

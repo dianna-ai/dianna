@@ -1,8 +1,19 @@
 import pytest
 
 
-def pytest_runtest_setup(item):
-    """Configure pytest per item."""
-    # Do not test dashboard workflow by default
-    if 'dashboard' in (mark.name for mark in item.iter_markers()):
-        pytest.skip('Use `-m dashboard` to test dashboard workflow.')
+def pytest_addoption(parser):
+    parser.addoption('--dashboard',
+                     action='store_true',
+                     default=False,
+                     help='Run dashboard workflow tests')
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption('--dashboard'):
+        return
+
+    skip_dashboard = pytest.mark.skip(
+        reason='Use `-m dashboard` to test dashboard workflow.')
+    for item in items:
+        if 'dahsboard' in item.keywords:
+            item.add_marker(skip_dashboard)
