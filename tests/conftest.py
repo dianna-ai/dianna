@@ -2,6 +2,7 @@ import pytest
 
 
 def pytest_addoption(parser):
+    """Add options to pytest."""
     parser.addoption('--dashboard',
                      action='store_true',
                      default=False,
@@ -9,6 +10,7 @@ def pytest_addoption(parser):
 
 
 def pytest_collection_modifyitems(config, items):
+    """Modify items for pytest."""
     if config.getoption('--dashboard'):
         return
 
