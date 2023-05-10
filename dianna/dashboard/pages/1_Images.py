@@ -11,7 +11,6 @@ from _shared import add_sidebar_logo
 from _shared import data_directory
 from dianna.visualization import plot_image
 
-
 add_sidebar_logo()
 
 st.title('Image explanation')

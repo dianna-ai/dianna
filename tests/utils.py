@@ -5,7 +5,6 @@ from scipy.special import expit as sigmoid
 from torchtext.vocab import Vectors
 from dianna.utils.tokenizers import SpacyTokenizer
 
-
 _mnist_1_data = """
 0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
 0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0

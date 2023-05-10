@@ -1,6 +1,5 @@
 import numpy as np
 
-
 """Test case for timeseries xai methods.
 This test case is designed to show if the xai methods could provide reasonable results.
 In this test case, every test instance is a 28 days by 1 channel array indicating the max temp on a day.
