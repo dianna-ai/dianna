@@ -39,7 +39,7 @@ runs:
       shell: bash {0}
       run: |
         python3 -m pip install torch --index-url https://download.pytorch.org/whl/cpu
-        python3 -m pip install tensorflow-cpu
+        python3 -m pip install tensorflow-cpu>=2.12
 
     - name: Upgrade pip
       shell: bash {0}
