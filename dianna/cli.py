@@ -1,6 +1,4 @@
-import os
 import sys
-from pathlib import Path
 
 if sys.version_info < (3, 10):
     from importlib_resources import files
@@ -14,8 +12,7 @@ def dashboard():
 
     args = sys.argv[1:]
 
-    dashboard_dir = Path(files('dianna')).parent / 'dashboard'
-    os.chdir(dashboard_dir)
+    files('dianna.dashboard') / 'Home.py'
 
     # https://docs.streamlit.io/library/advanced-features/configuration
     sys.argv = [

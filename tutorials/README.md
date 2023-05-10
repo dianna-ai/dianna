@@ -27,3 +27,14 @@ The datasets used in the tutorials are represented with their respective logo:
 | [Stanford sentiment treebank](https://nlp.stanford.edu/sentiment/index.html) | <img width="25" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152540890-c8e1e37d-f0cc-4f84-80a4-2c59176cbf4c.png">|
 
 The models used in the tutorials are available at [tutorials/models](https://github.com/dianna-ai/dianna/tree/main/tutorials/models).
+
+
+## Colab
+The tutorials can also be run directly in Google Colab, by clicking on the links/buttons below, or for a general demo here: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/demo.ipynb).
+
+| modality \ method | RISE                                                                                           | LIME                                                                                           | KernelSHAP                                                                                     |
+|-------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| images            | [mnist](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/rise_mnist.ipynb), [imagenet](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/rise_imagenet.ipynb)       | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/lime_images.ipynb)       | [mnist](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/kernelshap_mnist.ipynb), [geometric shapes](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/kernelshap_geometric_shapes.ipynb) |
+| text              | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/rise_text.ipynb)         | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/lime_text.ipynb)         | -   |
+| timeseries        | [weather](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/rise_timeseries_weather.ipynb) | [weather](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/lime_timeseries_weather.ipynb), [coffee](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/lime_timeseries_coffee.ipynb) | - |
+
