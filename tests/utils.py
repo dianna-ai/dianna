@@ -94,7 +94,14 @@ class ModelRunner:
             self.tokenize(sentence) for sentence in sentences
         ]
 
-        assert len(set(len(tokens) for tokens in tokenized_sentences)) == 1
+        expected_length = len(tokenized_sentences[0])
+        if not all(
+                len(tokens) == expected_length
+                for tokens in tokenized_sentences):
+            raise ValueError(
+                'Mismatch in length of tokenized sentences.'
+                'This is a problem in the tokenizer:'
+                'https://github.com/dianna-ai/dianna/issues/531', )
 
         # run the model, applying a sigmoid because the model outputs logits
         onnx_input = {input_name: tokenized_sentences}
@@ -106,7 +113,8 @@ class ModelRunner:
         negativity = 1 - positivity
         return np.transpose([negativity, positivity])
 
-    def tokenize(self, sentence):
+    def tokenize(self, sentence: str):
+        """Tokenize sentence."""
         # tokenize and pad to minimum length
         tokens = self.tokenizer.tokenize(sentence)
         if len(tokens) < self.max_filter_size:
