@@ -149,7 +149,7 @@ def tokenizer():
     ('such UNKWORDZ UNKWORDZ movie "UNKWORDZUNKWORDZ\'UNKWORDZ', 9),
     ('such a bad UNKWORDZ UNKWORDZ!UNKWORDZ\'UNKWORDZ', 9),
 ])
-def test_spacytokenizer(text, length, tokenizer):
+def test_spacytokenizer_length(text, length, tokenizer):
     """Test that tokenizer returns strings of the correct length."""
     tokens = tokenizer.tokenize(text)
     assert len(tokens) == length
