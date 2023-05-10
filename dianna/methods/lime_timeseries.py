@@ -97,8 +97,10 @@ class LIMETimeseries:
         exp = explanation.Explanation(
             domain_mapper=self.domain_mapper, class_names=class_names
         )
-        # Expected shape of input: masked[num_samples, channels * num_slices],
-        # predictions[num_samples, labels], distances[num_samples]
+        # Expected shape of input:
+        # masked[num_samples, channels * num_slices],
+        # predictions[num_samples, labels],
+        # distances[num_samples]
         for label in labels:
             (
                 exp.intercept[int(label)],
@@ -141,7 +143,6 @@ class LIMETimeseries:
               Euclidean space.
             - Dynamic Time Warping is an algorithm for measuring similarity between two time
               series sequences that may vary in speed or timing.
-
         """
         support_methods = ["cosine", "euclidean"]
         if distance_method == "dtw":
@@ -150,8 +151,10 @@ class LIMETimeseries:
             distance = (
                 sklearn.metrics.pairwise.pairwise_distances(
                     masked_data, masked_data[0].reshape([1, -1]), metric=distance_method
-                ).ravel() * 100
+                ).ravel()
             )
+            if distance_method == "cosine":
+                distance *= 100 # make sure it has same scale as other methods
         else:
             raise ValueError(
                 f"Given method {distance_method} is not supported. Please "
