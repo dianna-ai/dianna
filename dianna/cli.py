@@ -12,11 +12,11 @@ def dashboard():
 
     args = sys.argv[1:]
 
-    files('dianna.dashboard') / 'Home.py'
+    dash = files('dianna.dashboard') / 'Home.py'
 
     # https://docs.streamlit.io/library/advanced-features/configuration
     sys.argv = [
-        *('streamlit', 'run', 'Home.py'),
+        *('streamlit', 'run', str(dash)),
         *('--theme.base', 'light'),
         *('--theme.primaryColor', '7030a0'),
         *('--theme.secondaryBackgroundColor', 'e4f3f9'),
