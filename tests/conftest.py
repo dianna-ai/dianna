@@ -15,5 +15,5 @@ def pytest_collection_modifyitems(config, items):
     skip_dashboard = pytest.mark.skip(
         reason='Use `-m dashboard` to test dashboard workflow.')
     for item in items:
-        if 'dahsboard' in item.keywords:
+        if 'dashboard' in item.keywords:
             item.add_marker(skip_dashboard)
