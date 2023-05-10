@@ -82,12 +82,12 @@ class LIMETimeseries:
         runner = utils.get_function(
             model_or_function, preprocess_function=self.preprocess_function
         )
-        masks = generate_masks(input_timeseries, num_samples, p_keep=0.9)
+        masks = generate_masks(input_timeseries, num_samples, p_keep=0.1)
         # NOTE: Required by `lime_base` explainer since the first instance must be the original data
         # For more details, check this link
         # https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148
         masks[0, :, :] = 1.0
-        masked = mask_data(input_timeseries, masks, mask_type="mean")
+        masked = mask_data(input_timeseries, masks, mask_type=mask_type)
         # generate predictions using the masked data.
         predictions = self._make_predictions(masked, runner, batch_size)
         # need to reshape for the calculation of distance
