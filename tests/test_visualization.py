@@ -10,7 +10,7 @@ def test_plot_timeseries_univariate(tmpdir, random):
     y = np.sin(x)
     segments = get_test_segments(data=np.expand_dims(y, 0))
 
-    output_path = Path('.') / 'temp_visualization_test_univariate.png'
+    output_path = Path(tmpdir) / 'temp_visualization_test_univariate.png'
 
     plot_timeseries(x=x,
                     y=y,
@@ -26,7 +26,7 @@ def test_plot_timeseries_multivariate(tmpdir, random):
     x = np.linspace(start=0, stop=10, num=20)
     y = np.stack((np.sin(x), np.cos(x), np.tan(0.4 * x)))
     segments = get_test_segments(data=y)
-    output_path = Path('.') / 'temp_visualization_test_multivariate.png'
+    output_path = Path(tmpdir) / 'temp_visualization_test_multivariate.png'
 
     plot_timeseries(x=x,
                     y=y,
