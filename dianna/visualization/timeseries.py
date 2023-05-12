@@ -1,7 +1,9 @@
 from typing import Any
 from typing import Dict
+from typing import Iterable
 from typing import List
 from typing import Optional
+from typing import Union
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
@@ -11,8 +13,8 @@ def plot_timeseries(
     x: np.ndarray,
     y: np.ndarray,
     segments: List[Dict[str, Any]],
-    xlabel: str = 'x',
-    ylabel: str = 'y',
+    x_label: str = 'x',
+    y_label: Union[str, Iterable[str]] = None,
     cmap: Optional[str] = None,
     show_plot: bool = False,
     output_filename: Optional[str] = None,
@@ -28,8 +30,8 @@ def plot_timeseries(
             'weight'. Here, `index` is the index of the segment of feature,
             `start` and `end` determine the location of the
             segment, and `weight` determines the color.
-        xlabel (str, optional): Label for the x-axis
-        ylabel (str, optional): Label for the y-axis
+        x_label (str, optional): Label for the x-axis
+        y_label (str, optional): Label for the y-axis
         cmap (str, optional): Matplotlib colormap
         show_plot (bool, optional): Shows plot if true (for testing or writing
             plots to disk instead).
@@ -37,33 +39,15 @@ def plot_timeseries(
             the plot to (optional).
         ax (plt.Axes, optional): Matplotlib axes object
     """
-    assert len(x) == len(y)
+    ax, axs, y_labels, ys = _process_plotting_parameters(ax, y, y_label)
 
-    if not ax:
-        _, ax = plt.subplots()
+    for y_current, y_label_current, ax_current in zip(ys, y_labels, axs):
+        current_ax = ax_current
+        current_ax.plot(x, y_current, label=y_label_current)
+        current_ax.set_xlabel(x_label)
+        current_ax.set_ylabel(y_label_current)
 
-    ax.plot(x, y, label='Timeseries')
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-
-    cmap = plt.get_cmap(cmap)
-
-    norm = plt.Normalize(-1, 1)
-
-    for segment in segments:
-        start = segment['start']
-        stop = segment['stop']
-        weight = segment['weight']
-        index = segment['index']
-
-        color = cmap(norm(weight))
-
-        ax.axvspan(start, stop, color=color, alpha=0.5)
-        ax.text(start, max(y), str(index))
-
-    plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap),
-                 ax=ax,
-                 label='weights')
+    _draw_segments(ax, axs, cmap, segments, ys)
 
     if show_plot:
         plt.show()
@@ -71,3 +55,49 @@ def plot_timeseries(
         plt.savefig(output_filename)
 
     return ax
+
+
+def _draw_segments(ax, axs, cmap, segments, ys):
+    cmap = plt.get_cmap(cmap)
+    norm = plt.Normalize(-1, 1)
+    for segment in segments:
+        start = segment['start']
+        stop = segment['stop']
+        weight = segment['weight']
+        index = segment['index']
+        channel = segment['channel']
+
+        color = cmap(norm(weight))
+
+        axs[channel].axvspan(start, stop, color=color, alpha=0.5)
+        axs[channel].text(start, max(ys[channel]), str(index))
+    plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap),
+                 ax=ax,
+                 label='weights')
+
+
+def _process_plotting_parameters(ax, y, y_label):
+    if y.ndim == 1:
+        print(y.shape)
+        ys = np.expand_dims(y, 0)
+        print(y.shape)
+    elif y.ndim == 2:
+        ys = y
+    else:
+        raise ValueError(
+            f'Invalid rank {y.ndim}. Data y can only have either 1 or 2 dimensions.'
+        )
+
+    if not y_label:
+        y_labels = [f'channel {c}' for c in range(ys.shape[0])]
+    if isinstance(y_label, str):
+        y_labels = [y_label]
+
+    n_channels = ys.shape[0]
+    if not ax:
+        _, ax = plt.subplots(nrows=n_channels, sharex=True)
+        if n_channels == 1:
+            axs = (ax, )
+        else:
+            axs = ax
+    return ax, axs, y_labels, ys
