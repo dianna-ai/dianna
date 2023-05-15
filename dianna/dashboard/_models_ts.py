@@ -26,6 +26,7 @@ def _run_rise_timeseries(_model, ts_data, **kwargs):
         run_model,
         timeseries_data=ts_data,
         method='RISE',
+        mask_type=lambda _: 0,
         **kwargs,
     )
 

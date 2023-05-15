@@ -35,10 +35,9 @@ ts_label_file = st.sidebar.file_uploader('Select labels',
                                          disabled=load_example)
 
 if load_example:
-    ts_file = (data_directory / 'weather_data.npy')
-    ts_model_file = (data_directory /
-                     'season_prediction_model_temp_max_binary.onnx')
-    ts_label_file = (data_directory / 'weather_data_labels.txt')
+    ts_file = (data_directory / 'FRB211024_dianna_demo.npy')
+    ts_model_file = (data_directory / 'arts_frb_freq_time.onnx')
+    ts_label_file = (data_directory / 'arts_frb_labels.txt')
 
 if not (ts_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
