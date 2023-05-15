@@ -7,8 +7,8 @@ inputs:
     default: "3.9"
   extras-require:
     required: false
-    description: "The extras dependencies packages to be installed, for instance 'dev' or 'dev,publishing,notebooks'."
-    default: "dev"
+    description: "The extras dependencies packages to be installed, for instance 'docs' or 'publishing,notebooks'."
+    default: ""
 runs:
   using: "composite"
   steps:
@@ -21,7 +21,7 @@ runs:
       id: cache-python-env
       with:
         path: ${{ env.pythonLocation }}
-        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.cfg') }}
+        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.cfg') }}-${{ inputs.extras-require }}
 
     - name: Python info
       shell: bash {0}
@@ -43,8 +43,14 @@ runs:
         python3 -m pip install torch --index-url https://download.pytorch.org/whl/cpu
         python3 -m pip install tensorflow-cpu
 
-    - name: Upgrade pip
+    - name: Install DIANNA
       if: steps.cache-python-env.outputs.cache-hit != 'true'
+      shell: bash {0}
+      run: |
+        python3 -m pip install -e .[dev]
+
+    - name: Install DIANNA extras
+      if: ${{ inputs.extras-require }} != ""
       shell: bash {0}
       run: |
         python3 -m pip install -e .[${{ inputs.extras-require }}]
