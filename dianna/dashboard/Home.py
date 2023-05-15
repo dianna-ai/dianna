@@ -30,7 +30,7 @@ learning projects.
 
 - <a href="/Images" target="_parent">Images</a>
 - <a href="/Text" target="_parent">Text</a>
-- <a href="/Time series" target="_parent">Time series</a>
+- <a href="/Time_series" target="_parent">Time series</a>
 
 
 ### More information
