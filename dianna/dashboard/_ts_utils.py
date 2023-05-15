@@ -8,16 +8,9 @@ def open_timeseries(file):
 
 def _convert_to_segments(explanation):
     """Convert explanation to segments."""
-    import numpy as np
-
-    def normalize(data):
-        """Squash all values into [-1,1] range."""
-        zero_to_one = (data - np.min(data)) / (np.max(data) - np.min(data))
-        return 2 * zero_to_one - 1
-
     # LCO: first 0 is to select one heatmap, unclear why second 0 is needed
     # for FRB dataset. Extra channels axis should not be present in explanation...
-    heatmap = normalize(explanation[0, ..., 0])
+    heatmap = explanation[0, ..., 0]
     segments = []
     for channel_number, heatmap_channel in enumerate(heatmap):
         for i, val in enumerate(heatmap_channel):
