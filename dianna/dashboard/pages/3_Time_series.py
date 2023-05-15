@@ -51,7 +51,8 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(ts_label_file)
 
-choices = ('LIME', 'RISE')
+# choices = ('LIME', 'RISE')
+choices = ('RISE', )
 methods = _methods_checkboxes(choices=choices)
 
 method_params = _get_method_params(methods)
