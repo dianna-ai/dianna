@@ -72,11 +72,11 @@ def _get_params(method: str):
     if method == 'RISE':
         return {
             'n_masks':
-            st.number_input('Number of masks', value=1000),
+            st.number_input('Number of masks', value=2048),
             'feature_res':
-            st.number_input('Feature resolution', value=6),
+            st.number_input('Feature resolution', value=8),
             'p_keep':
-            st.number_input('Probability to be kept unmasked', value=0.1),
+            st.number_input('Probability to be kept unmasked', value=0.05),
         }
 
     elif method == 'KernelSHAP':
