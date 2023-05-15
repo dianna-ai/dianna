@@ -57,7 +57,7 @@ methods = _methods_checkboxes(choices=choices)
 method_params = _get_method_params(methods)
 
 with st.spinner('Predicting class'):
-    predictions = predict(model=serialized_model, ts_data=ts_data)
+    predictions = predict(model=serialized_model, ts_data=ts_data[None, ...])
 
 top_indices, top_labels = _get_top_indices_and_labels(
     predictions=predictions[0], labels=labels)
@@ -84,6 +84,6 @@ for index, label in zip(top_indices, top_labels):
 
         segments = _convert_to_segments(explanation)
 
-        fig = plot_timeseries(range(len(ts_data[0, 0])), ts_data[0], segments)
+        fig = plot_timeseries(range(len(ts_data[0])), ts_data, segments)
 
         col.pyplot(fig)

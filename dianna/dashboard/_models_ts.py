@@ -24,7 +24,7 @@ def _run_rise_timeseries(_model, ts_data, **kwargs):
 
     explanation = dianna.explain_timeseries(
         run_model,
-        timeseries_data=ts_data[0],
+        timeseries_data=ts_data,
         method='RISE',
         **kwargs,
     )
@@ -41,8 +41,8 @@ def _run_lime_timeseries(_model, ts_data, **kwargs):
         run_model,
         ts_data[0],
         method='LIME',
-        num_features=len(ts_data[0]),
-        num_slices=len(ts_data[0]),
+        num_features=len(ts_data),
+        num_slices=len(ts_data),
         distance_method='cosine',
         **kwargs,
     )
