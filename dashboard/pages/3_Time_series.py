@@ -80,7 +80,7 @@ for index, label in zip(top_indices, top_labels):
 
         func = explain_ts_dispatcher[method]
 
-        with col.spinner(f'Running {method}'):
+        with st.spinner(f'Running {method}'):
             explanation = func(serialized_model, ts_data=ts_data, **kwargs)
 
         segments = _convert_to_segments(explanation)
