@@ -50,7 +50,7 @@ runs:
         python3 -m pip install -e .[dev]
 
     - name: Install DIANNA extras
-      if: ${{ inputs.extras-require }} != ""
+      if: ${{ inputs.extras-require != "" }}
       shell: bash {0}
       run: |
         python3 -m pip install -e .[${{ inputs.extras-require }}]
