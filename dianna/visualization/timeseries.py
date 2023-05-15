@@ -18,7 +18,6 @@ def plot_timeseries(
     cmap: Optional[str] = None,
     show_plot: bool = False,
     output_filename: Optional[str] = None,
-    ax: Optional[plt.Axes] = None,
 ) -> plt.Axes:
     """Plot timeseries with segments highlighted.
 
@@ -37,9 +36,8 @@ def plot_timeseries(
             plots to disk instead).
         output_filename (str, optional): Name of the file to save
             the plot to (optional).
-        ax (plt.Axes, optional): Matplotlib axes object
     """
-    ax, axs, y_labels, ys = _process_plotting_parameters(ax, y, y_label)
+    axs, y_labels, ys = _process_plotting_parameters(y, y_label)
 
     for y_current, y_label_current, ax_current in zip(ys, y_labels, axs):
         current_ax = ax_current
@@ -48,17 +46,15 @@ def plot_timeseries(
         current_ax.set_ylabel(y_label_current)
         current_ax.label_outer()
 
-    _draw_segments(ax, axs, cmap, segments, ys)
+    _draw_segments(axs, cmap, segments)
 
     if show_plot:
         plt.show()
     if output_filename:
         plt.savefig(output_filename)
 
-    return ax
 
-
-def _draw_segments(ax, axs, cmap, segments, ys):
+def _draw_segments(axs, cmap, segments):
     cmap = plt.get_cmap(cmap)
     norm = plt.Normalize(-1, 1)
     for segment in segments:
@@ -72,11 +68,11 @@ def _draw_segments(ax, axs, cmap, segments, ys):
 
         axs[channel].axvspan(start, stop, color=color, alpha=0.5)
     plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap),
-                 ax=ax,
+                 ax=axs,
                  label='weights')
 
 
-def _process_plotting_parameters(ax, y, y_labels):
+def _process_plotting_parameters(y, y_labels):
     if y.ndim == 1:
         print(y.shape)
         ys = np.expand_dims(y, 0)
@@ -94,10 +90,9 @@ def _process_plotting_parameters(ax, y, y_labels):
         y_labels = [y_labels]
 
     n_channels = ys.shape[0]
-    if not ax:
-        _, ax = plt.subplots(nrows=n_channels, sharex=True)
-        if n_channels == 1:
-            axs = (ax, )
-        else:
-            axs = ax
-    return ax, axs, y_labels, ys
+    _, ax = plt.subplots(nrows=n_channels, sharex=True)
+    if n_channels == 1:
+        axs = (ax, )
+    else:
+        axs = ax
+    return axs, y_labels, ys
