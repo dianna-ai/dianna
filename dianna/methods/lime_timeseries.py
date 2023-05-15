@@ -22,7 +22,7 @@ class LIMETimeseries:
         kernel_width=25,
         verbose=False,
         preprocess_function=None,
-        feature_selection="auto",
+        feature_selection='auto',
     ):
         """Initializes Lime explainer for timeseries.
 
@@ -48,14 +48,14 @@ class LIMETimeseries:
         self,
         model_or_function,
         input_timeseries,
-        labels=(1,),
+        labels=(1, ),
         class_names=None,
         num_features=1,
         num_samples=1,
         num_slices=1,
         batch_size=1,
-        mask_type="mean",
-        distance_method="cosine",
+        mask_type='mean',
+        distance_method='cosine',
     ):  # pylint: disable=too-many-arguments,too-many-locals
         """Run the LIME explainer for timeseries.
 
@@ -80,32 +80,25 @@ class LIMETimeseries:
         #       of steps masked is 1. We should updating it after adapting maskers function to LIME.
         # wrap up the input model or function using the runner
         runner = utils.get_function(
-            model_or_function, preprocess_function=self.preprocess_function
-        )
+            model_or_function, preprocess_function=self.preprocess_function)
         masks = generate_masks(input_timeseries, num_samples, p_keep=0.9)
-        masked = mask_data(input_timeseries, masks, mask_type="mean")
+        # NOTE: Required by `lime_base` explainer since the first instance must be the original data
+        # For more details, check this link
+        # https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148
+        masks[0, :, :] = 1.0
+        masked = mask_data(input_timeseries, masks, mask_type='mean')
         # generate predictions using the masked data.
         predictions = self._make_predictions(masked, runner, batch_size)
         # need to reshape for the calculation of distance
         _, sequence, n_var = masked.shape
         masked = masked.reshape((-1, sequence * n_var))
-        distance = self._calculate_distance(
-            input_timeseries, masked, distance_method=distance_method
-        )
-        exp = explanation.Explanation(
-            domain_mapper=self.domain_mapper, class_names=class_names
-        )
-        # TODO: The current form of explanation follows lime-for-time. Would be good to merge formatting with DIANNA.
-        # run the explanation.
-        # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L130
-
-        # NOTE: the first instance in masked should be the original data, so it is with the predictions and
-        # distance (therefore 1). Check the following link for the explanation
-        # https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148
-        # expected shape of input
-        # masked: [num_samples, channels * num_slices]
-        # predictions: [num_samples, labels]
-        # distances: [num_samples]
+        distance = self._calculate_distance(input_timeseries,
+                                            masked,
+                                            distance_method=distance_method)
+        exp = explanation.Explanation(domain_mapper=self.domain_mapper,
+                                      class_names=class_names)
+        # Expected shape of input: masked[num_samples, channels * num_slices],
+        # predictions[num_samples, labels], distances[num_samples]
         for label in labels:
             (
                 exp.intercept[int(label)],
@@ -122,7 +115,10 @@ class LIMETimeseries:
             )
         return exp
 
-    def _calculate_distance(self, input_data, masked_data, distance_method="cosine"):
+    def _calculate_distance(self,
+                            input_data,
+                            masked_data,
+                            distance_method='cosine'):
         """Calcuate distance between perturbed data and the original samples.
 
         Args:
@@ -148,24 +144,21 @@ class LIMETimeseries:
             that may vary in speed or timing.
 
         """
-        support_methods = ["cosine", "euclidean"]
-        if distance_method == "dtw":
+        support_methods = ['cosine', 'euclidean']
+        if distance_method == 'dtw':
             distance = self._dtw_distance(input_data, masked_data)
         elif distance_method in support_methods:
             # TODO: implementation for reference
             # https://github.com/emanuel-metzenthin/Lime-For-Time/blob/3af530f778ab2593246cefc1e5fdb28fa872dbdf/lime_timeseries.py#L175
             # should understand why (* 100?) and if it is equivalent to dtw.
-            distance = (
-                sklearn.metrics.pairwise.pairwise_distances(
-                    masked_data, masked_data[0].reshape([1, -1]), metric=distance_method
-                ).ravel()
-                * 100
-            )
+            distance = (sklearn.metrics.pairwise.pairwise_distances(
+                masked_data,
+                masked_data[0].reshape([1, -1]),
+                metric=distance_method).ravel() * 100)
         else:
             raise ValueError(
-                f"Given method {distance_method} is not supported. Please "
-                "choose from 'dtw', 'cosine' and 'euclidean'."
-            )
+                f'Given method {distance_method} is not supported. Please '
+                "choose from 'dtw', 'cosine' and 'euclidean'.")
 
         return distance
 
@@ -181,9 +174,10 @@ class LIMETimeseries:
         """
         # implementation for reference
         # https://github.com/TortySivill/LIMESegment/blob/0a276e30f8d259642521407e7d51d07969169432/Utils/explanations.py#L111
-        distance = np.asarray(
-            [fastdtw(input_data, one_masked_data)[0] for one_masked_data in masked_data]
-        )
+        distance = np.asarray([
+            fastdtw(input_data, one_masked_data)[0]
+            for one_masked_data in masked_data
+        ])
         return distance
 
     # TODO: duplication code from rise_timeseries. Need to put it in util.py
@@ -202,6 +196,7 @@ class LIMETimeseries:
         """
         number_of_masks = masked_data.shape[0]
         predictions = []
-        for i in tqdm(range(0, number_of_masks, batch_size), desc="Explaining"):
-            predictions.append(runner(masked_data[i : i + batch_size]))
+        for i in tqdm(range(0, number_of_masks, batch_size),
+                      desc='Explaining'):
+            predictions.append(runner(masked_data[i:i + batch_size]))
         return np.concatenate(predictions)

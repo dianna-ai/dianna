@@ -86,6 +86,32 @@ The second is to use ``tox``, which must be installed separately (e.g. with ``pi
 Testing with ``tox`` allows for keeping the testing environment separate from your development environment.
 The development environment will typically accumulate (old) packages during development that interfere with testing; this problem is avoided by testing with ``tox``.
 
+Testing the dashboard
+~~~~~~~~~~~~~~~~~~~~~
+
+The dashboard workflow can be tested using `playwright <https://playwright.dev/python/>`__.
+
+Setup:
+
+.. code:: shell
+
+    pip install pytest-playwright
+    playwright install chromium
+
+To run the dashboard tests:
+
+.. code:: shell
+
+    pytest -v --dashboard
+
+To help with developing the dashboard tests,
+you can use the `playwright code generator <https://playwright.dev/python/docs/codegen)>`__:
+
+.. code:: shell
+
+    playwright codegen http://localhost:8501
+
+
 Running linters locally
 -----------------------
 

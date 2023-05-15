@@ -13,7 +13,7 @@ command_line = "-m pytest"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py37,py38,py39
+envlist = py38,py39,310
 skip_missing_interpreters = true
 
 [testenv]
@@ -93,5 +93,4 @@ line-length = 120
 [tool.ruff.isort]
 known-first-party = ["dianna"]
 force-single-line = true
-lines-after-imports = 2
 no-lines-before = ["future","standard-library","third-party","first-party","local-folder"]

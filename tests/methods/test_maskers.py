@@ -10,7 +10,8 @@ def test_mask_has_correct_shape_univariate():
     input_data = _get_univariate_input_data()
     number_of_masks = 5
 
-    result = _call_masking_function(input_data, number_of_masks=number_of_masks)
+    result = _call_masking_function(input_data,
+                                    number_of_masks=number_of_masks)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
@@ -20,27 +21,32 @@ def test_mask_has_correct_shape_multivariate():
     input_data = _get_multivariate_input_data()
     number_of_masks = 5
 
-    result = _call_masking_function(input_data, number_of_masks=number_of_masks)
+    result = _call_masking_function(input_data,
+                                    number_of_masks=number_of_masks)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
 
-@pytest.mark.parametrize("p_keep_and_expected_rate", [
-    (0.1, 0.1),  # Mask all but one
-    (0.1, 0.1),
-    (0.3, 0.3),
-    (0.5, 0.5),
-    (0.667, 0.7),
-    (0.99, 0.9),  # Mask only 1
-])
-def test_mask_contains_correct_number_of_unmasked_parts(p_keep_and_expected_rate):
+@pytest.mark.parametrize(
+    'p_keep_and_expected_rate',
+    [
+        (0.1, 0.1),  # Mask all but one
+        (0.1, 0.1),
+        (0.3, 0.3),
+        (0.5, 0.5),
+        (0.667, 0.7),
+        (0.99, 0.9),  # Mask only 1
+    ])
+def test_mask_contains_correct_number_of_unmasked_parts(
+        p_keep_and_expected_rate):
     """Number of unmasked parts should be conforming the given p_keep."""
     p_keep, expected_rate = p_keep_and_expected_rate
     input_data = _get_univariate_input_data()
 
     result = _call_masking_function(input_data, p_keep=p_keep)
 
-    assert np.sum(result == input_data) / np.product(result.shape) == expected_rate
+    assert np.sum(result == input_data) / np.product(
+        result.shape) == expected_rate
 
 
 def test_mask_contains_correct_parts_are_mean_masked():
@@ -51,7 +57,9 @@ def test_mask_contains_correct_parts_are_mean_masked():
     result = _call_masking_function(input_data, mask_type='mean')
 
     masked_parts = result[(result != input_data)]
-    assert np.alltrue(masked_parts == mean), f'All elements in {masked_parts} should have value {mean}'
+    assert np.alltrue(
+        masked_parts ==
+        mean), f'All elements in {masked_parts} should have value {mean}'
 
 
 def _get_univariate_input_data() -> np.array:
@@ -61,10 +69,16 @@ def _get_univariate_input_data() -> np.array:
 
 def _get_multivariate_input_data(number_of_channels: int = 6) -> np.array:
     """Get some multivariate test data."""
-    return np.row_stack([np.zeros((10, number_of_channels)), np.ones((10, number_of_channels))])
+    return np.row_stack([
+        np.zeros((10, number_of_channels)),
+        np.ones((10, number_of_channels))
+    ])
 
 
-def _call_masking_function(input_data, number_of_masks=5, p_keep=.3, mask_type='mean'):
+def _call_masking_function(input_data,
+                           number_of_masks=5,
+                           p_keep=.3,
+                           mask_type='mean'):
     """Helper function with some defaults to call the code under test."""
     masks = generate_masks(input_data, number_of_masks, p_keep=p_keep)
     return mask_data(input_data, masks, mask_type=mask_type)
@@ -94,7 +108,8 @@ def test_channel_mask_has_does_not_contain_conflicting_values():
             value = channel[0]
             if (not value) in channel:
                 unexpected_results.append(
-                    f'Mask {mask_i} contains conflicting values in channel {channel_i}. Channel: {channel}')
+                    f'Mask {mask_i} contains conflicting values in channel {channel_i}. Channel: {channel}'
+                )
     assert not unexpected_results
 
 
@@ -128,3 +143,20 @@ def test_masking_univariate_leaves_anything_unmasked():
 
     assert np.any(result)
     assert np.any(~result)
+
+
+def test_masking_keep_first_instance():
+    """First instance must be the original data for Lime timeseries.
+
+    Required by `lime_base` explainer, the first instance of masked (or perturbed)
+    data must be the original instance.
+
+    More details can be found in the code:
+    https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148
+    """
+    input_data = _get_multivariate_input_data()
+    number_of_masks = 5
+    masks = generate_masks(input_data, number_of_masks, p_keep=0.9)
+    masks[0, :, :] = 1.0
+    masked = mask_data(input_data, masks, mask_type='mean')
+    assert np.array_equal(masked[0, :, :], input_data)

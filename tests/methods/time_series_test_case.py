@@ -1,10 +1,9 @@
-import numpy as np
-
-
 """Test case for timeseries xai methods.
+
 This test case is designed to show if the xai methods could provide reasonable results.
 In this test case, every test instance is a 28 days by 1 channel array indicating the max temp on a day.
 """
+import numpy as np
 
 
 def input_train_mean(_data):
@@ -12,7 +11,8 @@ def input_train_mean(_data):
     return 14
 
 
-def average_temperature_timeseries_with_1_cold_and_1_hot_day(cold_day_index, hot_day_index):
+def average_temperature_timeseries_with_1_cold_and_1_hot_day(
+        cold_day_index, hot_day_index):
     """Creates a temperature time series of all 14s and a single cold (-2) and hot (30) day."""
     temperature_timeseries = np.expand_dims(np.zeros(28), axis=1) + 14
     temperature_timeseries[hot_day_index] = 30

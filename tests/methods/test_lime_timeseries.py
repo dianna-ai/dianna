@@ -17,25 +17,25 @@ class LIMEOnTimeseries(TestCase):
         exp = explainer.explain(
             run_model,
             input_data,
-            labels=(1,),
-            class_names=("test",),
+            labels=(1, ),
+            class_names=('test', ),
             num_features=num_features,
             num_samples=10,
             num_slices=10,
-            mask_type="mean",
+            mask_type='mean',
         )
         assert len(exp.local_exp[1]) == num_features
 
     def test_cosine_distance(self):
         """Test cosine distance."""
-        dummy_timeseries = np.random.random((50))
+        dummy_timeseries = np.random.random((50, 1))
         number_of_masks = 50
         masks = generate_masks(dummy_timeseries, number_of_masks, p_keep=0.9)
-        masked = mask_data(dummy_timeseries, masks, mask_type="mean")
+        masked = mask_data(dummy_timeseries, masks, mask_type='mean')
         explainer = LIMETimeseries()
-        distance = explainer._calculate_distance(
-            dummy_timeseries, masked, distance_method="cosine"
-        )
+        distance = explainer._calculate_distance(dummy_timeseries,
+                                                 masked.reshape((-1, 50)),
+                                                 distance_method='cosine')
         assert len(distance) == number_of_masks
 
     def test_dtw_distance(self):
@@ -52,4 +52,5 @@ class LIMEOnTimeseries(TestCase):
         actual_distance = explainer._dtw_distance(input_data, masked_data)
 
         # Check that the actual and expected results are equal
-        np.testing.assert_array_almost_equal(actual_distance, expected_distance)
+        np.testing.assert_array_almost_equal(actual_distance,
+                                             expected_distance)
