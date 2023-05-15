@@ -18,7 +18,7 @@ def plot_timeseries(
     cmap: Optional[str] = None,
     show_plot: bool = False,
     output_filename: Optional[str] = None,
-) -> plt.Axes:
+) -> plt.Figure:
     """Plot timeseries with segments highlighted.
 
     Args:
