@@ -64,7 +64,7 @@ def plot_timeseries(
 
 def _draw_segments(axs, cmap, segments):
     cmap = plt.get_cmap(cmap)
-    norm = plt.Normalize(-1, 1)
+    norm = plt.Normalize(0, 1)
     for segment in segments:
         start = segment['start']
         stop = segment['stop']
