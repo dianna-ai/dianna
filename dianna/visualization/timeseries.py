@@ -36,8 +36,11 @@ def plot_timeseries(
             plots to disk instead).
         output_filename (str, optional): Name of the file to save
             the plot to (optional).
+
+    Returns:
+        plt.Figure
     """
-    axs, y_labels, ys = _process_plotting_parameters(y, y_label)
+    fig, axs, y_labels, ys = _process_plotting_parameters(y, y_label)
 
     for y_current, y_label_current, ax_current in zip(ys, y_labels, axs):
         current_ax = ax_current
@@ -52,6 +55,8 @@ def plot_timeseries(
         plt.show()
     if output_filename:
         plt.savefig(output_filename)
+
+    return fig
 
 
 def _draw_segments(axs, cmap, segments):
@@ -90,9 +95,9 @@ def _process_plotting_parameters(y, y_labels):
         y_labels = [y_labels]
 
     n_channels = ys.shape[0]
-    _, ax = plt.subplots(nrows=n_channels, sharex=True)
+    fig, ax = plt.subplots(nrows=n_channels, sharex=True)
     if n_channels == 1:
         axs = (ax, )
     else:
         axs = ax
-    return axs, y_labels, ys
+    return fig, axs, y_labels, ys
