@@ -6,12 +6,10 @@ from typing import Sequence
 import numpy as np
 import streamlit as st
 
-
 if sys.version_info < (3, 10):
     from importlib_resources import files
 else:
     from importlib.resources import files
-
 
 data_directory = files('dianna.data')
 

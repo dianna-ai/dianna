@@ -11,7 +11,6 @@ from _shared import add_sidebar_logo
 from _shared import data_directory
 from _text_utils import format_word_importances
 
-
 add_sidebar_logo()
 
 st.title('Text explanation')
