@@ -21,7 +21,7 @@ runs:
       id: cache-python-env
       with:
         path: ${{ env.pythonLocation }}
-        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.cfg') }}-${{ inputs.extras-require }}
+        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.cfg') }}
 
     - name: Python info
       shell: bash {0}
