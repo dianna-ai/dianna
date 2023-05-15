@@ -9,6 +9,7 @@ from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import data_directory
 from _ts_utils import _convert_to_segments
+from _ts_utils import _downsample_channels
 from _ts_utils import open_timeseries
 from dianna.visualization import plot_timeseries
 
@@ -79,10 +80,25 @@ for index, label in zip(top_indices, top_labels):
         func = explain_ts_dispatcher[method]
 
         with st.spinner(f'Running {method}'):
-            explanation = func(serialized_model, ts_data=ts_data, **kwargs)
+            explanation = func(serialized_model, ts_data=ts_data, **kwargs)[0]
 
-        segments = _convert_to_segments(explanation)
+        # hard-coded for FRB dataset
+        downsampling_factor = 4
+        explanation_ds = _downsample_channels(explanation, downsampling_factor)
+        ts_data_ds = _downsample_channels(ts_data, downsampling_factor)
+        x_label = 'Time step'
+        freq_low = 1220  # MHz
+        bandwidth = 300  # MHz
+        nchan = ts_data_ds.shape[0]
+        df = bandwidth / nchan
+        y_label = [f'{1220 + .5*df + df * chan:.0f}' for chan in range(nchan)]
 
-        fig = plot_timeseries(range(len(ts_data[0])), ts_data, segments)
+        segments = _convert_to_segments(explanation_ds)
+
+        fig = plot_timeseries(range(explanation_ds.shape[1]),
+                              ts_data_ds,
+                              segments,
+                              x_label=x_label,
+                              y_label=y_label)
 
         col.pyplot(fig)

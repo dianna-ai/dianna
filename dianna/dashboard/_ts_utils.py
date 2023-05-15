@@ -8,12 +8,9 @@ def open_timeseries(file):
 
 def _convert_to_segments(explanation):
     """Convert explanation to segments."""
-    # LCO: first 0 is to select one heatmap, unclear why second 0 is needed
-    # for FRB dataset. Extra channels axis should not be present in explanation...
-    heatmap = explanation[0, ..., 0]
     segments = []
-    for channel_number, heatmap_channel in enumerate(heatmap):
-        for i, val in enumerate(heatmap_channel):
+    for channel_number, explanation_channel in enumerate(explanation):
+        for i, val in enumerate(explanation_channel):
             segments.append({
                 'index': i,
                 'start': i - 0.5,
@@ -23,3 +20,10 @@ def _convert_to_segments(explanation):
             })
 
     return segments
+
+
+def _downsample_channels(data, factor):
+    assert data.shape[
+        0] % factor == 0, 'Downsampling factor must be a factor of the number of channels'
+    return data.reshape(data.shape[0] // factor, factor,
+                        *data.shape[1:]).mean(axis=1)

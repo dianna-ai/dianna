@@ -10,8 +10,8 @@ def predict(*, model, ts_data):
     sess = ort.InferenceSession(model)
     input_name = sess.get_inputs()[0].name
     output_name = sess.get_outputs()[0].name
-
-    onnx_input = {input_name: ts_data.astype(np.float32)}
+    # Add extra axis to data for FRB model
+    onnx_input = {input_name: ts_data[..., None].astype(np.float32)}
     pred_onnx = sess.run([output_name], onnx_input)[0]
 
     return pred_onnx
@@ -40,7 +40,7 @@ def _run_lime_timeseries(_model, ts_data, **kwargs):
 
     exp = dianna.explain_timeseries(
         run_model,
-        ts_data[0],
+        ts_data,
         method='LIME',
         num_features=len(ts_data),
         num_slices=len(ts_data),
