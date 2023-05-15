@@ -2,7 +2,6 @@ import streamlit as st
 from _shared import add_sidebar_logo
 from _shared import data_directory
 
-
 st.set_page_config(page_title="Dianna's dashboard",
                    page_icon='📊',
                    layout='centered',
