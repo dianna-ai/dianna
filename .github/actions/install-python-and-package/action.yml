@@ -18,6 +18,7 @@ runs:
         python-version: ${{ inputs.python-version }}
 
     - uses: actions/cache@v3
+      id: cache-python-env
       with:
         path: ${{ env.pythonLocation }}
         key: ${{ env.pythonLocation }}-${{ hashFiles('setup.cfg') }}
@@ -29,19 +30,21 @@ runs:
         python3 --version
 
     - name: Upgrade pip
+      if: steps.cache-python-env.outputs.cache-hit != true
       shell: bash {0}
       run: |
         python3 -m pip install --upgrade pip setuptools wheel
 
     # only necessary on linux to avoid bloated installs
     - name: Install tensorflow/pytorch cpu version
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' && steps.cache-python-env.outputs.cache-hit != true
       shell: bash {0}
       run: |
         python3 -m pip install torch --index-url https://download.pytorch.org/whl/cpu
         python3 -m pip install tensorflow-cpu
 
     - name: Upgrade pip
+      if: steps.cache-python-env.outputs.cache-hit != true
       shell: bash {0}
       run: |
         python3 -m pip install -e .[${{ inputs.extras-require }}]
