@@ -13,7 +13,7 @@ def plot_timeseries(
     x: np.ndarray,
     y: np.ndarray,
     segments: List[Dict[str, Any]],
-    x_label: str = 'x',
+    x_label: str = 't',
     y_label: Union[str, Iterable[str]] = None,
     cmap: Optional[str] = None,
     show_plot: bool = False,
@@ -46,6 +46,7 @@ def plot_timeseries(
         current_ax.plot(x, y_current, label=y_label_current)
         current_ax.set_xlabel(x_label)
         current_ax.set_ylabel(y_label_current)
+        current_ax.label_outer()
 
     _draw_segments(ax, axs, cmap, segments, ys)
 
@@ -64,19 +65,18 @@ def _draw_segments(ax, axs, cmap, segments, ys):
         start = segment['start']
         stop = segment['stop']
         weight = segment['weight']
-        index = segment['index']
+        segment['index']
         channel = segment['channel']
 
         color = cmap(norm(weight))
 
         axs[channel].axvspan(start, stop, color=color, alpha=0.5)
-        axs[channel].text(start, max(ys[channel]), str(index))
     plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap),
                  ax=ax,
                  label='weights')
 
 
-def _process_plotting_parameters(ax, y, y_label):
+def _process_plotting_parameters(ax, y, y_labels):
     if y.ndim == 1:
         print(y.shape)
         ys = np.expand_dims(y, 0)
@@ -88,10 +88,10 @@ def _process_plotting_parameters(ax, y, y_label):
             f'Invalid rank {y.ndim}. Data y can only have either 1 or 2 dimensions.'
         )
 
-    if not y_label:
+    if not y_labels:
         y_labels = [f'channel {c}' for c in range(ys.shape[0])]
-    if isinstance(y_label, str):
-        y_labels = [y_label]
+    if isinstance(y_labels, str):
+        y_labels = [y_labels]
 
     n_channels = ys.shape[0]
     if not ax:
