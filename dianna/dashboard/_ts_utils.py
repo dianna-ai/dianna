@@ -15,14 +15,18 @@ def _convert_to_segments(explanation):
         zero_to_one = (data - np.min(data)) / (np.max(data) - np.min(data))
         return 2 * zero_to_one - 1
 
-    heatmap_channel = normalize(explanation[0])
+    # LCO: first 0 is to select one heatmap, unclear why second 0 is needed
+    # for FRB dataset. Extra channels axis should not be present in explanation...
+    heatmap = normalize(explanation[0, ..., 0])
     segments = []
-    for i, val in enumerate(heatmap_channel):
-        segments.append({
-            'index': i,
-            'start': i - 0.5,
-            'stop': i + 0.5,
-            'weight': val
-        })
+    for channel_number, heatmap_channel in enumerate(heatmap):
+        for i, val in enumerate(heatmap_channel):
+            segments.append({
+                'index': i,
+                'start': i - 0.5,
+                'stop': i + 0.5,
+                'weight': val,
+                'channel': channel_number
+            })
 
     return segments

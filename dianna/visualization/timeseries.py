@@ -40,6 +40,9 @@ def plot_timeseries(
     Returns:
         plt.Figure
     """
+    # Temporary for FRB dataset: remove extra "colour channels" axis
+    if (y.ndim == 3) and (y.shape[-1] == 1):
+        y = y[..., 0]
     fig, axs, y_labels, ys = _process_plotting_parameters(y, y_label)
 
     for y_current, y_label_current, ax_current in zip(ys, y_labels, axs):
