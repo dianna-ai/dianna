@@ -44,7 +44,7 @@ def plot_timeseries(
 
     for y_current, y_label_current, ax_current in zip(ys, y_labels, axs):
         current_ax = ax_current
-        current_ax.plot(x, y_current, label=y_label_current)
+        current_ax.plot(x, y_current, label=y_label_current, c='k')
         current_ax.set_xlabel(x_label)
         current_ax.set_ylabel(y_label_current)
         current_ax.label_outer()
