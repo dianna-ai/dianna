@@ -100,6 +100,7 @@ for index, label in zip(top_indices, top_labels):
                               ts_data_ds,
                               segments,
                               x_label=x_label,
-                              y_label=y_label)
+                              y_label=y_label,
+                              cmap='seismic')
 
         col.pyplot(fig)
