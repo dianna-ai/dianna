@@ -78,7 +78,7 @@ for index, label in zip(top_indices, top_labels):
 
         func = explain_text_dispatcher[method]
 
-        with col.spinner(f'Running {method}'):
+        with st.spinner(f'Running {method}'):
             relevances = func(model_runner, text_input, **kwargs)
 
         html = format_word_importances(text_input, relevances[0])
