@@ -115,7 +115,15 @@ class LIMETimeseries:
                 num_features=num_features,
                 model_regressor=None,
             )
-        return exp
+        # extract scores from lime explainer
+        saliency = []
+        for i, _ in enumerate(labels):
+            local_exp = sorted(exp.local_exp[i])
+            # shape of local_exp [(index, saliency)]
+            selected_saliency = [i[1] for i in local_exp]
+            saliency.append(selected_saliency[:])
+
+        return np.concatenate(saliency).reshape(-1, sequence, n_var)
 
     def _calculate_distance(self, masked_data, distance_method="cosine"):
         """Calcuate distance between perturbed data and the original samples.
