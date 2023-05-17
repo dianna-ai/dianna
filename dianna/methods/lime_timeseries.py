@@ -48,7 +48,7 @@ class LIMETimeseries:
         self,
         model_or_function,
         input_timeseries,
-        labels=(1,),
+        labels=(0,),
         class_names=None,
         num_features=1,
         num_samples=1,
