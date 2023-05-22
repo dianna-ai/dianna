@@ -1,3 +1,4 @@
+import numpy as np
 import streamlit as st
 from _image_utils import open_image
 from _model_utils import load_labels
@@ -63,7 +64,9 @@ top_indices, top_labels = _get_top_indices_and_labels(predictions=predictions,
                                                       labels=labels)
 
 # check which axis is color channel
-original_data = image[:, :, 0] if image.shape[2] <= 3 else image[1, :, :]
+original_data = image.copy()
+if image.shape[0] == 3:
+    original_data = np.transpose(original_data, (1, 2, 0))
 axis_labels = {2: 'channels'} if image.shape[2] <= 3 else {0: 'channels'}
 
 weight = 0.9 / len(methods)
