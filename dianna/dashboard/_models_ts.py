@@ -37,7 +37,7 @@ def _run_lime_timeseries(_model, ts_data, **kwargs):
     def run_model(ts_data):
         return predict(model=_model, ts_data=ts_data)
 
-    exp = dianna.explain_timeseries(
+    explanation = dianna.explain_timeseries(
         run_model,
         ts_data[0],
         method='LIME',
@@ -47,10 +47,7 @@ def _run_lime_timeseries(_model, ts_data, **kwargs):
         **kwargs,
     )
 
-    label = kwargs['labels'][0]
-    explanation = [i[1] for i in exp.local_exp[label]]
-
-    return np.array(explanation).reshape(ts_data.shape)
+    return explanation
 
 
 explain_ts_dispatcher = {
