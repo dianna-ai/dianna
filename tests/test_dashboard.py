@@ -21,7 +21,7 @@ import pytest
 from playwright.sync_api import Page
 from playwright.sync_api import expect
 
-LOCAL = True
+LOCAL = False
 
 PORT = '8501' if LOCAL else '8502'
 BASE_URL = f'localhost:{PORT}'
