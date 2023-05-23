@@ -55,7 +55,7 @@ labels = load_labels(ts_label_file)
 choices = ('RISE', )
 methods = _methods_checkboxes(choices=choices)
 
-method_params = _get_method_params(methods)
+method_params = _get_method_params(methods, 'text')
 
 with st.spinner('Predicting class'):
     predictions = predict(model=serialized_model, ts_data=ts_data[None, ...])

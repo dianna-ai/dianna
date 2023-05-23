@@ -50,7 +50,7 @@ labels = load_labels(text_label_file)
 choices = ('RISE', 'LIME')
 methods = _methods_checkboxes(choices=choices)
 
-method_params = _get_method_params(methods)
+method_params = _get_method_params(methods, 'text')
 
 model_runner = MovieReviewsModelRunner(serialized_model)
 

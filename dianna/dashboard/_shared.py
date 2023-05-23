@@ -68,16 +68,36 @@ def _methods_checkboxes(*, choices: Sequence):
     return methods
 
 
-def _get_params(method: str):
+def _get_params(method: str, page: str = 'images'):
+    assert page in ['images', 'text', 'timeseries']
     if method == 'RISE':
-        return {
-            'n_masks':
-            st.number_input('Number of masks', value=2048),
-            'feature_res':
-            st.number_input('Feature resolution', value=8),
-            'p_keep':
-            st.number_input('Probability to be kept unmasked', value=0.05),
-        }
+        if page == 'timeseries':
+            return {
+                'n_masks':
+                st.number_input('Number of masks', value=2048),
+                'feature_res':
+                st.number_input('Feature resolution', value=8),
+                'p_keep':
+                st.number_input('Probability to be kept unmasked', value=0.05),
+            }
+        elif page == 'images':
+            return {
+                'n_masks':
+                st.number_input('Number of masks', value=32),
+                'feature_res':
+                st.number_input('Feature resolution', value=6),
+                'p_keep':
+                st.number_input('Probability to be kept unmasked', value=0.1),
+            }
+        else:
+            return {
+                'n_masks':
+                st.number_input('Number of masks', value=512),
+                'feature_res':
+                st.number_input('Feature resolution', value=6),
+                'p_keep':
+                st.number_input('Probability to be kept unmasked', value=0.1),
+            }
 
     elif method == 'KernelSHAP':
         return {
@@ -96,14 +116,15 @@ def _get_params(method: str):
         raise ValueError(f'No such method: {method}')
 
 
-def _get_method_params(methods: Sequence[str]) -> Dict[str, Dict[str, Any]]:
+def _get_method_params(methods: Sequence[str],
+                       page: str) -> Dict[str, Dict[str, Any]]:
     method_params = {}
 
     with st.expander('Click to modify method parameters'):
         for method, col in zip(methods, st.columns(len(methods))):
             with col:
                 st.header(method)
-                method_params[method] = _get_params(method)
+                method_params[method] = _get_params(method, page)
 
     return method_params
 

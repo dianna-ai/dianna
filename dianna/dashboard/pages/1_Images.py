@@ -55,7 +55,7 @@ labels = load_labels(image_label_file)
 choices = ('RISE', 'KernelSHAP', 'LIME')
 methods = _methods_checkboxes(choices=choices)
 
-method_params = _get_method_params(methods)
+method_params = _get_method_params(methods, 'images')
 
 with st.spinner('Predicting class'):
     predictions = predict(model=model, image=image)
