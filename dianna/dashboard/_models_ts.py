@@ -1,8 +1,10 @@
 import numpy as np
 import onnxruntime as ort
+import streamlit as st
 import dianna
 
 
+@st.cache_data
 def predict(*, model, ts_data):
     # model must receive data in the order of [batch, timeseries, channels]
     # data = data.transpose([0,2,1])
@@ -17,6 +19,7 @@ def predict(*, model, ts_data):
     return pred_onnx
 
 
+@st.cache_data
 def _run_rise_timeseries(_model, ts_data, **kwargs):
 
     def run_model(ts_data):
@@ -32,6 +35,7 @@ def _run_rise_timeseries(_model, ts_data, **kwargs):
     return explanation
 
 
+@st.cache_data
 def _run_lime_timeseries(_model, ts_data, **kwargs):
 
     def run_model(ts_data):
