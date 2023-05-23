@@ -78,11 +78,12 @@ for index, label in zip(top_indices, top_labels):
 
         func = explain_text_dispatcher[method]
 
-        with col.spinner(f'Running {method}'):
-            relevances = func(model_runner, text_input, **kwargs)
+        with col:
+            with st.spinner(f'Running {method}'):
+                relevances = func(model_runner, text_input, **kwargs)
 
-        html = format_word_importances(text_input, relevances[0])
-        col.write(html, unsafe_allow_html=True)
+            html = format_word_importances(text_input, relevances[0])
+            st.write(html, unsafe_allow_html=True)
 
     # add some white space to separate rows
     st.markdown('')

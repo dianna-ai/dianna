@@ -84,12 +84,13 @@ for index, label in zip(top_indices, top_labels):
 
         func = explain_image_dispatcher[method]
 
-        with col.spinner(f'Running {method}'):
-            heatmap = func(serialized_model, image, index, **kwargs)
+        with col:
+            with st.spinner(f'Running {method}'):
+                heatmap = func(serialized_model, image, index, **kwargs)
 
-        fig = plot_image(heatmap,
-                         original_data=original_data,
-                         heatmap_cmap='bwr',
-                         show_plot=False)
+            fig = plot_image(heatmap,
+                             original_data=original_data,
+                             heatmap_cmap='bwr',
+                             show_plot=False)
 
-        col.pyplot(fig)
+            st.pyplot(fig)
