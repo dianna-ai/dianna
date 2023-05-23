@@ -16,14 +16,12 @@ add_sidebar_logo()
 
 st.title('Time series explanation')
 
-st.error('Time series explanation is still work in progress.')
-
 st.sidebar.header('Input data')
 
 load_example = st.sidebar.checkbox('Load example data', key='ts_example_check')
 
 ts_file = st.sidebar.file_uploader('Select input data',
-                                   type=(),
+                                   type='npy',
                                    disabled=load_example)
 
 ts_model_file = st.sidebar.file_uploader('Select model',
