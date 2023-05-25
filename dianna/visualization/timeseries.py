@@ -79,9 +79,7 @@ def _draw_segments(axs, cmap, segments):
 
 def _process_plotting_parameters(y, y_labels):
     if y.ndim == 1:
-        print(y.shape)
         ys = np.expand_dims(y, 0)
-        print(y.shape)
     elif y.ndim == 2:
         ys = y
     else:
