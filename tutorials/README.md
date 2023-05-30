@@ -30,6 +30,10 @@ The datasets used in the tutorials are represented with their respective logos:
 ||[Simple Scientific (LeafSnap30)](https://zenodo.org/record/5061353/)| <img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/151539100-dbdfe0f8-485f-45d4-a249-a1f79e970066.png"> |
 ||[Imagenet](https://image-net.org/download.php) | <img width="94" alt="ImageNet_autocrop" src="https://user-images.githubusercontent.com/3244249/152542090-fd78fde1-6dec-43b6-a7ae-eea964b8ae28.png">|
 |Text| [Stanford sentiment treebank](https://nlp.stanford.edu/sentiment/index.html) | <img width="25" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152540890-c8e1e37d-f0cc-4f84-80a4-2c59176cbf4c.png">|
+|Timeseries | [Coffee dataset](https://timeseriesclassification.com/description.php?Dataset=Coffee)  | <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162">|
+|           | [Weather dataset](https://zenodo.org/record/7525955) | <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">|
+
+
 
 The models used in the tutorials are available at [tutorials/models](https://github.com/dianna-ai/dianna/tree/main/tutorials/models).
 
