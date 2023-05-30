@@ -30,7 +30,7 @@ def plot_timeseries(
             `start` and `end` determine the location of the
             segment, and `weight` determines the color.
         x_label (str, optional): Label for the x-axis
-        y_label (str, optional): Label for the y-axis
+        y_label (Union[str, Iterable[str]], optional): Label or list of labels for the y-axis
         cmap (str, optional): Matplotlib colormap
         show_plot (bool, optional): Shows plot if true (for testing or writing
             plots to disk instead).
