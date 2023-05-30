@@ -12,19 +12,19 @@ class LIMEOnTimeseries(TestCase):
     def test_lime_timeseries_correct_output_shape(self):
         """Test the output of explainer."""
         input_data = np.random.random((10, 1))
-        num_features = 2
+        num_features = 10
         explainer = LIMETimeseries()
         exp = explainer.explain(
             run_model,
             input_data,
-            labels=(1,),
+            labels=(0,),
             class_names=("test",),
             num_features=num_features,
             num_samples=10,
             num_slices=10,
             mask_type="mean",
         )
-        assert len(exp.local_exp[1]) == num_features
+        assert len(exp[0]) == num_features
 
     def test_distance_shape(self):
         """Test the shape of returned distance array."""

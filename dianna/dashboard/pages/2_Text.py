@@ -1,0 +1,91 @@
+import streamlit as st
+from _model_utils import load_labels
+from _model_utils import load_model
+from _models_text import explain_text_dispatcher
+from _models_text import predict
+from _movie_model import MovieReviewsModelRunner
+from _shared import _get_method_params
+from _shared import _get_top_indices_and_labels
+from _shared import _methods_checkboxes
+from _shared import add_sidebar_logo
+from _shared import data_directory
+from _text_utils import format_word_importances
+
+add_sidebar_logo()
+
+st.title('Text explanation')
+
+with st.sidebar:
+    st.header('Input data')
+
+    load_example = st.checkbox('Load example data', key='text_example_check')
+
+    text_input = st.text_input('Input string', disabled=load_example)
+
+    if text_input:
+        st.write(text_input)
+
+    text_model_file = st.file_uploader('Select model',
+                                       type='onnx',
+                                       disabled=load_example)
+
+    text_label_file = st.file_uploader('Select labels',
+                                       type='txt',
+                                       disabled=load_example)
+
+    if load_example:
+        text_input = 'The movie started out great but the ending was dissappointing'
+        text_model_file = data_directory / 'movie_review_model.onnx'
+        text_label_file = data_directory / 'labels_text.txt'
+
+if not (text_input and text_model_file and text_label_file):
+    st.info('Add your input data in the left panel to continue')
+    st.stop()
+
+model = load_model(text_model_file)
+serialized_model = model.SerializeToString()
+
+labels = load_labels(text_label_file)
+
+choices = ('RISE', 'LIME')
+methods = _methods_checkboxes(choices=choices)
+
+method_params = _get_method_params(methods)
+
+model_runner = MovieReviewsModelRunner(serialized_model)
+
+with st.spinner('Predicting class'):
+    predictions = predict(model=serialized_model, text_input=text_input)
+
+top_indices, top_labels = _get_top_indices_and_labels(
+    predictions=predictions[0], labels=labels)
+
+weight = 0.85 / len(methods)
+column_spec = [0.15, *[weight for _ in methods]]
+
+_, *columns = st.columns(column_spec)
+for col, method in zip(columns, methods):
+    with col:
+        st.header(method)
+
+for index, label in zip(top_indices, top_labels):
+    index_col, *columns = st.columns(column_spec)
+
+    with index_col:
+        st.markdown(f'##### {label}')
+
+    for col, method in zip(columns, methods):
+        kwargs = method_params[method].copy()
+        kwargs['labels'] = [index]
+
+        func = explain_text_dispatcher[method]
+
+        with col:
+            with st.spinner(f'Running {method}'):
+                relevances = func(model_runner, text_input, **kwargs)
+
+            html = format_word_importances(text_input, relevances[0])
+            st.write(html, unsafe_allow_html=True)
+
+    # add some white space to separate rows
+    st.markdown('')

@@ -4,7 +4,6 @@ from abc import abstractmethod
 from typing import List
 import numpy as np
 
-
 try:
     from torchtext.data import get_tokenizer
 except ImportError as err:

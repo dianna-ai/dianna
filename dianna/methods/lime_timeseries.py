@@ -48,7 +48,7 @@ class LIMETimeseries:
         self,
         model_or_function,
         input_timeseries,
-        labels=(1,),
+        labels=(0,),
         class_names=None,
         num_features=1,
         num_samples=1,
@@ -82,12 +82,12 @@ class LIMETimeseries:
         runner = utils.get_function(
             model_or_function, preprocess_function=self.preprocess_function
         )
-        masks = generate_masks(input_timeseries, num_samples, p_keep=0.9)
+        masks = generate_masks(input_timeseries, num_samples, p_keep=0.1)
         # NOTE: Required by `lime_base` explainer since the first instance must be the original data
         # For more details, check this link
         # https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148
         masks[0, :, :] = 1.0
-        masked = mask_data(input_timeseries, masks, mask_type="mean")
+        masked = mask_data(input_timeseries, masks, mask_type=mask_type)
         # generate predictions using the masked data.
         predictions = self._make_predictions(masked, runner, batch_size)
         # need to reshape for the calculation of distance
@@ -115,7 +115,15 @@ class LIMETimeseries:
                 num_features=num_features,
                 model_regressor=None,
             )
-        return exp
+        # extract scores from lime explainer
+        saliency = []
+        for i, _ in enumerate(labels):
+            local_exp = sorted(exp.local_exp[i])
+            # shape of local_exp [(index, saliency)]
+            selected_saliency = [i[1] for i in local_exp]
+            saliency.append(selected_saliency[:])
+
+        return np.concatenate(saliency).reshape(-1, sequence, n_var)
 
     def _calculate_distance(self, masked_data, distance_method="cosine"):
         """Calcuate distance between perturbed data and the original samples.
