@@ -67,7 +67,7 @@ def _draw_segments(axs, cmap, segments):
         stop = segment['stop']
         weight = segment['weight']
         segment['index']
-        channel = segment['channel']
+        channel = segment.get('channel', 0)
 
         color = cmap(norm(weight))
 
