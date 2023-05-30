@@ -22,13 +22,13 @@ def plot_timeseries(
     """Plot timeseries with segments highlighted.
 
     Args:
-        x (np.ndarray): X-values
-        y (np.ndarray): Y-values
+        x (np.ndarray): X-values with shape (number of time_steps)
+        y (np.ndarray): Y-values with shape (number_of_time_steps, number_of_channels)
         segments (List[Dict[str, Any]]): Segment data, must be a list of
             dicts with the following keys: 'index', 'start', 'end',
-            'weight'. Here, `index` is the index of the segment of feature,
+            'weight', 'channel. Here, `index` is the index of the segment of feature,
             `start` and `end` determine the location of the
-            segment, and `weight` determines the color.
+            segment, `weight` determines the color, and 'channel' determines the channel within the timeseries.
         x_label (str, optional): Label for the x-axis
         y_label (str, optional): Label for the y-axis
         cmap (str, optional): Matplotlib colormap
@@ -67,7 +67,7 @@ def _draw_segments(axs, cmap, segments):
         stop = segment['stop']
         weight = segment['weight']
         segment['index']
-        channel = segment['channel']
+        channel = segment.get('channel', 0)
 
         color = cmap(norm(weight))
 

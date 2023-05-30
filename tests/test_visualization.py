@@ -24,12 +24,12 @@ def test_plot_timeseries_univariate(tmpdir, random):
 def test_plot_timeseries_multivariate(tmpdir, random):
     """Test plot multivariate time series."""
     x = np.linspace(start=0, stop=10, num=20)
-    y = np.stack((np.sin(x), np.cos(x), np.tan(0.4 * x)))
-    segments = get_test_segments(data=y)
+    ys = np.stack((np.sin(x), np.cos(x), np.tan(0.4 * x)))
+    segments = get_test_segments(data=ys)
     output_path = Path(tmpdir) / 'temp_visualization_test_multivariate.png'
 
     plot_timeseries(x=x,
-                    y=y.T,
+                    y=ys.T,
                     segments=segments,
                     show_plot=False,
                     output_filename=output_path)
@@ -47,13 +47,15 @@ def get_test_segments(data):
     segments = []
     for i_segment in range(n_segments):
         for i_channel in range(n_channels):
-            segments.append({
+            segment = {
                 'index': i_segment + i_channel * n_segments,
                 'start': i_segment,
                 'stop': i_segment + 1,
                 'weight': data[i_channel, factor * i_segment],
-                'channel': i_channel,
-            })
+            }
+            if n_channels > 1:
+                segment['channel'] = i_channel
+            segments.append(segment)
 
     return segments
 
