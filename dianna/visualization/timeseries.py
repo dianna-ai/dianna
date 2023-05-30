@@ -101,9 +101,7 @@ def _process_plotting_parameters(x, y, y_labels):
         y_labels = [y_labels]
 
     n_channels = ys.shape[1]
-    fig, ax = plt.subplots(nrows=n_channels, sharex=True)
+    fig, axs = plt.subplots(nrows=n_channels, sharex=True)
     if n_channels == 1:
-        axs = (ax, )
-    else:
-        axs = ax
+        axs = (axs, )
     return fig, axs, y_labels, ys
