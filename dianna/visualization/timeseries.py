@@ -30,7 +30,7 @@ def plot_timeseries(
             `start` and `end` determine the location of the
             segment, `weight` determines the color, and 'channel' determines the channel within the timeseries.
         x_label (str, optional): Label for the x-axis
-        y_label (str, optional): Label for the y-axis
+        y_label (Union[str, Iterable[str]], optional): Label or list of labels for the y-axis
         cmap (str, optional): Matplotlib colormap
         show_plot (bool, optional): Shows plot if true (for testing or writing
             plots to disk instead).
@@ -101,9 +101,7 @@ def _process_plotting_parameters(x, y, y_labels):
         y_labels = [y_labels]
 
     n_channels = ys.shape[1]
-    fig, ax = plt.subplots(nrows=n_channels, sharex=True)
+    fig, axs = plt.subplots(nrows=n_channels, sharex=True)
     if n_channels == 1:
-        axs = (ax, )
-    else:
-        axs = ax
+        axs = (axs, )
     return fig, axs, y_labels, ys
