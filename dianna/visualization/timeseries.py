@@ -40,9 +40,9 @@ def plot_timeseries(
     Returns:
         plt.Figure
     """
-    fig, axs, y_labels, ys = _process_plotting_parameters(y, y_label)
+    fig, axs, y_labels, ys = _process_plotting_parameters(x, y, y_label)
 
-    for y_current, y_label_current, ax_current in zip(ys, y_labels, axs):
+    for y_current, y_label_current, ax_current in zip(ys.T, y_labels, axs):
         current_ax = ax_current
         current_ax.plot(x, y_current, label=y_label_current)
         current_ax.set_xlabel(x_label)
@@ -77,10 +77,18 @@ def _draw_segments(axs, cmap, segments):
                  label='weights')
 
 
-def _process_plotting_parameters(y, y_labels):
+def _process_plotting_parameters(x, y, y_labels):
+    if hasattr(x, 'ndim') and x.ndim != 1:
+        raise ValueError(
+            f'Invalid rank {x.ndim}. Data x can only have 1 dimension.')
+
     if y.ndim == 1:
-        ys = np.expand_dims(y, 0)
+        ys = np.expand_dims(y, 1)
     elif y.ndim == 2:
+        if y.shape[0] != len(x):
+            raise ValueError(
+                f'Shape y was {y.shape} but should be ({len(x)}, ?) instead to be compatible with x.'
+            )
         ys = y
     else:
         raise ValueError(
@@ -92,7 +100,7 @@ def _process_plotting_parameters(y, y_labels):
     if isinstance(y_labels, str):
         y_labels = [y_labels]
 
-    n_channels = ys.shape[0]
+    n_channels = ys.shape[1]
     fig, ax = plt.subplots(nrows=n_channels, sharex=True)
     if n_channels == 1:
         axs = (ax, )

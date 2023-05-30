@@ -29,7 +29,7 @@ def test_plot_timeseries_multivariate(tmpdir, random):
     output_path = Path(tmpdir) / 'temp_visualization_test_multivariate.png'
 
     plot_timeseries(x=x,
-                    y=y,
+                    y=y.T,
                     segments=segments,
                     show_plot=False,
                     output_filename=output_path)
