@@ -15,7 +15,7 @@ def make_predictions(data, runner, batch_size):
     Returns:
         np.ndarray: An array of predictions made by the model on the input data.
     """
-    number_of_masks = data.shape[0]
+    number_of_masks = len(data)
     predictions = []
     for i in tqdm(range(0, number_of_masks, batch_size), desc="Explaining"):
         predictions.append(runner(data[i : i + batch_size]))
