@@ -2,6 +2,7 @@ import numpy as np
 from skimage.transform import resize
 from tqdm import tqdm
 from dianna import utils
+from dianna.utils.predict import make_predictions
 
 # To Do: remove this import when the method for different input type is splitted
 from dianna.methods.rise_timeseries import RISETimeseries  # noqa: F401 ignore unused import
@@ -14,17 +15,6 @@ def normalize(saliency, n_masks, p_keep):
 
 def _upscale(grid_i, up_size):
     return resize(grid_i, up_size, order=1, mode='reflect', anti_aliasing=False)
-
-
-def _predict_in_batches(masked, runner):
-    batch_size = 50
-    predictions = []
-    for i in range(0, len(masked), batch_size):
-        current_input = masked[i:min(i + batch_size, len(masked))]
-        current_predictions = runner(current_input)
-        predictions.append(current_predictions)
-    predictions = np.concatenate(predictions)
-    return predictions
 
 
 class RISEText:
@@ -94,7 +84,7 @@ class RISEText:
                                   n_masks):
         masks = self._generate_masks(input_text.shape, p_keep, n_masks)
         masked = self._create_masked_sentences(input_text, masks, tokenizer)
-        predictions = _predict_in_batches(masked, runner)
+        predictions = make_predictions(masked, runner, batch_size=50)
         std_per_class = predictions.std(axis=0)
         return np.max(std_per_class)
 
@@ -103,7 +93,7 @@ class RISEText:
         return masks
 
     def _get_saliencies(self, runner, sentences, num_tokens, batch_size, p_keep):
-        self.predictions = self._get_predictions(sentences, runner, batch_size)
+        self.predictions = make_predictions(sentences, runner, batch_size)
         unnormalized_saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, num_tokens)
         return normalize(unnormalized_saliency, self.n_masks, p_keep)
 
@@ -111,13 +101,6 @@ class RISEText:
     def _reshape_result(input_tokens, labels, saliencies):
         word_indices = list(range(len(input_tokens)))
         return [list(zip(input_tokens, word_indices, saliencies[label])) for label in labels]
-
-    def _get_predictions(self, sentences, runner, batch_size):
-        predictions = []
-        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            predictions.append(runner(sentences[i:i + batch_size]))
-        predictions = np.concatenate(predictions)
-        return predictions
 
     def _create_masked_sentences(self, tokens, masks, tokenizer):
         tokens_masked_list = [
@@ -180,10 +163,7 @@ class RISEImage:
         # Make sure multiplication is being done for correct axes
         masked = input_data * self.masks
 
-        batch_predictions = []
-        for i in tqdm(range(0, self.n_masks, batch_size), desc='Explaining'):
-            batch_predictions.append(runner(masked[i:i + batch_size]))
-        self.predictions = np.concatenate(batch_predictions)
+        self.predictions = make_predictions(masked, runner, batch_size)
 
         saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(-1, *img_shape)
         result = normalize(saliency, self.n_masks, active_p_keep)
@@ -226,7 +206,7 @@ class RISEImage:
         img_shape = input_data.shape[1:3]
         masks = self._generate_masks(img_shape, p_keep, n_masks)
         masked = input_data * masks
-        predictions = _predict_in_batches(masked, runner)
+        predictions = make_predictions(masked, runner, batch_size=50)
         std_per_class = predictions.std(axis=0)
         return np.max(std_per_class)
 
@@ -289,7 +269,6 @@ class RISEImage:
             Function that first ensures the data has the same shape and type as the input data,
             then runs the users' preprocessing function
         """
-
         def moveaxis_function(data):
             return utils.move_axis(data, 'channels', channel_axis_index).astype(dtype).values
 
