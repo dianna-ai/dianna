@@ -3,7 +3,6 @@ import sklearn
 from fastdtw import fastdtw
 from lime import explanation
 from lime import lime_base
-from tqdm import tqdm
 from dianna import utils
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import mask_data

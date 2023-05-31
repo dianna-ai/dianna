@@ -1,11 +1,10 @@
 import numpy as np
 from skimage.transform import resize
-from tqdm import tqdm
 from dianna import utils
-from dianna.utils.predict import make_predictions
 
 # To Do: remove this import when the method for different input type is splitted
 from dianna.methods.rise_timeseries import RISETimeseries  # noqa: F401 ignore unused import
+from dianna.utils.predict import make_predictions
 
 
 def normalize(saliency, n_masks, p_keep):
