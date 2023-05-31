@@ -3,15 +3,7 @@ from tqdm import tqdm
 from dianna import utils
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import mask_data
-
-
-def _make_predictions(input_data, runner, batch_size):
-    """Process the input_data with the model runner in batches and return the predictions."""
-    number_of_masks = input_data.shape[0]
-    batch_predictions = []
-    for i in tqdm(range(0, number_of_masks, batch_size), desc='Explaining'):
-        batch_predictions.append(runner(input_data[i:i + batch_size]))
-    return np.concatenate(batch_predictions)
+from dianna.utils.predict import make_predictions
 
 
 # TODO: Duplicate code from rise.py:
@@ -61,7 +53,7 @@ class RISETimeseries:
         self.masks = generate_masks(input_timeseries, number_of_masks=self.n_masks, p_keep=self.p_keep)
         masked = mask_data(input_timeseries, self.masks, mask_type=mask_type)
 
-        self.predictions = _make_predictions(masked, runner, batch_size)
+        self.predictions = make_predictions(masked, runner, batch_size)
         n_labels = self.predictions.shape[1]
 
         saliency = self.predictions.T.dot(self.masks.reshape(self.n_masks, -1)).reshape(n_labels,

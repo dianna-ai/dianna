@@ -7,6 +7,7 @@ from tqdm import tqdm
 from dianna import utils
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import mask_data
+from dianna.utils.predict import make_predictions
 
 
 class LIMETimeseries:
@@ -89,7 +90,7 @@ class LIMETimeseries:
         masks[0, :, :] = 1.0
         masked = mask_data(input_timeseries, masks, mask_type=mask_type)
         # generate predictions using the masked data.
-        predictions = self._make_predictions(masked, runner, batch_size)
+        predictions = make_predictions(masked, runner, batch_size)
         # need to reshape for the calculation of distance
         _, sequence, n_var = masked.shape
         masked = masked.reshape((-1, sequence * n_var))
@@ -188,23 +189,3 @@ class LIMETimeseries:
             ]
         )
         return distance
-
-    # TODO: duplication code from rise_timeseries. Need to put it in util.py
-    def _make_predictions(self, masked_data, runner, batch_size):
-        """Make predictions for the masked data.
-
-        Process the masked_data with the model runner and return the predictions.
-
-        Args:
-            masked_data (np.ndarray): An array of masked input data to be processed by the model.
-            runner (object): An object that runs the model on the input data and returns the predictions.
-            batch_size (int): The number of masked inputs to process in each batch.
-
-        Returns:
-            np.ndarray: An array of predictions made by the model on the input data.
-        """
-        number_of_masks = masked_data.shape[0]
-        predictions = []
-        for i in tqdm(range(0, number_of_masks, batch_size), desc="Explaining"):
-            predictions.append(runner(masked_data[i : i + batch_size]))
-        return np.concatenate(predictions)
