@@ -3,9 +3,7 @@ from skimage.transform import resize
 from dianna import utils
 
 # To Do: remove this import when the method for different input type is splitted
-from dianna.methods.rise_timeseries import (
-    RISETimeseries,
-)  # noqa: F401 ignore unused import
+from dianna.methods.rise_timeseries import RISETimeseries  # noqa: F401 ignore unused import
 from dianna.utils.predict import make_predictions
 
 

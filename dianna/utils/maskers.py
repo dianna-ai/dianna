@@ -36,7 +36,7 @@ def generate_channel_masks(input_data: np.ndarray, number_of_masks: int, p_keep:
     number_of_channels = input_data.shape[1]
     number_of_channels_masked = _determine_number_masked(p_keep, number_of_channels)
     masked_data_shape = [number_of_masks] + list(input_data.shape)
-    masks = np.ones(masked_data_shape, dtype=np.bool)
+    masks = np.ones(masked_data_shape, dtype=bool)
     for i in range(number_of_masks):
         channels_to_mask = np.random.choice(number_of_channels, number_of_channels_masked, False)
         masks[i, :, channels_to_mask] = False
@@ -48,7 +48,7 @@ def generate_time_step_masks(input_data: np.ndarray, number_of_masks: int, p_kee
     series_length = input_data.shape[0]
     number_of_steps_masked = _determine_number_masked(p_keep, series_length)
     masked_data_shape = [number_of_masks] + list(input_data.shape)
-    masks = np.ones(masked_data_shape, dtype=np.bool)
+    masks = np.ones(masked_data_shape, dtype=bool)
     for i in range(number_of_masks):
         steps_to_mask = np.random.choice(series_length, number_of_steps_masked, False)
         masks[i, steps_to_mask] = False
