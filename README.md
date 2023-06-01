@@ -156,7 +156,7 @@ dianna.visualization.plot_image(explanation[labels.index(class_a)], original_dat
 
 ## Dashboard
 
-Explore your trained model explained using the DIANNA dashboard. [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dianna/dashboard) for more information.
+Explore your trained model explained using the DIANNA dashboard. [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
 
 <a href="https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard" target="_blank">
   <img width="300" align="center" alt="Dianna dashboard screenshot" src="https://raw.githubusercontent.com/dianna-ai/dianna/update-dashboard-readme/dianna/dashboard/dashboard-screenshot.png">
