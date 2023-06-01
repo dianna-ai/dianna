@@ -6,7 +6,7 @@ from tests.utils import run_model
 
 def test_common_RISE_image_pipeline():  # noqa: N802 ignore case
     """No errors thrown while creating a relevance map and visualizing it."""
-    input_image = np.random.random((5, 5, 3))
+    input_image = np.random.random((224, 224, 3))
     axis_labels = {-1: 'channels'}
     labels = [0, 1]
 
@@ -28,16 +28,20 @@ def test_common_RISE_timeseries_pipeline():  # noqa: N802 ignore case
 
     heatmap = dianna.explain_timeseries(run_model, input_timeseries, 'RISE',
                                         labels)[0]
-    heatmap_channel = heatmap[:, 0]
     segments = []
-    for i in range(len(heatmap_channel) - 1):
-        segments.append({
-            'index': i,
-            'start': i,
-            'stop': i + 1,
-            'weight': heatmap_channel[i]
-        })
-    dianna.visualization.plot_timeseries(range(len(heatmap_channel)),
-                                         input_timeseries[:, 0],
+    for channel_number in range(heatmap.shape[1]):
+        heatmap_channel = heatmap[:, channel_number]
+        for i in range(len(heatmap_channel) - 1):
+            segments.append({
+                'index': i,
+                'start': i,
+                'stop': i + 1,
+                'weight': heatmap_channel[i],
+                'channel': channel_number
+            })
+    r = range(len(heatmap_channel))
+
+    dianna.visualization.plot_timeseries(r,
+                                         input_timeseries,
                                          segments,
                                          show_plot=False)
