@@ -1,14 +1,14 @@
-import string
+import re
 from abc import ABC
 from abc import abstractmethod
 from typing import List
-import numpy as np
 
 try:
     from torchtext.data import get_tokenizer
 except ImportError as err:
-    raise ImportError("Failed to import torchtext, please install manually or reinstall dianna with "
-                      "text support: `pip install dianna[text]`") from err
+    raise ImportError(
+        'Failed to import torchtext, please install manually or reinstall dianna with '
+        'text support: `pip install dianna[text]`') from err
 
 
 class Tokenizer(ABC):
@@ -16,6 +16,7 @@ class Tokenizer(ABC):
 
     Has the same interface as (part of) the transformers Tokenizer class.
     """
+
     def __init__(self, mask_token: str):
         """Tokenizer initializer.
 
@@ -35,7 +36,14 @@ class Tokenizer(ABC):
 
 class SpacyTokenizer(Tokenizer):
     """Spacy tokenizer for natural language."""
-    def __init__(self, name: str = 'en_core_web_sm', mask_token: str = "UNKWORDZ"):
+
+    MATCH_token_unk_token = re.compile(r'(\S)(UNKWORDZ)(\S)')
+    MATCH_token_unk_white = re.compile(r'(\S)(UNKWORDZ)(\s|$)')
+    MATCH_white_unk_token = re.compile(r'(^|\s)(UNKWORDZ)(\S)')
+
+    def __init__(self,
+                 name: str = 'en_core_web_sm',
+                 mask_token: str = 'UNKWORDZ'):
         """Spacy tokenizer initalizer.
 
         Args:
@@ -47,38 +55,24 @@ class SpacyTokenizer(Tokenizer):
 
     def tokenize(self, sentence: str) -> List[str]:
         """Tokenize sentence."""
-        raw_tokens = self.spacy_tokenizer(sentence)
-        # do not consider several special characters in a row as separate tokens
-        # special characters in string.punctuation are !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~.
-        # find indices of tokens that are a special character
-        indices_in_tokens = np.where([token in string.punctuation for token in raw_tokens])[0]
-        indices_in_raw_string = np.where([character in string.punctuation for character in (sentence)])[0]
-        if indices_in_tokens.size == 0:
-            # no special characters at all
-            return raw_tokens
+        sentence = self._fix_whitespace(sentence)
 
-        # reconstruct list of tokens, combining consecutive special characters
-        tokens = []
-        steps_in_raw_string = np.diff(indices_in_raw_string)
-        special_char_index = 0
-        for idx, token in enumerate(raw_tokens):
-            if idx not in indices_in_tokens:
-                # not a special character
-                tokens.append(token)
-            elif special_char_index == 0 or steps_in_raw_string[special_char_index - 1] != 1:
-                # create new token if this is the first special character,
-                # or it does not directly follow another special character
-                # in the original input
-                tokens.append(token)
-                special_char_index += 1
-            else:
-                # add token to existing one if both are special characters and
-                # they are consecutive in the original input
-                tokens[-1] = tokens[-1] + token
-                special_char_index += 1
+        tokens = self.spacy_tokenizer(sentence)
+
         return tokens
 
     def convert_tokens_to_string(self, tokens: List[str]) -> str:
         """Paste together with spaces in between."""
-        sentence = " ".join(tokens)
+        sentence = ' '.join(tokens)
+        return sentence
+
+    def _fix_whitespace(self, sentence: str):
+        """Apply fixes for the punctuation/special characters problem.
+
+        For more info, see:
+        https://github.com/dianna-ai/dianna/issues/531
+        """
+        sentence = self.MATCH_token_unk_token.sub(r'\1 \2 \3', sentence)
+        sentence = self.MATCH_token_unk_white.sub(r'\1 \2\3', sentence)
+        sentence = self.MATCH_white_unk_token.sub(r'\1\2 \3', sentence)
         return sentence

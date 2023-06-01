@@ -1,7 +1,8 @@
 # DIANNA dashboard
 
+![Dianna dashboard screenshot](./dashboard-screenshot.png)
 
-A dashboard was created for DIANNA using [streamlit](https://streamlit.io/) that can be used for simple exploration of your trained model explained by DIANNA. The dashboard produces the visual explanation of your selected XAI method. Additionally it allows you to compare the results of different XAI methods, as well as explanations of the top ranked predicted labels.
+The DIANNA dashboard can be used for simple exploration of your trained model explained by DIANNA. The dashboard produces the visual explanation of your selected XAI method. Additionally it allows you to compare the results of different XAI methods, as well as explanations of the top ranked predicted labels. The dashboard was created using [streamlit](https://streamlit.io/).
 
 To open the dashboard, you can install dianna via `pip install -e .[dashboard]` and run:
 
@@ -16,7 +17,6 @@ streamlit run Home.py
 ```
 
 Open the link on which the app is running. Note that you are running the dashboard *only locally*. The data you use in the dashboard is your local data, and it is *not* uploaded to any server.
-
 
 ## How to use the dashboard
 
