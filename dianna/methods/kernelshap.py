@@ -54,7 +54,7 @@ class KERNELSHAPImage:
 
     def explain(
         self,
-        model,
+        model_or_function,
         input_data,
         labels,
         nsamples='auto',
@@ -69,7 +69,7 @@ class KERNELSHAPImage:
         The model will be called with the function of image segmentation.
 
         Args:
-            model (str): The path to a ONNX model on disk.
+            model_or_function (str): The path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained. It is mandatory to only
                                      provide a single example as input. This is because
                                      KernelShap is generally used for sample-based
@@ -103,7 +103,7 @@ class KERNELSHAPImage:
             Explanation heatmap of shapley values for each class (np.ndarray).
         """
         self.onnx_model, self.input_node_dtype,\
-            self.output_node = utils.onnx_model_node_loader(model)
+            self.output_node = utils.onnx_model_node_loader(model_or_function)
         self.labels = labels
         self.input_data = self._prepare_image_data(input_data)
         self.background = background
