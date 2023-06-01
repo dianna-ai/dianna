@@ -10,7 +10,7 @@ pip install .[notebooks]
 
 For general demonstration of DIANNA click on the logo [<img width="75" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">](https://github.com/dianna-ai/dianna/blob/main/tutorials/demo.ipynb) or run it in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/demo.ipynb).
 
-Use the cleckable XAI methods (explainers) names to watch explanatory videos for the respective method.
+Click on the XAI method (explainer) names to watch explanatory videos for the respective method.
 
 Use the clickable logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset. 
 
