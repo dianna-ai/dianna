@@ -71,7 +71,7 @@ The key points of DIANNA:
 * Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
 * Supports the de-facto standard format for neural network models - ONNX.
 * Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and scikit-learn to ONNX.
-* Supports both images and text data modalities. Time series is work in progress, tabular data and even embeddings support is planned.
+* Supports images, text and time series data modalities. Tabular data and even embeddings support is planned.
 * Comes with simple intuitive image and text benchmarks
 * Easily extendable to other XAI methods
 
@@ -177,6 +177,12 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 |:-----|:----|:---|:----|
 | [Stanford sentiment treebank](https://nlp.stanford.edu/sentiment/index.html)<img width="20" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152355020-908c04f3-aa99-489d-b87a-7e6b1f586118.png">|Dataset for predicting the sentiment, positive or negative, of movie reviews. | _This movie was actually neither that funny, nor super witty._|[Sentiment treebank](https://nlp.stanford.edu/sentiment/treebank.html)|
 
+### Time series
+|Dataset|Description|Examples|Generation|
+|:-----|:----|:---|:----|
+| [Coffee dataset](https://timeseriesclassification.com/description.php?Dataset=Coffee) <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162"> | Food spectographs time series dataset for a two class problem to distinguish between Robusta and Arabica coffee beans.| <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/763002c5-40ad-48cc-9de0-ea43d7fa8a75)">| [data source](https://github.com/QIBChemometrics/Benchtop-NMR-Coffee-Survey)| 
+|  [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f"> |The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010.| <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d)"> | [data source](https://github.com/florian-huber/weather_prediction_dataset) |
+
 ## ONNX models
 <!-- TODO: Add all links, see issue https://github.com/dianna-ai/dianna/issues/135 -->
 
@@ -201,6 +207,12 @@ And here are links to notebooks showing how we created our models on the benchma
 |:-----|:----|
 |[Movie reviews model](https://zenodo.org/record/5910598)| [Stanford sentiment treebank model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/movie_reviews/generate_model.ipynb)|
 
+### Time series
+|Models|Generation|
+|:-----|:----|
+| Coffee model | [Coffee model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/coffee/generate_model.ipynb)|
+| [Season prediction model](https://zenodo.org/record/7543883) | [Season prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/season_prediction/generate_model.ipynb) |
+
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
 
 ## Tutorials
@@ -211,11 +223,12 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 |Data \ XAI|[RISE](http://bmvc2018.org/contents/papers/1064.pdf)|[LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf)|[KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf)|
 |:-----|:---|:---|:---|
 |Images|:white_check_mark:|:white_check_mark:|:white_check_mark:|
-|Text|:white_check_mark:|:white_check_mark:|planned|
-|Timeseries|work in progress|work in progress|work in progress|
-|Embedding|coming soon|coming soon|coming soon|
-|Graphs |planned|planned|planned |
-|Tabular||||
+|Text|:white_check_mark:|:white_check_mark:||
+|Timeseries|:white_check_mark:|:white_check_mark:||
+|Embedding|planned|planned|planned|
+|Tabular|planned|planned|planned|
+|Graphs* |work in progress|work in progress| work in progress|
+
 
 
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective criteria (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
