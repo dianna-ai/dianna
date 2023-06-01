@@ -204,7 +204,7 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 |:-----|:---|:---|:---|
 |Images|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 |Text|:white_check_mark:|:white_check_mark:|planned|
-|Timeseries|work in progress|work in progress|work in progress|
+|Timeseries|:white_check_mark:|:white_check_mark:|work in progress|
 |Embedding|coming soon|coming soon|coming soon|
 |Graphs |planned|planned|planned |
 |Tabular||||
