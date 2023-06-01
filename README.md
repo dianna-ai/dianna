@@ -154,6 +154,12 @@ dianna.visualization.plot_image(explanation[labels.index(class_a)], original_dat
 ```
 ![image](https://user-images.githubusercontent.com/6087314/155557077-e2052094-d8ac-49d3-a840-0160256d53a6.png)
 
+## Dashboard
+
+Explore your trained model explained using the DIANNA dashboard. [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dianna/dashboard) for more information.
+
+[![Dianna dashboard screenshot](./dianna/dashboard/dashboard-screenshot.png)](https://github.com/dianna-ai/dianna/tree/main/dianna/dianna/dashboard)
+
 ## Datasets
 DIANNA comes with simple datasets. Their main goal is to provide intuitive insight into the working of the XAI methods. They can be used as benchmarks for evaluation and comparison of existing and new XAI methods.
 
