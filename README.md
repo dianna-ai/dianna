@@ -199,6 +199,12 @@ And here are links to notebooks showing how we created our models on the benchma
 |:-----|:----|
 |[Movie reviews model](https://zenodo.org/record/5910598)| [Stanford sentiment treebank model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/movie_reviews/generate_model.ipynb)|
 
+### Time series
+|Models|Generation|
+|:-----|:----|
+| Coffee model | [Coffee model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/coffee/generate_model.ipynb)|
+| [Season prediction model](https://zenodo.org/record/7543883) | [Season prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/season_prediction/generate_model.ipynb) |
+
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
 
 ## Tutorials
