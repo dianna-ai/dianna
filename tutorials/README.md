@@ -12,7 +12,7 @@ For general demonstration of DIANNA click on the logo [<img width="75" alt="Logo
 
 Click on the XAI method (explainer) names to watch explanatory videos for the respective method.
 
-Use the clickable logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset. 
+Click on the logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset. 
 
 The tutorials can also be run directly in Google Colab, by clicking on the Colab buttons below: 
 
