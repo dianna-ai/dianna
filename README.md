@@ -209,11 +209,12 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 |Data \ XAI|[RISE](http://bmvc2018.org/contents/papers/1064.pdf)|[LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf)|[KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf)|
 |:-----|:---|:---|:---|
 |Images|:white_check_mark:|:white_check_mark:|:white_check_mark:|
-|Text|:white_check_mark:|:white_check_mark:|planned|
-|Timeseries|:white_check_mark:|:white_check_mark:|work in progress|
-|Embedding|coming soon|coming soon|coming soon|
-|Graphs |planned|planned|planned |
-|Tabular||||
+|Text|:white_check_mark:|:white_check_mark:||
+|Timeseries|:white_check_mark:|:white_check_mark:||
+|Embedding|planned|planned|planned|
+|Tabular|planned|planned|planned|
+|Graphs* |work in progress|work in progress| work in progress|
+
 
 
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective criteria (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
