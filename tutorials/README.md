@@ -14,7 +14,7 @@ Click on the XAI method (explainer) names to watch explanatory videos for the re
 
 Click on the logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset. 
 
-The tutorials can also be run directly in Google Colab, by clicking on the Colab buttons below: 
+Run the tutorials directly in Google Colab by clicking on the Colab buttons below: 
 
 |*Modality*\ Method|RISE|[LIME](https://youtu.be/d6j6bofhj2M)|Kernel[SHAP](https://youtu.be/9haIOplEIGM)|
 |:-----|:---|:---|:---|
