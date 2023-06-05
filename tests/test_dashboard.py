@@ -144,3 +144,36 @@ def test_image_page(page: Page):
             page.get_by_role('img', name='0').nth(1),
     ):
         expect(selector).to_be_visible()
+
+
+def test_timeseries_page(page: Page):
+    """Test performance of timeseries page."""
+    page.goto(f'{BASE_URL}/Time_series')
+
+    page.get_by_text('Running...').wait_for(state='detached')
+
+    expect(page).to_have_title('Time_series · Streamlit')
+
+    expect(
+        page.get_by_text('Add your input data in the left panel to continue')
+    ).to_be_visible()
+
+    page.locator('label').filter(
+        has_text='Load example data').locator('span').click()
+
+    expect(page.get_by_text('Select a method to continue')).to_be_visible()
+
+    page.locator('label').filter(has_text='RISE').locator('span').click()
+
+    page.get_by_text('Running...').wait_for(state='detached', timeout=45_000)
+
+    for selector in (
+            page.get_by_role('heading', name='RISE').get_by_text('RISE'),
+            # first image
+            page.get_by_role('heading', name='winter').get_by_text('winter'),
+            page.get_by_role('img', name='0').first,
+            # second image
+            page.get_by_role('heading', name='summer').get_by_text('summer'),
+            page.get_by_role('img', name='0').nth(1),
+    ):
+        expect(selector).to_be_visible()

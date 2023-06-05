@@ -6,7 +6,7 @@ from tests.utils import run_model
 
 def test_common_RISE_image_pipeline():  # noqa: N802 ignore case
     """No errors thrown while creating a relevance map and visualizing it."""
-    input_image = np.random.random((224, 224, 3))
+    input_image = np.random.random((5, 5, 3))
     axis_labels = {-1: 'channels'}
     labels = [0, 1]
 

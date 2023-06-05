@@ -15,28 +15,28 @@ add_sidebar_logo()
 
 st.title('Text explanation')
 
-with st.sidebar:
-    st.header('Input data')
+st.sidebar.header('Input data')
 
-    load_example = st.checkbox('Load example data', key='text_example_check')
+load_example = st.sidebar.checkbox('Load example data',
+                                   key='text_example_check')
 
-    text_input = st.text_input('Input string', disabled=load_example)
+text_input = st.sidebar.text_input('Input string', disabled=load_example)
 
-    if text_input:
-        st.write(text_input)
+if text_input:
+    st.sidebar.write(text_input)
 
-    text_model_file = st.file_uploader('Select model',
-                                       type='onnx',
-                                       disabled=load_example)
+text_model_file = st.sidebar.file_uploader('Select model',
+                                           type='onnx',
+                                           disabled=load_example)
 
-    text_label_file = st.file_uploader('Select labels',
-                                       type='txt',
-                                       disabled=load_example)
+text_label_file = st.sidebar.file_uploader('Select labels',
+                                           type='txt',
+                                           disabled=load_example)
 
-    if load_example:
-        text_input = 'The movie started out great but the ending was dissappointing'
-        text_model_file = data_directory / 'movie_review_model.onnx'
-        text_label_file = data_directory / 'labels_text.txt'
+if load_example:
+    text_input = 'The movie started out great but the ending was dissappointing'
+    text_model_file = data_directory / 'movie_review_model.onnx'
+    text_label_file = data_directory / 'labels_text.txt'
 
 if not (text_input and text_model_file and text_label_file):
     st.info('Add your input data in the left panel to continue')
@@ -65,14 +65,12 @@ column_spec = [0.15, *[weight for _ in methods]]
 
 _, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    with col:
-        st.header(method)
+    col.header(method)
 
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
 
-    with index_col:
-        st.markdown(f'##### {label}')
+    index_col.markdown(f'##### {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()

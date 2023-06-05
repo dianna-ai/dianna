@@ -15,30 +15,30 @@ add_sidebar_logo()
 
 st.title('Image explanation')
 
-with st.sidebar:
-    st.header('Input data')
+st.sidebar.header('Input data')
 
-    load_example = st.checkbox('Load example data', key='image_example_check')
+load_example = st.sidebar.checkbox('Load example data',
+                                   key='image_example_check')
 
-    image_file = st.file_uploader('Select image',
-                                  type=('png', 'jpg', 'jpeg'),
-                                  disabled=load_example)
+image_file = st.sidebar.file_uploader('Select image',
+                                      type=('png', 'jpg', 'jpeg'),
+                                      disabled=load_example)
 
-    if image_file:
-        st.image(image_file)
+if image_file:
+    st.sidebar.image(image_file)
 
-    image_model_file = st.file_uploader('Select model',
-                                        type='onnx',
-                                        disabled=load_example)
+image_model_file = st.sidebar.file_uploader('Select model',
+                                            type='onnx',
+                                            disabled=load_example)
 
-    image_label_file = st.file_uploader('Select labels',
-                                        type='txt',
-                                        disabled=load_example)
+image_label_file = st.sidebar.file_uploader('Select labels',
+                                            type='txt',
+                                            disabled=load_example)
 
-    if load_example:
-        image_file = (data_directory / 'digit0.png')
-        image_model_file = (data_directory / 'mnist_model_tf.onnx')
-        image_label_file = (data_directory / 'labels_mnist.txt')
+if load_example:
+    image_file = (data_directory / 'digit0.png')
+    image_model_file = (data_directory / 'mnist_model_tf.onnx')
+    image_label_file = (data_directory / 'labels_mnist.txt')
 
 if not (image_file and image_model_file and image_label_file):
     st.info('Add your input data in the left panel to continue')
@@ -71,14 +71,11 @@ column_spec = [0.1, *[weight for _ in methods]]
 
 _, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    with col:
-        st.header(method)
+    col.header(method)
 
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
-
-    with index_col:
-        st.markdown(f'##### {label}')
+    index_col.markdown(f'##### {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
