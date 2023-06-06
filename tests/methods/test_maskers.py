@@ -17,7 +17,7 @@ def test_mask_has_correct_shape_univariate():
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
 
-def test_generate_masks_dtype_univariate():
+def test_mask_has_correct_type_univariate():
     """Test masked data has the correct dtype for a univariate input."""
     input_data = _get_univariate_input_data()
     number_of_masks = 5

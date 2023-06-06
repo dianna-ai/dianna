@@ -25,11 +25,13 @@ class TextExample:
 
 class TextExampleWithExpectedHtml:
     """Short text and explanation and its expected html output after visualizing."""
-    expected_html = '<html><body><span style="background:rgba(255, 0, 0, 0.59)">Such</span> ' \
-                    '<span style="background:rgba(255, 0, 0, 0.62)">a</span> ' \
-                    '<span style="background:rgba(255, 0, 0, 0.80)">bad</span> ' \
-                    '<span style="background:rgba(255, 0, 0, 0.63)">movie</span> ' \
-                    '<span style="background:rgba(128, 128, 128, 0.3)">.</span></body></html>\n'
+    expected_html = (
+        '<mark style="background-color: hsl(0, 100%, 63%, 0.8); line-height:1.75">Such</mark> '
+        '<mark style="background-color: hsl(0, 100%, 62%, 0.8); line-height:1.75">a</mark> '
+        '<mark style="background-color: hsl(0, 100%, 50%, 0.8); line-height:1.75">bad</mark> '
+        '<mark style="background-color: hsl(0, 100%, 61%, 0.8); line-height:1.75">movie</mark> '
+        '<mark style="background-color: hsl(0, 0%, 75%, 0.8); line-height:1.75">.</mark>\n'
+    )
 
     original_text = 'Such a bad movie.'
 
@@ -74,6 +76,7 @@ class TextVisualizationTestCase(unittest.TestCase):
 
         with open(self.html_file_path, encoding='utf-8') as result_file:
             result = result_file.read()
+
         assert result == TextExampleWithExpectedHtml.expected_html
 
     def test_text_visualization_show_plot(self):

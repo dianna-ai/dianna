@@ -84,6 +84,7 @@ def _get_mask_value(data: np.array, mask_type: str) -> int:
 
 
 def _determine_number_masked(p_keep: float, series_length: int) -> int:
+    """Determine the number of time steps that need to be masked."""
     user_requested_steps = int(np.round(series_length * (1 - p_keep)))
     if user_requested_steps == series_length:
         warnings.warn(
@@ -133,7 +134,8 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
     """
     flat = float_mask.flatten()
     time_indices = list(range(len(flat)))
-    number_of_unmasked_cells = int(round(len(time_indices) * p_keep))
+    number_of_unmasked_cells = _determine_number_masked(
+        p_keep, len(time_indices))  # int(round(len(time_indices) * p_keep))
     top_indices = heapq.nsmallest(number_of_unmasked_cells,
                                   time_indices,
                                   key=lambda time_step: flat[time_step])
