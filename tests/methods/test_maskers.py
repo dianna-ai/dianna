@@ -34,6 +34,7 @@ def test_generate_time_step_masks_dtype_multivariate():
 
     result = generate_time_step_masks(input_data,
                                       number_of_masks=number_of_masks,
+                                      feature_res=8,
                                       p_keep=0.5)
 
     assert result.dtype == np.bool
@@ -46,6 +47,7 @@ def test_generate_segmented_time_step_masks_dtype_multivariate():
 
     result = generate_time_step_masks(input_data,
                                       number_of_masks=number_of_masks,
+                                      feature_res=8,
                                       p_keep=0.5)
 
     assert result.dtype == np.bool
@@ -114,12 +116,18 @@ def _get_multivariate_input_data(number_of_channels: int = 6) -> np.array:
     ])
 
 
-def _call_masking_function(input_data,
-                           number_of_masks=5,
-                           p_keep=.3,
-                           mask_type='mean'):
+def _call_masking_function(
+    input_data,
+    number_of_masks=5,
+    p_keep=.3,
+    mask_type='mean',
+    feature_res=5,
+):
     """Helper function with some defaults to call the code under test."""
-    masks = generate_masks(input_data, number_of_masks, p_keep=p_keep)
+    masks = generate_masks(input_data,
+                           number_of_masks,
+                           feature_res,
+                           p_keep=p_keep)
     return mask_data(input_data, masks, mask_type=mask_type)
 
 

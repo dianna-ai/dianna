@@ -5,21 +5,28 @@ import numpy as np
 from skimage.transform import resize
 
 
-def generate_masks(input_data: np.array,
-                   number_of_masks: int,
-                   p_keep: float = 0.5):
+def generate_masks(
+    input_data: np.array,
+    number_of_masks: int,
+    feature_res: int = 8,
+    p_keep: float = 0.5,
+):
     """Generate masks for time series data given a probability of keeping any time step or channel unmasked.
 
     Args:
         input_data: Timeseries data to be explained.
         number_of_masks: Number of masks to generate.
         p_keep: the probability that any value remains unmasked.
+        feature_res: Resolution of features in masks.
 
     Returns:
     Single array containing all masks where the first dimension represents the batch.
     """
     if input_data.shape[-1] == 1:  # univariate data
-        return generate_time_step_masks(input_data, number_of_masks, p_keep)
+        return generate_time_step_masks(input_data,
+                                        number_of_masks,
+                                        p_keep,
+                                        feature_res=feature_res)
 
     number_of_channel_masks = number_of_masks // 3
     number_of_time_step_masks = number_of_channel_masks
@@ -27,11 +34,12 @@ def generate_masks(input_data: np.array,
 
     time_step_masks = generate_time_step_masks(input_data,
                                                number_of_time_step_masks,
-                                               p_keep)
+                                               feature_res, p_keep)
     channel_masks = generate_channel_masks(input_data, number_of_channel_masks,
                                            p_keep)
     combined_masks = generate_time_step_masks(
-        input_data, number_of_combined_masks, p_keep) * generate_channel_masks(
+        input_data, number_of_combined_masks,
+        feature_res, p_keep) * generate_channel_masks(
             input_data, number_of_combined_masks, p_keep)
 
     return np.concatenate([time_step_masks, channel_masks, combined_masks],
@@ -99,17 +107,15 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
     return user_requested_steps
 
 
-def generate_time_step_masks(input_data: np.ndarray,
-                             number_of_masks: int,
-                             p_keep: float,
-                             num_features=5):
+def generate_time_step_masks(input_data: np.ndarray, number_of_masks: int,
+                             p_keep: float, feature_res: int):
     """Generate masks that masks complete time steps at a time while masking time steps in a segmented fashion."""
     time_series_length = input_data.shape[0]
     number_of_channels = input_data.shape[1]
 
     float_masks = _generate_interpolated_float_masks([time_series_length, 1],
                                                      p_keep, number_of_masks,
-                                                     num_features)[:, :, 0]
+                                                     feature_res)[:, :, 0]
     bool_masks = np.empty(shape=float_masks.shape, dtype=np.bool)
 
     # Convert float masks to bool masks using a dynamic threshold
