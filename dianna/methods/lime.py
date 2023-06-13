@@ -1,10 +1,10 @@
 import numpy as np
 
-from dianna import utils
 from lime.lime_image import LimeImageExplainer
 from lime.lime_image import ImageExplanation
 from lime.lime_text import LimeTextExplainer
 from numpy.typing import NDArray
+from dianna import utils
 
 # To Do: remove this import when the method for different input type is splitted
 from dianna.methods.lime_timeseries import LIMETimeseries  # noqa: F401 ignore unused import
@@ -215,7 +215,7 @@ class LIMEImage:
             maps = [explanation.get_image_and_mask(label, positive_only=positive_only, hide_rest=hide_rest,
                                                    num_features=num_features, **get_image_and_mask_kwargs)[1]
                     for label in labels]
-        else: 
+        else:
             maps = [self.get_explanation_values(label, explanation) for label in labels]
         return maps
 
@@ -287,9 +287,9 @@ class LIMEImage:
     @staticmethod
     def get_explanation_values(label: int, explanation: ImageExplanation) -> NDArray:
         """Get the values from LIME in a salience map.
-        
-        Leverages the `ImageExplanation` class from LIME to generate salience maps 
-        based on the segmentation that was produced on the images, also stored in 
+
+        Leverages the `ImageExplanation` class from LIME to generate salience maps
+        based on the segmentation that was produced on the images, also stored in
         `ImageExplanation`.
 
         Args:
@@ -305,7 +305,7 @@ class LIMEImage:
         segment_ids = [x[0] for x in class_explanation]
 
         # Fill segments with the coefficients produced by LIME
-        for i, segment_id in enumerate(segment_ids): 
-            salience_map = np.where(explanation.segments == segment_id, 
+        for i, segment_id in enumerate(segment_ids):
+            salience_map = np.where(explanation.segments == segment_id,
                                     class_explanation[i][1], salience_map)
         return salience_map
