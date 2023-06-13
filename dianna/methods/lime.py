@@ -1,5 +1,6 @@
 import numpy as np
-from lime.lime_image import LimeImageExplainer
+from numpy.typing import NDArray
+from lime.lime_image import LimeImageExplainer, ImageExplanation
 from lime.lime_text import LimeTextExplainer
 from dianna import utils
 
@@ -164,6 +165,7 @@ class LIMEImage:
                 top_labels=None,
                 num_features=10,
                 num_samples=5000,
+                return_masks=False,
                 positive_only=False,
                 hide_rest=True,
                 **kwargs,
@@ -205,12 +207,14 @@ class LIMEImage:
                                                       num_samples=num_samples,
                                                       **explain_instance_kwargs,
                                                       )
-
-        get_image_and_mask_kwargs = utils.get_kwargs_applicable_to_function(explanation.get_image_and_mask, kwargs)
-        masks = [explanation.get_image_and_mask(label, positive_only=positive_only, hide_rest=hide_rest,
-                                                num_features=num_features, **get_image_and_mask_kwargs)[1]
-                 for label in labels]
-        return masks
+        if return_masks:
+            get_image_and_mask_kwargs = utils.get_kwargs_applicable_to_function(explanation.get_image_and_mask, kwargs)
+            maps = [explanation.get_image_and_mask(label, positive_only=positive_only, hide_rest=hide_rest,
+                                                    num_features=num_features, **get_image_and_mask_kwargs)[1]
+                    for label in labels]
+        else: 
+            maps = [self.get_explanation_values(label, explanation) for label in labels]
+        return maps
 
     def _prepare_image_data(self, input_data):
         """Transforms the data to be of the shape and type LIME expects.
@@ -276,3 +280,16 @@ class LIMEImage:
         if self.preprocess_function is None:
             return moveaxis_function
         return lambda data: self.preprocess_function(moveaxis_function(data))
+    
+    @staticmethod
+    def get_explanation_values(label: int, explanation: ImageExplanation) -> NDArray:
+        salience_map = np.zeros(explanation.segments.shape, explanation.segments.dtype)
+
+        class_explanation = explanation.local_exp[label]
+        segment_ids = [x[0] for x in class_explanation]
+
+        # Fill segments with the coefficients produced by LIME
+        for i, segment_id in enumerate(segment_ids): 
+            salience_map = np.where(explanation.segments == segment_id, 
+                                    class_explanation[i][1], 0.)
+        return salience_map
