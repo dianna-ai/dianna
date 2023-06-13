@@ -1,7 +1,6 @@
 import numpy as np
-
-from lime.lime_image import LimeImageExplainer
 from lime.lime_image import ImageExplanation
+from lime.lime_image import LimeImageExplainer
 from lime.lime_text import LimeTextExplainer
 from numpy.typing import NDArray
 from dianna import utils
