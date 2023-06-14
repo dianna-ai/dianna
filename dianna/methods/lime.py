@@ -298,13 +298,11 @@ class LIMEImage:
         Returns:
             A salience map containing the feature importances from LIME
         """
-        salience_map = np.zeros(explanation.segments.shape, explanation.segments.dtype)
-
         class_explanation = explanation.local_exp[label]
-        segment_ids = [x[0] for x in class_explanation]
+        salience_map = np.zeros(explanation.segments.shape,
+                                dtype=class_explanation[0][1].dtype) # Ensure same dataype for segment values
 
-        # Fill segments with the coefficients produced by LIME
-        for i, segment_id in enumerate(segment_ids):
-            salience_map = np.where(explanation.segments == segment_id,
-                                    class_explanation[i][1], salience_map)
+        # Fill segments
+        for segment_id, segment_val in class_explanation:
+            salience_map[segment_id == explanation.segments] = segment_val
         return salience_map
