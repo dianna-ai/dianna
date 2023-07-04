@@ -285,9 +285,10 @@ class LIMEImage:
     def _get_explanation_values(self, label: int, explanation: ImageExplanation) -> np.array:
         """Get the importance scores from LIME in a salience map.
 
-        Leverages the `ImageExplanation` class from LIME to generate salience maps
-        based on the segmentation that was produced on the images, also stored in
-        `ImageExplanation`.
+        Leverages the `ImageExplanation` class from LIME to generate salience maps. 
+        These salience maps are constructed using the segmentation masks from 
+        the explanation and fills these with the scores from the surrogate model 
+        (default for LIME is Ridge regression) used for the explanation.
 
         Args:
             label: The class label for the given explanation
