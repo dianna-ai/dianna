@@ -2,7 +2,6 @@ import numpy as np
 from lime.lime_image import ImageExplanation
 from lime.lime_image import LimeImageExplainer
 from lime.lime_text import LimeTextExplainer
-from numpy.typing import NDArray
 from dianna import utils
 
 # To Do: remove this import when the method for different input type is splitted
@@ -182,7 +181,7 @@ class LIMEImage:
             top_labels: Top labels
             num_features (int): Number of features
             num_samples (int): Number of samples
-            return_masks (bool): Return discretized masks or LIME values
+            return_masks (bool): If true, return discretized masks. Otherwise, return LIME scores
             positive_only (bool): Positive only
             hide_rest (bool): Hide rest
             kwargs: These parameters are passed on
@@ -215,7 +214,7 @@ class LIMEImage:
                                                    num_features=num_features, **get_image_and_mask_kwargs)[1]
                     for label in labels]
         else:
-            maps = [self.get_explanation_values(label, explanation) for label in labels]
+            maps = [self._get_explanation_values(label, explanation) for label in labels]
         return maps
 
     def _prepare_image_data(self, input_data):
@@ -283,9 +282,8 @@ class LIMEImage:
             return moveaxis_function
         return lambda data: self.preprocess_function(moveaxis_function(data))
 
-    @staticmethod
-    def get_explanation_values(label: int, explanation: ImageExplanation) -> NDArray:
-        """Get the values from LIME in a salience map.
+    def _get_explanation_values(self, label: int, explanation: ImageExplanation) -> np.array:
+        """Get the importance scores from LIME in a salience map.
 
         Leverages the `ImageExplanation` class from LIME to generate salience maps
         based on the segmentation that was produced on the images, also stored in
