@@ -1,19 +1,15 @@
 import numpy as np
-from skimage.transform import resize
 from dianna import utils
 
 # To Do: remove this import when the method for different input type is splitted
 from dianna.methods.rise_timeseries import RISETimeseries  # noqa: F401 ignore unused import
+from dianna.utils.maskers import generate_masks_for_images
 from dianna.utils.predict import make_predictions
 
 
 def normalize(saliency, n_masks, p_keep):
     """Normalizes salience by number of masks and keep probability."""
     return saliency / n_masks / p_keep
-
-
-def _upscale(grid_i, up_size):
-    return resize(grid_i, up_size, order=1, mode="reflect", anti_aliasing=False)
 
 
 class RISEText:
@@ -199,7 +195,7 @@ class RISEImage:
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
         # Expose masks for to make user inspection possible
-        self.masks = self._generate_masks(img_shape, active_p_keep, self.n_masks)
+        self.masks = generate_masks_for_images(self.feature_res, img_shape, active_p_keep, self.n_masks)
 
         # Make sure multiplication is being done for correct axes
         masked = input_data * self.masks
@@ -257,44 +253,11 @@ class RISEImage:
 
     def _calculate_max_class_std(self, p_keep, runner, input_data, n_masks):
         img_shape = input_data.shape[1:3]
-        masks = self._generate_masks(img_shape, p_keep, n_masks)
+        masks = generate_masks_for_images(self.feature_res, img_shape, p_keep, n_masks)
         masked = input_data * masks
         predictions = make_predictions(masked, runner, batch_size=50)
         std_per_class = predictions.std(axis=0)
         return np.max(std_per_class)
-
-    def _generate_masks(self, input_size, p_keep, n_masks):
-        """Generates a set of random masks to mask the input data.
-
-        Args:
-            input_size (int): Size of a single sample of input data, for images without the channel axis.
-            p_keep: Fraction of input data to keep in each mask
-            n_masks: Number of masks
-
-        Returns:
-            The generated masks (np.ndarray)
-        """
-        cell_size = np.ceil(np.array(input_size) / self.feature_res)
-        up_size = (self.feature_res + 1) * cell_size
-
-        grid = np.random.choice(
-            a=(True, False),
-            size=(n_masks, self.feature_res, self.feature_res),
-            p=(p_keep, 1 - p_keep),
-        )
-        grid = grid.astype("float32")
-
-        masks = np.empty((n_masks, *input_size), dtype=np.float32)
-
-        for i in range(n_masks):
-            y = np.random.randint(0, cell_size[0])
-            x = np.random.randint(0, cell_size[1])
-            # Linear upsampling and cropping
-            masks[i, :, :] = _upscale(grid[i], up_size)[
-                y : y + input_size[0], x : x + input_size[1]
-            ]
-        masks = masks.reshape(-1, *input_size, 1)
-        return masks
 
     def _prepare_image_data(self, input_data):
         """Transforms the data to be of the shape and type RISE expects.
