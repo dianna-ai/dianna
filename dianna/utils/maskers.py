@@ -1,6 +1,7 @@
 import warnings
 from typing import Union
 import numpy as np
+from skimage.transform import resize
 
 
 def generate_masks(input_data: np.array, number_of_masks: int, p_keep: float = 0.5):
@@ -92,3 +93,42 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
         warnings.warn('Warning: p_keep chosen too high. Continuing with masking 1 time step per mask.')
         return 1
     return user_requested_steps
+
+
+def _upscale(grid_i, up_size):
+    return resize(grid_i, up_size, order=1, mode="reflect", anti_aliasing=False)
+
+
+def generate_masks_for_images(feature_res, input_size, p_keep, n_masks):
+    """Generates a set of random masks to mask the input data.
+
+    Args:
+        feature_res (int): Resolution of features in masks.
+        input_size (int): Size of a single sample of input data, for images without the channel axis.
+        p_keep: Fraction of input data to keep in each mask
+        n_masks: Number of masks
+
+    Returns:
+        The generated masks (np.ndarray)
+    """
+    cell_size = np.ceil(np.array(input_size) / feature_res)
+    up_size = (feature_res + 1) * cell_size
+
+    grid = np.random.choice(
+        a=(True, False),
+        size=(n_masks, feature_res, feature_res),
+        p=(p_keep, 1 - p_keep),
+    )
+    grid = grid.astype("float32")
+
+    masks = np.empty((n_masks, *input_size), dtype=np.float32)
+
+    for i in range(n_masks):
+        y = np.random.randint(0, cell_size[0])
+        x = np.random.randint(0, cell_size[1])
+        # Linear upsampling and cropping
+        masks[i, :, :] = _upscale(grid[i], up_size)[
+            y : y + input_size[0], x : x + input_size[1]
+        ]
+    masks = masks.reshape(-1, *input_size, 1)
+    return masks
