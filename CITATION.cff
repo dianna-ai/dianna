@@ -43,6 +43,10 @@ authors:
     family-names: Smeets
     given-names: Stef
     orcid: "https://orcid.org/0000-0002-5413-9038"
+  -
+    family-names: Spek
+    given-names: Willem
+    name-particle: "van der"
 
 doi: 10.5281/zenodo.5801485
 version: "1.1.0"
