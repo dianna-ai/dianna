@@ -1,5 +1,6 @@
 from unittest import TestCase
 import numpy as np
+import skimage.segmentation
 from dianna.methods.kernelshap import KERNELSHAPImage
 
 
@@ -63,5 +64,7 @@ class ShapOnImages(TestCase):
             compactness=10.0,
             sigma=0,
         )
+        segments = skimage.segmentation.slic(input_data, n_segments=n_segments)
+        n_segments = np.unique(segments).size
 
         assert shap_values[0].shape == np.zeros((1, n_segments)).shape
