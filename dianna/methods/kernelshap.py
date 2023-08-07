@@ -116,6 +116,7 @@ class KERNELSHAPImage:
         self.image_segments = self._segment_image(self.input_data, n_segments,
                                                   compactness, sigma,
                                                   **slic_kwargs)
+        n_segments = np.unique(self.image_segments).size
 
         # call the Kernel SHAP explainer
         explainer = shap.KernelExplainer(
