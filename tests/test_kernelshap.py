@@ -64,7 +64,11 @@ class ShapOnImages(TestCase):
             compactness=10.0,
             sigma=0,
         )
-        segments = skimage.segmentation.slic(input_data, n_segments=n_segments)
+        segments = skimage.segmentation.slic(image=input_data.reshape(28, 28, 1),
+                                             n_segments=n_segments,
+                                             compactness=10.0,
+                                             sigma=0.)
         n_segments = np.unique(segments).size
 
         assert shap_values[0].shape == np.zeros((1, n_segments)).shape
+
