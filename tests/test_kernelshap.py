@@ -1,6 +1,5 @@
 from unittest import TestCase
 import numpy as np
-import skimage.segmentation
 from dianna.methods.kernelshap import KERNELSHAPImage
 
 
@@ -54,7 +53,7 @@ class ShapOnImages(TestCase):
         n_segments = 50
         explainer = KERNELSHAPImage()
         labels = [0]
-        shap_values, _ = explainer.explain(
+        shap_values, segments = explainer.explain(
             onnx_model_path,
             input_data,
             labels,
@@ -64,11 +63,6 @@ class ShapOnImages(TestCase):
             compactness=10.0,
             sigma=0,
         )
-        segments = skimage.segmentation.slic(image=input_data.reshape(28, 28, 1),
-                                             n_segments=n_segments,
-                                             compactness=10.0,
-                                             sigma=0.)
+        # Check if shapeley values match number of segments
         n_segments = np.unique(segments).size
-
         assert shap_values[0].shape == np.zeros((1, n_segments)).shape
-
