@@ -20,6 +20,8 @@ jobs:
     if: github.event.pull_request.draft == true
     runs-on: 'ubuntu-latest'
     steps:
+      - run: pwd
+      
       - uses: actions/checkout@v3
 
       - uses: ./.github/actions/install-python-and-package
