@@ -165,7 +165,21 @@ def tokenizer():
     ('UNKWORDZ a bad UNKWORDZ UNKWORDZ!?\'"', 9),
     ('such UNKWORDZ UNKWORDZ movie "UNKWORDZUNKWORDZ\'UNKWORDZ', 9),
     ('such a bad UNKWORDZ UNKWORDZ!UNKWORDZ\'UNKWORDZ', 9),
+    pytest.param('its own self-UNKWORDZ universe.', 7,
+                 marks=pytest.mark.xfail(reason='poor handling of -')),
+    pytest.param('its own UNKWORDZ-contained universe.', 7,
+                 marks=pytest.mark.xfail(reason='poor handling of -')),
+    pytest.param('Backslashes are UNKWORDZ/cool.', 6,
+                 marks=pytest.mark.xfail(reason='/ poor handling of /')),
+    pytest.param('Backslashes are fun/UNKWORDZ.', 6,
+                 marks=pytest.mark.xfail(reason='poor handling of /')),
+    pytest.param('    ', 0,
+                 marks=pytest.mark.xfail(reason='Repeated whitespaces')),
+    pytest.param('I like   whitespaces.', 4,
+                 marks=pytest.mark.xfail(reason='Repeated whitespaces')),
 ])
+
+
 def test_spacytokenizer_length(text, length, tokenizer):
     """Test that tokenizer returns strings of the correct length."""
     tokens = tokenizer.tokenize(text)
