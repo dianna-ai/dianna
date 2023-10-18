@@ -66,7 +66,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/install-python-and-package
         with:
-          python-version: '3.10'
+          python-version: '3.11'
           extras-require: dev,dashboard
 
       - name: Ensure browser is installed
