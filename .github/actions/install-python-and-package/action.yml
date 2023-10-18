@@ -44,7 +44,6 @@ runs:
         python3 -m pip install tensorflow-cpu
 
     - name: Install DIANNA
-      if: steps.cache-python-env.outputs.cache-hit != 'true'
       shell: bash {0}
       run: |
         python3 -m pip install -e .[dev]
