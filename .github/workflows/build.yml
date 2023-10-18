@@ -53,7 +53,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Run unit tests
-        run: pytest -v
+        run: python3 -m pytest -v
 
       - name: Verify that we can build the package
         run: python3 setup.py sdist bdist_wheel
