@@ -27,29 +27,29 @@ runs:
       shell: bash {0}
       run: |
         which python3
-        python3 --version
+        python --version
 
     - name: Upgrade pip
       if: steps.cache-python-env.outputs.cache-hit != 'true'
       shell: bash {0}
       run: |
-        python3 -m pip install --upgrade pip setuptools wheel
+        python -m pip install --upgrade pip setuptools wheel
 
     # only necessary on linux to avoid bloated installs
     - name: Install tensorflow/pytorch cpu version
       if: runner.os == 'Linux' && steps.cache-python-env.outputs.cache-hit != 'true'
       shell: bash {0}
       run: |
-        python3 -m pip install torch --index-url https://download.pytorch.org/whl/cpu
-        python3 -m pip install tensorflow-cpu
+        python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+        python -m pip install tensorflow-cpu
 
     - name: Install DIANNA
       shell: bash {0}
       run: |
-        python3 -m pip install -e .[dev]
+        python -m pip install -e .[dev]
 
     - name: Install DIANNA extras
       if: ${{ inputs.extras-require }}
       shell: bash {0}
       run: |
-        python3 -m pip install -e .[${{ inputs.extras-require }}]
+        python -m pip install -e .[${{ inputs.extras-require }}]
