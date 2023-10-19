@@ -75,7 +75,7 @@ The key points of DIANNA:
 * Comes with simple intuitive image and text benchmarks
 * Easily extendable to other XAI methods
 
-For more information on the unique strengths of DIANNA with comparison to other tools, please see the [context landscape](https://dianna.readthedocs.io/en/latest/CONTEXT.html).
+For more information on the unique strengths of DIANNA in comparison to other tools, please see the [context landscape](https://dianna.readthedocs.io/en/latest/CONTEXT.html).
 
 ## Installation
 [![workflow pypi badge](https://img.shields.io/pypi/v/dianna.svg?colorB=blue)](https://pypi.python.org/project/dianna/)
