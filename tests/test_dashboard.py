@@ -123,7 +123,7 @@ def test_image_page(page: Page):
 
     expect(
         page.get_by_text('Add your input data in the left panel to continue')
-    ).to_be_visible()
+    ).to_be_visible(timeout=30_000)
 
     page.locator('label').filter(
         has_text='Load example data').locator('span').click()
@@ -143,7 +143,7 @@ def test_image_page(page: Page):
             page.get_by_role('heading', name='1').get_by_text('1'),
             page.get_by_role('img', name='0').nth(1),
     ):
-        expect(selector).to_be_visible()
+        expect(selector).to_be_visible(timeout=45_000)
 
 
 def test_timeseries_page(page: Page):

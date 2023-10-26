@@ -30,7 +30,7 @@ jobs:
         run: pytest -v
 
       - name: Verify that we can build the package
-        run: python3 setup.py sdist bdist_wheel
+        run: python setup.py sdist bdist_wheel
 
   build_all:
     name: Build for (${{ matrix.python-version }}, ${{ matrix.os }})
@@ -53,10 +53,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Run unit tests
-        run: pytest -v
+        run: python -m pytest -v
 
       - name: Verify that we can build the package
-        run: python3 setup.py sdist bdist_wheel
+        run: python setup.py sdist bdist_wheel
 
   test_dashboard:
     name: Test dashboard
