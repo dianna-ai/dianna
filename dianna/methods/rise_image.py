@@ -2,7 +2,7 @@ import numpy as np
 from dianna import utils
 from dianna.utils.maskers import generate_masks_for_images
 from dianna.utils.predict import make_predictions
-from dianna.utils.predict import normalize
+from dianna.utils.rise_utils import normalize
 
 
 class RISEImage:

@@ -18,10 +18,6 @@ def make_predictions(data, runner, batch_size):
     """
     number_of_masks = len(data)
     predictions = []
-    for i in tqdm(range(0, number_of_masks, batch_size), desc="Explaining"):
-        predictions.append(runner(data[i : i + batch_size]))
+    for i in tqdm(range(0, number_of_masks, batch_size), desc='Explaining'):
+        predictions.append(runner(data[i:i + batch_size]))
     return np.concatenate(predictions)
-
-def normalize(saliency, n_masks, p_keep):
-    """Normalizes salience by number of masks and keep probability."""
-    return saliency / n_masks / p_keep
