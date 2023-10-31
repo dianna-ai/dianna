@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import dianna
 import dianna.visualization
-from dianna.methods.lime import LIMEImage
+from dianna.methods.lime_image import LIMEImage
 from tests.test_onnx_runner import generate_data
 from tests.utils import assert_explanation_satisfies_expectations
 from tests.utils import load_movie_review_model

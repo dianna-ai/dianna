@@ -2,8 +2,8 @@ from unittest import TestCase
 import numpy as np
 import dianna
 import dianna.visualization
-from dianna.methods.rise import RISEImage
-from dianna.methods.rise import RISEText
+from dianna.methods.rise_image import RISEImage
+from dianna.methods.rise_text import RISEText
 from dianna.utils import get_function
 from tests.utils import assert_explanation_satisfies_expectations
 from tests.utils import get_mnist_1_data

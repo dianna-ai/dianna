@@ -1,3 +1,4 @@
+"""Utility functions for perturbation based predictions."""
 import numpy as np
 from tqdm import tqdm
 
@@ -17,6 +18,6 @@ def make_predictions(data, runner, batch_size):
     """
     number_of_masks = len(data)
     predictions = []
-    for i in tqdm(range(0, number_of_masks, batch_size), desc="Explaining"):
-        predictions.append(runner(data[i : i + batch_size]))
+    for i in tqdm(range(0, number_of_masks, batch_size), desc='Explaining'):
+        predictions.append(runner(data[i:i + batch_size]))
     return np.concatenate(predictions)

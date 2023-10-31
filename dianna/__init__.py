@@ -99,19 +99,23 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels,
     explainer = _get_explainer(method, kwargs, modality='Text')
     explain_text_kwargs = utils.get_kwargs_applicable_to_function(
         explainer.explain, kwargs)
-    return explainer.explain(model_or_function=model_or_function,
-                             input_text=input_text,
-                             labels=labels,
-                             tokenizer=tokenizer,
-                             **explain_text_kwargs)
+    return explainer.explain(
+        model_or_function=model_or_function,
+        input_text=input_text,
+        labels=labels,
+        tokenizer=tokenizer,
+        **explain_text_kwargs,
+    )
 
 
 def _get_explainer(method, kwargs, modality):
     try:
         method_submodule = importlib.import_module(
-            f'dianna.methods.{method.lower()}')
+            f'dianna.methods.{method.lower()}_{modality.lower()}')
     except ImportError as err:
-        raise ValueError(f'Method {method} does not exist') from err
+        raise ValueError(
+            f'Method {method.lower()}_{modality.lower()} does not exist'
+        ) from err
     try:
         method_class = getattr(method_submodule, f'{method.upper()}{modality}')
     except AttributeError as err:

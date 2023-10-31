@@ -1,6 +1,6 @@
 from unittest import TestCase
 import numpy as np
-from dianna.methods.kernelshap import KERNELSHAPImage
+from dianna.methods.kernelshap_image import KERNELSHAPImage
 
 
 class ShapOnImages(TestCase):
