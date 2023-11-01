@@ -1,6 +1,6 @@
 # Planned DIANNA developments
 
-- Other data modalities: We are working on adding support for graphs and plan to add, in a later stage, tabular data support. 
+- Other data modalities: We are currently working on adding support for tabular data and support for graphs is also work in progress. 
 
 - Embeddings: We plan to add support for embeddings as a data modality in the near future. This will allow users to create the same or similar explanations and visualizations for their models that is projecting data towards embedded spaces. 
 
