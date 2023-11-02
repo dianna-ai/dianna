@@ -247,11 +247,15 @@ See our [developer documentation](docs/developer_info.rst) for information on de
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5592606.svg)](https://zenodo.org/record/5592606)
 [![RSD](https://img.shields.io/badge/rsd-dianna-00a3e3.svg)](https://www.research-software.nl/software/dianna)
 
-If you use this package for your scientific work, please consider citing it as:
+If you use this package for your scientific work, please consider citing directly the software as:
 
     Ranguelova, E., Bos, P., Liu, Y., Meijer, C., Oostrum, L., Crocioni, G., Ootes, L., Chandramouli, P., Jansen, A., Smeets, S. (2023). dianna (*[VERSION YOU USED]*). Zenodo. https://zenodo.org/record/5592606
 
-See also the [Zenodo page](https://zenodo.org/record/5592606) for exporting the citation to BibTteX and other formats.
+or the JOSS paper as:
+
+    Ranguelova et al., (2022). DIANNA: Deep Insight And Neural Network Analysis. Journal of Open Source Software, 7(80), 4493, https://doi.org/10.21105/joss.04493
+
+See also the [Zenodo page](https://zenodo.org/record/5592606) or the [JOSS page](https://joss.theoj.org/papers/10.21105/joss.04493) for exporting the software citation to BibTteX and other formats.
 
 ## Credits
 
