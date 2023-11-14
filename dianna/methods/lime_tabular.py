@@ -23,30 +23,44 @@ class LimeTabular:
     ):
         """Initializes Lime explainer.
 
+        For numerical features, perturb them by sampling from a Normal(0,1) and
+        doing the inverse operation of mean-centering and scaling, according to the
+        means and stds in the training data.
+
+        For categorical features, perturb by sampling according to the training
+        distribution, and making a binary feature that is 1 when the value is the
+        same as the instance being explained.
+
+        More information can be found in the API guide:
+        https://lime-ml.readthedocs.io/en/latest/lime.html#module-lime.lime_tabular
+
         Args:
+            training_data (np.array): numpy 2d array
+            mode (str, optional): "classification" or "regression"
+            feature_names (strings, optional): list of names corresponding to the columns
+                           in the training data.
+            categorical_features (ints, optional): list of indices corresponding to the
+                                                   categorical columns. Values in these
+                                                   columns MUST be integers.
             kernel_width (int, optional): kernel width
             kernel (callable, optional): kernel
-            feature_names: list of names (strings) corresponding to the columns
-                in the training data.
-            categorical_features: list of indices (ints) corresponding to the
-                categorical columns. Everything else will be considered
-                continuous. Values in these columns MUST be integers.
             verbose (bool, optional): verbose
-            class_names: list of class names, ordered according to whatever the classifier
-                          is using. If not present, class names will be '0', '1', ...
+            class_names (str, optional): list of class names, ordered according to whatever
+                                         the classifier is using. If not present, class names
+                                         will be '0', '1', ...
             feature_selection (str, optional): feature selection
             discretize_continuous (bool, optional): if True, all non-categorical features
                                                     will be discretized into quartiles.
             random_state (int or np.RandomState, optional): seed or random state
+            kwargs: These parameters are passed on
 
         """
         init_instance_kwargs = utils.get_kwargs_applicable_to_function(
             LimeTabularExplainer, kwargs)
 
-        self.mode = mode
         self.explainer = LimeTabularExplainer(
             training_data,
-            mode=self.mode,
+            mode=mode,
             feature_names=feature_names,
             categorical_features=categorical_features,
             kernel_width=kernel_width,
@@ -74,29 +88,26 @@ class LimeTabular:
             model_or_function (callable or str): The function that runs the model to be explained
                                                  or the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained.
-            labels (Iterable(int)): Indices of classes to be explained.
-            top_labels: Top labels
-            num_features (int): Number of features
-            num_samples (int): Number of samples
-            return_masks (bool): If true, return discretized masks. Otherwise, return LIME scores
-            positive_only (bool): Positive only
-            hide_rest (bool): Hide rest
+            labels (Iterable(int), optional): Indices of classes to be explained.
+            top_labels (str, optional): Top labels
+            num_features (int, optional): Number of features
+            num_samples (int, optional): Number of samples
             kwargs: These parameters are passed on
 
-        Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance:
-
-        https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_image.LimeImageExplainer.explain_instance
+        Other keyword arguments: see the documentation for LimeTabularExplainer.explain_instance:
+        https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_tabular.LimeTabularExplainer.explain_instance
 
         Returns:
-            list of heatmaps for each label
+            explanation: An Explanation object containing the LIME explanations for each class.
         """
         # run the explanation.
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(
             self.explainer.explain_instance, kwargs)
-        #runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
+        runner = utils.get_function(model_or_function)
+
         explanation = self.explainer.explain_instance(
             input_data,
-            model_or_function,
+            runner,
             labels=labels,
             top_labels=top_labels,
             num_features=num_features,
