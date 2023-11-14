@@ -183,8 +183,8 @@ num_samples = 500  # The number of samples to generate for the LIME explainer.
 Which of your model's classes do you want an explanation for?
 
 ```python
-class_names= [class_a, class_b]  # The list of class names.
-labels = np.argsort(class_names)  # The list of labels for different classes.
+class_names= [class_a, class_b] # String representation of the different classes of interest
+labels = np.argsort(class_names) # Numerical representation of the different classes of interest for the model
 ```
 
 Run using the XAI method of your choice, for example LIME with the following additional arguments:
