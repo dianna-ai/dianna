@@ -178,7 +178,6 @@ timeseries_instance = pd.read_csv('your_data_instance.csv').astype(float)
 
 num_features = len(timeseries_instance )  # The number of features to include in the explanation.
 num_samples = 500  # The number of samples to generate for the LIME explainer.
-num_slices = len(timeseries_instance)  # The number of slices to divide the time series data into.
 ```
 
 Which of your model's classes do you want an explanation for?
@@ -193,7 +192,7 @@ Run using the XAI method of your choice, for example LIME with the following add
 ```python
 explanation = dianna.explain_timeseries(model_path, timeseries_data=timeseries_instance , method='LIME', 
 					labels=labels, class_names=class_names, num_features=num_features,
-                                	num_samples=num_samples, num_slices=num_slices, distance_method='cosine')
+                                	num_samples=num_samples, distance_method='cosine')
 
 ```
 
