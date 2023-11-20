@@ -176,7 +176,7 @@ def test_masking_has_correct_shape_multivariate():
     number_of_masks = 15
     input_data = _get_multivariate_input_data()
 
-    result = generate_masks(input_data, number_of_masks, 0.5)
+    result = generate_masks(input_data, number_of_masks)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
@@ -186,7 +186,7 @@ def test_masking_univariate_leaves_anything_unmasked():
     number_of_masks = 1
     input_data = _get_univariate_input_data()
 
-    result = generate_masks(input_data, number_of_masks, 0.5)
+    result = generate_masks(input_data, number_of_masks)
 
     assert np.any(result)
     assert np.any(~result)

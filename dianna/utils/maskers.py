@@ -34,12 +34,12 @@ def generate_masks(
 
     time_step_masks = generate_time_step_masks(input_data,
                                                number_of_time_step_masks,
-                                               feature_res, p_keep)
+                                               p_keep, feature_res)
     channel_masks = generate_channel_masks(input_data, number_of_channel_masks,
                                            p_keep)
     combined_masks = generate_time_step_masks(
         input_data, number_of_combined_masks,
-        feature_res, p_keep) * generate_channel_masks(
+        p_keep, feature_res) * generate_channel_masks(
             input_data, number_of_combined_masks, p_keep)
 
     return np.concatenate([time_step_masks, channel_masks, combined_masks],
