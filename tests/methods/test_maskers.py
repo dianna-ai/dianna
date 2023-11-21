@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from pandas import DataFrame
 from dianna.utils.maskers import generate_channel_masks
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import generate_time_step_masks
@@ -64,9 +65,6 @@ def test_mask_has_correct_shape_multivariate():
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
 
-@pytest.mark.skip(
-    'Fraction of masked parts is not exacly p_keep because of the combined masks.'
-)
 @pytest.mark.parametrize(
     'p_keep_and_expected_rate',
     [
@@ -190,3 +188,24 @@ def test_masking_univariate_leaves_anything_unmasked():
 
     assert np.any(result)
     assert np.any(~result)
+
+
+@pytest.mark.parametrize('num_steps', [
+    10,
+    3,
+])
+def test_masks_approximately_correct_number_of_masked_parts_per_time_step(
+        num_steps):
+    """Number of unmasked parts should be conforming the given p_keep."""
+    p_keep = 0.5
+    number_of_masks = 500
+    input_data = _get_univariate_input_data(num_steps=num_steps)
+
+    masks = generate_masks(input_data,
+                           number_of_masks=number_of_masks,
+                           feature_res=num_steps,
+                           p_keep=0.5)[:, :, 0]
+
+    masks_mean = DataFrame(masks).sum() / number_of_masks
+    print(masks_mean)
+    assert np.allclose(masks_mean, p_keep, atol=0.1)
