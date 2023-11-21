@@ -4,7 +4,7 @@ from lime.lime_tabular import LimeTabularExplainer
 from dianna import utils
 
 
-class LimeTabular:
+class LIMETabular:
     """Wrapper around the LIME explainer for tabular data."""
 
     def __init__(
@@ -75,7 +75,7 @@ class LimeTabular:
     def explain(
         self,
         model_or_function,
-        input_data,
+        input_tabular,
         labels=(1, ),
         top_labels=None,
         num_features=10,
@@ -87,7 +87,7 @@ class LimeTabular:
         Args:
             model_or_function (callable or str): The function that runs the model to be explained
                                                  or the path to a ONNX model on disk.
-            input_data (np.ndarray): Data to be explained.
+            input_tabular (np.ndarray): Data to be explained.
             labels (Iterable(int), optional): Indices of classes to be explained.
             top_labels (str, optional): Top labels
             num_features (int, optional): Number of features
@@ -106,7 +106,7 @@ class LimeTabular:
         runner = utils.get_function(model_or_function)
 
         explanation = self.explainer.explain_instance(
-            input_data,
+            input_tabular,
             runner,
             labels=labels,
             top_labels=top_labels,

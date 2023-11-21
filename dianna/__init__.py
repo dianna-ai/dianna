@@ -26,19 +26,18 @@ from . import utils
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-__author__ = 'DIANNA Team'
-__email__ = 'dianna-ai@esciencecenter.nl'
-__version__ = '1.2.0'
+__author__ = "DIANNA Team"
+__email__ = "dianna-ai@esciencecenter.nl"
+__version__ = "1.2.0"
 
 
-def explain_timeseries(model_or_function, timeseries_data, method, labels,
-                       **kwargs):
+def explain_timeseries(model_or_function, input_timeseries, method, labels, **kwargs):
     """Explain timeseries data given a model and a chosen method.
 
     Args:
         model_or_function (callable or str): The function that runs the model to be explained _or_
                                              the path to a ONNX model on disk.
-        timeseries_data (np.ndarray): Timeseries data to be explained
+        input_timeseries (np.ndarray): Timeseries data to be explained
         method (string): One of the supported methods: RISE, LIME or KernelSHAP
         labels (Iterable(int)): Labels to be explained
         kwargs: key word arguments
@@ -47,20 +46,22 @@ def explain_timeseries(model_or_function, timeseries_data, method, labels,
         One heatmap per class.
 
     """
-    explainer = _get_explainer(method, kwargs, modality='Timeseries')
+    explainer = _get_explainer(method, kwargs, modality="Timeseries")
     explain_timeseries_kwargs = utils.get_kwargs_applicable_to_function(
-        explainer.explain, kwargs)
-    return explainer.explain(model_or_function, timeseries_data, labels,
-                             **explain_timeseries_kwargs)
+        explainer.explain, kwargs
+    )
+    return explainer.explain(
+        model_or_function, input_timeseries, labels, **explain_timeseries_kwargs
+    )
 
 
-def explain_image(model_or_function, input_data, method, labels, **kwargs):
+def explain_image(model_or_function, input_image, method, labels, **kwargs):
     """Explain an image (input_data) given a model and a chosen method.
 
     Args:
         model_or_function (callable or str): The function that runs the model to be explained _or_
                                              the path to a ONNX model on disk.
-        input_data (np.ndarray): Image data to be explained
+        input_image (np.ndarray): Image data to be explained
         method (string): One of the supported methods: RISE, LIME or KernelSHAP
         labels (Iterable(int)): Labels to be explained
         kwargs: These keyword parameters are passed on
@@ -69,18 +70,19 @@ def explain_image(model_or_function, input_data, method, labels, **kwargs):
         One heatmap (2D array) per class.
 
     """
-    if method.upper() == 'KERNELSHAP':
+    if method.upper() == "KERNELSHAP":
         # To avoid Access Violation on Windows with SHAP:
         from onnx_tf.backend import prepare  # noqa: F401
-    explainer = _get_explainer(method, kwargs, modality='Image')
+    explainer = _get_explainer(method, kwargs, modality="Image")
     explain_image_kwargs = utils.get_kwargs_applicable_to_function(
-        explainer.explain, kwargs)
-    return explainer.explain(model_or_function, input_data, labels,
-                             **explain_image_kwargs)
+        explainer.explain, kwargs
+    )
+    return explainer.explain(
+        model_or_function, input_image, labels, **explain_image_kwargs
+    )
 
 
-def explain_text(model_or_function, input_text, tokenizer, method, labels,
-                 **kwargs):
+def explain_text(model_or_function, input_text, tokenizer, method, labels, **kwargs):
     """Explain text (input_text) given a model and a chosen method.
 
     Args:
@@ -96,9 +98,10 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels,
         List of (word, index of word in raw text, importance for target class) tuples.
 
     """
-    explainer = _get_explainer(method, kwargs, modality='Text')
+    explainer = _get_explainer(method, kwargs, modality="Text")
     explain_text_kwargs = utils.get_kwargs_applicable_to_function(
-        explainer.explain, kwargs)
+        explainer.explain, kwargs
+    )
     return explainer.explain(
         model_or_function=model_or_function,
         input_text=input_text,
@@ -108,20 +111,47 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels,
     )
 
 
+def explain_tabular(model_or_function, input_tabular, method, labels=(1, ), **kwargs):
+    """Explain tabular (input_text) given a model and a chosen method.
+
+    Args:
+        model_or_function (callable or str): The function that runs the model to be explained _or_
+                                             the path to a ONNX model on disk.
+        input_tabular (np.ndarray): Tabular data to be explained
+        method (string): One of the supported methods: RISE, LIME or KernelSHAP
+        labels (Iterable(int), optional): Labels to be explained
+        kwargs: These keyword parameters are passed on
+
+    Returns:
+        One heatmap (2D array) per class.
+    """
+    explainer = _get_explainer(method, kwargs, modality="Tabular")
+    explain_tabular_kwargs = utils.get_kwargs_applicable_to_function(
+        explainer.explain, kwargs
+    )
+    return explainer.explain(
+        model_or_function=model_or_function,
+        input_tabular=input_tabular,
+        labels=labels,
+        **explain_tabular_kwargs,
+    )
+
 def _get_explainer(method, kwargs, modality):
     try:
         method_submodule = importlib.import_module(
-            f'dianna.methods.{method.lower()}_{modality.lower()}')
+            f"dianna.methods.{method.lower()}_{modality.lower()}"
+        )
     except ImportError as err:
         raise ValueError(
-            f'Method {method.lower()}_{modality.lower()} does not exist'
+            f"Method {method.lower()}_{modality.lower()} does not exist"
         ) from err
     try:
-        method_class = getattr(method_submodule, f'{method.upper()}{modality}')
+        method_class = getattr(method_submodule, f"{method.upper()}{modality}")
     except AttributeError as err:
         raise ValueError(
-            f'Data modality {modality} is not available for method {method.upper()}'
+            f"Data modality {modality} is not available for method {method.upper()}"
         ) from err
     method_kwargs = utils.get_kwargs_applicable_to_function(
-        method_class.__init__, kwargs)
+        method_class.__init__, kwargs
+    )
     return method_class(**method_kwargs)
