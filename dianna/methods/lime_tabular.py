@@ -1,5 +1,5 @@
 """LIME tabular explainer."""
-
+import numpy as np
 from lime.lime_tabular import LimeTabularExplainer
 from dianna import utils
 
@@ -55,12 +55,17 @@ class LIMETabular:
             kwargs: These parameters are passed on
 
         """
+        self.mode = mode
         init_instance_kwargs = utils.get_kwargs_applicable_to_function(
             LimeTabularExplainer, kwargs)
 
+        # temporary solution for setting num_features and top_labels
+        self.num_features = len(feature_names)
+        self.top_labels = len(class_names)
+
         self.explainer = LimeTabularExplainer(
             training_data,
-            mode=mode,
+            mode=self.mode,
             feature_names=feature_names,
             categorical_features=categorical_features,
             kernel_width=kernel_width,
@@ -77,8 +82,6 @@ class LIMETabular:
         model_or_function,
         input_tabular,
         labels=(1, ),
-        top_labels=None,
-        num_features=10,
         num_samples=5000,
         **kwargs,
     ):
@@ -89,8 +92,6 @@ class LIMETabular:
                                                  or the path to a ONNX model on disk.
             input_tabular (np.ndarray): Data to be explained.
             labels (Iterable(int), optional): Indices of classes to be explained.
-            top_labels (str, optional): Top labels
-            num_features (int, optional): Number of features
             num_samples (int, optional): Number of samples
             kwargs: These parameters are passed on
 
@@ -109,10 +110,23 @@ class LIMETabular:
             input_tabular,
             runner,
             labels=labels,
-            top_labels=top_labels,
-            num_features=num_features,
+            top_labels=self.top_labels,
+            num_features=self.num_features,
             num_samples=num_samples,
             **explain_instance_kwargs,
         )
 
-        return explanation
+        if self.mode == 'regression':
+            local_exp = sorted(explanation.local_exp[1])
+            saliency = [i[1] for i in local_exp]
+
+        elif self.mode == 'classification':
+            # extract scores from lime explainer
+            saliency = []
+            for i in range(self.top_labels):
+                local_exp = sorted(explanation.local_exp[i])
+                # shape of local_exp [(index, saliency)]
+                selected_saliency = [x[1] for x in local_exp]
+                saliency.append(selected_saliency[:])
+
+        return np.array(saliency)
