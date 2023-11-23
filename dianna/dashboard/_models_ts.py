@@ -27,7 +27,7 @@ def _run_rise_timeseries(_model, ts_data, **kwargs):
 
     explanation = dianna.explain_timeseries(
         run_model,
-        timeseries_data=ts_data[0],
+        input_timeseries=ts_data[0],
         method='RISE',
         **kwargs,
     )
