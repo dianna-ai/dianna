@@ -5,7 +5,6 @@ In this test case, every test instance is a 28 days by 1 channel array indicatin
 """
 import numpy as np
 
-
 MEAN_TEMP = 10
 
 

@@ -53,7 +53,7 @@ def generate_channel_masks(input_data: np.ndarray, number_of_masks: int,
     number_of_channels_masked = _determine_number_masked(
         p_keep, number_of_channels)
     masked_data_shape = [number_of_masks] + list(input_data.shape)
-    masks = np.ones(masked_data_shape, dtype=np.bool)
+    masks = np.ones(masked_data_shape, dtype=bool)
     for i in range(number_of_masks):
         channels_to_mask = np.random.choice(number_of_channels,
                                             number_of_channels_masked, False)
@@ -82,7 +82,7 @@ def mask_data(data: np.array, masks: np.array, mask_type: Union[object, str]):
     return result
 
 
-def _get_mask_value(data: np.array, mask_type: str) -> int:
+def _get_mask_value(data: np.array, mask_type: object) -> int:
     """Calculates a masking value of the given type for the data."""
     if callable(mask_type):
         return mask_type(data)
@@ -151,8 +151,8 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
     return bool_mask
 
 
-def _generate_interpolated_float_masks(input_size, p_keep, n_masks,
-                                       number_of_features):
+def _generate_interpolated_float_masks(input_size: int, p_keep: float,
+                                       n_masks: int, number_of_features: int):
     """Generates a set of random masks to mask the input data.
 
     Args:

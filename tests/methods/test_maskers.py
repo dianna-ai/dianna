@@ -191,6 +191,23 @@ def test_masking_univariate_leaves_anything_unmasked():
     assert np.any(~result)
 
 
+def test_masking_keep_first_instance():
+    """First instance must be the original data for Lime timeseries.
+
+    Required by `lime_base` explainer, the first instance of masked (or perturbed)
+    data must be the original instance.
+
+    More details can be found in the code:
+    https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148
+    """
+    input_data = _get_multivariate_input_data()
+    number_of_masks = 5
+    masks = generate_masks(input_data, number_of_masks, p_keep=0.9)
+    masks[0, :, :] = 1.0
+    masked = mask_data(input_data, masks, mask_type="mean")
+    assert np.array_equal(masked[0, :, :], input_data)
+
+
 @pytest.mark.parametrize('num_steps', [
     10,
     3,
@@ -244,10 +261,12 @@ def test_generate_interpolated_float_masks(num_steps):
     number_of_masks = 500
     input_data = _get_univariate_input_data(num_steps=num_steps)
 
-    masks = _generate_interpolated_float_masks(input_data.shape,
-                                               number_of_masks=number_of_masks,
-                                               number_of_features=num_steps,
-                                               p_keep=0.5)[:, :, 0, 0]
+    masks = _generate_interpolated_float_masks(
+        input_data.shape,
+        p_keep=0.5,
+        number_of_masks=number_of_masks,
+        number_of_features=num_steps,
+    )[:, :, 0, 0]
 
     masks_mean = DataFrame(masks).sum() / number_of_masks
     print('\n')

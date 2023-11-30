@@ -1,23 +1,8 @@
-import numpy as np
-from tqdm import tqdm
 from dianna import utils
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import mask_data
-
-
-def _make_predictions(input_data, runner, batch_size):
-    """Process the input_data with the model runner in batches and return the predictions."""
-    number_of_masks = input_data.shape[0]
-    batch_predictions = []
-    for i in tqdm(range(0, number_of_masks, batch_size), desc='Explaining'):
-        batch_predictions.append(runner(input_data[i:i + batch_size]))
-    return np.concatenate(batch_predictions)
-
-
-# TODO: Duplicate code from rise.py:
-def normalize(saliency, n_masks, p_keep):
-    """Normalizes salience by number of masks and keep probability."""
-    return saliency / n_masks / p_keep
+from dianna.utils.predict import make_predictions
+from dianna.utils.rise_utils import normalize
 
 
 class RISETimeseries:
@@ -41,6 +26,7 @@ class RISETimeseries:
         self.p_keep = p_keep
         self.preprocess_function = preprocess_function
         self.masks = None
+        self.masked = None
         self.predictions = None
 
     def explain(self,
@@ -71,9 +57,11 @@ class RISETimeseries:
                                     number_of_masks=self.n_masks,
                                     feature_res=self.feature_res,
                                     p_keep=self.p_keep)
-        masked = mask_data(input_timeseries, self.masks, mask_type=mask_type)
+        self.masked = mask_data(input_timeseries,
+                                self.masks,
+                                mask_type=mask_type)
 
-        self.predictions = _make_predictions(masked, runner, batch_size)
+        self.predictions = make_predictions(self.masked, runner, batch_size)
         n_labels = self.predictions.shape[1]
 
         saliency = self.predictions.T.dot(self.masks.reshape(

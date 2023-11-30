@@ -17,16 +17,16 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u"dianna"
-copyright = u"2022, Netherlands eScience Center"
-author = u"DIANNA Team"
+project = u'dianna'
+copyright = u'2022, Netherlands eScience Center'
+author = u'DIANNA Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = "0.9.0"
+version = '1.2.0'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -36,27 +36,19 @@ release = version
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.coverage",
-    "sphinx.ext.doctest",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.mathjax",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.todo",
-    "sphinx.ext.viewcode",
-    "autoapi.extension",
-    "nbsphinx",
-    "nbsphinx_link",
-    "myst_parser"
+    'sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.doctest',
+    'sphinx.ext.intersphinx', 'sphinx.ext.mathjax', 'sphinx.ext.napoleon',
+    'sphinx.ext.todo', 'sphinx.ext.viewcode', 'autoapi.extension', 'nbsphinx',
+    'nbsphinx_link', 'myst_parser'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
+templates_path = ['_templates']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
@@ -70,7 +62,7 @@ autoapi_dirs = ['../dianna']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -80,11 +72,12 @@ html_theme = "sphinx_rtd_theme"
 
 # -- Options for Intersphinx
 
-intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
-                       # Commonly used libraries, uncomment when used in package
-                       # 'numpy': ('http://docs.scipy.org/doc/numpy/', None),
-                       # 'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
-                       # 'scikit-learn': ('https://scikit-learn.org/stable/', None),
-                       # 'matplotlib': ('https://matplotlib.org/stable/', None),
-                       # 'pandas': ('http://pandas.pydata.org/docs/', None),
-                       }
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    # Commonly used libraries, uncomment when used in package
+    # 'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    # 'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
+    # 'scikit-learn': ('https://scikit-learn.org/stable/', None),
+    # 'matplotlib': ('https://matplotlib.org/stable/', None),
+    # 'pandas': ('http://pandas.pydata.org/docs/', None),
+}
