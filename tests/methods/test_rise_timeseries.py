@@ -25,7 +25,7 @@ def test_rise_timeseries_with_expert_model_for_correct_max_and_min():
     temperature_timeseries = average_temperature_timeseries_with_1_cold_and_1_hot_day(cold_day_index, hot_day_index)
 
     summer_explanation, winter_explanation = dianna.explain_timeseries(run_expert_model,
-                                                                       timeseries_data=temperature_timeseries,
+                                                                       input_timeseries=temperature_timeseries,
                                                                        method='rise',
                                                                        labels=[0, 1],
                                                                        p_keep=0.1, n_masks=10000,
