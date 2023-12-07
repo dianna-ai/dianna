@@ -1,5 +1,6 @@
 """LIME tabular explainer."""
 from typing import Iterable
+from typing import List
 from typing import Union
 import numpy as np
 from lime.lime_tabular import LimeTabularExplainer
@@ -13,12 +14,12 @@ class LIMETabular:
         self,
         training_data: np.array,
         mode: str = "classification",
-        feature_names: list[int] = None,
-        categorical_features: list[int] = None,
+        feature_names: List[int] = None,
+        categorical_features: List[int] = None,
         kernel_width: int = 25,
         kernel: callable = None,
         verbose: bool = False,
-        class_names: list[str] = None,
+        class_names: List[str] = None,
         feature_selection: str = "auto",
         random_state: int = None,
         **kwargs,
