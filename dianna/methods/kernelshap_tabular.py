@@ -27,7 +27,7 @@ class KERNELSHAPTabular:
         Arguments:
             training_data (np.array): training data, which should be numpy 2d array
             feature_names (list(str), optional): list of names corresponding to the columns
-                           in the training data.
+                                                 in the training data.
             training_data_kmeans(int, optional): summarize the whole training set with
                                                  weighted kmeans
         """
@@ -43,6 +43,7 @@ class KERNELSHAPTabular:
         self,
         model_or_function: Union[str, callable],
         input_tabular: np.array,
+        link: str = "identity",
         **kwargs,
     ) -> np.array:
         """Run the KernelSHAP explainer.
@@ -51,7 +52,8 @@ class KERNELSHAPTabular:
             model_or_function (callable or str): The function that runs the model to be explained
                                                  or the path to a ONNX model on disk.
             input_tabular (np.ndarray): Data to be explained.
-
+            link (str): A generalized linear model link to connect the feature importance values
+                        to the model. Must be either "identity" or "logit".
             kwargs: These parameters are passed on
 
         Other keyword arguments: see the documentation for KernelExplainer:
@@ -65,13 +67,13 @@ class KERNELSHAPTabular:
             KernelExplainer, kwargs
         )
         self.explainer = KernelExplainer(
-            model_or_function, self.training_data, init_instance_kwargs
+            model_or_function, self.training_data, link, **init_instance_kwargs
         )
 
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(
             self.explainer.shap_values, kwargs
         )
 
-        saliency = self.explainer.shap_values(input_tabular, explain_instance_kwargs)
+        saliency = self.explainer.shap_values(input_tabular, **explain_instance_kwargs)
 
         return saliency
