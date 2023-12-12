@@ -119,11 +119,11 @@ class LIMETabular:
             **explain_instance_kwargs,
         )
 
-        if self.mode == "regression":
+        if self.mode == 'regression':
             local_exp = sorted(explanation.local_exp[1])
             saliency = [i[1] for i in local_exp]
 
-        elif self.mode == "classification":
+        elif self.mode == 'classification':
             # extract scores from lime explainer
             saliency = []
             for i in range(self.top_labels):

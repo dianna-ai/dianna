@@ -13,6 +13,7 @@ class KERNELSHAPTabular:
     def __init__(
         self,
         training_data: np.array,
+        mode: str = "classification",
         feature_names: List[int] = None,
         training_data_kmeans: Optional[int] = None,
     ) -> None:
@@ -26,6 +27,7 @@ class KERNELSHAPTabular:
 
         Arguments:
             training_data (np.array): training data, which should be numpy 2d array
+            mode (str, optional): "classification" or "regression"
             feature_names (list(str), optional): list of names corresponding to the columns
                                                  in the training data.
             training_data_kmeans(int, optional): summarize the whole training set with
@@ -36,7 +38,7 @@ class KERNELSHAPTabular:
         else:
             self.training_data = training_data
         self.feature_names = feature_names
-
+        self.mode = mode
         self.explainer: KernelExplainer
 
     def explain(
@@ -75,5 +77,8 @@ class KERNELSHAPTabular:
         )
 
         saliency = self.explainer.shap_values(input_tabular, **explain_instance_kwargs)
+
+        if self.mode == 'regression':
+            return saliency[0]
 
         return saliency
