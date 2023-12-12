@@ -2,6 +2,7 @@ import heapq
 import warnings
 from typing import Union
 import numpy as np
+from numpy import ndarray
 from skimage.transform import resize
 
 
@@ -26,7 +27,7 @@ def generate_masks(
         return generate_time_step_masks(input_data,
                                         number_of_masks,
                                         p_keep,
-                                        feature_res=feature_res)
+                                        number_of_features=feature_res)
 
     number_of_channel_masks = number_of_masks // 3
     number_of_time_step_masks = number_of_channel_masks
@@ -108,14 +109,13 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
 
 
 def generate_time_step_masks(input_data: np.ndarray, number_of_masks: int,
-                             p_keep: float, feature_res: int):
+                             p_keep: float, number_of_features: int):
     """Generate masks that masks complete time steps at a time while masking time steps in a segmented fashion."""
     time_series_length = input_data.shape[0]
     number_of_channels = input_data.shape[1]
 
-    float_masks = _generate_interpolated_float_masks([time_series_length, 1],
-                                                     p_keep, number_of_masks,
-                                                     feature_res)[:, :, 0]
+    float_masks = _generate_interpolated_float_masks_for_timeseries(
+        [time_series_length, 1], number_of_masks, number_of_features)[:, :, 0]
     bool_masks = np.empty(shape=float_masks.shape, dtype=np.bool)
 
     # Convert float masks to bool masks using a dynamic threshold
@@ -152,40 +152,78 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
 
 
 def _generate_interpolated_float_masks(input_size: int, p_keep: float,
-                                       n_masks: int, number_of_features: int):
+                                       number_of_masks: int,
+                                       number_of_features: int):
     """Generates a set of random masks to mask the input data.
 
     Args:
         input_size (int): Size of a single sample of input data, for images without the channel axis.
         p_keep: ?
-        n_masks: Number of masks
+        number_of_masks: Number of masks
         number_of_features: Number of features per dimension
 
     Returns:
         The generated masks (np.ndarray)
     """
+    grid = np.random.choice(a=(True, False),
+                            size=(number_of_masks, number_of_features,
+                                  number_of_features),
+                            p=(p_keep, 1 - p_keep)).astype('float32')
     cell_size = np.ceil(np.array(input_size) / number_of_features)
     up_size = (number_of_features + 1) * cell_size
-
-    grid = np.random.choice(a=(True, False),
-                            size=(n_masks, number_of_features,
-                                  number_of_features),
-                            p=(p_keep, 1 - p_keep))
-    grid = grid.astype('float32')
-
-    masks = np.empty((n_masks, *input_size), dtype=np.float32)
-
-    for i in range(n_masks):
-        y = np.random.randint(0, cell_size[0])
-        x = np.random.randint(0, cell_size[1])
+    masks = np.empty((number_of_masks, *input_size), dtype=np.float32)
+    for i in range(masks.shape[0]):
+        y_offset = np.random.randint(0, cell_size[0])
+        x_offset = np.random.randint(0, cell_size[1])
         # Linear upsampling and cropping
-        masks[i, :, :] = _upscale(grid[i], up_size)[y:y + input_size[0],
-                                                    x:x + input_size[1]]
+        masks[i, :, :] = _upscale(grid[i],
+                                  up_size)[y_offset:y_offset + input_size[0],
+                                           x_offset:x_offset + input_size[1]]
     masks = masks.reshape(-1, *input_size, 1)
     return masks
 
 
+def _generate_interpolated_float_masks_for_timeseries(input_size: int, number_of_masks: int, number_of_features: int)\
+        -> ndarray:
+    """Generates a set of random masks to mask the input data.
+
+    Args:
+        input_size (int): Size of a single sample of input time series.
+        number_of_masks: Number of masks
+        number_of_features: Number of features in the time dimension
+
+    Returns:
+        The generated masks (np.ndarray)
+    """
+    grid = np.random.random(size=(number_of_masks, number_of_features,
+                                  1), ).astype('float32')
+
+    masks_shape = (number_of_masks, *input_size)
+
+    if grid.shape == masks_shape:
+        masks = grid
+    else:
+        masks = _project_grids_to_masks(grid, masks_shape, number_of_features)
+    return masks.reshape(-1, *input_size, 1)
+
+
+def _project_grids_to_masks(grid: ndarray, masks_shape: tuple,
+                            number_of_features: int) -> ndarray:
+    mask_size = masks_shape[1:]
+    cell_size = np.ceil(np.array(mask_size) / number_of_features)
+    up_size = (number_of_features + 1) * cell_size
+    masks = np.empty(masks_shape, dtype=np.float32)
+    for i in range(masks_shape[0]):
+        y_offset = np.random.randint(0, cell_size[0])
+        x_offset = np.random.randint(0, cell_size[1])
+        masks[i, :, :] = _upscale(grid[i],
+                                  up_size)[y_offset:y_offset + mask_size[0],
+                                           x_offset:x_offset + mask_size[1]]
+    return masks
+
+
 def _upscale(grid_i, up_size):
+    """Up samples and crops the grid to result in an array with size up_size."""
     return resize(grid_i,
                   up_size,
                   order=1,

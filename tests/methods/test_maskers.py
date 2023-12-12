@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 from pandas import DataFrame
 from dianna.utils.maskers import _generate_interpolated_float_masks
+from dianna.utils.maskers import _generate_interpolated_float_masks_for_timeseries
 from dianna.utils.maskers import generate_channel_masks
 from dianna.utils.maskers import generate_masks
 from dianna.utils.maskers import generate_time_step_masks
@@ -36,7 +37,7 @@ def test_generate_time_step_masks_dtype_multivariate():
 
     result = generate_time_step_masks(input_data,
                                       number_of_masks=number_of_masks,
-                                      feature_res=8,
+                                      number_of_features=8,
                                       p_keep=0.5)
 
     assert result.dtype == np.bool
@@ -49,7 +50,7 @@ def test_generate_segmented_time_step_masks_dtype_multivariate():
 
     result = generate_time_step_masks(input_data,
                                       number_of_masks=number_of_masks,
-                                      feature_res=8,
+                                      number_of_features=8,
                                       p_keep=0.5)
 
     assert result.dtype == np.bool
@@ -208,10 +209,7 @@ def test_masking_keep_first_instance():
     assert np.array_equal(masked[0, :, :], input_data)
 
 
-@pytest.mark.parametrize('num_steps', [
-    10,
-    3,
-])
+@pytest.mark.parametrize('num_steps', range(3, 20))
 def test_masks_approximately_correct_number_of_masked_parts_per_time_step(
         num_steps):
     """Number of unmasked parts should be conforming the given p_keep."""
@@ -242,7 +240,7 @@ def test_approximately_time_step_masks(num_steps):
 
     masks = generate_time_step_masks(input_data,
                                      number_of_masks=number_of_masks,
-                                     feature_res=num_steps,
+                                     number_of_features=num_steps,
                                      p_keep=0.5)[:, :, 0]
 
     masks_mean = DataFrame(masks).sum() / number_of_masks
@@ -255,8 +253,8 @@ def test_approximately_time_step_masks(num_steps):
     10,
     3,
 ])
-def test_generate_interpolated_float_masks(num_steps):
-    """Number of unmasked parts should be conforming the given p_keep."""
+def test_generate_interpolated_mean_float_masks(num_steps):
+    """Mean of float masks should be conforming the given p_keep."""
     p_keep = 0.5
     number_of_masks = 500
     input_data = _get_univariate_input_data(num_steps=num_steps)
@@ -272,3 +270,28 @@ def test_generate_interpolated_float_masks(num_steps):
     print('\n')
     print(masks_mean)
     assert np.allclose(masks_mean, p_keep, atol=0.1)
+
+
+@pytest.mark.parametrize('num_steps', range(2, 20))
+def test_generate_interpolated_order_float_masks(num_steps):
+    """Number of unmasked parts should be conforming the given p_keep."""
+    number_of_masks = 500
+    input_data = _get_univariate_input_data(num_steps=num_steps)
+
+    masks = _generate_interpolated_float_masks_for_timeseries(
+        input_data.shape,
+        number_of_masks=number_of_masks,
+        number_of_features=num_steps,
+    )[:, :, 0, 0]
+
+    indices = np.argsort(masks, axis=1)
+    counts = np.empty((num_steps, num_steps))
+    for time_step in range(num_steps):
+        for rank in range(num_steps):
+            p_rank = np.sum(indices[:, time_step] == rank) / number_of_masks
+            counts[time_step, rank] = p_rank
+    index = [['timestep #' for _ in range(num_steps)], list(range(num_steps))]
+    columns = [['rank #' for _ in range(num_steps)], list(range(num_steps))]
+    print(DataFrame(counts, index=index, columns=columns))
+
+    assert np.allclose(counts, 1 / num_steps, atol=0.1)
