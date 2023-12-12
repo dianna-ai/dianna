@@ -38,10 +38,13 @@ def generate_masks(
                                                p_keep, feature_res)
     channel_masks = generate_channel_masks(input_data, number_of_channel_masks,
                                            p_keep)
+
+    # Product of two masks: we need sqrt to ensure correct resulting p_keep
+    sqrt_p_keep = np.sqrt(p_keep)
     combined_masks = generate_time_step_masks(
         input_data, number_of_combined_masks,
-        p_keep, feature_res) * generate_channel_masks(
-            input_data, number_of_combined_masks, p_keep)
+        sqrt_p_keep, feature_res) * generate_channel_masks(
+            input_data, number_of_combined_masks, sqrt_p_keep)
 
     return np.concatenate([time_step_masks, channel_masks, combined_masks],
                           axis=0)
@@ -183,7 +186,7 @@ def _generate_interpolated_float_masks(input_size: int, p_keep: float,
     return masks
 
 
-def _generate_interpolated_float_masks_for_timeseries(input_size: int, number_of_masks: int, number_of_features: int)\
+def _generate_interpolated_float_masks_for_timeseries(input_size: int, number_of_masks: int, number_of_features: int) \
         -> ndarray:
     """Generates a set of random masks to mask the input data.
 
