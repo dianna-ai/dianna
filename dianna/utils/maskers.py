@@ -98,12 +98,12 @@ def _get_mask_value(data: np.array, mask_type: object) -> int:
 def _determine_number_masked(p_keep: float, series_length: int) -> int:
     """Determine the number of time steps that need to be masked."""
     user_requested_steps = int(np.round(series_length * (1 - p_keep)))
-    if user_requested_steps == series_length:
+    if user_requested_steps >= series_length:
         warnings.warn(
             'Warning: p_keep chosen too low. Continuing with leaving 1 time step unmasked per mask.'
         )
         return series_length - 1
-    if user_requested_steps == 0:
+    if user_requested_steps <= 0:
         warnings.warn(
             'Warning: p_keep chosen too high. Continuing with masking 1 time step per mask.'
         )
