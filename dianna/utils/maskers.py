@@ -97,7 +97,15 @@ def _get_mask_value(data: np.array, mask_type: object) -> int:
 
 def _determine_number_masked(p_keep: float, series_length: int) -> int:
     """Determine the number of time steps that need to be masked."""
-    user_requested_steps = int(np.round(series_length * (1 - p_keep)))
+    mean = series_length * (1 - p_keep)
+    floor = np.floor(mean)
+    ceil = np.ceil(mean)
+    if floor != ceil:
+        user_requested_steps = int(
+            np.random.choice([floor, ceil], 1, p=[ceil - mean, mean - floor]))
+    else:
+        user_requested_steps = int(floor)
+
     if user_requested_steps >= series_length:
         warnings.warn(
             'Warning: p_keep chosen too low. Continuing with leaving 1 time step unmasked per mask.'
@@ -144,14 +152,13 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
     flat = float_mask.flatten()
     time_indices = list(range(len(flat)))
     number_of_unmasked_cells = _determine_number_masked(
-        p_keep, len(time_indices))  # int(round(len(time_indices) * p_keep))
+        p_keep, len(time_indices))
     top_indices = heapq.nsmallest(number_of_unmasked_cells,
                                   time_indices,
                                   key=lambda time_step: flat[time_step])
     flat_mask = np.ones(flat.shape, dtype=np.bool)
     flat_mask[top_indices] = False
-    bool_mask = flat_mask.reshape(float_mask.shape)
-    return bool_mask
+    return flat_mask.reshape(float_mask.shape)
 
 
 def _generate_interpolated_float_masks(input_size: int, p_keep: float,
