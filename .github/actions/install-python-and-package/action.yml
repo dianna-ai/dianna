@@ -3,8 +3,8 @@ description: "Installs Python, updates pip and installs DIANNA together with its
 inputs:
   python-version:
     required: false
-    description: "The Python version to use. Specify major and minor version, e.g. '3.9'."
-    default: "3.9"
+    description: "The Python version to use. Specify major and minor version, e.g. '3.10'."
+    default: "3.10"
   extras-require:
     required: false
     description: "The extras dependencies packages to be installed, for instance 'docs' or 'publishing,notebooks'."
