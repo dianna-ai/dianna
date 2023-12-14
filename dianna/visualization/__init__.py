@@ -3,3 +3,4 @@
 from .image import plot_image
 from .text import highlight_text
 from .timeseries import plot_timeseries
+from .tabular import plot_tabular
