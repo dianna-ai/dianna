@@ -1,3 +1,4 @@
+"""Visualization module for tabular data."""
 from typing import List
 from typing import Optional
 import matplotlib.pyplot as plt
