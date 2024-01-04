@@ -10,7 +10,7 @@ class LIMEOnTabular(TestCase):
     """Suite of LIME tests for the tabular case."""
 
     def test_shap_tabular_classification_correct_output_shape(self):
-        """Test the output of explainer."""
+        """Test whether the output of explainer has the correct shape."""
         training_data = np.random.random((10, 2))
         input_data = np.random.random(2)
         feature_names = ["feature_1", "feature_2"]
@@ -24,7 +24,7 @@ class LIMEOnTabular(TestCase):
         assert len(exp[0]) == len(feature_names)
 
     def test_shap_tabular_regression_correct_output_shape(self):
-        """Test the output of explainer."""
+        """Test whether the output of explainer has the correct length."""
         training_data = np.random.random((10, 2))
         input_data = np.random.random(2)
         feature_names = ["feature_1", "feature_2"]
