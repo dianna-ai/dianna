@@ -21,7 +21,7 @@ def plot_tabular(
         y (List[str]): List of feature names
         x_label (str): Label for the x-axis
         y_label (str): Label or list of labels for the y-axis
-        num_features (Optional[int]): Number of top features to display
+        num_features (Optional[int]): Number of most salient features to display
         show_plot (bool, optional): Shows plot if true (for testing or writing
             plots to disk instead).
         output_filename (str, optional): Name of the file to save
