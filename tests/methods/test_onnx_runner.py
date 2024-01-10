@@ -4,7 +4,8 @@ from dianna.utils.onnx_runner import SimpleModelRunner
 
 def generate_data(batch_size):
     """Generate a batch of random data."""
-    return np.random.randint(0, 256, size=(batch_size, 1, 28, 28))  # MNIST shape
+    return np.random.randint(0, 256,
+                             size=(batch_size, 1, 28, 28))  # MNIST shape
 
 
 def test_onnx_runner():
