@@ -10,8 +10,8 @@ def plot_tabular(
     y: List[str],
     x_label: str = "Importance score",
     y_label: str = "Features",
-    num_features: int = None,
-    show_plot: bool = True,
+    num_features: Optional[int] = None,
+    show_plot: Optional[bool] = True,
     output_filename: Optional[str] = None,
 ) -> plt.Figure:
     """Plot feature importance with segments highlighted.
@@ -21,7 +21,7 @@ def plot_tabular(
         y (List[str]): List of feature names
         x_label (str): Label for the x-axis
         y_label (str): Label or list of labels for the y-axis
-        num_features (int): Number of top features to display
+        num_features (Optional[int]): Number of top features to display
         show_plot (bool, optional): Shows plot if true (for testing or writing
             plots to disk instead).
         output_filename (str, optional): Name of the file to save
