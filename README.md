@@ -176,7 +176,7 @@ dianna.visualization.plot_image(explanation[labels.index(class_a)], original_dat
 model_path = 'your_model.onnx'  # model trained on images
 timeseries_instance = pd.read_csv('your_data_instance.csv').astype(float)
 
-num_features = len(timeseries_instance )  # The number of features to include in the explanation.
+num_features = len(timeseries_instance)  # The number of features to include in the explanation.
 num_samples = 500  # The number of samples to generate for the LIME explainer.
 ```
 
@@ -197,6 +197,22 @@ explanation = dianna.explain_timeseries(model_path, timeseries_data=timeseries_i
 ```
 
 For visualization of the heatmap please refer to the [tutorial](https://github.com/dianna-ai/dianna/blob/main/tutorials/lime_timeseries_coffee.ipynb)
+
+### Tabular example:
+
+```python
+model_path = 'your_model.onnx'  # model trained on tabular data
+tabular_instance = pd.read_csv('your_data_instance.csv')
+```
+
+Run using the XAI method of your choice. Note that you need to specify the mode, either regression or classification. This case, for instance a regression task using KernelSHAP with the following additional arguments:
+
+```python
+explanation = dianna.explain_tabular(run_model, input_tabular=data_instance, method='kernelshap',
+                                     mode ='regression', training_data = X_train,
+                                     training_data_kmeans = 5, feature_names=input_features.columns)
+plot_tabular(explanation, X_test.columns, num_features=10)  # display 10 most salient features
+```
 
 ## Dashboard
 
