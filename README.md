@@ -47,7 +47,7 @@ affiliations:
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
- [![status](https://camo.githubusercontent.com/dcc6405df4084ef5aa1cdf0f13d7fc01e72c9e7c4ca907a68c95698cec85e75a/68747470733a2f2f6a6f73732e7468656f6a2e6f72672f7061706572732f66303539326331616563623337313165303638623538393730353838663138352f7374617475732e737667)](https://joss.theoj.org/papers/f0592c1aecb3711e068b58970588f185)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.04493/status.svg)](https://doi.org/10.21105/joss.04493)
 
 <img width="300" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
@@ -176,7 +176,7 @@ dianna.visualization.plot_image(explanation[labels.index(class_a)], original_dat
 model_path = 'your_model.onnx'  # model trained on images
 timeseries_instance = pd.read_csv('your_data_instance.csv').astype(float)
 
-num_features = len(timeseries_instance )  # The number of features to include in the explanation.
+num_features = len(timeseries_instance)  # The number of features to include in the explanation.
 num_samples = 500  # The number of samples to generate for the LIME explainer.
 ```
 
@@ -197,6 +197,24 @@ explanation = dianna.explain_timeseries(model_path, timeseries_data=timeseries_i
 ```
 
 For visualization of the heatmap please refer to the [tutorial](https://github.com/dianna-ai/dianna/blob/main/tutorials/lime_timeseries_coffee.ipynb)
+
+### Tabular example:
+
+```python
+model_path = 'your_model.onnx'  # model trained on tabular data
+tabular_instance = pd.read_csv('your_data_instance.csv')
+```
+
+Run using the XAI method of your choice. Note that you need to specify the mode, either regression or classification. This case, for instance a regression task using KernelSHAP with the following additional arguments:
+
+```python
+explanation = dianna.explain_tabular(run_model, input_tabular=data_instance, method='kernelshap',
+                                     mode ='regression', training_data = X_train,
+                                     training_data_kmeans = 5, feature_names=input_features.columns)
+plot_tabular(explanation, X_test.columns, num_features=10)  # display 10 most salient features
+```
+
+![image](https://github.com/dianna-ai/dianna/assets/25911757/ce0b76b8-f00c-468a-9732-c21704e289f6)
 
 ## Dashboard
 
