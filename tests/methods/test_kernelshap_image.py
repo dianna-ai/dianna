@@ -1,3 +1,4 @@
+"""Unit tests for KernelSHAP image."""
 from unittest import TestCase
 import numpy as np
 from dianna.methods.kernelshap_image import KERNELSHAPImage
@@ -5,6 +6,7 @@ from dianna.methods.kernelshap_image import KERNELSHAPImage
 
 class ShapOnImages(TestCase):
     """Suite of Kernelshap tests for the image case."""
+
     def test_shap_segment_image(self):
         """Test if the segmentation of images are correct given some data."""
         input_data = np.random.random((28, 28, 1))
@@ -41,7 +43,10 @@ class ShapOnImages(TestCase):
             sigma,
         )
         masked_image = explainer._mask_image(
-            np.zeros((1, n_segments)), segments_slic, input_data, background,
+            np.zeros((1, n_segments)),
+            segments_slic,
+            input_data,
+            background,
         )
         # check if all points are masked
         assert np.array_equal(masked_image[0], np.zeros(input_data.shape))
