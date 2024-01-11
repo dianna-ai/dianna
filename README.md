@@ -214,6 +214,8 @@ explanation = dianna.explain_tabular(run_model, input_tabular=data_instance, met
 plot_tabular(explanation, X_test.columns, num_features=10)  # display 10 most salient features
 ```
 
+![image](https://github.com/dianna-ai/dianna/assets/25911757/ce0b76b8-f00c-468a-9732-c21704e289f6)
+
 ## Dashboard
 
 Explore your trained model explained using the DIANNA dashboard. [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
