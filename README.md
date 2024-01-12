@@ -64,7 +64,7 @@ DIANNA software is addressing needs of both (X)AI researchers and mostly the var
 
 After studying the vast XAI landscape we have made choices in the parts of the [XAI Taxonomy](https://doi.org/10.3390/make3030032) on which methods, data modalities and problems types to focus. Our choices, based on the largest usage in scientific literature, are shown graphically in the XAI taxonomy below:
 
-<img src="https://user-images.githubusercontent.com/33344129/234316105-0bc5721f-c4b0-432d-88a7-7586f034ec2c.png" alt="XAI_taxonomy" width="60%"/>
+<img src="https://github.com/dianna-ai/dianna/assets/3244249/9b864980-86f4-4d0e-8a83-af7d6be606f7" alt="XAI_taxonomy" width="80%"/>
 
 The key points of DIANNA:
 
@@ -218,7 +218,8 @@ plot_tabular(explanation, X_test.columns, num_features=10)  # display 10 most sa
 
 ## Dashboard
 
-Explore your trained model explained using the DIANNA dashboard. [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
+Explore the explanations of your trained model using the DIANNA dashboard (for now images, text and time series classification is supported). 
+[Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
 
 <a href="https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard" target="_blank">
   <img width="1000" align="center" alt="Dianna dashboard screenshot" src="https://raw.githubusercontent.com/dianna-ai/dianna/main/dianna/dashboard/dashboard-screenshot.png">
