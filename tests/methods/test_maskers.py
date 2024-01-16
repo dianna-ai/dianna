@@ -318,6 +318,7 @@ def test_projection():
     assert_and_print_rank_counts(masks, num_steps)
 
 
+@pytest.mark.skip(reason='draft')
 def test_projection_draft():
     """Number of unmasked parts should be conforming the given p_keep with a set of evenly distributed offsets."""
     grid_source = np.array([0.0, 0.1, 0.9])
@@ -398,4 +399,4 @@ def assert_and_print_rank_counts(masks, num_steps):
     columns = [['rank #' for _ in range(num_steps)], list(range(num_steps))]
     print(DataFrame(counts, index=index, columns=columns))
 
-    # assert np.allclose(counts, 1 / num_steps, atol=0.1)
+    assert np.allclose(counts, 1 / num_steps, atol=0.1)

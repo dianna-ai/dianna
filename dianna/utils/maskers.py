@@ -3,7 +3,6 @@ import warnings
 from typing import Optional
 from typing import Union
 import numpy as np
-import pytest
 from numpy import ndarray
 from skimage.transform import resize
 
@@ -123,6 +122,20 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
 
 def generate_time_step_masks(input_data: np.ndarray, number_of_masks: int,
                              p_keep: float, number_of_features: int):
+    """Generate masks that mask one or multiple time steps at a time."""
+    series_length = input_data.shape[0]
+    number_of_steps_masked = _determine_number_masked(p_keep, series_length)
+    masked_data_shape = [number_of_masks] + list(input_data.shape)
+    masks = np.ones(masked_data_shape, dtype=bool)
+    for i in range(number_of_masks):
+        steps_to_mask = np.random.choice(series_length, number_of_steps_masked,
+                                         False)
+        masks[i, steps_to_mask] = False
+    return masks
+
+
+def generate_time_step_masks_old(input_data: np.ndarray, number_of_masks: int,
+                                 p_keep: float, number_of_features: int):
     """Generate masks that masks complete time steps at a time while masking time steps in a segmented fashion."""
     time_series_length = input_data.shape[0]
     number_of_channels = input_data.shape[1]
@@ -270,7 +283,6 @@ def _project_grids_to_masks_v2(grids: ndarray,
     return masks
 
 
-@pytest.skip
 def _project_grids_to_masks_v3(grids: ndarray,
                                masks_shape: tuple,
                                offset=None) -> ndarray:

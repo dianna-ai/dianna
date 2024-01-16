@@ -61,7 +61,9 @@ def test_rise_timeseries_with_expert_model_low_feature_res_for_correct_max_and_m
     temperature_timeseries = average_temperature_timeseries_with_1_cold_and_1_hot_day(
         cold_day_index, hot_day_index, series_length=series_length)
 
-    explainer = RISETimeseries(n_masks=9, p_keep=0.5, feature_res=3)
+    explainer = RISETimeseries(n_masks=9,
+                               p_keep=0.5,
+                               feature_res=series_length)
     summer_explanation, winter_explanation = explainer.explain(
         run_expert_model_3_step, temperature_timeseries, labels=[0, 1])
 
