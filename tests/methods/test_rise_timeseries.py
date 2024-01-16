@@ -50,6 +50,38 @@ def test_rise_timeseries_with_expert_model_for_correct_max_and_min(
     assert np.argmax(winter_explanation) == cold_day_index
 
 
+@pytest.mark.parametrize('series_length', range(3, 20))
+def test_rise_timeseries_with_expert_model_low_feature_res_for_correct_max_and_min(
+        series_length):
+    """Test if RISE highlights the correct areas for this artificial example."""
+    np.random.seed(0)
+
+    hot_day_index = 1
+    cold_day_index = 2
+    temperature_timeseries = average_temperature_timeseries_with_1_cold_and_1_hot_day(
+        cold_day_index, hot_day_index, series_length=series_length)
+
+    explainer = RISETimeseries(n_masks=9, p_keep=0.5, feature_res=3)
+    summer_explanation, winter_explanation = explainer.explain(
+        run_expert_model_3_step, temperature_timeseries, labels=[0, 1])
+
+    print('\n' + '\n'.join([
+        ' '.join(['0' if e else '1' for e in mask])
+        for mask in (explainer.masks)
+    ]))
+    print('\n' + '\n'.join([
+        ' '.join([str(e) for e in predictions])
+        for predictions in (explainer.predictions)
+    ]))
+
+    _visualize_explainer_output(hot_day_index, cold_day_index,
+                                summer_explanation, winter_explanation)
+    assert np.argmin(winter_explanation) == hot_day_index
+    assert np.argmax(summer_explanation) == hot_day_index
+    assert np.argmin(summer_explanation) == cold_day_index
+    assert np.argmax(winter_explanation) == cold_day_index
+
+
 def _visualize_explainer_output(hot_day_index, cold_day_index,
                                 summer_explanation, winter_explanation):
     print('\n')

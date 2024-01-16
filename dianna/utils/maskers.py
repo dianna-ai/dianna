@@ -1,7 +1,9 @@
 import heapq
 import warnings
+from typing import Optional
 from typing import Union
 import numpy as np
+import pytest
 from numpy import ndarray
 from skimage.transform import resize
 
@@ -213,12 +215,12 @@ def _generate_interpolated_float_masks_for_timeseries(input_size: int, number_of
     if grid.shape == masks_shape:
         masks = grid
     else:
-        masks = _project_grids_to_masks(grid, masks_shape, number_of_features)
+        masks = _project_grids_to_masks_v3(grid, masks_shape)
     return masks.reshape(-1, *input_size, 1)
 
 
-def _project_grids_to_masks(grid: ndarray, masks_shape: tuple,
-                            number_of_features: int) -> ndarray:
+def _project_grids_to_masks__old(grid: ndarray, masks_shape: tuple,
+                                 number_of_features: int) -> ndarray:
     mask_size = masks_shape[1:]
     cell_size = np.ceil(np.array(mask_size) / number_of_features)
     up_size = (number_of_features + 1) * cell_size
@@ -229,6 +231,79 @@ def _project_grids_to_masks(grid: ndarray, masks_shape: tuple,
         masks[i, :, :] = _upscale(grid[i],
                                   up_size)[y_offset:y_offset + mask_size[0],
                                            x_offset:x_offset + mask_size[1]]
+    return masks
+
+
+def _project_grids_to_masks_v2(grids: ndarray,
+                               masks_shape: tuple,
+                               _offset: Optional[float] = None) -> ndarray:
+    number_of_features = grids.shape[1]
+
+    mask_len = masks_shape[1]
+    up_scale = mask_len / (number_of_features - 1)
+
+    masks = np.empty(masks_shape, dtype=np.float32)
+    for i_mask in range(masks.shape[0]):
+        grid = grids[i_mask, :, 0]
+        mask = masks[i_mask, :, 0]
+        offset = _offset if _offset is not None else np.random.random()
+
+        center_keys = []
+        for i_step in range(mask.shape[0]):
+            center_key = (offset + i_step) / up_scale
+            center_keys.append(center_key)
+
+            ceil_key = int(np.ceil(center_key))
+            floor_key = int(np.floor(center_key))
+            if ceil_key == floor_key:
+                combined_value_from_grid = grid[ceil_key]
+            else:
+                floor_val = grid[floor_key]
+                ceil_val = grid[ceil_key]
+                combined_value_from_grid = (
+                    ceil_key - center_key) * floor_val + (center_key -
+                                                          floor_key) * ceil_val
+
+            mask[i_step] = combined_value_from_grid
+        masks[i_mask, :, 0] = mask  # TODO, what about multi channel?
+
+    return masks
+
+
+@pytest.skip
+def _project_grids_to_masks_v3(grids: ndarray,
+                               masks_shape: tuple,
+                               offset=None) -> ndarray:
+    offset = np.random.random() if offset is None else offset
+
+    number_of_features = grids.shape[1]
+
+    mask_len = masks_shape[1]
+
+    masks = np.empty(masks_shape, dtype=np.float32)
+    for i_mask in range(masks.shape[0]):
+        grid = grids[i_mask, :, 0]
+        mask = masks[i_mask, :, 0]
+
+        center_keys = []
+        for i_mask_step, center_key in enumerate(
+                np.linspace(start=offset,
+                            stop=number_of_features - 2 + offset,
+                            num=mask_len)):
+            center_keys.append(center_key)
+            ceil_key = int(np.ceil(center_key))
+            floor_key = int(np.floor(center_key))
+            if ceil_key == floor_key:
+                combined_value_from_grid = grid[ceil_key]
+            else:
+                floor_val = grid[floor_key]
+                ceil_val = grid[ceil_key]
+                combined_value_from_grid = (
+                    ceil_key - center_key) * floor_val + (center_key -
+                                                          floor_key) * ceil_val
+
+            mask[i_mask_step] = combined_value_from_grid
+        masks[i_mask, :, 0] = mask  # TODO, what about multi channel?
     return masks
 
 
