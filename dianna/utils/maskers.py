@@ -1,6 +1,5 @@
 import heapq
 import warnings
-from typing import Optional
 from typing import Union
 import numpy as np
 from numpy import ndarray
@@ -40,7 +39,7 @@ def generate_masks(
     channel_masks = generate_channel_masks(input_data, number_of_channel_masks,
                                            p_keep)
 
-    # Product of two masks: we need sqrt to ensure correct resulting p_keep
+    # Product of two masks: we need sqrt p_keep to ensure correct resulting p_keep
     sqrt_p_keep = np.sqrt(p_keep)
     combined_masks = generate_time_step_masks(
         input_data, number_of_combined_masks,
@@ -122,20 +121,6 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
 
 def generate_time_step_masks(input_data: np.ndarray, number_of_masks: int,
                              p_keep: float, number_of_features: int):
-    """Generate masks that mask one or multiple time steps at a time."""
-    series_length = input_data.shape[0]
-    number_of_steps_masked = _determine_number_masked(p_keep, series_length)
-    masked_data_shape = [number_of_masks] + list(input_data.shape)
-    masks = np.ones(masked_data_shape, dtype=bool)
-    for i in range(number_of_masks):
-        steps_to_mask = np.random.choice(series_length, number_of_steps_masked,
-                                         False)
-        masks[i, steps_to_mask] = False
-    return masks
-
-
-def generate_time_step_masks_old(input_data: np.ndarray, number_of_masks: int,
-                                 p_keep: float, number_of_features: int):
     """Generate masks that masks complete time steps at a time while masking time steps in a segmented fashion."""
     time_series_length = input_data.shape[0]
     number_of_channels = input_data.shape[1]
@@ -228,7 +213,7 @@ def _generate_interpolated_float_masks_for_timeseries(input_size: int, number_of
     if grid.shape == masks_shape:
         masks = grid
     else:
-        masks = _project_grids_to_masks_v3(grid, masks_shape)
+        masks = _project_grids_to_masks(grid, masks_shape)
     return masks.reshape(-1, *input_size, 1)
 
 
@@ -247,45 +232,9 @@ def _project_grids_to_masks__old(grid: ndarray, masks_shape: tuple,
     return masks
 
 
-def _project_grids_to_masks_v2(grids: ndarray,
-                               masks_shape: tuple,
-                               _offset: Optional[float] = None) -> ndarray:
-    number_of_features = grids.shape[1]
-
-    mask_len = masks_shape[1]
-    up_scale = mask_len / (number_of_features - 1)
-
-    masks = np.empty(masks_shape, dtype=np.float32)
-    for i_mask in range(masks.shape[0]):
-        grid = grids[i_mask, :, 0]
-        mask = masks[i_mask, :, 0]
-        offset = _offset if _offset is not None else np.random.random()
-
-        center_keys = []
-        for i_step in range(mask.shape[0]):
-            center_key = (offset + i_step) / up_scale
-            center_keys.append(center_key)
-
-            ceil_key = int(np.ceil(center_key))
-            floor_key = int(np.floor(center_key))
-            if ceil_key == floor_key:
-                combined_value_from_grid = grid[ceil_key]
-            else:
-                floor_val = grid[floor_key]
-                ceil_val = grid[ceil_key]
-                combined_value_from_grid = (
-                    ceil_key - center_key) * floor_val + (center_key -
-                                                          floor_key) * ceil_val
-
-            mask[i_step] = combined_value_from_grid
-        masks[i_mask, :, 0] = mask  # TODO, what about multi channel?
-
-    return masks
-
-
-def _project_grids_to_masks_v3(grids: ndarray,
-                               masks_shape: tuple,
-                               offset=None) -> ndarray:
+def _project_grids_to_masks(grids: ndarray,
+                            masks_shape: tuple,
+                            offset=None) -> ndarray:
     offset = np.random.random() if offset is None else offset
 
     number_of_features = grids.shape[1]

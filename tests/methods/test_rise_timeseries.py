@@ -61,19 +61,19 @@ def test_rise_timeseries_with_expert_model_low_feature_res_for_correct_max_and_m
     temperature_timeseries = average_temperature_timeseries_with_1_cold_and_1_hot_day(
         cold_day_index, hot_day_index, series_length=series_length)
 
-    explainer = RISETimeseries(n_masks=9,
+    explainer = RISETimeseries(n_masks=1000,
                                p_keep=0.5,
                                feature_res=series_length)
     summer_explanation, winter_explanation = explainer.explain(
         run_expert_model_3_step, temperature_timeseries, labels=[0, 1])
 
-    print('\n' + '\n'.join([
+    print('\nFirst mask examples:\n' + '\n'.join([
         ' '.join(['0' if e else '1' for e in mask])
-        for mask in (explainer.masks)
+        for mask in explainer.masks[:5]
     ]))
-    print('\n' + '\n'.join([
+    print('\nFirst explanation examples: ' + '\n'.join([
         ' '.join([str(e) for e in predictions])
-        for predictions in (explainer.predictions)
+        for predictions in explainer.predictions[:5]
     ]))
 
     _visualize_explainer_output(hot_day_index, cold_day_index,
