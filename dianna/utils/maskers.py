@@ -264,7 +264,10 @@ def _project_grids_to_masks(grids: ndarray,
                                                           floor_key) * ceil_val
 
             mask[i_mask_step] = combined_value_from_grid
-        masks[i_mask, :, 0] = mask  # TODO, what about multi channel?
+        for i_channel in range(masks.shape[-1]):
+            masks[
+                i_mask, :,
+                i_channel] = mask  # Mask all channels with the same time step mask
     return masks
 
 
