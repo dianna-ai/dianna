@@ -1,10 +1,9 @@
 from unittest import TestCase
-import pytest
 import dianna
 from tests.test_onnx_runner import generate_data
 import numpy as np
 
-class initialize_method(TestCase):
+class MethodKwargs(TestCase):
 
     def test_lime_image_correct_kwargs(self):
         model_filename = 'tests/test_data/mnist_model.onnx'
