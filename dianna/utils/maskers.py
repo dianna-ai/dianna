@@ -161,7 +161,7 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
     return flat_mask.reshape(float_mask.shape)
 
 
-def _generate_interpolated_float_masks(input_size: int, p_keep: float,
+def _generate_interpolated_float_masks_for_image(input_size: int, p_keep: float,
                                        number_of_masks: int,
                                        number_of_features: int):
     """Generates a set of random masks to mask the input data.
