@@ -23,6 +23,7 @@ See https://github.com/dianna-ai/dianna
 import importlib
 import logging
 from . import utils
+import warnings 
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
@@ -77,6 +78,10 @@ def explain_image(model_or_function, input_image, method, labels, **kwargs):
     explain_image_kwargs = utils.get_kwargs_applicable_to_function(
         explainer.explain, kwargs
     )
+    for key in explain_image_kwargs.keys():
+        kwargs.pop(key)
+    if kwargs:
+        warnings.warn(message = f'Please note the following kwargs are not being used: {kwargs}')
     return explainer.explain(
         model_or_function, input_image, labels, **explain_image_kwargs
     )
@@ -154,4 +159,6 @@ def _get_explainer(method, kwargs, modality):
     method_kwargs = utils.get_kwargs_applicable_to_function(
         method_class.__init__, kwargs
     )
+    for key in method_kwargs.keys():
+        kwargs.pop(key)
     return method_class(**method_kwargs)
