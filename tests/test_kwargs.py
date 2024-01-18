@@ -1,11 +1,14 @@
 from unittest import TestCase
+import numpy as np
 import dianna
 from tests.test_onnx_runner import generate_data
-import numpy as np
+
 
 class MethodKwargs(TestCase):
+    """Suite of tests for kwargs to explainers"""
 
     def test_lime_image_correct_kwargs(self):
+        """Test to ensure correct kwargs to lime run without issues"""
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1)[0].astype(np.float32)
         axis_labels = ('channels', 'y', 'x')
@@ -29,8 +32,9 @@ class MethodKwargs(TestCase):
                                 positive_only=False,
                                 hide_rest=True,
                                 )
-        
+
     def test_lime_image_extra_kwarg(self):
+        """Test to ensure extra kwargs to lime raise warnings"""
         model_filename = 'tests/test_data/mnist_model.onnx'
         input_data = generate_data(batch_size=1)[0].astype(np.float32)
         axis_labels = ('channels', 'y', 'x')
@@ -56,4 +60,3 @@ class MethodKwargs(TestCase):
                                     hide_rest=True,
                                     extra_kwarg=None
                                     )
-
