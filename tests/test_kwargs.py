@@ -1,7 +1,7 @@
 from unittest import TestCase
 import numpy as np
 import dianna
-from tests.test_onnx_runner import generate_data
+from tests.methods.test_onnx_runner import generate_data
 from tests.utils import load_movie_review_model
 from tests.utils import run_model
 
