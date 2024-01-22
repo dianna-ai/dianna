@@ -51,6 +51,10 @@ def explain_timeseries(model_or_function, input_timeseries, method, labels, **kw
     explain_timeseries_kwargs = utils.get_kwargs_applicable_to_function(
         explainer.explain, kwargs
     )
+    for key in explain_timeseries_kwargs.keys():
+        kwargs.pop(key)
+    if kwargs:
+        warnings.warn(message = f'Please note the following kwargs are not being used: {kwargs}')
     return explainer.explain(
         model_or_function, input_timeseries, labels, **explain_timeseries_kwargs
     )
@@ -107,6 +111,10 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels, **kwa
     explain_text_kwargs = utils.get_kwargs_applicable_to_function(
         explainer.explain, kwargs
     )
+    for key in explain_text_kwargs.keys():
+        kwargs.pop(key)
+    if kwargs:
+        warnings.warn(message = f'Please note the following kwargs are not being used: {kwargs}')
     return explainer.explain(
         model_or_function=model_or_function,
         input_text=input_text,
@@ -134,6 +142,10 @@ def explain_tabular(model_or_function, input_tabular, method, labels=(1, ), **kw
     explain_tabular_kwargs = utils.get_kwargs_applicable_to_function(
         explainer.explain, kwargs
     )
+    for key in explain_tabular_kwargs.keys():
+        kwargs.pop(key)
+    if kwargs:
+        warnings.warn(message = f'Please note the following kwargs are not being used: {kwargs}')
     return explainer.explain(
         model_or_function=model_or_function,
         input_tabular=input_tabular,
