@@ -16,7 +16,7 @@ def plot_timeseries(
     x_label: str = 't',
     y_label: Union[str, Iterable[str]] = None,
     cmap: Optional[str] = None,
-    show_plot: bool = False,
+    show_plot: Optional[bool] = False,
     output_filename: Optional[str] = None,
 ) -> plt.Figure:
     """Plot timeseries with segments highlighted.

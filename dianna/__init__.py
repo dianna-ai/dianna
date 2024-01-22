@@ -29,7 +29,7 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = 'DIANNA Team'
 __email__ = 'dianna-ai@esciencecenter.nl'
-__version__ = '1.2.0'
+__version__ = '1.3.0'
 
 
 def explain_timeseries(model_or_function, input_timeseries, method, labels, **kwargs):
