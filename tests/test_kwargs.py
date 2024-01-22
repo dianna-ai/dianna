@@ -79,7 +79,7 @@ class TextKwargs(TestCase):
                             feature_res=8,
                             p_keep=0.5,
                             preprocess_function=None,
-                            batch_size=100      
+                            batch_size=100
                             )
 
     def test_rise_text_extra_kwarg(self):
@@ -97,7 +97,7 @@ class TextKwargs(TestCase):
                                 feature_res=8,
                                 p_keep=0.5,
                                 preprocess_function=None,
-                                batch_size=100,   
+                                batch_size=100,
                                 extra_kwarg=None
                                 )
 
@@ -117,7 +117,7 @@ class TimeseriesKwargs(TestCase):
                                     run_model,
                                     input_timeseries=input_data,
                                     method='LIME',
-                                    labels=[0,1], 
+                                    labels=[0,1],
                                     class_names=["summer", "winter"],
                                     kernel_width=25,
                                     verbose=False,
@@ -140,7 +140,7 @@ class TimeseriesKwargs(TestCase):
                                         run_model,
                                         input_timeseries=input_data,
                                         method='LIME',
-                                        labels=[0,1], 
+                                        labels=[0,1],
                                         class_names=["summer", "winter"],
                                         kernel_width=25,
                                         verbose=False,
@@ -159,8 +159,7 @@ class TabularKwargs(TestCase):
     """Suite of tests for kwargs to explainers for Images."""
 
     def test_lime_tabular_correct_kwargs(self):
-        """To be implemented"""
+        """To be implemented."""
 
     def test_rise_text_extra_kwarg(self):
-        """To be implemented"""
-       
+        """To be implemented."""
