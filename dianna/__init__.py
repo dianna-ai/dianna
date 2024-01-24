@@ -171,6 +171,7 @@ def _get_explainer(method, kwargs, modality):
     method_kwargs = utils.get_kwargs_applicable_to_function(
         method_class.__init__, kwargs
     )
+    # Remove used kwargs from list of kwargs passed to the function.
     for key in method_kwargs.keys():
         kwargs.pop(key)
     return method_class(**method_kwargs)
