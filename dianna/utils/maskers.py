@@ -217,25 +217,17 @@ def _generate_interpolated_float_masks_for_timeseries(input_size: int, number_of
     return masks.reshape(-1, *input_size, 1)
 
 
-def _project_grids_to_masks__old(grid: ndarray, masks_shape: tuple,
-                                 number_of_features: int) -> ndarray:
-    mask_size = masks_shape[1:]
-    cell_size = np.ceil(np.array(mask_size) / number_of_features)
-    up_size = (number_of_features + 1) * cell_size
-    masks = np.empty(masks_shape, dtype=np.float32)
-    for i in range(masks_shape[0]):
-        y_offset = np.random.randint(0, cell_size[0])
-        x_offset = np.random.randint(0, cell_size[1])
-        masks[i, :, :] = _upscale(grid[i],
-                                  up_size)[y_offset:y_offset + mask_size[0],
-                                           x_offset:x_offset + mask_size[1]]
-    return masks
+def _project_grids_to_masks(grids: ndarray, masks_shape: tuple) -> ndarray:
+    """Projects a set of (low resolution) grids onto a target resolution masks.
 
+    Args:
+        grids: Set of grids with a pattern for each resulting mask
+        masks_shape: Resolution of the resulting masks
 
-def _project_grids_to_masks(grids: ndarray,
-                            masks_shape: tuple,
-                            offset=None) -> ndarray:
-    offset = np.random.random() if offset is None else offset
+    Returns:
+        Set of masks with specified shape based on the grids
+    """
+    offset = np.random.random()
 
     number_of_features = grids.shape[1]
 
@@ -248,9 +240,11 @@ def _project_grids_to_masks(grids: ndarray,
 
         center_keys = []
         for i_mask_step, center_key in enumerate(
-                np.linspace(start=offset,
-                            stop=number_of_features - 2 + offset,
-                            num=mask_len)):
+                np.linspace(
+                    start=offset,
+                    stop=number_of_features - 2 +
+                    offset,  # See timeseries masking documentation
+                    num=mask_len)):
             center_keys.append(center_key)
             ceil_key = int(np.ceil(center_key))
             floor_key = int(np.floor(center_key))
