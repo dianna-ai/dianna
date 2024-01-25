@@ -13,7 +13,7 @@ command_line = "-m pytest"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py38,py39,310
+envlist = py38,py39,py310,py311
 skip_missing_interpreters = true
 
 [testenv]
@@ -87,7 +87,7 @@ per-file-ignores = {}
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-target-version = "py39"
+target-version = "py310"
 line-length = 120
 
 [tool.ruff.isort]

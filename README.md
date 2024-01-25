@@ -47,7 +47,7 @@ affiliations:
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
- [![status](https://camo.githubusercontent.com/dcc6405df4084ef5aa1cdf0f13d7fc01e72c9e7c4ca907a68c95698cec85e75a/68747470733a2f2f6a6f73732e7468656f6a2e6f72672f7061706572732f66303539326331616563623337313165303638623538393730353838663138352f7374617475732e737667)](https://joss.theoj.org/papers/f0592c1aecb3711e068b58970588f185)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.04493/status.svg)](https://doi.org/10.21105/joss.04493)
 
 <img width="300" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
@@ -64,7 +64,7 @@ DIANNA software is addressing needs of both (X)AI researchers and mostly the var
 
 After studying the vast XAI landscape we have made choices in the parts of the [XAI Taxonomy](https://doi.org/10.3390/make3030032) on which methods, data modalities and problems types to focus. Our choices, based on the largest usage in scientific literature, are shown graphically in the XAI taxonomy below:
 
-<img src="https://user-images.githubusercontent.com/33344129/234316105-0bc5721f-c4b0-432d-88a7-7586f034ec2c.png" alt="XAI_taxonomy" width="60%"/>
+<img src="https://github.com/dianna-ai/dianna/assets/3244249/9b864980-86f4-4d0e-8a83-af7d6be606f7" alt="XAI_taxonomy" width="80%"/>
 
 The key points of DIANNA:
 
@@ -176,7 +176,7 @@ dianna.visualization.plot_image(explanation[labels.index(class_a)], original_dat
 model_path = 'your_model.onnx'  # model trained on images
 timeseries_instance = pd.read_csv('your_data_instance.csv').astype(float)
 
-num_features = len(timeseries_instance )  # The number of features to include in the explanation.
+num_features = len(timeseries_instance)  # The number of features to include in the explanation.
 num_samples = 500  # The number of samples to generate for the LIME explainer.
 ```
 
@@ -198,9 +198,28 @@ explanation = dianna.explain_timeseries(model_path, timeseries_data=timeseries_i
 
 For visualization of the heatmap please refer to the [tutorial](https://github.com/dianna-ai/dianna/blob/main/tutorials/lime_timeseries_coffee.ipynb)
 
+### Tabular example:
+
+```python
+model_path = 'your_model.onnx'  # model trained on tabular data
+tabular_instance = pd.read_csv('your_data_instance.csv')
+```
+
+Run using the XAI method of your choice. Note that you need to specify the mode, either regression or classification. This case, for instance a regression task using KernelSHAP with the following additional arguments:
+
+```python
+explanation = dianna.explain_tabular(run_model, input_tabular=data_instance, method='kernelshap',
+                                     mode ='regression', training_data = X_train,
+                                     training_data_kmeans = 5, feature_names=input_features.columns)
+plot_tabular(explanation, X_test.columns, num_features=10)  # display 10 most salient features
+```
+
+![image](https://github.com/dianna-ai/dianna/assets/25911757/ce0b76b8-f00c-468a-9732-c21704e289f6)
+
 ## Dashboard
 
-Explore your trained model explained using the DIANNA dashboard. [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
+Explore the explanations of your trained model using the DIANNA dashboard (for now images, text and time series classification is supported). 
+[Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
 
 <a href="https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard" target="_blank">
   <img width="1000" align="center" alt="Dianna dashboard screenshot" src="https://raw.githubusercontent.com/dianna-ai/dianna/main/dianna/dashboard/dashboard-screenshot.png">
@@ -214,22 +233,29 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 
 | Dataset                                                                                                                                                                                                                                     | Description                                                                                                                                                                 | Examples                                                                                                                                               | Generation                                                                                                                                             |
 | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Binary MNIST `<img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152354583-d7b68902-d402-4098-922b-b1a33b07e3e1.png">`                                                             | Greyscale images of the digits "1" and "0" - a 2-class subset from the famous[MNIST dataset](http://yann.lecun.com/exdb/mnist/) for handwritten digit classification.          | `<img width="120" alt="BinaryMNIST" src="https://user-images.githubusercontent.com/3244249/150808267-3d27eae0-78f2-45f8-8569-cb2561f2c2e9.png">`     | [Binary MNIST dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/MNIST)                       |
-| [Simple Geometric (circles and triangles)](https://doi.org/10.5281/zenodo.5012824) `<img width="20" alt="Simple Geometric Logo" src="https://user-images.githubusercontent.com/3244249/150808842-d35d741e-294a-4ede-bbe9-58e859483589.png">` | Images of circles and triangles for 2-class geometric shape classificaiton. The shapes of varying size and orientation and the background have varying uniform gray levels. | `<img width="130" alt="SimpleGeometric" src="https://user-images.githubusercontent.com/3244249/150808125-e1576237-47fa-4e51-b01e-180904b7c7f6.png">` | [Simple geometric shapes dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/geometric_shapes) |
-| [Simple Scientific (LeafSnap30)](https://zenodo.org/record/5061353/)`<img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/150815639-2da560d4-8b26-4eeb-9ab4-dabf221a264a.png">`                      | Color images of tree leaves - a 30-class post-processed subset from the LeafSnap dataset for automatic identification of North American tree species.                       | `<img width="600" alt="LeafSnap" src="https://user-images.githubusercontent.com/3244249/150804246-f714e517-641d-48b2-af26-2f04166870d6.png">`        | [LeafSnap30 dataset generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/dataset_preparation/LeafSnap/)                     |
+| Binary MNIST <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152354583-d7b68902-d402-4098-922b-b1a33b07e3e1.png">                                                             | Greyscale images of the digits "1" and "0" - a 2-class subset from the famous[MNIST dataset](http://yann.lecun.com/exdb/mnist/) for handwritten digit classification.          | <img width="120" alt="BinaryMNIST" src="https://user-images.githubusercontent.com/3244249/150808267-3d27eae0-78f2-45f8-8569-cb2561f2c2e9.png">     | [Binary MNIST dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/MNIST)                       |
+| [Simple Geometric (circles and triangles)](https://doi.org/10.5281/zenodo.5012824) <img width="20" alt="Simple Geometric Logo" src="https://user-images.githubusercontent.com/3244249/150808842-d35d741e-294a-4ede-bbe9-58e859483589.png"> | Images of circles and triangles for 2-class geometric shape classificaiton. The shapes of varying size and orientation and the background have varying uniform gray levels. | <img width="130" alt="SimpleGeometric" src="https://user-images.githubusercontent.com/3244249/150808125-e1576237-47fa-4e51-b01e-180904b7c7f6.png"> | [Simple geometric shapes dataset generation](https://github.com/dianna-ai/dianna-exploration/tree/main/example_data/dataset_preparation/geometric_shapes) |
+| [Simple Scientific (LeafSnap30)](https://zenodo.org/record/5061353/) <img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/150815639-2da560d4-8b26-4eeb-9ab4-dabf221a264a.png">                      | Color images of tree leaves - a 30-class post-processed subset from the LeafSnap dataset for automatic identification of North American tree species.                       | <img width="600" alt="LeafSnap" src="https://user-images.githubusercontent.com/3244249/150804246-f714e517-641d-48b2-af26-2f04166870d6.png">        | [LeafSnap30 dataset generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/dataset_preparation/LeafSnap/)                     |
 
 ### Text
 
 | Dataset                                                                                                                                                                                                                            | Description                                                                   | Examples                                                         | Generation                                                          |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- | :--------------------------------------------------------------- | :------------------------------------------------------------------ |
-| [Stanford sentiment treebank](https://nlp.stanford.edu/sentiment/index.html) `<img width="20" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152355020-908c04f3-aa99-489d-b87a-7e6b1f586118.png">` | Dataset for predicting the sentiment, positive or negative, of movie reviews. | _This movie was actually neither that funny, nor super witty._ | [Sentiment treebank](https://nlp.stanford.edu/sentiment/treebank.html) |
+| [Stanford sentiment treebank](https://nlp.stanford.edu/sentiment/index.html) <img width="20" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152355020-908c04f3-aa99-489d-b87a-7e6b1f586118.png"> | Dataset for predicting the sentiment, positive or negative, of movie reviews. | _This movie was actually neither that funny, nor super witty._ | [Sentiment treebank](https://nlp.stanford.edu/sentiment/treebank.html) |
 
 ### Time series
 
 | Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
-| [Coffee dataset](https://timeseriesclassification.com/description.php?Dataset=Coffee) `<img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162">` | Food spectographs time series dataset for a two class problem to distinguish between Robusta and Arabica coffee beans.                                         | `<img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/763002c5-40ad-48cc-9de0-ea43d7fa8a75)">` | [data source](https://github.com/QIBChemometrics/Benchtop-NMR-Coffee-Survey) |
-| [Weather dataset](https://zenodo.org/record/7525955) `<img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">`                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | `<img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d)">` | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
+| [Coffee dataset](https://timeseriesclassification.com/description.php?Dataset=Coffee) <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162"> | Food spectographs time series dataset for a two class problem to distinguish between Robusta and Arabica coffee beans.                                         | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/763002c5-40ad-48cc-9de0-ea43d7fa8a75)"> | [data source](https://github.com/QIBChemometrics/Benchtop-NMR-Coffee-Survey) |
+| [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d)"> | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
+
+### Tabular 
+
+| Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
+| [Pengiun dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris) <img width="75" alt="Penguins Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57)"> | Palmer Archipelago (Antarctica) penguin dataset is a great intro dataset for data exploration & visualization similar to the famous Iris dataset.                                         | <img width="500" alt="example image" src="https://github.com/allisonhorst/palmerpenguins/blob/main/man/figures/README-mass-flipper-1.png"> | [data source](https://github.com/allisonhorst/palmerpenguins) |
+| [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d)"> | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
 
 ## ONNX models
 
@@ -267,6 +293,14 @@ And here are links to notebooks showing how we created our models on the benchma
 | Coffee model                                              | [Coffee model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/coffee/generate_model.ipynb)                       |
 | [Season prediction model](https://zenodo.org/record/7543883) | [Season prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/season_prediction/generate_model.ipynb) |
 
+### Tabular
+
+| Models                                                    | Generation                                                                                                                                                        |
+| :-------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Penguin model    (classification)                         | [Penguin model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/penguin_species/generate_model.ipynb)                       |
+| Sunshine hours prediction model (regression) | [Sunshine hours prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/sunshine_prediction/generate_model.ipynb) |
+
+
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
 
 ## Tutorials
@@ -279,9 +313,9 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 | :--------- | :------------------------------------------------ | :----------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------- |
 | Images     | ✅                                                | ✅                                                                 | ✅                                                                                                   |
 | Text       | ✅                                                | ✅                                                                 |                                                                                                      |
-| Timeseries | ✅                                                | ✅                                                                 |                                                                                                      |
-| Embedding  | planned                                           | planned                                                            | planned                                                                                              |
-| Tabular    | planned                                           | planned                                                            | planned                                                                                              |
+| Timeseries | ✅                                                | ✅                                                                 |                                                                                                                                                                       |
+| Tabular    | planned                                           | ✅                                                            | planned                                                                                              |
+| Embedding  | planned                                           | planned                                                            | planned   
 | Graphs*    | work in progress                                  | work in progress                                                   | work in progress                                                                                     |
 
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective criteria (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
