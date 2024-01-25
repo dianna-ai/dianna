@@ -223,3 +223,31 @@ def test_masks_approximately_correct_number_of_masked_parts_per_time_step(
     print('\n')
     print(masks_mean)
     assert np.allclose(masks_mean, p_keep, atol=0.1)
+
+
+@pytest.mark.parametrize('num_steps', range(5, 20))
+def test_masks_approximately_correct_number_of_masked_parts_per_time_step_projected(
+        num_steps):
+    """Number of unmasked parts should be conforming the given p_keep."""
+    p_keep = 0.5
+    number_of_masks = 500
+    input_data = _get_univariate_input_data(num_steps=num_steps)
+
+    masks = generate_masks(input_data,
+                           number_of_masks=number_of_masks,
+                           feature_res=6,
+                           p_keep=p_keep)[:, :, 0]
+    print_univariate_masks(masks[:5])
+
+    masks_mean = DataFrame(masks).mean()
+    print('\n')
+    print(masks_mean)
+    assert np.allclose(masks_mean, p_keep, atol=0.1)
+
+
+def print_univariate_masks(masks: np.ndarray):
+    """Print univariate masks to console for inspection."""
+    print('\n')
+    for mask in masks:
+        steps = ['1' if s else '0' for s in mask]
+        print(' '.join(steps))
