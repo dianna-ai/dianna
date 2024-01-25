@@ -12,13 +12,14 @@
 | [visualization.timeseries]|  x,y               | np.ndarray    | x shape (number of time_steps), y shape (number_of_time_steps, number_of_channels) |
 
 
-| Output                    | Name                       | Type           | value range |
-| :-------------------      | :------------------------: | :-----------:  | :----:      |
-| [explain_timeseries]      |  heatmap per class         | np.ndarray     |             |
-| [rise_timeseries]         |  heatmap per class         | np.ndarray     |             |
-| [lime_timeseries]         |  an explanation object     | explanation    |             |
-| [visualization.timeseries]|  figure                    | plt.Figure     |             |
+| Output                    | Name                    | Type         | value range |
+| :-------------------      | :---------------------: | :-----------:| :----:      |
+| [explain_timeseries]      |  heatmap per class      | np.ndarray   |             |
+| [rise_timeseries]         |  heatmap per class      | np.ndarray   |   [0, 1]  [normalize] is applied   |
+| [lime_timeseries]         |  an explanation object  | (np.ndarray)*|   scores    |
+| [visualization.timeseries]|  figure                 | plt.Figure   |   [-1, 1]   |
 
+`*` mismatch between API doc and implementation
 
 ### Image
 
@@ -28,17 +29,18 @@
 | [rise_image]         |  input_image       | np.ndarray    |         |
 | [lime_image]         |  input_data        | np.ndarray    |  RGB    |
 | [kernelshap_image]   |  image             | np.ndarray    |         |
-| [visualization.image]|  heatmap           |               |      |
+| [visualization.image]|  heatmap           |               |         |
 
 
 | Output               | Name                       | Type           | value range    |
 | :------------------- | :------------------------: | :-----------:  | :----:  |
 | [explain_image]      |  heatmap per class         | 2D array       |         |
-| [rise_image]         |  heatmap per class         | np.ndarray     |         |
-| [lime_image]         |  list of heatmaps          | list           |         |
-| [kernelshap_image]   |  Explanation heatmap       | np.ndarray     |         |
-| [visualization.image]|  plot                      |     None       |         |
+| [rise_image]         |  heatmap per class         | np.ndarray     |[0, 1]  [normalize] is applied |
+| [lime_image]         |  list of heatmaps          | list           |  scores |
+| [kernelshap_image]   |  Explanation heatmap       | np.ndarray (tuple)*     |   -      |
+| [visualization.image]|  plot                      |     None       | defined by cmap |
 
+`*` mismatch between API doc and implementation
 
 ### Text
 
@@ -107,7 +109,7 @@
 
 | Output               | Name                       | Type           | value range |
 | :------------------- | :------------------------: | :-----------:  | :----:      |
-| [rise_timeseries]    |  heatmap per class         | np.ndarray     |             |
+| [rise_timeseries]    |  heatmap per class         | np.ndarray     |   [0, 1]    |
 | [rise_image]         |  heatmap per class         | np.ndarray     |             |
 | [rise_text]          |  heatmap per class         | np.ndarray     |             |
 
@@ -124,10 +126,12 @@
 
 | Output               | Name                       | Type           | value range |
 | :------------------- | :------------------------: | :-----------:  | :----:      |
-| [lime_timeseries]    |  an explanation object     | explanation    |             |
+| [lime_timeseries]    |  an explanation object     | (np.ndarray)*  |   scores    |
 | [lime_image]         |  list of heatmaps          | list           |         |
 | [lime_text]          |  (word, index, importance) | List of tuples |         |
 | [lime_tabular]       |  an explanation object     | explanation    |         |
+
+`*` mismatch between API doc and implementation
 
 ### KERNELSHAP
 
@@ -137,11 +141,12 @@
 | [kernelshap_tabular] |  input_tabular     | np.ndarray    |         |
 
 
-| Output               | Name                       | Type           | value range    |
-| :------------------- | :------------------------: | :-----------:  | :----:  |
-| [kernelshap_image]   |  Explanation heatmap       | np.ndarray     |         |
-| [kernelshap_tabular] |  an explanation object     | explanation    |         |
+| Output               | Name                       | Type                | value range    |
+| :------------------- | :------------------------: | :----------------:  | :----:  |
+| [kernelshap_image]   |  Explanation heatmap       | np.ndarray (tuple)* |         |
+| [kernelshap_tabular] |  an explanation object     | explanation         |         |
 
+`*` mismatch between API doc and implementation
 
 ### Visualization
 
@@ -155,7 +160,7 @@
 
 | Output                    | Name                       | Type           | value range |
 | :-------------------      | :------------------------: | :-----------:  | :----:      |
-| [visualization.timeseries]|  figure                    | plt.Figure     |             |
+| [visualization.timeseries]|  figure                    | plt.Figure     |   [-1, 1]   |
 | [visualization.image]     |  plot                      |     None       |             |
 | [visualization.text]      |  plot                      | None           |             |
 | [visualization.tabular]   |  plot                      | plt.Figure     |             |
@@ -185,3 +190,5 @@
 [visualization.image]: https://dianna.readthedocs.io/en/latest/autoapi/dianna/visualization/image/index.html#module-dianna.visualization.image
 [visualization.text]: https://dianna.readthedocs.io/en/latest/autoapi/dianna/visualization/text/index.html#module-dianna.visualization.text
 [visualization.tabular]: https://dianna.readthedocs.io/en/latest/autoapi/dianna/visualization/tabular/index.html#module-dianna.visualization.tabular
+
+[normalize]: https://dianna.readthedocs.io/en/latest/autoapi/dianna/utils/rise_utils/index.html#dianna.utils.rise_utils.normalize
