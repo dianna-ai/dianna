@@ -25,7 +25,7 @@ def test_mask_has_correct_type_univariate():
 
     result = generate_masks(input_data, number_of_masks=number_of_masks)
 
-    assert result.dtype == np.bool
+    assert result.dtype == bool
 
 
 def test_generate_time_step_masks_dtype_multivariate():
@@ -38,7 +38,7 @@ def test_generate_time_step_masks_dtype_multivariate():
                                       number_of_features=8,
                                       p_keep=0.5)
 
-    assert result.dtype == np.bool
+    assert result.dtype == bool
 
 
 def test_generate_segmented_time_step_masks_dtype_multivariate():
@@ -51,7 +51,7 @@ def test_generate_segmented_time_step_masks_dtype_multivariate():
                                       number_of_features=8,
                                       p_keep=0.5)
 
-    assert result.dtype == np.bool
+    assert result.dtype == bool
 
 
 def test_mask_has_correct_shape_multivariate():

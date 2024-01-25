@@ -127,7 +127,7 @@ def generate_time_step_masks(input_data: np.ndarray, number_of_masks: int,
 
     float_masks = _generate_interpolated_float_masks_for_timeseries(
         [time_series_length, 1], number_of_masks, number_of_features)[:, :, 0]
-    bool_masks = np.empty(shape=float_masks.shape, dtype=np.bool)
+    bool_masks = np.empty(shape=float_masks.shape, dtype=bool)
 
     # Convert float masks to bool masks using a dynamic threshold
     for i in range(float_masks.shape[0]):
@@ -156,14 +156,15 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
     top_indices = heapq.nsmallest(number_of_unmasked_cells,
                                   time_indices,
                                   key=lambda time_step: flat[time_step])
-    flat_mask = np.ones(flat.shape, dtype=np.bool)
+    flat_mask = np.ones(flat.shape, dtype=bool)
     flat_mask[top_indices] = False
     return flat_mask.reshape(float_mask.shape)
 
 
-def _generate_interpolated_float_masks_for_image(input_size: int, p_keep: float,
-                                       number_of_masks: int,
-                                       number_of_features: int):
+def _generate_interpolated_float_masks_for_image(input_size: int,
+                                                 p_keep: float,
+                                                 number_of_masks: int,
+                                                 number_of_features: int):
     """Generates a set of random masks to mask the input data.
 
     Args:
