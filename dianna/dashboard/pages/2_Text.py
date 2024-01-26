@@ -10,6 +10,7 @@ from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import data_directory
 from _shared import model_directory
+from _shared import label_directory
 from _text_utils import format_word_importances
 
 add_sidebar_logo()
@@ -37,7 +38,7 @@ text_label_file = st.sidebar.file_uploader('Select labels',
 if load_example:
     text_input = 'The movie started out great but the ending was dissappointing'
     text_model_file = model_directory / 'movie_review_model.onnx'
-    text_label_file = data_directory / 'labels_text.txt'
+    text_label_file = label_directory / 'labels_text.txt'
 
 if not (text_input and text_model_file and text_label_file):
     st.info('Add your input data in the left panel to continue')
