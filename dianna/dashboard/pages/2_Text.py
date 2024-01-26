@@ -8,7 +8,6 @@ from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
-from _shared import data_directory
 from _shared import model_directory
 from _shared import label_directory
 from _text_utils import format_word_importances
