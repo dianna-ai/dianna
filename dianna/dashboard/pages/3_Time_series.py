@@ -8,6 +8,7 @@ from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import data_directory
+from _shared import model_directory
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
 from dianna.visualization import plot_timeseries
@@ -34,7 +35,7 @@ ts_label_file = st.sidebar.file_uploader('Select labels',
 
 if load_example:
     ts_file = (data_directory / 'weather_data.npy')
-    ts_model_file = (data_directory /
+    ts_model_file = (model_directory /
                      'season_prediction_model_temp_max_binary.onnx')
     ts_label_file = (data_directory / 'weather_data_labels.txt')
 

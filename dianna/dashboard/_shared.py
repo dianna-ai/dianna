@@ -12,7 +12,7 @@ else:
     from importlib.resources import files
 
 data_directory = files('dianna.data')
-
+model_direcrtory = filesd('dianna.models')
 
 @st.cache_data
 def get_base64_of_bin_file(png_file):
