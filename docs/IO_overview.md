@@ -1,21 +1,29 @@
 # Overview of methods I/O types and dimensions
 
-## Dianna functions View 1
+This document provides an overview about the input and ouyput of functions/methods used in Dianna. There are two views to facilitate the explorations:
+
+- Dianna functions view 1: the view is based on the type of the data:
+  Timeseries, Image, Text, Tabular
+- Dianna functions view 2: the view is based on the methods: Explainer, RISE, LIME, KERNELSHAP, Visualization
+
+Each view provides link to documentation API.
+
+## Dianna functions view 1
 
 ### Timeseries
 
-| Input                     | Name               | Type          | Dims/shape |
-| :-------------------      | :----------------: | :-----------: | :----:     |
-| [explain_timeseries]      |  input_timeseries  | np.ndarray    |            |
-| [rise_timeseries]         |  input_timeseries  | np.ndarray    |            |
-| [lime_timeseries]         |  input_timeseries  | np.ndarray    | [batch_size, sequence_length, num_features] |
-| [visualization.timeseries]|  x,y               | np.ndarray    | x shape (number of time_steps), y shape (number_of_time_steps, number_of_channels) |
+| Input                     | Name                   | Type          | Dims/shape |
+| :-------------------      | :--------------------: | :-----------: | :----:     |
+| [explain_timeseries]      |  input_timeseries      | np.ndarray    |            |
+| [rise_timeseries]         |  input_timeseries      | np.ndarray    |            |
+| [lime_timeseries]         |  input_timeseries      | np.ndarray    | [batch_size, sequence_length, num_features] |
+| [visualization.timeseries]|  x,y                   | np.ndarray    | x shape (number of time_steps), y shape (number_of_time_steps, number_of_channels) |
 
 
 | Output                    | Name                    | Type         | value range |
 | :-------------------      | :---------------------: | :-----------:| :----:      |
 | [explain_timeseries]      |  heatmap per class      | np.ndarray   |             |
-| [rise_timeseries]         |  heatmap per class      | np.ndarray   |   [0, 1]  [normalize] is applied   |
+| [rise_timeseries]         |  heatmap per class      | np.ndarray   |[normalize] is applied   |
 | [lime_timeseries]         |  an explanation object  | (np.ndarray)*|   scores    |
 | [visualization.timeseries]|  figure                 | plt.Figure   |   [-1, 1]   |
 
@@ -23,69 +31,69 @@
 
 ### Image
 
-| Input                | Name               | Type          | Dims/shape    |
-| :------------------- | :----------------: | :-----------: | :----:  |
-| [explain_image]      |  input_image       | np.ndarray    |         |
-| [rise_image]         |  input_image       | np.ndarray    |         |
-| [lime_image]         |  input_data        | np.ndarray    |  RGB    |
-| [kernelshap_image]   |  image             | np.ndarray    |         |
-| [visualization.image]|  heatmap           |               |         |
+| Input                | Name               | Type               | Dims/shape    |
+| :------------------- | :----------------: | :----------------: | :----------:  |
+| [explain_image]      |  input_image       | np.ndarray         |               |
+| [rise_image]         |  input_image       | np.ndarray         |  RGB          |
+| [lime_image]         |  input_data        | np.ndarray         |  RGB          |
+| [kernelshap_image]   |  image             | np.ndarray         |  RGB          |
+| [visualization.image]|  heatmap           |      -             |               |
 
 
-| Output               | Name                       | Type           | value range    |
-| :------------------- | :------------------------: | :-----------:  | :----:  |
-| [explain_image]      |  heatmap per class         | 2D array       |         |
-| [rise_image]         |  heatmap per class         | np.ndarray     |[0, 1]  [normalize] is applied |
-| [lime_image]         |  list of heatmaps          | list           |  scores |
-| [kernelshap_image]   |  Explanation heatmap       | np.ndarray (tuple)*     |   -      |
-| [visualization.image]|  plot                      |     None       | defined by cmap |
+| Output               | Name                 | Type                     | value range           |
+| :------------------- | :------------------: | :---------------------:  | :-----------:         |
+| [explain_image]      |  heatmap per class   | 2D array                 |                       |
+| [rise_image]         |  heatmap per class   | np.ndarray               |[normalize] is applied |
+| [lime_image]         |  list of heatmaps    | list                     |  scores               |
+| [kernelshap_image]   |  Explanation heatmap | np.ndarray (tuple)*      |   -                   |
+| [visualization.image]|  plot (None)         | matplotlib.figure.Figure | defined by cmap       |
 
 `*` mismatch between API doc and implementation
 
 ### Text
 
-| Input                | Name               | Type          | Dims/shape    |
-| :------------------- | :----------------: | :-----------: | :----:  |
-| [explain_text]       |  input_text        | string        |         |
-| [rise_text]          |  input_text        | string        |         |
-| [lime_text]          |  input_text        | np.ndarray    |         |
-| [visualization.text] |  explanation       | list of tuples|         |
+| Input                | Name               | Type          | Dims/shape |
+| :------------------- | :----------------: | :-----------: | :-------:  |
+| [explain_text]       |  input_text        | string        |            |
+| [rise_text]          |  input_text        | np.ndarray    |            |
+| [lime_text]          |  input_text        | np.ndarray    |            |
+| [visualization.text] |  explanation       | list of tuples|            |
 
 
-| Output               | Name                       | Type           | value range    |
-| :------------------- | :------------------------: | :-----------:  | :----:  |
-| [explain_text]       |  (word, index, importance) | List of tuples |         |
-| [rise_text]          |  heatmap per class         | np.ndarray     |         |
-| [lime_text]          |  (word, index, importance) | List of tuples |         |
-| [visualization.text] |  plot                      | None           |         |
+| Output               | Name                       | Type           | value range                      |
+| :------------------- | :------------------------: | :-----------:  | :---------------:                |
+| [explain_text]       |  (word, index, importance) | List of tuples |                                  |
+| [rise_text]          |  heatmap per class         | np.ndarray     |[normalize] is applied            |
+| [lime_text]          |  (word, index, importance) | List of tuples |    -                             |
+| [visualization.text] |  plot (None)               | IPython.display| does normalize to max importance |
 
 
 ### Tabular
 
-| Input                   | Name          | Type                  | Dims/shape    |
-| :-------------------    | :------------:| :------------------:  | :----:  |
-| [explain_tabular]       |  input_tabular| np.ndarray            |         |
-| [lime_tabular]          |  input_tabular| np.ndarray            |         |
-| [kernelshap_tabular]    |  input_tabular| np.ndarray            |         |
-| [visualization.tabular] |  x,y          | np.ndarray, List(str) |         |
+| Input                   | Name          | Type                  | Dims/shape |
+| :-------------------    | :------------:| :------------------:  | :-------:  |
+| [explain_tabular]       |  input_tabular| np.ndarray            |            |
+| [lime_tabular]          |  input_tabular| np.ndarray            |            |
+| [kernelshap_tabular]    |  input_tabular| np.ndarray            |            |
+| [visualization.tabular] |  x,y          | np.ndarray, List(str) |            |
 
 
-| Output                  | Name                    | Type           | value range    |
-| :-------------------    | :---------------------: | :-----------:  | :----:  |
-| [explain_tabular]       |  heatmap per class      | 2D array       |         |
-| [lime_tabular]          |  an explanation object  | explanation    |         |
-| [kernelshap_tabular]    |  an explanation object  | explanation    |         |
-| [visualization.tabular] |  plot                   | plt.Figure     |         |
+| Output                  | Name                    | Type                     | value range |
+| :-------------------    | :---------------------: | :----------------:       | :--------:  |
+| [explain_tabular]       |  heatmap per class      | 2D array                 |             |
+| [lime_tabular]          |  an explanation object  | np.array                 |  -          |
+| [kernelshap_tabular]    |  an explanation object  | np.array                 |  -          |
+| [visualization.tabular] |  plot                   | matplotlib.pyplot.Figure |             |
 
 
-## Dianna functions View 2
+## Dianna functions view 2
 
 ### Explainer
 
 | Input                | Name               | Type          | Dims/shape |
 | :------------------- | :----------------: | :-----------: | :----:     |
 | [explain_timeseries] |  input_timeseries  | np.ndarray    |            |
-| [explain_image]      |  input_image       | np.ndarray    |            |
+| [explain_image]      |  input_image       | np.ndarray    | RGB        |
 | [explain_text]       |  input_text        | string        |            |
 | [explain_tabular]    |  input_tabular     | np.ndarray    |            |
 
@@ -104,14 +112,14 @@
 | :------------------- | :----------------: | :-----------: | :----:     |
 | [rise_timeseries]    |  input_timeseries  | np.ndarray    |            |
 | [rise_image]         |  input_image       | np.ndarray    |            |
-| [rise_text]          |  input_text        | string        |            |
+| [rise_text]          |  input_text        | np.ndarray    |            |
 
 
-| Output               | Name                       | Type           | value range |
-| :------------------- | :------------------------: | :-----------:  | :----:      |
-| [rise_timeseries]    |  heatmap per class         | np.ndarray     |   [0, 1]    |
-| [rise_image]         |  heatmap per class         | np.ndarray     |             |
-| [rise_text]          |  heatmap per class         | np.ndarray     |             |
+| Output               | Name                       | Type           | value range           |
+| :------------------- | :------------------------: | :-----------:  | :----------:          |
+| [rise_timeseries]    |  heatmap per class         | np.ndarray     |[normalize] is applied |
+| [rise_image]         |  heatmap per class         | np.ndarray     |[normalize] is applied |
+| [rise_text]          |  heatmap per class         | np.ndarray     |[normalize] is applied |
 
 
 ### LIME
@@ -125,26 +133,26 @@
 
 
 | Output               | Name                       | Type           | value range |
-| :------------------- | :------------------------: | :-----------:  | :----:      |
+| :------------------- | :------------------------: | :-----------:  | :--------:  |
 | [lime_timeseries]    |  an explanation object     | (np.ndarray)*  |   scores    |
-| [lime_image]         |  list of heatmaps          | list           |         |
-| [lime_text]          |  (word, index, importance) | List of tuples |         |
-| [lime_tabular]       |  an explanation object     | explanation    |         |
+| [lime_image]         |  list of heatmaps          | list           |             |
+| [lime_text]          |  (word, index, importance) | List of tuples |             |
+| [lime_tabular]       |  an explanation object     | np.array       |             |
 
 `*` mismatch between API doc and implementation
 
 ### KERNELSHAP
 
-| Input                | Name               | Type          | Dims/shape    |
-| :------------------- | :----------------: | :-----------: | :----:  |
-| [kernelshap_image]   |  image             | np.ndarray    |         |
-| [kernelshap_tabular] |  input_tabular     | np.ndarray    |         |
+| Input                | Name               | Type          | Dims/shape |
+| :------------------- | :----------------: | :-----------: | :-------:  |
+| [kernelshap_image]   |  image             | np.ndarray    |            |
+| [kernelshap_tabular] |  input_tabular     | np.ndarray    |            |
 
 
-| Output               | Name                       | Type                | value range    |
-| :------------------- | :------------------------: | :----------------:  | :----:  |
-| [kernelshap_image]   |  Explanation heatmap       | np.ndarray (tuple)* |         |
-| [kernelshap_tabular] |  an explanation object     | explanation         |         |
+| Output               | Name                       | Type                | value range |
+| :------------------- | :------------------------: | :----------------:  | :-------:   |
+| [kernelshap_image]   |  Explanation heatmap       | np.ndarray (tuple)* |             |
+| [kernelshap_tabular] |  an explanation object     | np.array            |             |
 
 `*` mismatch between API doc and implementation
 
@@ -158,12 +166,12 @@
 | [visualization.tabular]   |  x,y               | np.ndarray, List(str) |            |
 
 
-| Output                    | Name                       | Type           | value range |
-| :-------------------      | :------------------------: | :-----------:  | :----:      |
-| [visualization.timeseries]|  figure                    | plt.Figure     |   [-1, 1]   |
-| [visualization.image]     |  plot                      |     None       |             |
-| [visualization.text]      |  plot                      | None           |             |
-| [visualization.tabular]   |  plot                      | plt.Figure     |             |
+| Output                    | Name         | Type                     | value range |
+| :-------------------      | :----------: | :-------------------:    | :-------:   |
+| [visualization.timeseries]|  figure      | plt.Figure               |   [-1, 1]   |
+| [visualization.image]     |  plot (None) | matplotlib.figure.Figure |             |
+| [visualization.text]      |  plot (None) | IPython.display          | does normalize to max importance|
+| [visualization.tabular]   |  plot        | matplotlib.figure.Figure |             |
 
 
 
