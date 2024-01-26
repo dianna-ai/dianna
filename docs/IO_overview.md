@@ -1,12 +1,15 @@
 # Overview of methods I/O types and dimensions
 
-This document provides an overview about the input and ouyput of functions/methods used in Dianna. There are two views to facilitate the explorations:
+This document provides an overview of the input and output of
+functions/methods used in Dianna. There are two views to facilitate the
+explorations:
 
 - Dianna functions view 1: the view is based on the type of the data:
   Timeseries, Image, Text, Tabular
-- Dianna functions view 2: the view is based on the methods: Explainer, RISE, LIME, KERNELSHAP, Visualization
+- Dianna functions view 2: the view is based on the methods: Explainer, RISE,
+  LIME, KERNELSHAP, Visualization
 
-Each view provides link to documentation API.
+Each view provides links to related parts in the documentation API.
 
 ## Dianna functions view 1
 
