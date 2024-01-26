@@ -25,7 +25,7 @@ Each view provides link to documentation API.
 | [explain_timeseries]      |  heatmap per class      | np.ndarray   |             |
 | [rise_timeseries]         |  heatmap per class      | np.ndarray   |[normalize] is applied   |
 | [lime_timeseries]         |  an explanation object  | (np.ndarray)*|   scores    |
-| [visualization.timeseries]|  figure                 | plt.Figure   |   [-1, 1]   |
+| [visualization.timeseries]|  figure                 | plt.Figure   |   -         |
 
 `*` mismatch between API doc and implementation
 
@@ -168,7 +168,7 @@ Each view provides link to documentation API.
 
 | Output                    | Name         | Type                     | value range |
 | :-------------------      | :----------: | :-------------------:    | :-------:   |
-| [visualization.timeseries]|  figure      | plt.Figure               |   [-1, 1]   |
+| [visualization.timeseries]|  figure      | plt.Figure               |             |
 | [visualization.image]     |  plot (None) | matplotlib.figure.Figure |             |
 | [visualization.text]      |  plot (None) | IPython.display          | does normalize to max importance|
 | [visualization.tabular]   |  plot        | matplotlib.figure.Figure |             |
