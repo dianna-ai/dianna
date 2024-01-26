@@ -13,6 +13,7 @@ else:
 
 data_directory = files('dianna.data')
 model_direcrtory = files('dianna.models')
+label_directory = files('dianna.labels')
 
 @st.cache_data
 def get_base64_of_bin_file(png_file):
