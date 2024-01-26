@@ -12,7 +12,7 @@ else:
     from importlib.resources import files
 
 data_directory = files('dianna.data')
-model_direcrtory = files('dianna.models')
+model_directory = files('dianna.models')
 label_directory = files('dianna.labels')
 
 @st.cache_data
