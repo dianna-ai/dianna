@@ -1,4 +1,3 @@
-import streamlit as st
 from _model_utils import load_labels
 from _model_utils import load_model
 from _models_text import explain_text_dispatcher
@@ -11,6 +10,7 @@ from _shared import add_sidebar_logo
 from _shared import model_directory
 from _shared import label_directory
 from _text_utils import format_word_importances
+import streamlit as st
 
 add_sidebar_logo()
 

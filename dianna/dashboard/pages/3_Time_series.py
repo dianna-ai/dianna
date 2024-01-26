@@ -1,4 +1,3 @@
-import streamlit as st
 from _model_utils import load_labels
 from _model_utils import load_model
 from _models_ts import explain_ts_dispatcher
@@ -13,6 +12,7 @@ from _shared import label_directory
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
 from dianna.visualization import plot_timeseries
+import streamlit as st
 
 add_sidebar_logo()
 
