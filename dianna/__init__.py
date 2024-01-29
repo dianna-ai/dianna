@@ -22,7 +22,6 @@ See https://github.com/dianna-ai/dianna
 """
 import importlib
 import logging
-import warnings
 from . import utils
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
