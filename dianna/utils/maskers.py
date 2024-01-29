@@ -228,14 +228,13 @@ def _project_grids_to_masks(grids: ndarray, masks_shape: tuple) -> ndarray:
     Returns:
         Set of masks with specified shape based on the grids
     """
-    offset = np.random.random()
-
     number_of_features = grids.shape[1]
 
     mask_len = masks_shape[1]
 
     masks = np.empty(masks_shape, dtype=np.float32)
     for i_mask in range(masks.shape[0]):
+        offset = np.random.random()
         grid = grids[i_mask, :, 0]
         mask = masks[i_mask, :, 0]
 
