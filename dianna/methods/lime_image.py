@@ -80,7 +80,7 @@ class LIMEImage:
         - https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_image.ImageExplanation.get_image_and_mask
 
         Returns:
-            list of heatmaps for each label
+            np.ndarray: An array (np.ndarray) containing the LIME explanations for each class.
         """
         input_data, full_preprocess_function = self._prepare_image_data(input_data)
         runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
@@ -102,6 +102,10 @@ class LIMEImage:
                     for label in labels]
         else:
             maps = [self._get_explanation_values(label, explanation) for label in labels]
+
+        # convert to numpy array with shape[labels, map_dims_0, map_dims_1]
+        map_dims = maps[0].shape
+        maps = np.concatenate(maps).reshape(len(labels), map_dims[0], map_dims[1])
         return maps
 
     def _prepare_image_data(self, input_data):
