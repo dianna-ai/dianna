@@ -104,8 +104,8 @@ class LIMEImage:
             maps = [self._get_explanation_values(label, explanation) for label in labels]
 
         # convert to numpy array with shape[labels, map_dims_0, map_dims_1]
-        map_dims = maps[0].shape
-        maps = np.concatenate(maps).reshape(len(labels), map_dims[0], map_dims[1])
+        map_shape = maps[0].shape
+        maps = np.concatenate(maps).reshape(len(labels), *map_shape)
         return maps
 
     def _prepare_image_data(self, input_data):
