@@ -40,6 +40,10 @@ def plot_image(heatmap,
     """
     # default cmap depends on shape: grayscale or colour
 
+    # the shape of heatmap is (n_classes, height, width), but ax.imshow expects
+    # (height, width, n_classes)
+    heatmap = heatmap.transpose(1, 2, 0)
+
     fig, ax = plt.subplots()
     alpha = 1
     if original_data is not None:
