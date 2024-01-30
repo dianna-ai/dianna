@@ -68,6 +68,7 @@ class RISEImage:
 
         self.predictions = make_predictions(masked, runner, batch_size)
 
+        # Reshape to (n_classes, *img_shape)
         saliency = self.predictions.T.dot(self.masks.reshape(
             self.n_masks, -1)).reshape(-1, *img_shape)
         result = normalize(saliency, self.n_masks, active_p_keep)
