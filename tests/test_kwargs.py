@@ -42,8 +42,8 @@ class ImageKwargs(TestCase):
         input_data = generate_data(batch_size=1)[0].astype(np.float32)
         axis_labels = ('channels', 'y', 'x')
         labels = [1]
-        warn_msg = "Error due to following unused kwargs: {'extra_kwarg': None}"
-        with pytest.raises(TypeError, match=warn_msg):
+        error_message = "Error due to following unused kwargs: {'extra_kwarg': None}"
+        with pytest.raises(TypeError, match=error_message):
             dianna.explain_image(model_filename,
                                     input_data,
                                     method='LIME',
@@ -88,8 +88,8 @@ class TextKwargs(TestCase):
         """Test to ensure extra kwargs to lime raise warnings."""
         review = "such a bad movie"
 
-        warn_msg = "Error due to following unused kwargs: {'extra_kwarg': None}"
-        with pytest.raises(TypeError, match=warn_msg):
+        error_message = "Error due to following unused kwargs: {'extra_kwarg': None}"
+        with pytest.raises(TypeError, match=error_message):
             dianna.explain_text(
                                 self.runner,
                                 review,
@@ -138,8 +138,8 @@ class TimeseriesKwargs(TestCase):
         """Test to ensure extra kwargs to lime raise warnings."""
         input_data = np.random.random((10, 1))
 
-        warn_msg = "Error due to following unused kwargs: {'extra_kwarg': None}"
-        with pytest.raises(TypeError, match=warn_msg):
+        error_message = "Error due to following unused kwargs: {'extra_kwarg': None}"
+        with pytest.raises(TypeError, match=error_message):
             dianna.explain_timeseries(
                                         run_model,
                                         input_timeseries=input_data,
