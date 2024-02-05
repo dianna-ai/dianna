@@ -22,7 +22,6 @@ See https://github.com/dianna-ai/dianna
 """
 import importlib
 import logging
-import warnings
 from . import utils
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -54,7 +53,7 @@ def explain_timeseries(model_or_function, input_timeseries, method, labels, **kw
     for key in explain_timeseries_kwargs.keys():
         kwargs.pop(key)
     if kwargs:
-        warnings.warn(message = f'Please note the following kwargs are not being used: {kwargs}')
+        raise TypeError(f'Error due to following unused kwargs: {kwargs}')
     return explainer.explain(
         model_or_function, input_timeseries, labels, **explain_timeseries_kwargs
     )
@@ -85,7 +84,7 @@ def explain_image(model_or_function, input_image, method, labels, **kwargs):
     for key in explain_image_kwargs.keys():
         kwargs.pop(key)
     if kwargs:
-        warnings.warn(message = f'Please note the following kwargs are not being used: {kwargs}')
+        raise TypeError(f'Error due to following unused kwargs: {kwargs}')
     return explainer.explain(
         model_or_function, input_image, labels, **explain_image_kwargs
     )
@@ -114,7 +113,7 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels, **kwa
     for key in explain_text_kwargs.keys():
         kwargs.pop(key)
     if kwargs:
-        warnings.warn(message = f'Please note the following kwargs are not being used: {kwargs}')
+        raise TypeError(f'Error due to following unused kwargs: {kwargs}')
     return explainer.explain(
         model_or_function=model_or_function,
         input_text=input_text,
@@ -145,7 +144,7 @@ def explain_tabular(model_or_function, input_tabular, method, labels=(1, ), **kw
     for key in explain_tabular_kwargs.keys():
         kwargs.pop(key)
     if kwargs:
-        warnings.warn(message = f'Please note the following kwargs are not being used: {kwargs}')
+        raise TypeError(f'Error due to following unused kwargs: {kwargs}')
     return explainer.explain(
         model_or_function=model_or_function,
         input_tabular=input_tabular,
