@@ -45,7 +45,7 @@ def test_mask_contains_correct_number_of_unmasked_parts(
 
     result = _call_masking_function(input_data, p_keep=p_keep)
 
-    assert np.sum(result == input_data) / np.product(
+    assert np.sum(result == input_data) / np.prod(
         result.shape) == expected_rate
 
 
@@ -57,9 +57,8 @@ def test_mask_contains_correct_parts_are_mean_masked():
     result = _call_masking_function(input_data, mask_type='mean')
 
     masked_parts = result[(result != input_data)]
-    assert np.alltrue(
-        masked_parts ==
-        mean), f'All elements in {masked_parts} should have value {mean}'
+    assert np.all(masked_parts == mean
+                  ), f'All elements in {masked_parts} should have value {mean}'
 
 
 def _get_univariate_input_data() -> np.array:
@@ -121,7 +120,7 @@ def test_channel_mask_masks_correct_number_of_cells():
 
     result = generate_channel_masks(input_data, number_of_masks, p_keep)
 
-    assert result.sum() / np.product(result.shape) == p_keep
+    assert result.sum() / np.prod(result.shape) == p_keep
 
 
 def test_masking_has_correct_shape_multivariate():
