@@ -27,10 +27,9 @@ Each view provides links to related parts in the documentation API.
 | :-------------------      | :---------------------: | :-----------:| :----:      |
 | [explain_timeseries]      |  heatmap per class      | np.ndarray   |             |
 | [rise_timeseries]         |  heatmap per class      | np.ndarray   |[normalize] is applied   |
-| [lime_timeseries]         |  an explanation object  | (np.ndarray)*|   scores    |
+| [lime_timeseries]         |  an explanation object  | np.ndarray   |   scores    |
 | [visualization.timeseries]|  figure                 | plt.Figure   |   -         |
 
-`*` mismatch between API doc and implementation
 
 ### Image
 
@@ -47,11 +46,10 @@ Each view provides links to related parts in the documentation API.
 | :------------------- | :------------------: | :---------------------:  | :-----------:         |
 | [explain_image]      |  heatmap per class   | 2D array                 |                       |
 | [rise_image]         |  heatmap per class   | np.ndarray               |[normalize] is applied |
-| [lime_image]         |  list of heatmaps    | list                     |  scores               |
-| [kernelshap_image]   |  Explanation heatmap | np.ndarray (tuple)*      |   -                   |
+| [lime_image]         |  list of heatmaps    | np.ndarray               |  scores               |
+| [kernelshap_image]   |  Explanation heatmap | np.ndarray               |   -                   |
 | [visualization.image]|  plot (None)         | matplotlib.figure.Figure | defined by cmap       |
 
-`*` mismatch between API doc and implementation
 
 ### Text
 
