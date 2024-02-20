@@ -7,7 +7,7 @@ from skimage.transform import resize
 
 
 def generate_masks(
-    input_data: np.array,
+    input_data: np.ndarray,
     number_of_masks: int,
     feature_res: int = 8,
     p_keep: float = 0.5,
@@ -15,7 +15,7 @@ def generate_masks(
     """Generate masks for time series data given a probability of keeping any time step or channel unmasked.
 
     Args:
-        input_data: Timeseries data to be explained.
+        input_data: Timeseries data to be masked.
         number_of_masks: Number of masks to generate.
         p_keep: the probability that any value remains unmasked.
         feature_res: Resolution of features in masks.
