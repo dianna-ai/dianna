@@ -44,7 +44,7 @@ Each view provides links to related parts in the documentation API.
 
 | Output               | Name                 | Type                     | value range           |
 | :------------------- | :------------------: | :---------------------:  | :-----------:         |
-| [explain_image]      |  heatmap per class   | 2D array                 |                       |
+| [explain_image]      |  heatmap per class   | np.ndarray               |                       |
 | [rise_image]         |  heatmap per class   | np.ndarray               |[normalize] is applied |
 | [lime_image]         |  list of heatmaps    | np.ndarray               |  scores               |
 | [kernelshap_image]   |  Explanation heatmap | np.ndarray               |   -                   |

@@ -71,7 +71,7 @@ def explain_image(model_or_function, input_image, method, labels, **kwargs):
         kwargs: These keyword parameters are passed on
 
     Returns:
-        One heatmap (2D array) per class.
+        An array (np.ndarray) containing the heat maps for each class.
 
     """
     if method.upper() == 'KERNELSHAP':
