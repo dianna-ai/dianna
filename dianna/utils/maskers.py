@@ -30,6 +30,7 @@ def generate_masks(
                                         p_keep,
                                         number_of_features=feature_res)
 
+    # We have 3 types of mask generation: channel, time step, combined. We take 1/3 of each.
     number_of_channel_masks = number_of_masks // 3
     number_of_time_step_masks = number_of_channel_masks
     number_of_combined_masks = number_of_masks - number_of_time_step_masks - number_of_channel_masks
@@ -126,7 +127,7 @@ def generate_time_step_masks(input_data: np.ndarray, number_of_masks: int,
     time_series_length = input_data.shape[0]
     number_of_channels = input_data.shape[1]
 
-    float_masks = _generate_interpolated_float_masks_for_timeseries(
+    float_masks = generate_interpolated_float_masks_for_timeseries(
         [time_series_length, 1], number_of_masks, number_of_features)[:, :, 0]
     bool_masks = np.empty(shape=float_masks.shape, dtype=bool)
 
@@ -181,26 +182,28 @@ def generate_interpolated_float_masks_for_image(image_shape: Iterable[int],
                             size=(number_of_masks, number_of_features,
                                   number_of_features),
                             p=(p_keep, 1 - p_keep)).astype('float32')
-    cell_size = np.ceil(np.array(image_shape) / number_of_features)
+    mask_shape = image_shape[:2]
+    cell_size = np.ceil(np.array(mask_shape) / number_of_features)
     up_size = (number_of_features + 1) * cell_size
-    masks = np.empty((number_of_masks, *image_shape), dtype=np.float32)
+    masks = np.empty((number_of_masks, *mask_shape), dtype=np.float32)
     for i in range(masks.shape[0]):
         y_offset = np.random.randint(0, cell_size[0])
         x_offset = np.random.randint(0, cell_size[1])
         # Linear upsampling and cropping
-        masks[i, :, :] = _upscale(grid[i],
-                                  up_size)[y_offset:y_offset + image_shape[0],
-                                           x_offset:x_offset + image_shape[1]]
-    masks = masks.reshape(-1, *image_shape, 1)
+        upscaled = _upscale(grid[i], up_size)
+        masks[i, :, :] = upscaled[y_offset:y_offset + image_shape[0],
+                                  x_offset:x_offset + image_shape[1]]
+    masks = masks.reshape(-1, *mask_shape, 1)
     return masks
 
 
-def _generate_interpolated_float_masks_for_timeseries(input_size: int, number_of_masks: int, number_of_features: int) \
-        -> ndarray:
-    """Generates a set of random masks to mask the input data.
+def generate_interpolated_float_masks_for_timeseries(
+        time_series_shape: Iterable[int], number_of_masks: int,
+        number_of_features: int) -> ndarray:
+    """Generates a set of random masks to mask time-series data.
 
     Args:
-        input_size (int): Size of a single sample of input time series.
+        time_series_shape (int): Size of a single sample of input time series.
         number_of_masks: Number of masks
         number_of_features: Number of features in the time dimension
 
@@ -210,13 +213,13 @@ def _generate_interpolated_float_masks_for_timeseries(input_size: int, number_of
     grid = np.random.random(size=(number_of_masks, number_of_features,
                                   1), ).astype('float32')
 
-    masks_shape = (number_of_masks, *input_size)
+    masks_shape = (number_of_masks, *time_series_shape)
 
     if grid.shape == masks_shape:
         masks = grid
     else:
         masks = _project_grids_to_masks(grid, masks_shape)
-    return masks.reshape(-1, *input_size, 1)
+    return masks.reshape(-1, *time_series_shape, 1)
 
 
 def _project_grids_to_masks(grids: ndarray, masks_shape: tuple) -> ndarray:
