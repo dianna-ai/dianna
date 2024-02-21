@@ -101,7 +101,7 @@ class LIMETabular:
         https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_tabular.LimeTabularExplainer.explain_instance
 
         Returns:
-            explanation: An Explanation object containing the LIME explanations for each class.
+            An array (np.ndarray) containing LIME explanations for each class.
         """
         # run the explanation.
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(

@@ -135,7 +135,7 @@ def explain_tabular(model_or_function, input_tabular, method, labels=(1, ), **kw
         kwargs: These keyword parameters are passed on
 
     Returns:
-        One heatmap (2D array) per class.
+        An array (np.ndarray) containing the heat maps for each class..
     """
     explainer = _get_explainer(method, kwargs, modality='Tabular')
     explain_tabular_kwargs = utils.get_kwargs_applicable_to_function(
