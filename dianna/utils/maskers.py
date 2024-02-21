@@ -1,5 +1,6 @@
 import heapq
 import warnings
+from typing import Iterable
 from typing import Union
 import numpy as np
 from numpy import ndarray
@@ -161,17 +162,17 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
     return flat_mask.reshape(float_mask.shape)
 
 
-def _generate_interpolated_float_masks_for_image(input_size: int,
-                                                 p_keep: float,
-                                                 number_of_masks: int,
-                                                 number_of_features: int):
-    """Generates a set of random masks to mask the input data.
+def generate_interpolated_float_masks_for_image(image_shape: Iterable[int],
+                                                p_keep: float,
+                                                number_of_masks: int,
+                                                number_of_features: int):
+    """Generates a set of random masks of float values to mask image data.
 
     Args:
-        input_size (int): Size of a single sample of input data, for images without the channel axis.
+        image_shape (int): Size of a single sample of input data, for images without the channel axis.
         p_keep: ?
         number_of_masks: Number of masks
-        number_of_features: Number of features per dimension
+        number_of_features: Number of features (or blobs) in both dimensions
 
     Returns:
         The generated masks (np.ndarray)
@@ -180,17 +181,17 @@ def _generate_interpolated_float_masks_for_image(input_size: int,
                             size=(number_of_masks, number_of_features,
                                   number_of_features),
                             p=(p_keep, 1 - p_keep)).astype('float32')
-    cell_size = np.ceil(np.array(input_size) / number_of_features)
+    cell_size = np.ceil(np.array(image_shape) / number_of_features)
     up_size = (number_of_features + 1) * cell_size
-    masks = np.empty((number_of_masks, *input_size), dtype=np.float32)
+    masks = np.empty((number_of_masks, *image_shape), dtype=np.float32)
     for i in range(masks.shape[0]):
         y_offset = np.random.randint(0, cell_size[0])
         x_offset = np.random.randint(0, cell_size[1])
         # Linear upsampling and cropping
         masks[i, :, :] = _upscale(grid[i],
-                                  up_size)[y_offset:y_offset + input_size[0],
-                                           x_offset:x_offset + input_size[1]]
-    masks = masks.reshape(-1, *input_size, 1)
+                                  up_size)[y_offset:y_offset + image_shape[0],
+                                           x_offset:x_offset + image_shape[1]]
+    masks = masks.reshape(-1, *image_shape, 1)
     return masks
 
 
