@@ -61,13 +61,15 @@ Each view provides links to related parts in the documentation API.
 | [visualization.text] |  explanation       | list of tuples|            |
 
 
-| Output               | Name                       | Type           | value range                      |
+| Output*              | Name                       | Type           | value range                      |
 | :------------------- | :------------------------: | :-----------:  | :---------------:                |
 | [explain_text]       |  (word, index, importance) | List of tuples |                                  |
-| [rise_text]          |  heatmap per class         | np.ndarray     |[normalize] is applied            |
+| [rise_text]          |  heatmap per class         | List of tuples |[normalize] is applied            |
 | [lime_text]          |  (word, index, importance) | List of tuples |    -                             |
 | [visualization.text] |  plot (None)               | IPython.display| does normalize to max importance |
 
+*The output types here are `list` rather than `np.ndarray`, because there are
+numbers and strings that should be returned.
 
 ### Tabular
 

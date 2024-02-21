@@ -103,7 +103,7 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels, **kwa
         kwargs: These keyword parameters are passed on
 
     Returns:
-        List of (word, index of word in raw text, importance for target class) tuples.
+        List of tuples (word, index of word in raw text, importance for target class) for each class.
 
     """
     explainer = _get_explainer(method, kwargs, modality='Text')
