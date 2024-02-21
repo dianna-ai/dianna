@@ -83,9 +83,9 @@ numbers and strings that should be returned.
 
 | Output                  | Name                    | Type                     | value range |
 | :-------------------    | :---------------------: | :----------------:       | :--------:  |
-| [explain_tabular]       |  heatmap per class      | 2D array                 |             |
-| [lime_tabular]          |  an explanation object  | np.array                 |  -          |
-| [kernelshap_tabular]    |  an explanation object  | np.array                 |  -          |
+| [explain_tabular]       |  heatmap per class      | np.ndarray               |             |
+| [lime_tabular]          |  an explanation object  | np.ndarray               |  -          |
+| [kernelshap_tabular]    |  an explanation object  | np.ndarray               |  -          |
 | [visualization.tabular] |  plot                   | matplotlib.pyplot.Figure |             |
 
 
@@ -104,9 +104,9 @@ numbers and strings that should be returned.
 | Output               | Name                       | Type           | value range |
 | :------------------- | :------------------------: | :-----------:  | :----:      |
 | [explain_timeseries] |  heatmap per class         | np.ndarray     |             |
-| [explain_image]      |  heatmap per class         | 2D array       |             |
+| [explain_image]      |  heatmap per class         | np.ndarray     |             |
 | [explain_text]       |  (word, index, importance) | List of tuples |             |
-| [explain_tabular]    |  heatmap per class         | 2D array       |             |
+| [explain_tabular]    |  heatmap per class         | np.ndarray     |             |
 
 
 ### RISE
@@ -122,7 +122,7 @@ numbers and strings that should be returned.
 | :------------------- | :------------------------: | :-----------:  | :----------:          |
 | [rise_timeseries]    |  heatmap per class         | np.ndarray     |[normalize] is applied |
 | [rise_image]         |  heatmap per class         | np.ndarray     |[normalize] is applied |
-| [rise_text]          |  heatmap per class         | np.ndarray     |[normalize] is applied |
+| [rise_text]          |  (word, index, importance) | List of tuples |[normalize] is applied |
 
 
 ### LIME
@@ -137,12 +137,11 @@ numbers and strings that should be returned.
 
 | Output               | Name                       | Type           | value range |
 | :------------------- | :------------------------: | :-----------:  | :--------:  |
-| [lime_timeseries]    |  an explanation object     | (np.ndarray)*  |   scores    |
-| [lime_image]         |  list of heatmaps          | list           |             |
+| [lime_timeseries]    |  an explanation object     | np.ndarray     |   scores    |
+| [lime_image]         |  list of heatmaps          | np.ndarray     |             |
 | [lime_text]          |  (word, index, importance) | List of tuples |             |
-| [lime_tabular]       |  an explanation object     | np.array       |             |
+| [lime_tabular]       |  an explanation object     | np.ndarray     |             |
 
-`*` mismatch between API doc and implementation
 
 ### KERNELSHAP
 
@@ -154,10 +153,9 @@ numbers and strings that should be returned.
 
 | Output               | Name                       | Type                | value range |
 | :------------------- | :------------------------: | :----------------:  | :-------:   |
-| [kernelshap_image]   |  Explanation heatmap       | np.ndarray (tuple)* |             |
-| [kernelshap_tabular] |  an explanation object     | np.array            |             |
+| [kernelshap_image]   |  Explanation heatmap       | np.ndarray          |             |
+| [kernelshap_tabular] |  an explanation object     | np.ndarray          |             |
 
-`*` mismatch between API doc and implementation
 
 ### Visualization
 
