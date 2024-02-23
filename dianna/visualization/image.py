@@ -53,7 +53,8 @@ def plot_image(heatmap,
                   vmax=_determine_vmax(original_data.max()))
         alpha = .5
 
-    ax.imshow(heatmap, cmap=heatmap_cmap, alpha=alpha)
+    cax = ax.imshow(heatmap, cmap=heatmap_cmap, alpha=alpha)
+    plt.colorbar(cax)
     ax.tick_params(bottom=False,
                    left=False,
                    right=False,
