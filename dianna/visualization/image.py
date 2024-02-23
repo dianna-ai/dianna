@@ -63,8 +63,10 @@ def plot_image(heatmap,
                    labelbottom=False,
                    labelright=False,
                    labeltop=False)
-    if show_plot:
-        plt.show()
+
+    if not show_plot:
+        plt.close()
+
     if output_filename:
         plt.savefig(output_filename)
 
