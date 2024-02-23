@@ -75,4 +75,4 @@ def plot_image(heatmap,
     if output_filename:
         plt.savefig(output_filename)
 
-    return fig
+    return fig, ax
