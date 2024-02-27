@@ -104,7 +104,7 @@ class KERNELSHAPImage:
         https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
 
         Returns:
-            Explanation heatmap for each class (np.ndarray).
+            Explanation heatmap of Shapley values for each class (np.ndarray).
         """
         self.onnx_model, self.input_node_dtype,\
             self.output_node = utils.onnx_model_node_loader(model_or_function)
