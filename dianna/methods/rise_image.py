@@ -1,6 +1,6 @@
 import numpy as np
 from dianna import utils
-from dianna.utils.maskers import generate_masks_for_images
+from dianna.utils.maskers import generate_interpolated_float_masks_for_image
 from dianna.utils.predict import make_predictions
 from dianna.utils.rise_utils import normalize
 
@@ -60,8 +60,8 @@ class RISEImage:
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
         # Expose masks for to make user inspection possible
-        self.masks = generate_masks_for_images(img_shape, self.n_masks,
-                                               active_p_keep, self.feature_res)
+        self.masks = generate_interpolated_float_masks_for_image(
+            img_shape, active_p_keep, self.n_masks, self.feature_res)
 
         # Make sure multiplication is being done for correct axes
         masked = input_data * self.masks
@@ -117,8 +117,8 @@ class RISEImage:
 
     def _calculate_max_class_std(self, p_keep, runner, input_data, n_masks):
         img_shape = input_data.shape[1:3]
-        masks = generate_masks_for_images(img_shape, n_masks, p_keep,
-                                          self.feature_res)
+        masks = generate_interpolated_float_masks_for_image(
+            img_shape, p_keep, n_masks, self.feature_res)
         masked = input_data * masks
         predictions = make_predictions(masked, runner, batch_size=50)
         std_per_class = predictions.std(axis=0)
