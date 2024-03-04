@@ -8,11 +8,13 @@ To install the dependencies for the tutorials, run
 pip install .[notebooks]
 ```
 
-For general demonstration of DIANNA click on the logo [<img width="75" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">](https://github.com/dianna-ai/dianna/blob/main/tutorials/demo.ipynb) or run it in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/demo.ipynb).
+For *general demonstration of DIANNA* click on the logo [<img width="75" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">](https://github.com/dianna-ai/dianna/blob/main/tutorials/demo.ipynb) or run it in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/demo.ipynb).
 
-Click on the XAI method (explainer) names to watch explanatory videos for the respective method.
+For *tutorials on how to convert* an [Keras](https://keras.io/), [PyTorch](https://pytorch.org/), [Scikit-learn](https://scikit-learn.org/stable/) or [Tensorflow](https://www.tensorflow.org/) model to [ONNX](https://onnx.ai/), please see the [conversion tutorials](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/).
 
-Click on the logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset. 
+For *specific XAI methods (explainers)*:
+* Click on the explainer names to watch explanatory videos for the respective method.
+* Click on the logos below for direct access to a tutorial notebook for a combination of explainer and data modality/dataset. 
 
 Run the tutorials directly in Google Colab by clicking on the Colab buttons below: 
 
@@ -39,7 +41,7 @@ The datasets used in the tutorials are represented with their respective logos:
 |*Tabular*| [Penguin dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris)| <img width="75" alt="Penguin Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57"> | |
 |           | [Weather dataset](https://zenodo.org/record/7525955) | <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">|
 
-The ONNX models used in the tutorials are available at [tutorials/models](https://github.com/dianna-ai/dianna/tree/main/tutorials/models).
+The ONNX models used in the tutorials are available at [dianna/models](https://github.com/dianna-ai/dianna/tree/main/dianna/models).
 
 
 
