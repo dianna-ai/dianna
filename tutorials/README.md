@@ -1,7 +1,7 @@
 <img width="150" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
 ## Tutorials
-This folder contains DIANNA tutorial notebooks. 
+This folder contains DIANNA tutorial notebooks.
 
 To install the dependencies for the tutorials, run
 ```
@@ -12,9 +12,9 @@ For general demonstration of DIANNA click on the logo [<img width="75" alt="Logo
 
 Click on the XAI method (explainer) names to watch explanatory videos for the respective method.
 
-Click on the logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset. 
+Click on the logos below for direct access to a tutorial notebook for an explainability method and data modality/dataset.
 
-Run the tutorials directly in Google Colab by clicking on the Colab buttons below: 
+Run the tutorials directly in Google Colab by clicking on the Colab buttons below:
 
 |*Modality*\ Method|RISE|[LIME](https://youtu.be/d6j6bofhj2M)|Kernel[SHAP](https://youtu.be/9haIOplEIGM)|
 |:-----|:---|:---|:---|
@@ -23,6 +23,7 @@ Run the tutorials directly in Google Colab by clicking on the Colab buttons belo
 |*Text* |[<img width="25" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152540890-c8e1e37d-f0cc-4f84-80a4-2c59176cbf4c.png">](rise_text.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/rise_text.ipynb) |[<img width="25" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152540890-c8e1e37d-f0cc-4f84-80a4-2c59176cbf4c.png">](lime_text.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/lime_text.ipynb)  |[]()|
 | *Time series*| [<img width="25" alt="Weather Logo" src="https://user-images.githubusercontent.com/3244249/242001499-3ff3d639-ed2f-4a38-b7ac-957c984bce9f.png">](rise_timeseries_weather.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/rise_timeseries_weather.ipynb)| [<img width="25" alt="Weather Logo" src="https://user-images.githubusercontent.com/3244249/242001499-3ff3d639-ed2f-4a38-b7ac-957c984bce9f.png">](lime_timeseries_weather.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/lime_timeseries_weather.ipynb)| |
 | | | [<img width="25" alt="Coffe Logo" src="https://user-images.githubusercontent.com/3244249/241999275-9ab50a0f-5da3-41d2-80e9-70d2c8769162.jpg">](lime_timeseries_coffee.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/lime_timeseries_coffee.ipynb) | |
+| | | [FRB](rise_timeseries_frb.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/rise_timeseries_frb.ipynb) | |
 | *Tabular* | | [<img width="75" alt="Penguin Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57">](lime_tabular_penguin.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/lime_tabular_penguin.ipynb) | |
 | | | [<img width="25" alt="Weather Logo" src="https://user-images.githubusercontent.com/3244249/242001499-3ff3d639-ed2f-4a38-b7ac-957c984bce9f.png">](lime_tabular_weather.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/lime_tabular_weather.ipynb)| |
 
@@ -39,7 +40,4 @@ The datasets used in the tutorials are represented with their respective logos:
 |*Tabular*| [Penguin dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris)| <img width="75" alt="Penguin Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57"> | |
 |           | [Weather dataset](https://zenodo.org/record/7525955) | <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">|
 
-The ONNX models used in the tutorials are available at [tutorials/models](https://github.com/dianna-ai/dianna/tree/main/tutorials/models).
-
-
-
+The ONNX models used in the tutorials are available at [tutorials/models](https://github.com/dianna-ai/dianna/tree/main/tutorials/models). The FRB model is available [here](https://zenodo.org/record/10656614)
