@@ -127,18 +127,19 @@ class KERNELSHAPImage:
             self._runner, np.zeros((len(self.labels), n_segments)))
 
         # Temporarily hide warnings, because shap is very spammy
-        # `shap_values` is a matrix of shapley values for each model outputs
+        # `shap_values_list` is a list of arrays, each array contains the shapley
+        # values for each model output
         with LoggingContext(level=logging.CRITICAL):
-            shap_values = explainer.shap_values(np.ones(
+            shap_values_list = explainer.shap_values(np.ones(
                 (len(self.labels), n_segments)),
                                                 nsamples=nsamples)
 
         # create heat_maps where shape is (n_classes, *image_segments.shape)
-        n_classes = len(shap_values)
+        n_classes = len(shap_values_list)
         heat_maps = np.zeros((n_classes, *self.image_segments.shape))
 
         # fill the heat_maps with shap values for each class and segment
-        for i, shap_value in enumerate(shap_values):
+        for i, shap_value in enumerate(shap_values_list):
             class_heat_map = heat_maps[i]
             for index in self.image_segments.flat:
                 class_heat_map[self.image_segments == index] = shap_value[0][index - 1]
