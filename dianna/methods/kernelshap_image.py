@@ -229,7 +229,6 @@ def _create_heatemaps(shap_values_list, image_segments):
 
     The final heatmaps has a shape of (n_classes, *image_segments.shape).
     """
-
     n_classes = len(shap_values_list)  # number of classes
     heat_maps = np.zeros((n_classes, *image_segments.shape))
 
