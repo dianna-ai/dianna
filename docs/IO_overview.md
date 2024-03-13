@@ -27,10 +27,9 @@ Each view provides links to related parts in the documentation API.
 | :-------------------      | :---------------------: | :-----------:| :----:      |
 | [explain_timeseries]      |  heatmap per class      | np.ndarray   |             |
 | [rise_timeseries]         |  heatmap per class      | np.ndarray   |[normalize] is applied   |
-| [lime_timeseries]         |  an explanation object  | (np.ndarray)*|   scores    |
+| [lime_timeseries]         |  an explanation object  | np.ndarray   |   scores    |
 | [visualization.timeseries]|  figure                 | plt.Figure   |   -         |
 
-`*` mismatch between API doc and implementation
 
 ### Image
 
@@ -45,13 +44,12 @@ Each view provides links to related parts in the documentation API.
 
 | Output               | Name                 | Type                     | value range           |
 | :------------------- | :------------------: | :---------------------:  | :-----------:         |
-| [explain_image]      |  heatmap per class   | 2D array                 |                       |
+| [explain_image]      |  heatmap per class   | np.ndarray               |                       |
 | [rise_image]         |  heatmap per class   | np.ndarray               |[normalize] is applied |
-| [lime_image]         |  list of heatmaps    | list                     |  scores               |
-| [kernelshap_image]   |  Explanation heatmap | np.ndarray (tuple)*      |   -                   |
+| [lime_image]         |  list of heatmaps    | np.ndarray               |  scores               |
+| [kernelshap_image]   |  Explanation heatmap | np.ndarray               |   -                   |
 | [visualization.image]|  plot (None)         | matplotlib.figure.Figure | defined by cmap       |
 
-`*` mismatch between API doc and implementation
 
 ### Text
 
@@ -63,13 +61,15 @@ Each view provides links to related parts in the documentation API.
 | [visualization.text] |  explanation       | list of tuples|            |
 
 
-| Output               | Name                       | Type           | value range                      |
+| Output*              | Name                       | Type           | value range                      |
 | :------------------- | :------------------------: | :-----------:  | :---------------:                |
 | [explain_text]       |  (word, index, importance) | List of tuples |                                  |
-| [rise_text]          |  heatmap per class         | np.ndarray     |[normalize] is applied            |
+| [rise_text]          |  heatmap per class         | List of tuples |[normalize] is applied            |
 | [lime_text]          |  (word, index, importance) | List of tuples |    -                             |
 | [visualization.text] |  plot (None)               | IPython.display| does normalize to max importance |
 
+*The output types here are `list` rather than `np.ndarray`, because there are
+numbers and strings that should be returned.
 
 ### Tabular
 
@@ -83,9 +83,9 @@ Each view provides links to related parts in the documentation API.
 
 | Output                  | Name                    | Type                     | value range |
 | :-------------------    | :---------------------: | :----------------:       | :--------:  |
-| [explain_tabular]       |  heatmap per class      | 2D array                 |             |
-| [lime_tabular]          |  an explanation object  | np.array                 |  -          |
-| [kernelshap_tabular]    |  an explanation object  | np.array                 |  -          |
+| [explain_tabular]       |  heatmap per class      | np.ndarray               |             |
+| [lime_tabular]          |  an explanation object  | np.ndarray               |  -          |
+| [kernelshap_tabular]    |  an explanation object  | np.ndarray               |  -          |
 | [visualization.tabular] |  plot                   | matplotlib.pyplot.Figure |             |
 
 
@@ -104,9 +104,9 @@ Each view provides links to related parts in the documentation API.
 | Output               | Name                       | Type           | value range |
 | :------------------- | :------------------------: | :-----------:  | :----:      |
 | [explain_timeseries] |  heatmap per class         | np.ndarray     |             |
-| [explain_image]      |  heatmap per class         | 2D array       |             |
+| [explain_image]      |  heatmap per class         | np.ndarray     |             |
 | [explain_text]       |  (word, index, importance) | List of tuples |             |
-| [explain_tabular]    |  heatmap per class         | 2D array       |             |
+| [explain_tabular]    |  heatmap per class         | np.ndarray     |             |
 
 
 ### RISE
@@ -122,7 +122,7 @@ Each view provides links to related parts in the documentation API.
 | :------------------- | :------------------------: | :-----------:  | :----------:          |
 | [rise_timeseries]    |  heatmap per class         | np.ndarray     |[normalize] is applied |
 | [rise_image]         |  heatmap per class         | np.ndarray     |[normalize] is applied |
-| [rise_text]          |  heatmap per class         | np.ndarray     |[normalize] is applied |
+| [rise_text]          |  (word, index, importance) | List of tuples |[normalize] is applied |
 
 
 ### LIME
@@ -137,12 +137,11 @@ Each view provides links to related parts in the documentation API.
 
 | Output               | Name                       | Type           | value range |
 | :------------------- | :------------------------: | :-----------:  | :--------:  |
-| [lime_timeseries]    |  an explanation object     | (np.ndarray)*  |   scores    |
-| [lime_image]         |  list of heatmaps          | list           |             |
+| [lime_timeseries]    |  an explanation object     | np.ndarray     |   scores    |
+| [lime_image]         |  list of heatmaps          | np.ndarray     |             |
 | [lime_text]          |  (word, index, importance) | List of tuples |             |
-| [lime_tabular]       |  an explanation object     | np.array       |             |
+| [lime_tabular]       |  an explanation object     | np.ndarray     |             |
 
-`*` mismatch between API doc and implementation
 
 ### KERNELSHAP
 
@@ -154,10 +153,9 @@ Each view provides links to related parts in the documentation API.
 
 | Output               | Name                       | Type                | value range |
 | :------------------- | :------------------------: | :----------------:  | :-------:   |
-| [kernelshap_image]   |  Explanation heatmap       | np.ndarray (tuple)* |             |
-| [kernelshap_tabular] |  an explanation object     | np.array            |             |
+| [kernelshap_image]   |  Explanation heatmap       | np.ndarray          |             |
+| [kernelshap_tabular] |  an explanation object     | np.ndarray          |             |
 
-`*` mismatch between API doc and implementation
 
 ### Visualization
 

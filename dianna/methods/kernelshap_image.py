@@ -40,6 +40,10 @@ class KERNELSHAPImage:
             sigma (float): Width of Gaussian smoothing kernel
             kwargs: These keyword parameters are passed on
 
+        Returns:
+            integer mask indicating segment labels with the shape of the input image.
+            the number of segments is less than or equal to n_segments.
+
         Check keyword arguments for the skimage.segmentation.slic function
         via the following link:
         https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
@@ -100,7 +104,7 @@ class KERNELSHAPImage:
         https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
 
         Returns:
-            Explanation heatmap of shapley values for each class (np.ndarray).
+            Explanation heatmap of Shapley values for each class (np.ndarray).
         """
         self.onnx_model, self.input_node_dtype,\
             self.output_node = utils.onnx_model_node_loader(model_or_function)
@@ -123,12 +127,20 @@ class KERNELSHAPImage:
             self._runner, np.zeros((len(self.labels), n_segments)))
 
         # Temporarily hide warnings, because shap is very spammy
+        # `shap_values_list` is a list of arrays, each array contains the shapley
+        # values for each model output
         with LoggingContext(level=logging.CRITICAL):
-            shap_values = explainer.shap_values(np.ones(
+            shap_values_list = explainer.shap_values(np.ones(
                 (len(self.labels), n_segments)),
                                                 nsamples=nsamples)
 
-        return shap_values, self.image_segments
+        # create heat_maps where shape is (n_classes, *image_segments.shape)
+        heat_maps = _create_heatemaps(shap_values_list, self.image_segments)
+
+        if labels is not None:
+            heat_maps = heat_maps[list(labels)]
+
+        return heat_maps
 
     def _prepare_image_data(self, input_data):
         """Transforms the data to be of the shape and type KernelSHAP expects.
@@ -210,3 +222,21 @@ class KERNELSHAPImage:
             model_input = self.preprocess_function(model_input)
         return self.onnx_to_tf(
             self.onnx_model).run(model_input)[f'{self.output_node}']
+
+
+def _create_heatemaps(shap_values_list, image_segments):
+    """Create heatmaps from the shap values and the image segments.
+
+    The final heatmaps has a shape of (n_classes, *image_segments.shape).
+    """
+    n_classes = len(shap_values_list)  # number of classes
+    heat_maps = np.zeros((n_classes, *image_segments.shape))
+
+    # fill the heat_maps with shap values for each class and segment
+    for i, shap_value in enumerate(shap_values_list):
+        class_heat_map = heat_maps[i]
+        for index in image_segments.flat:
+            class_heat_map[image_segments == index] = shap_value[0][index - 1]
+        heat_maps[i] = class_heat_map
+
+    return heat_maps
