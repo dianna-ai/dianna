@@ -104,7 +104,8 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
     ceil = np.ceil(mean)
     if floor != ceil:
         user_requested_steps = int(
-            np.random.choice([floor, ceil], 1, p=[ceil - mean, mean - floor]))
+            np.random.choice([floor, ceil], 1, p=[ceil - mean,
+                                                  mean - floor])[0])
     else:
         user_requested_steps = int(floor)
 
