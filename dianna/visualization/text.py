@@ -1,69 +1,99 @@
-from IPython.display import HTML
-from IPython.display import display
+import matplotlib.pyplot as plt
+import matplotlib.transforms as mtransforms
 
 
 def highlight_text(explanation,
-                   input_tokens,
+                   input_tokens=None,
                    show_plot=True,
-                   output_html_filename=None,
-                   max_opacity=.8):
+                   output_filename=None,
+                   colormap="RdBu",
+                   alpha=1.0,
+                   heatmap_range=(-1, 1)):
     """Highlights a given text based on values in a given explanation object.
 
     Args:
         explanation: list of tuples of (word, index of word in original data, importance)
         input_tokens: list of all tokens (including those without importance)
         show_plot: Shows plot if true (for testing or writing plots to disk instead)
-        output_html_filename: Name of the file to save the plot to (optional).
-        max_opacity: Maximum opacity (0-1)
-
+        output_filename: Name of the file to save the plot to (optional).
+        colormap: color map for the heatmap plot (see mpl.Axes.imshow documentation for options).
+        heatmap_range: a tuple (vmin, vmax) to set the range of the heatmap.
     Returns:
         None
     """
-    output = _create_html(input_tokens, explanation, max_opacity)
+    tokens, _, importances = zip(*explanation)
 
-    if output_html_filename:
-        with open(output_html_filename, 'w',
-                  encoding='utf-8') as output_html_file:
-            print(output, file=output_html_file)
+    if input_tokens:
+        # Make a list of tuples (token, i, importance) for each token in the
+        # input_tokens. if a token isnot in the explanantion, the importance is
+        # None
+        explanation = [
+            (
+                token, i, importances[tokens.index(token)] if token in tokens else None
+            )
+            for i, token in enumerate(input_tokens)
+        ]
 
-    if show_plot:
-        display(HTML(output))
+    vmin, vmax = heatmap_range
+
+    x, y = (0, 0) # the initial position of the text
+    space_token = ' '
+    fig, ax = plt.subplots(figsize=(10, 1))
+    ax.axis('off')
+
+    for token, _, importance in explanation:
+
+        color = _get_text_color(importance, vmin, vmax, colormap, alpha)
+        text = ax.text(x, y, token, fontsize=12, backgroundcolor=color)
+
+        # Get the bounding box of the text in display space and convert it to data space
+        bbox = text.get_window_extent()
+        bbox_data = mtransforms.Bbox(ax.transData.inverted().transform(bbox))
+        x = bbox_data.x1
+
+        # Add a space after each token
+        text = ax.text(x, y, space_token, fontsize=12)
+        bbox = text.get_window_extent()
+        bbox_data = mtransforms.Bbox(ax.transData.inverted().transform(bbox))
+
+        # The next x is the right side of the bbox plus the fixed space
+        x = bbox_data.x1
+
+        # Wrap the text if token is a dot
+        if token == '.':
+            x = 0
+            y -= 0.5  # space between lines in inches
+
+    # adjust the height of the figure
+    y_hight = 1
+    if abs(y) > 1:
+        y_hight = y
+    ax.set_ylim(y_hight, 0)
+    fig.set_figheight(abs(y_hight))
+
+    # add colorbar
+    sm = plt.cm.ScalarMappable(
+        cmap=plt.get_cmap(colormap),
+        norm=plt.Normalize(vmin, vmax)
+        )
+    sm.set_array([])
+    fig.colorbar(sm, ax=ax, orientation='horizontal', aspect=20, use_gridspec=True)
+    # TODO add alpha to the colorbar
+
+    if not show_plot:
+        plt.close()
+
+    if output_filename:
+        plt.savefig(output_filename)
+
+    return fig, ax
 
 
-def _create_html(tokens, explanation, opacity: float = 0.8):
-    importance_map = {r[0]: r[2] for r in explanation}
+def _get_text_color(importance, vmin, vmax, colormap, alpha):
+    if importance is None:
+        return "none"
 
-    max_importance = max(abs(val) for val in importance_map.values())
-
-    tags = []
-    for token in tokens:
-        importance = importance_map.get(token)
-
-        if importance is None:
-            color = f'hsl(0, 0%, 75%, {opacity})'
-        else:
-            # normalize to max importance
-            importance = importance / max_importance
-            color = _get_color(importance, opacity)
-
-        tag = (f'<mark style="background-color: {color}; '
-               f'line-height:1.75">{token}</mark>')
-        tags.append(tag)
-
-    html = ' '.join(tags)
-
-    return html
-
-
-def _get_color(importance: float, opacity: float) -> str:
-    # clip values to prevent CSS errors (Values should be from [-1,1])
-    importance = max(-1, min(1, importance))
-    if importance > 0:
-        hue = 0
-        sat = 100
-        lig = 100 - int(50 * importance)
-    else:
-        hue = 240
-        sat = 100
-        lig = 100 - int(-50 * importance)
-    return f'hsl({hue}, {sat}%, {lig}%, {opacity})'
+    cmap = plt.get_cmap(colormap)
+    norm = plt.Normalize(vmin, vmax)
+    r, g, b, _ = cmap(norm(importance))
+    return (r, g, b, alpha)
