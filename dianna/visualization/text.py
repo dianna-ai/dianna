@@ -17,7 +17,9 @@ def highlight_text(explanation,
         show_plot: Shows plot if true (for testing or writing plots to disk instead)
         output_filename: Name of the file to save the plot to (optional).
         colormap: color map for the heatmap plot (see mpl.Axes.imshow documentation for options).
+        alpha: alpha value for the heatmap plot.
         heatmap_range: a tuple (vmin, vmax) to set the range of the heatmap.
+
     Returns:
         None
     """
