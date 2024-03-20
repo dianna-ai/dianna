@@ -18,7 +18,7 @@ coverage.xml
 *word_vectors.txt.pt
 
 # tutorial model that is downloaded automatically
-tutorials/models/apertif_frb_dynamic_spectrum_model.onnx
+apertif_frb_dynamic_spectrum_model.onnx
 
 docs/_build
 
