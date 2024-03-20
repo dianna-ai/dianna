@@ -4,11 +4,11 @@ from tests.methods.test_tabular import assert_tabular_classification_correct_out
 from tests.methods.test_tabular import assert_tabular_regression_correct_output_shape
 
 
-def test_lime_tabular_classification_correct_output_shape(self):
+def test_lime_tabular_classification_correct_output_shape():
     """Test the output of explainer."""
     assert_tabular_classification_correct_output_shape(LIMETabular)
 
 
-def test_lime_tabular_regression_correct_output_shape(self):
+def test_lime_tabular_regression_correct_output_shape():
     """Test the output of explainer."""
     assert_tabular_regression_correct_output_shape('lime')
