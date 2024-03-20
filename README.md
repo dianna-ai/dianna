@@ -290,15 +290,15 @@ And here are links to notebooks showing how we created our models on the benchma
 
 | Models                                                    | Generation                                                                                                                                                        |
 | :-------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Coffee model                                              | [Coffee model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/coffee/generate_model.ipynb)                       |
+| [Coffee model](https://zenodo.org/records/10579458)          | [Coffee model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/coffee/generate_model.ipynb)                       |
 | [Season prediction model](https://zenodo.org/record/7543883) | [Season prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/season_prediction/generate_model.ipynb) |
 
 ### Tabular
 
 | Models                                                    | Generation                                                                                                                                                        |
 | :-------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Penguin model    (classification)                         | [Penguin model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/penguin_species/generate_model.ipynb)                       |
-| Sunshine hours prediction model (regression) | [Sunshine hours prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/sunshine_prediction/generate_model.ipynb) |
+| [Penguin model    (classification)](https://zenodo.org/records/10580743)                         | [Penguin model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/penguin_species/generate_model.ipynb)                       |
+| [Sunshine hours prediction model (regression)](https://zenodo.org/records/10580833) | [Sunshine hours prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/sunshine_prediction/generate_model.ipynb) |
 
 
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
