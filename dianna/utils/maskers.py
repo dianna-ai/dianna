@@ -7,6 +7,35 @@ from numpy import ndarray
 from skimage.transform import resize
 
 
+def generate_tabular_masks(
+    input_data_shape: tuple[int],
+    number_of_masks: int,
+    p_keep: float = 0.5,
+):
+    """Generator function to create masks for tabular data.
+
+    Args:
+        input_data_shape: Shape of the tabular data to be masked.
+        number_of_masks: Number of masks to generate.
+        p_keep: probability that any value should remain unmasked.
+
+    Returns:
+    Single array containing all masks where the first dimension represents the batch.
+    """
+    instance_length = np.product(input_data_shape)
+
+    for i in range(number_of_masks):
+        n_masked = _determine_number_masked(p_keep, instance_length)
+        trues = n_masked * [False]
+        falses = (instance_length - n_masked) * [True]
+        options = trues + falses
+        yield np.random.choice(
+            a=options,
+            size=input_data_shape,
+            replace=False,
+        )
+
+
 def generate_timeseries_masks(
     input_data_shape: tuple[int],
     number_of_masks: int,
@@ -97,7 +126,9 @@ def _get_mask_value(data: np.array, mask_type: object) -> int:
     raise ValueError(f'Unknown mask_type selected: {mask_type}')
 
 
-def _determine_number_masked(p_keep: float, series_length: int) -> int:
+def _determine_number_masked(p_keep: float,
+                             series_length: int,
+                             element_name='feature') -> int:
     """Determine the number of time steps that need to be masked."""
     mean = series_length * (1 - p_keep)
     floor = np.floor(mean)
@@ -111,12 +142,12 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
 
     if user_requested_steps >= series_length:
         warnings.warn(
-            'Warning: p_keep chosen too low. Continuing with leaving 1 time step unmasked per mask.'
+            f'Warning: p_keep chosen too low. Continuing with leaving 1 {element_name} unmasked per mask.'
         )
         return series_length - 1
     if user_requested_steps <= 0:
         warnings.warn(
-            'Warning: p_keep chosen too high. Continuing with masking 1 time step per mask.'
+            f'Warning: p_keep chosen too high. Continuing with masking 1 {element_name} per mask.'
         )
         return 1
     return user_requested_steps
@@ -156,7 +187,7 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
     flat = float_mask.flatten()
     time_indices = list(range(len(flat)))
     number_of_unmasked_cells = _determine_number_masked(
-        p_keep, len(time_indices))
+        p_keep, len(time_indices), element_name='time step')
     top_indices = heapq.nsmallest(number_of_unmasked_cells,
                                   time_indices,
                                   key=lambda time_step: flat[time_step])

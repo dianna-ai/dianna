@@ -4,6 +4,7 @@ from pandas import DataFrame
 from dianna.utils.maskers import generate_channel_masks
 from dianna.utils.maskers import generate_interpolated_float_masks_for_image
 from dianna.utils.maskers import generate_interpolated_float_masks_for_timeseries
+from dianna.utils.maskers import generate_tabular_masks
 from dianna.utils.maskers import generate_time_step_masks
 from dianna.utils.maskers import generate_timeseries_masks
 from dianna.utils.maskers import mask_data
@@ -312,3 +313,63 @@ def test_generate_interpolated_mean_float_masks_for_image(
     print('\n')
     print(masks_mean)
     assert np.allclose(masks_mean, p_keep, atol=0.1)
+
+
+def test_tabular_mask_has_correct_shape():
+    """Test whether tabular masks has the correct shape."""
+    input_data_shape = (10, )
+    number_of_masks = 30
+
+    masks = np.stack(
+        generate_tabular_masks(
+            input_data_shape,
+            number_of_masks,
+            p_keep=0.2,
+        ))
+
+    assert masks.shape == (number_of_masks, *input_data_shape)
+
+
+@pytest.mark.parametrize('p_keep_and_n_unmasked', [
+    (0.2, 0.2),
+    (0.7, 0.7),
+    (0.75, 0.75),
+    (0.999, 0.9),
+    (0.01, 0.1),
+])
+def test_tabular_mask_has_correct_number_masked(p_keep_and_n_unmasked):
+    """Test whether the expected number of features was masked.
+
+    Also taking into account min=1 and max=n-1 of features per instance and edge cases where the exact p_keep can't
+    be met.
+    """
+    input_data_shape = (10, )
+    number_of_masks = 50
+    p_keep, n_unmasked = p_keep_and_n_unmasked
+
+    masks = np.stack(
+        generate_tabular_masks(
+            input_data_shape,
+            number_of_masks,
+            p_keep=p_keep,
+        ))
+
+    mean_element = masks.sum() / (np.product(input_data_shape) *
+                                  number_of_masks)
+    assert np.isclose(mean_element, n_unmasked, atol=0.03)
+
+
+def test_tabular_mask_prob_masked_per_feature_correct():
+    """Test whether every feature has the same probability of being masked."""
+    input_data_shape = (10, )
+    number_of_masks = 1000
+    p_keep = 0.2
+
+    masks = np.stack(
+        generate_tabular_masks(
+            input_data_shape,
+            number_of_masks,
+            p_keep=p_keep,
+        ))
+
+    assert np.allclose(masks.mean(axis=0), p_keep, atol=0.05)
