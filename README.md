@@ -196,7 +196,7 @@ explanation = dianna.explain_timeseries(model_path, timeseries_data=timeseries_i
 
 ```
 
-For visualization of the heatmap please refer to the [tutorial](https://github.com/dianna-ai/dianna/blob/main/tutorials/lime_timeseries_coffee.ipynb)
+For visualization of the heatmap please refer to the [tutorial](https://github.com/dianna-ai/dianna/blob/main/tutorials/explainers/LIME/lime_timeseries_coffee.ipynb)
 
 ### Tabular example:
 
