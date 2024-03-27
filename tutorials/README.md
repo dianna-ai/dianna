@@ -46,14 +46,14 @@ The ONNX models used in the tutorials are available at [dianna/models](https://g
 
 ### IMPORTANT: Hyperparameters
 The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity is researched and useful conclusions are drawn.
-The default hyperparameters used in DIANNA for each explainer are given below:
+The default hyperparameters used in DIANNA for each explainer as well as the choices for some tutorials and their data modality (*i* - images, *txt* - text, *ts* - time series and *tab* - tabular) are given below:
 
 #### RISE
-| Hyperparameter  | Value(s) |
-| ------------- | ------------- |
-| $n_{masks}$  | $1800$ (text), $1900$ (image)  |
-| $p_{keep}$  | optimized  |
-| Resolution  | $6$ (image) |
+| Hyperparameter  | Default value | <img width="94" alt="ImageNet_autocrop" src="https://user-images.githubusercontent.com/3244249/152542090-fd78fde1-6dec-43b6-a7ae-eea964b8ae28.png"> (*i*)| <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152540187-b7a8239f-6742-437f-8f9b-35b950ce5ddb.png">(*i*) | <img width="25" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152540890-c8e1e37d-f0cc-4f84-80a4-2c59176cbf4c.png"> (*txt*) | <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">  (*ts*)| <img width="25" alt="FRB logo" src="https://github.com/dianna-ai/dianna/assets/6370787/f53b280d-94b0-40ec-bfe7-ee48777d7964"> (*ts*)|
+| ------------- | ------------- | -------------------|-----------------------------| ---------------------------------|---------------------------------|---------------------------------|
+| $n_{masks}$  |**$1000$**  | default | $5000$ | default | $10000$ |$5000$ |
+| $p_{keep}$  | **optimized** (*i*, *txt*), **$0.5$** (*ts*) | $0.1$| $0.1$ |  default | $0.1$| $0.1$|
+| Resolution  |**$8$** | $6$ |default |  default | default | $1$ |
 #### LIME
 | Hyperparameter  | Value(s) |
 | ------------- | ------------- |
