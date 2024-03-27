@@ -58,8 +58,7 @@ class LIMETabular:
         """
         self.mode = mode
         init_instance_kwargs = utils.get_kwargs_applicable_to_function(
-            LimeTabularExplainer, kwargs
-        )
+            LimeTabularExplainer, kwargs)
 
         # temporary solution for setting num_features and top_labels
         self.num_features = len(feature_names)
@@ -83,7 +82,7 @@ class LIMETabular:
         self,
         model_or_function: Union[str, callable],
         input_tabular: np.array,
-        labels: Iterable[int] = (1,),
+        labels: Iterable[int],
         num_samples: int = 5000,
         **kwargs,
     ) -> np.array:
@@ -93,7 +92,7 @@ class LIMETabular:
             model_or_function (callable or str): The function that runs the model to be explained
                                                  or the path to a ONNX model on disk.
             input_tabular (np.ndarray): Data to be explained.
-            labels (Iterable(int), optional): Indices of classes to be explained.
+            labels (Iterable(int)): Indices of classes to be explained.
             num_samples (int, optional): Number of samples
             kwargs: These parameters are passed on
 
@@ -105,8 +104,7 @@ class LIMETabular:
         """
         # run the explanation.
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(
-            self.explainer.explain_instance, kwargs
-        )
+            self.explainer.explain_instance, kwargs)
         runner = utils.get_function(model_or_function)
 
         explanation = self.explainer.explain_instance(
@@ -131,5 +129,8 @@ class LIMETabular:
                 # shape of local_exp [(index, saliency)]
                 selected_saliency = [x[1] for x in local_exp]
                 saliency.append(selected_saliency[:])
+
+        else:
+            raise ValueError(f'Unsupported mode "{self.mode}"')
 
         return np.array(saliency)
