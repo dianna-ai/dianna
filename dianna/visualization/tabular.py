@@ -32,21 +32,24 @@ def plot_tabular(
     """
     if not num_features:
         num_features = len(x)
-    fig, ax = plt.subplots()
+
+
     abs_values = [abs(i) for i in x]
     top_values = [x for _, x in sorted(zip(abs_values, x), reverse=True)][:num_features]
     top_features = [x for _, x in sorted(zip(abs_values, y), reverse=True)][
         :num_features
     ]
 
+    fig, ax = plt.subplots()
     colors = ["r" if x >= 0 else "b" for x in top_values]
     ax.barh(top_features, top_values, color=colors)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
 
-    if show_plot:
-        plt.show()
+    if not show_plot:
+        plt.close()
+
     if output_filename:
         plt.savefig(output_filename)
 
-    return fig
+    return fig, ax

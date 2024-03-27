@@ -13,6 +13,7 @@ def _determine_vmax(max_data_value):
 def plot_image(heatmap,
                original_data=None,
                heatmap_cmap=None,
+               heatmap_range=(None, None),  # (vmin, vmax)
                data_cmap=None,
                show_plot=True,
                output_filename=None):
@@ -28,6 +29,9 @@ def plot_image(heatmap,
                        alpha = 0.5 (optional).
         heatmap_cmap: color map for the heatmap plot (see mpl.Axes.imshow
                       documentation for options).
+        heatmap_range: a tuple (vmin, vmax) to set the range of the heatmap.
+                    By default, the colormap covers the complete value range of
+                    the supplied heatmap.
         data_cmap: color map for the (optional) data image (see mpl.Axes.imshow
                    documentation for options). By default, if the image is two
                    dimensional, the color map is set to 'gray'.
@@ -53,7 +57,9 @@ def plot_image(heatmap,
                   vmax=_determine_vmax(original_data.max()))
         alpha = .5
 
-    ax.imshow(heatmap, cmap=heatmap_cmap, alpha=alpha)
+    vmin, vmax = heatmap_range
+    cax = ax.imshow(heatmap, vmin=vmin, vmax=vmax, cmap=heatmap_cmap, alpha=alpha)
+    fig.colorbar(cax)
     ax.tick_params(bottom=False,
                    left=False,
                    right=False,
@@ -62,9 +68,11 @@ def plot_image(heatmap,
                    labelbottom=False,
                    labelright=False,
                    labeltop=False)
-    if show_plot:
-        plt.show()
+
+    if not show_plot:
+        plt.close()
+
     if output_filename:
         plt.savefig(output_filename)
 
-    return fig
+    return fig, ax

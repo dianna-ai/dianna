@@ -8,11 +8,22 @@ Installation:
     pip install pytest-playwright
     playwright install
 
-Code generation (https://playwright.dev/python/docs/codegen):
+Make sure that the server is running by:
+```bash
+cd dianna/dashboard
+streamlit run Home.py
+```
+Then, set variable `LOCAL=True` (see below) to connect to local instance for
+debugging. Then, you can run the tests with:
+
+```bash
+pytest -v -m dashboard --dashboard
+```
+See more documentation about dashboard in: dianna/dashboard/readme.md
+
+For Code generation (https://playwright.dev/python/docs/codegen):
 
     playwright codegen http://localhost:8501
-
-Set `LOCAL=True` to connect to local instance for debugging
 """
 
 import time
@@ -97,19 +108,16 @@ def test_text_page(page: Page):
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
-            # first text
+            # first image
             page.get_by_role('heading',
                              name='positive').get_by_text('positive'),
-            page.get_by_text(
-                'The movie started out great but the ending was dissappointing'
-            ).first,
-            # second text
+            page.get_by_role('img', name='0').first,
+            # second image
             page.get_by_role('heading',
                              name='negative').get_by_text('negative'),
-            page.get_by_text(
-                'The movie started out great but the ending was dissappointing'
-            ).nth(1),
+            page.get_by_role('img', name='0').nth(1),
     ):
+        print(selector)
         expect(selector).to_be_visible()
 
 

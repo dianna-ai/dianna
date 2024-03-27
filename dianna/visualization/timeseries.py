@@ -16,8 +16,9 @@ def plot_timeseries(
     x_label: str = 't',
     y_label: Union[str, Iterable[str]] = None,
     cmap: Optional[str] = None,
-    show_plot: Optional[bool] = False,
+    show_plot: Optional[bool] = True,
     output_filename: Optional[str] = None,
+    heatmap_range=(-1, 1),
 ) -> plt.Figure:
     """Plot timeseries with segments highlighted.
 
@@ -36,6 +37,7 @@ def plot_timeseries(
             plots to disk instead).
         output_filename (str, optional): Name of the file to save
             the plot to (optional).
+        heatmap_range (tuple, optional): a tuple (vmin, vmax) to set the range of the heatmap.
 
     Returns:
         plt.Figure
@@ -49,19 +51,21 @@ def plot_timeseries(
         current_ax.set_ylabel(y_label_current)
         current_ax.label_outer()
 
-    _draw_segments(axs, cmap, segments)
+    _draw_segments(axs, cmap, segments, heatmap_range)
 
-    if show_plot:
-        plt.show()
+    if not show_plot:
+        plt.close()
+
     if output_filename:
         plt.savefig(output_filename)
 
-    return fig
+    return fig, axs
 
 
-def _draw_segments(axs, cmap, segments):
+def _draw_segments(axs, cmap, segments, heatmap_range):
+    vmin, vmax = heatmap_range
     cmap = plt.get_cmap(cmap)
-    norm = plt.Normalize(-1, 1)
+    norm = plt.Normalize(vmin, vmax)
     for segment in segments:
         start = segment['start']
         stop = segment['stop']
