@@ -16,7 +16,7 @@ For *specific XAI methods (explainers)*:
 * Click on the explainer names to watch explanatory videos for the respective method.
 * Click on the logos below for direct access to a tutorial notebook for a combination of explainer and data modality/dataset.
 
-Run the tutorials directly in Google Colab by clicking on the Colab buttons below:
+Run the **tutorials** directly in Google Colab by clicking on the Colab buttons below:
 
 |*Modality* \ Method|RISE|[LIME](https://youtu.be/d6j6bofhj2M)|Kernel[SHAP](https://youtu.be/9haIOplEIGM)|
 |:-----|:---|:---|:---|
@@ -28,7 +28,7 @@ Run the tutorials directly in Google Colab by clicking on the Colab buttons belo
 | *Tabular* | | [<img width="75" alt="Penguin Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57">](./explainers/LIME/lime_tabular_penguin.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/explainers/LIME/lime_tabular_penguin.ipynb) | |
 | | | [<img width="25" alt="Weather Logo" src="https://user-images.githubusercontent.com/3244249/242001499-3ff3d639-ed2f-4a38-b7ac-957c984bce9f.png">](./explainers/LIME/lime_tabular_weather.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/explainers/LIME/lime_tabular_weather.ipynb)| |
 
-The datasets used in the tutorials are represented with their respective logos:
+The **datasets** used in the tutorials are represented with their respective logos:
 |Data modality|Dataset|Logo|
 |:------------|:------|:---|
 |*Images*|Binary MNIST | <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152540187-b7a8239f-6742-437f-8f9b-35b950ce5ddb.png">|
@@ -42,7 +42,7 @@ The datasets used in the tutorials are represented with their respective logos:
 |*Tabular*| [Penguin dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris)| <img width="75" alt="Penguin Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57"> | |
 |           | [Weather dataset](https://zenodo.org/record/7525955) | <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">|
 
-The ONNX models used in the tutorials are available at [dianna/models](https://github.com/dianna-ai/dianna/tree/main/dianna/models), or linked from their respective tutorial notebooks.
+The **ONNX models** used in the tutorials are available at [dianna/models](https://github.com/dianna-ai/dianna/tree/main/dianna/models), or linked from their respective tutorial notebooks.
 
 ### IMPORTANT: Hyperparameters
 The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity is researched and useful conclusions are drawn.
