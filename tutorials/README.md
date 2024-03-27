@@ -43,3 +43,27 @@ The datasets used in the tutorials are represented with their respective logos:
 |           | [Weather dataset](https://zenodo.org/record/7525955) | <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">|
 
 The ONNX models used in the tutorials are available at [dianna/models](https://github.com/dianna-ai/dianna/tree/main/dianna/models), or linked from their respective tutorial notebooks.
+
+### IMPORTANT: Hyperparameters
+The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity is researched and useful conclusions are drawn.
+The default hyperparameters used in DIANNA for each explainer are given below:
+
+#### RISE
+| Hyperparameter  | Value(s) |
+| ------------- | ------------- |
+| $n_{masks}$  | $1800$ (text), $1900$ (image)  |
+| $p_{keep}$  | optimized  |
+| Resolution  | $6$ (image) |
+#### LIME
+| Hyperparameter  | Value(s) |
+| ------------- | ------------- |
+| $n_{samples}$  | $1800$ (text), $1600$ (image)  |
+| Kernel Width | $25$ (image and text)  |
+| $n_{segments}$ | $95$ |
+| L2 Regularization | $0.01$ |
+#### KernalSHAP
+| Hyperparameter  | Value(s) |
+| ------------- | ------------- |
+| $n_{samples}$  | $1600$ |
+| $n_{segments}$ | $95$ |
+| L1 Regularization | auto |
