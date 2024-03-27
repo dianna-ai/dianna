@@ -38,7 +38,7 @@ The datasets used in the tutorials are represented with their respective logos:
 |*Text*| [Stanford sentiment treebank](https://nlp.stanford.edu/sentiment/index.html) | <img width="25" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152540890-c8e1e37d-f0cc-4f84-80a4-2c59176cbf4c.png">|
 |*Timeseries* | [Coffee dataset](https://timeseriesclassification.com/description.php?Dataset=Coffee)  | <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162">|
 |           | [Weather dataset](https://zenodo.org/record/7525955) | <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">|
-|           | FRB dataset (not publicly available) | <img width="25" alt="FRB logo" src="https://github.com/dianna-ai/dianna/assets/6370787/f53b280d-94b0-40ec-bfe7-ee48777d7964">|
+|           | Fast Radio Burst (FRB) dataset (not publicly available) | <img width="25" alt="FRB logo" src="https://github.com/dianna-ai/dianna/assets/6370787/f53b280d-94b0-40ec-bfe7-ee48777d7964">|
 |*Tabular*| [Penguin dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris)| <img width="75" alt="Penguin Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57"> | |
 |           | [Weather dataset](https://zenodo.org/record/7525955) | <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">|
 
