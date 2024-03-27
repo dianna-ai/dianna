@@ -56,12 +56,12 @@ The default hyperparameters used in DIANNA for each explainer as well as the cho
 | $p_{keep}$  | **optimized** (*i*, *txt*), **$0.5$** (*ts*) | $0.1$| $0.1$ |  default | $0.1$| $0.1$|
 | Resolution  |**$8$** | $6$ |default |  default | default | $1$ |
 #### LIME
-| Hyperparameter  | Value(s) |
-| ------------- | ------------- |
-| $n_{samples}$  | $1800$ (text), $1600$ (image)  |
-| Kernel Width | $25$ (image and text)  |
-| $n_{segments}$ | $95$ |
-| L2 Regularization | $0.01$ |
+| Hyperparameter  | Default value |  <img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/151539100-dbdfe0f8-485f-45d4-a249-a1f79e970066.png"> (*i*) |<img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f"> (*ts*)| <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162">(*ts*)|
+| ------------- | ------------- |--------| -----| -----|
+| $n_{samples}$  | **$5000$**  | $1000$ | $10 000$| $500$|
+| Kernel Width | **$25$**| default | default| default|
+| $n_{features}$ | **$10$** | $30$ | default| default|
+
 #### KernalSHAP
 | Hyperparameter  | Value(s) |
 | ------------- | ------------- |
