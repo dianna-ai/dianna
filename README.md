@@ -216,6 +216,10 @@ plot_tabular(explanation, X_test.columns, num_features=10)  # display 10 most sa
 
 ![image](https://github.com/dianna-ai/dianna/assets/25911757/ce0b76b8-f00c-468a-9732-c21704e289f6)
 
+### IMPORTANT: Hyperparameters
+The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity is researched and useful conclusions are drawn.
+The default hyperparameters used in DIANNA for each explainer are also given in the Tutorials [README](./tutorials).
+
 ## Dashboard
 
 Explore the explanations of your trained model using the DIANNA dashboard (for now images, text and time series classification is supported). 
@@ -305,7 +309,7 @@ And here are links to notebooks showing how we created our models on the benchma
 
 ## Tutorials
 
-DIANNA supports different data modalities and XAI methods. The table contains links to the relevant XAI method's papers (for some explanatory videos on the methods, please see [tutorials](./tutorials)). The DIANNA [tutorials](./tutorials) cover each supported method and data modality on a least one dataset. Our future plans to expand DIANNA with more data modalities and XAI methods are given in the [ROADMAP](https://dianna.readthedocs.io/en/latest/ROADMAP.html).
+DIANNA supports different data modalities and XAI methods. The table below contains links to the relevant XAI method's papers (for some explanatory videos on the methods, please see [tutorials](./tutorials)). The DIANNA [tutorials](./tutorials) cover each supported method and data modality on a least one dataset with some default hyperparameters. Our future plans to expand DIANNA with more data modalities and XAI methods are given in the [ROADMAP](https://dianna.readthedocs.io/en/latest/ROADMAP.html).
 
 <!-- see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
 
