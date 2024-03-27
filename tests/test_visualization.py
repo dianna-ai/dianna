@@ -1,9 +1,11 @@
 """Unit tests for visualization modules."""
 from pathlib import Path
+import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 from dianna.visualization import plot_tabular
 from dianna.visualization import plot_timeseries
+from dianna.visualization.text import highlight_text
 
 
 def test_plot_tabular(tmpdir):
@@ -77,3 +79,66 @@ def get_test_segments(data):
 def random():
     """Set the random seed."""
     np.random.seed(0)
+
+
+class TestHighlightText:
+    """Test highlight text function."""
+    def test_highlight_text_without_input_token(self, tmp_path):
+        """Test highlight text without input tokens."""
+        explanation = [("Hello", 0, 0.5), ("world", 1, -0.5)]
+        output_path = Path(tmp_path) / "hello_world.png"
+
+        fig, ax = highlight_text(explanation=explanation,
+                                output_filename=output_path)
+
+        assert output_path.exists()
+        assert fig is not None
+        assert ax is not None
+        assert ax.texts[0].get_text() == "Hello"
+        assert ax.texts[1].get_text() == " "
+        assert ax.texts[2].get_text() == "world"
+
+        # Get the colorbar and check range
+        cbar = fig.axes[-1]
+        assert cbar.get_xlim() == (-1, 1)
+
+    def test_highlight_text_with_input_token(self):
+        """Test highlight text with input tokens."""
+        explanation = [("Hello", 0, 0.5), ("world", 1, -0.5)]
+        input_tokens = ["Hello", "world", "!", "This", "is", "a", "test"]
+
+        fig, ax = highlight_text(explanation=explanation,
+                                input_tokens=input_tokens)
+
+        assert fig is not None
+        assert ax is not None
+        assert ax.texts[0].get_text() == "Hello"
+        assert ax.texts[1].get_text() == " "
+        assert ax.texts[2].get_text() == "world"
+        assert ax.texts[3].get_text() == " "
+        assert ax.texts[4].get_text() == "!"
+
+    def test_highlight_text_with_range(self):
+        """Test highlight text with heatmap range."""
+        explanation = [("Hello", 0, 0.5), ("world", 1, -0.5)]
+
+        fig, ax = highlight_text(explanation=explanation,
+                                heatmap_range=(0, 1))
+
+        assert fig is not None
+        assert ax is not None
+        # Get the colorbar and check range
+        cbar = fig.axes[-1]
+        assert cbar.get_xlim() == (0, 1)
+
+    def test_highlight_text_show_plot_false(self):
+        """Test highlight text with show plot false."""
+        explanation = [("Hello", 0, 0.5), ("world", 1, -0.5)]
+
+        fig, ax = highlight_text(explanation=explanation, show_plot=False)
+
+        assert fig is not None
+        assert ax is not None
+
+        # check that the plot is closed
+        assert not plt.fignum_exists(fig.number)
