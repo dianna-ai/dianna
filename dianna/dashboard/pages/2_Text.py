@@ -9,7 +9,7 @@ from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import data_directory
-from _text_utils import format_word_importances
+from dianna.visualization.text import highlight_text
 
 add_sidebar_logo()
 
@@ -82,8 +82,8 @@ for index, label in zip(top_indices, top_labels):
             with st.spinner(f'Running {method}'):
                 relevances = func(model_runner, text_input, **kwargs)
 
-            html = format_word_importances(text_input, relevances[0])
-            st.write(html, unsafe_allow_html=True)
+            fig, _ = highlight_text(explanation=relevances[0], show_plot=False)
+            st.pyplot(fig)
 
     # add some white space to separate rows
     st.markdown('')
