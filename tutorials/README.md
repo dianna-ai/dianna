@@ -17,7 +17,7 @@ For *specific XAI methods (explainers)*:
 * Click on the logos below for direct access to a tutorial notebook for a combination of explainer and data modality/dataset.
 
 The **datasets** and the **tasks** used in the tutorials are represented with their respective logos:
-|Data modality|Dataset|*Task*|Logo|
+|*Data modality*|Dataset|*Task*|Logo|
 |:------------|:------|:---|:----|
 |*Images*|Binary MNIST | Binary digit *classification*| <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152540187-b7a8239f-6742-437f-8f9b-35b950ce5ddb.png">|
 ||[Simple Geometric (circles and triangles)](https://doi.org/10.5281/zenodo.5012824)| Binary shape *classificaiton* |<img width="20" alt="SimpleGeometric Logo" src="https://user-images.githubusercontent.com/3244249/151539027-f2fc3fc0-282a-4993-9680-74ee28bcd360.png">|
@@ -63,8 +63,8 @@ The default hyperparameters used in DIANNA for each explainer as well as the cho
 | $n_{features}$ | **$10$** | $30$ | default| default|
 
 #### KernalSHAP
-| Hyperparameter  | Value(s) |
-| ------------- | ------------- |
-| $n_{samples}$  | $1600$ |
-| $n_{segments}$ | $95$ |
-| L1 Regularization | auto |
+| Hyperparameter  | Default value | <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152540187-b7a8239f-6742-437f-8f9b-35b950ce5ddb.png"> (*i*)| <img width="20" alt="SimpleGeometric Logo" src="https://user-images.githubusercontent.com/3244249/151539027-f2fc3fc0-282a-4993-9680-74ee28bcd360.png"> (*i*)|
+| ------------- | ------------- |------------- |------------- |
+| $n_{samples}$  | **auto/int** | $1000$| $2000$ |
+| $n_{segments}$ | **$100$** |$200$ |$200$ |
+
