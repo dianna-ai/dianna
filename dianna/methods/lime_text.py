@@ -78,7 +78,7 @@ class LIMEText:
         https://lime-ml.readthedocs.io/en/latest/lime.html#lime.lime_text.LimeTextExplainer.explain_instance.
 
         Returns:
-            list of (word, index of word in raw text, importance for target class) tuples
+            List of tuples (word, index of word in raw text, importance for target class) for each class
         """
         if tokenizer is None:
             raise ValueError('Please provide a tokenizer to explain_text.')

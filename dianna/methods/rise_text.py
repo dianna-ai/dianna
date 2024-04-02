@@ -46,7 +46,7 @@ class RISEText:
             batch_size (int): Batch size to use for running the model.
 
         Returns:
-            Explanation heatmap for each class (np.ndarray).
+            List of tuples (word, index of word in raw text, importance for target class) for each class.
         """
         if tokenizer is None:
             raise ValueError('Please provide a tokenizer to explain_text.')
