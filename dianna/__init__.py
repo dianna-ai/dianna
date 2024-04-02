@@ -32,7 +32,7 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = 'DIANNA Team'
 __email__ = 'dianna-ai@esciencecenter.nl'
-__version__ = '1.3.0'
+__version__ = '1.4.0'
 
 
 def explain_timeseries(model_or_function: Union[Callable, str],
@@ -55,15 +55,13 @@ def explain_timeseries(model_or_function: Union[Callable, str],
     """
     explainer = _get_explainer(method, kwargs, modality='Timeseries')
     explain_timeseries_kwargs = utils.get_kwargs_applicable_to_function(
-        explainer.explain, kwargs
-    )
+        explainer.explain, kwargs)
     for key in explain_timeseries_kwargs.keys():
         kwargs.pop(key)
     if kwargs:
         raise TypeError(f'Error due to following unused kwargs: {kwargs}')
-    return explainer.explain(
-        model_or_function, input_timeseries, labels, **explain_timeseries_kwargs
-    )
+    return explainer.explain(model_or_function, input_timeseries, labels,
+                             **explain_timeseries_kwargs)
 
 
 def explain_image(model_or_function: Union[Callable, str],
@@ -90,15 +88,13 @@ def explain_image(model_or_function: Union[Callable, str],
         from onnx_tf.backend import prepare  # noqa: F401
     explainer = _get_explainer(method, kwargs, modality='Image')
     explain_image_kwargs = utils.get_kwargs_applicable_to_function(
-        explainer.explain, kwargs
-    )
+        explainer.explain, kwargs)
     for key in explain_image_kwargs.keys():
         kwargs.pop(key)
     if kwargs:
         raise TypeError(f'Error due to following unused kwargs: {kwargs}')
-    return explainer.explain(
-        model_or_function, input_image, labels, **explain_image_kwargs
-    )
+    return explainer.explain(model_or_function, input_image, labels,
+                             **explain_image_kwargs)
 
 
 def explain_text(model_or_function: Union[Callable, str],
@@ -124,8 +120,7 @@ def explain_text(model_or_function: Union[Callable, str],
     """
     explainer = _get_explainer(method, kwargs, modality='Text')
     explain_text_kwargs = utils.get_kwargs_applicable_to_function(
-        explainer.explain, kwargs
-    )
+        explainer.explain, kwargs)
     for key in explain_text_kwargs.keys():
         kwargs.pop(key)
     if kwargs:
@@ -159,8 +154,7 @@ def explain_tabular(model_or_function: Union[Callable, str],
     """
     explainer = _get_explainer(method, kwargs, modality='Tabular')
     explain_tabular_kwargs = utils.get_kwargs_applicable_to_function(
-        explainer.explain, kwargs
-    )
+        explainer.explain, kwargs)
     for key in explain_tabular_kwargs.keys():
         kwargs.pop(key)
     if kwargs:
@@ -172,11 +166,11 @@ def explain_tabular(model_or_function: Union[Callable, str],
         **explain_tabular_kwargs,
     )
 
+
 def _get_explainer(method, kwargs, modality):
     try:
         method_submodule = importlib.import_module(
-            f'dianna.methods.{method.lower()}_{modality.lower()}'
-        )
+            f'dianna.methods.{method.lower()}_{modality.lower()}')
     except ImportError as err:
         raise ValueError(
             f'Method {method.lower()}_{modality.lower()} does not exist'
@@ -188,8 +182,7 @@ def _get_explainer(method, kwargs, modality):
             f'Data modality {modality} is not available for method {method.upper()}'
         ) from err
     method_kwargs = utils.get_kwargs_applicable_to_function(
-        method_class.__init__, kwargs
-    )
+        method_class.__init__, kwargs)
     # Remove used kwargs from list of kwargs passed to the function.
     for key in method_kwargs.keys():
         kwargs.pop(key)
