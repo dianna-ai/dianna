@@ -58,7 +58,10 @@ class ShapOnImages(TestCase):
         n_segments = 50
         explainer = KERNELSHAPImage()
         labels = [0]
-        shap_values, segments = explainer.explain(
+
+        # mnist_model has two outputs
+        # so, shap_values is a list of two arrays
+        heatmaps = explainer.explain(
             onnx_model_path,
             input_data,
             labels,
@@ -68,6 +71,7 @@ class ShapOnImages(TestCase):
             compactness=10.0,
             sigma=0,
         )
-        # Check if shapeley values match number of segments
-        n_segments = np.unique(segments).size
-        assert shap_values[0].shape == np.zeros((1, n_segments)).shape
+        # Check if shape of heatmaps is correct
+        assert heatmaps[0].shape[0] == input_data.shape[1]
+        assert heatmaps[0].shape[1] == input_data.shape[2]
+        assert heatmaps.shape[0] == len(labels)

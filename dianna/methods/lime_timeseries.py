@@ -74,7 +74,7 @@ class LIMETimeseries:
             distance_method (str): The distance metric to use for LIME. Can be "cosine" or "euclidean".
 
         Returns:
-            explanation: An Explanation object containing the LIME explanations for each class.
+            np.ndarray: An array (np.ndarray) containing the LIME explanations for each class.
         """
         # TODO: p_keep does not exist in LIME. LIME will mask every point, which means the number
         #       of steps masked is 1. We should updating it after adapting maskers function to LIME.
