@@ -3,11 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. image:: ./DIANNA_Logo.png
+  :width: 200
+  :alt: DIANNA logo
+
 Welcome to Dianna's documentation!
 ==========================================================
-.. image:: DIANNA_logo.png
-  :width: 300
-
 .. toctree::
   :maxdepth: 2
   :caption: Contents:
