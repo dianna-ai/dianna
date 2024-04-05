@@ -7,7 +7,6 @@ Welcome to Dianna's documentation!
 ==========================================================
 .. image:: DIANNA_logo.png
   :width: 300
-  :alt: DIANNA logo
 
 .. toctree::
   :maxdepth: 2
