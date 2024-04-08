@@ -46,7 +46,7 @@ Run the **tutorials** directly in Google Colab by clicking on the Colab buttons 
 
 
 ### IMPORTANT: Hyperparameters
-The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity is researched and useful conclusions are drawn.
+The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [master Thesis](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity is researched and useful conclusions are drawn.
 The default hyperparameters used in DIANNA for each explainer as well as the choices for some tutorials and their data modality (*i* - images, *txt* - text, *ts* - time series and *tab* - tabular) are given below:
 
 #### RISE
