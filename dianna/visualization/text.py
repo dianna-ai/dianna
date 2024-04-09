@@ -92,6 +92,19 @@ def highlight_text(explanation,
 
 
 def _get_text_color(importance, vmin, vmax, colormap, alpha):
+    """Assign a color to a text based on its importance.
+
+    Args:
+        importance (float): The importance of the text (between vmin and vmax)
+        vmin (float): The minimum value of the importance range
+        vmax (float): The maximum value of the importance range
+        colormap (str): color map for the heatmap plot (see mpl.Axes.imshow
+            documentation for options).
+        alpha (float): alpha value for the color.
+
+    Returns:
+        tuple: (r, g, b, alpha) values of the color.
+    """
     if importance is None:
         return "none"
 
