@@ -44,7 +44,7 @@ Run the **tutorials** directly in Google Colab by clicking on the Colab buttons 
 | *Tabular* | | [<img width="75" alt="Penguin Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57">](./explainers/LIME/lime_tabular_penguin.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/explainers/LIME/lime_tabular_penguin.ipynb) | |
 | | | [<img width="25" alt="Weather Logo" src="https://user-images.githubusercontent.com/3244249/242001499-3ff3d639-ed2f-4a38-b7ac-957c984bce9f.png">](./explainers/LIME/lime_tabular_weather.ipynb) or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/explainers/LIME/lime_tabular_weather.ipynb)| |
 
-To learn more about how we aproach the masking for time-series data, pelase read our [Masking time-series for XAI](https://blog.esciencecenter.nl/masking-time-series-for-explainable-ai-90247ac252b4) blog-post.
+To learn more about how we aproach the masking for time-series data, please read our [Masking time-series for XAI](https://blog.esciencecenter.nl/masking-time-series-for-explainable-ai-90247ac252b4) blog-post.
 
 ### IMPORTANT: Hyperparameters
 The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [master Thesis](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity is researched and useful conclusions are drawn.
