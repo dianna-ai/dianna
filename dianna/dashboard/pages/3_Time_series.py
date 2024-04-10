@@ -85,6 +85,6 @@ for index, label in zip(top_indices, top_labels):
 
             segments = _convert_to_segments(explanation)
 
-            fig = plot_timeseries(range(len(ts_data[0])), ts_data[0], segments)
+            fig, _ = plot_timeseries(range(len(ts_data[0])), ts_data[0], segments)
 
             st.pyplot(fig)

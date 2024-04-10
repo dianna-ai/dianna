@@ -90,7 +90,7 @@ for index, label in zip(top_indices, top_labels):
             with st.spinner(f'Running {method}'):
                 heatmap = func(serialized_model, image, index, **kwargs)
 
-            fig = plot_image(heatmap,
+            fig, _ = plot_image(heatmap,
                              original_data=original_data,
                              heatmap_cmap='bwr',
                              show_plot=False)
