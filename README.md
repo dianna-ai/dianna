@@ -319,7 +319,7 @@ DIANNA supports different data modalities and XAI methods. The table below conta
 | Images     | ✅                                                | ✅                                                                 | ✅                                                                                                   |
 | Text       | ✅                                                | ✅                                                                 |                                                                                                      |
 | Timeseries | ✅                                                | ✅                                                                 |                                                                                                                                                                       |
-| Tabular    | planned                                           | ✅                                                            | planned                                                                                              |
+| Tabular    | planned                                           | ✅                                                            | ✅                                                                                              |
 | Embedding  | planned                                           | planned                                                            | planned   
 | Graphs*    | work in progress                                  | work in progress                                                   | work in progress                                                                                     |
 
