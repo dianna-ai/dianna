@@ -4,7 +4,7 @@ from pandas import DataFrame
 from dianna.utils.maskers import generate_channel_masks
 from dianna.utils.maskers import generate_interpolated_float_masks_for_image
 from dianna.utils.maskers import generate_interpolated_float_masks_for_timeseries
-from dianna.utils.maskers import generate_masks
+from dianna.utils.maskers import generate_time_series_masks
 from dianna.utils.maskers import generate_time_step_masks
 from dianna.utils.maskers import mask_data
 
@@ -14,7 +14,7 @@ def test_mask_has_correct_shape_univariate():
     input_data = _get_univariate_time_series()
     number_of_masks = 5
 
-    result = generate_masks(input_data, number_of_masks)
+    result = generate_time_series_masks(input_data, number_of_masks)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
@@ -24,7 +24,8 @@ def test_mask_has_correct_type_univariate():
     input_data = _get_univariate_time_series()
     number_of_masks = 5
 
-    result = generate_masks(input_data, number_of_masks=number_of_masks)
+    result = generate_time_series_masks(input_data,
+                                        number_of_masks=number_of_masks)
 
     assert result.dtype == bool
 
@@ -122,10 +123,10 @@ def _call_masking_function(
     feature_res=5,
 ):
     """Helper function with some defaults to call the code under test."""
-    masks = generate_masks(input_data,
-                           number_of_masks,
-                           feature_res,
-                           p_keep=p_keep)
+    masks = generate_time_series_masks(input_data,
+                                       number_of_masks,
+                                       feature_res,
+                                       p_keep=p_keep)
     return mask_data(input_data, masks, mask_type=mask_type)
 
 
@@ -174,7 +175,7 @@ def test_masking_has_correct_shape_multivariate():
     number_of_masks = 15
     input_data = _get_multivariate_time_series()
 
-    result = generate_masks(input_data, number_of_masks)
+    result = generate_time_series_masks(input_data, number_of_masks)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
@@ -184,7 +185,7 @@ def test_masking_univariate_leaves_anything_unmasked():
     number_of_masks = 1
     input_data = _get_univariate_time_series()
 
-    result = generate_masks(input_data, number_of_masks)
+    result = generate_time_series_masks(input_data, number_of_masks)
 
     assert np.any(result)
     assert np.any(~result)
@@ -201,7 +202,7 @@ def test_masking_keep_first_instance():
     """
     input_data = _get_multivariate_time_series()
     number_of_masks = 5
-    masks = generate_masks(input_data, number_of_masks, p_keep=0.9)
+    masks = generate_time_series_masks(input_data, number_of_masks, p_keep=0.9)
     masks[0, :, :] = 1.0
     masked = mask_data(input_data, masks, mask_type="mean")
     assert np.array_equal(masked[0, :, :], input_data)
@@ -215,10 +216,10 @@ def test_masks_approximately_correct_number_of_masked_parts_per_time_step(
     number_of_masks = 500
     input_data = _get_univariate_time_series(num_steps=num_steps)
 
-    masks = generate_masks(input_data,
-                           number_of_masks=number_of_masks,
-                           feature_res=num_steps,
-                           p_keep=p_keep)[:, :, 0]
+    masks = generate_time_series_masks(input_data,
+                                       number_of_masks=number_of_masks,
+                                       feature_res=num_steps,
+                                       p_keep=p_keep)[:, :, 0]
 
     masks_mean = DataFrame(masks).mean()
     print('\n')
@@ -234,10 +235,10 @@ def test_masks_approximately_correct_number_of_masked_parts_per_time_step_projec
     number_of_masks = 500
     input_data = _get_univariate_time_series(num_steps=num_steps)
 
-    masks = generate_masks(input_data,
-                           number_of_masks=number_of_masks,
-                           feature_res=6,
-                           p_keep=p_keep)[:, :, 0]
+    masks = generate_time_series_masks(input_data,
+                                       number_of_masks=number_of_masks,
+                                       feature_res=6,
+                                       p_keep=p_keep)[:, :, 0]
     print_univariate_masks(masks[:5])
 
     masks_mean = DataFrame(masks).mean()
