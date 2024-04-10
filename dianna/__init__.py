@@ -32,13 +32,12 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = 'DIANNA Team'
 __email__ = 'dianna-ai@esciencecenter.nl'
-__version__ = '1.4.0'
+__version__ = '1.5.0'
 
 
 def explain_timeseries(model_or_function: Union[Callable, str],
                        input_timeseries: np.ndarray, method: str,
-                       labels: Iterable[int],
-                       **kwargs) -> np.ndarray:
+                       labels: Iterable[int], **kwargs) -> np.ndarray:
     """Explain timeseries data given a model and a chosen method.
 
     Args:
@@ -64,11 +63,9 @@ def explain_timeseries(model_or_function: Union[Callable, str],
                              **explain_timeseries_kwargs)
 
 
-def explain_image(model_or_function: Union[Callable, str],
-                  input_image: np.ndarray,
-                  method: str,
-                  labels: Iterable[int],
-                  **kwargs) -> np.ndarray:
+def explain_image(model_or_function: Union[Callable,
+                                           str], input_image: np.ndarray,
+                  method: str, labels: Iterable[int], **kwargs) -> np.ndarray:
     """Explain an image (input_data) given a model and a chosen method.
 
     Args:
@@ -97,12 +94,9 @@ def explain_image(model_or_function: Union[Callable, str],
                              **explain_image_kwargs)
 
 
-def explain_text(model_or_function: Union[Callable, str],
-                 input_text: str,
-                 tokenizer,
-                 method: str,
-                 labels: Iterable[int],
-                 **kwargs) -> list:
+def explain_text(model_or_function: Union[Callable,
+                                          str], input_text: str, tokenizer,
+                 method: str, labels: Iterable[int], **kwargs) -> list:
     """Explain text (input_text) given a model and a chosen method.
 
     Args:
