@@ -82,9 +82,10 @@ class RISETabular:
         runner = utils.get_function(model_or_function)
 
         masks = np.stack(
-            generate_tabular_masks(input_tabular.shape,
-                                   number_of_masks=self.n_masks,
-                                   p_keep=self.p_keep))
+            list(
+                generate_tabular_masks(input_tabular.shape,
+                                       number_of_masks=self.n_masks,
+                                       p_keep=self.p_keep)))
         self.masks = masks if self.keep_masks else None
 
         masked = mask_data(input_tabular, masks, mask_type=mask_type)
