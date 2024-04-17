@@ -7,13 +7,23 @@ from numpy import ndarray
 from skimage.transform import resize
 
 
-def generate_masks(
+def generate_time_series_masks(
     input_data: np.ndarray,
     number_of_masks: int,
     feature_res: int = 8,
     p_keep: float = 0.5,
 ):
     """Generate masks for time series data given a probability of keeping any time step or channel unmasked.
+
+    Note that, for multivariate data, the resulting masks will be an evenly distributed sample of the following 3 kinds
+    of masks:
+    - Channel masks. These are masks that mask a whole channel at the time, masking all its time steps simultaneously.
+    - Time step masks. These mask all channels simultaneously for selected time steps. Masked time steps are selected
+    randomly, while grouping adjacent time steps. See for a complete description of how we generate time step masks
+    in our blog post: https://medium.com/escience-center/masking-time-series-for-explainable-ai-90247ac252b4
+    - Combination masks: These masks are a combination of the above 2 types.
+
+    For univariate data, only time step masks are returned.
 
     Args:
         input_data: Timeseries data to be masked.
@@ -124,7 +134,11 @@ def _determine_number_masked(p_keep: float, series_length: int) -> int:
 
 def generate_time_step_masks(input_data: np.ndarray, number_of_masks: int,
                              p_keep: float, number_of_features: int):
-    """Generate masks that masks complete time steps at a time while masking time steps in a segmented fashion."""
+    """Generate masks that masks complete time steps at a time while masking time steps in a segmented fashion.
+
+    For a conceptual description see:
+    https://medium.com/escience-center/masking-time-series-for-explainable-ai-90247ac252b4.
+    """
     time_series_length = input_data.shape[0]
     number_of_channels = input_data.shape[1]
 
