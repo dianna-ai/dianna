@@ -12,10 +12,34 @@ def test_rise_timeseries_correct_output_shape():
     input_data = np.random.random((10, 1))
     labels = [1]
 
-    heatmaps = dianna.explain_timeseries(run_model, input_data, "RISE", labels,
-                                         n_masks=200, p_keep=.5)
+    heatmaps = dianna.explain_timeseries(run_model,
+                                         input_data,
+                                         "RISE",
+                                         labels,
+                                         n_masks=200,
+                                         p_keep=.5)
 
     assert heatmaps.shape == (len(labels), *input_data.shape)
+
+
+def test_rise_timeseries_with_model_file():
+    """Test if rise runs and outputs the correct shape given some data and a model file."""
+    filename = 'dianna/models/season_prediction_model_temp_max_binary.onnx'
+    input_data = np.random.random((28, 1))
+    labels = [0]
+
+    # this model requires float input, while numpy uses double
+    def preprocess(data):
+        return data.astype(np.float32)
+
+    heatmaps = dianna.explain_timeseries(filename,
+                                         input_data,
+                                         "RISE",
+                                         labels,
+                                         n_masks=200,
+                                         p_keep=.5,
+                                         preprocess_function=preprocess)
+    print(heatmaps.shape)
 
 
 @pytest.mark.parametrize('series_length', [
