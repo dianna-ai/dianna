@@ -35,13 +35,25 @@ def assert_tabular_classification_correct_output_shape(explainer_class):
     assert len(exp[0]) == len(feature_names)
 
 
+def _pprint(explanations):
+    """Pretty prints the explanation for each class while classifying tabular data."""
+    print()
+    rows = [' '.join([f'{v:>4d}' for v in range(25)])]
+    rows += [
+        ' '.join([f'{v:.2f}' for v in explanation])
+        for explanation in explanations
+    ]
+    print('\n'.join(rows))
+
+
 def assert_tabular_simple_dummy_model(explainer_class):
     """Tests if the explainer can find the single important feature in otherwise random data."""
     np.random.seed(0)
-    training_data = np.random.random((100, 10))
     num_features = 25
     input_data = np.array(num_features // 2 * [1.0] +
                           (num_features - num_features // 2) * [0.0])
+    training_data = np.stack([input_data for _ in range(len(input_data))]).T
+
     feature_names = [f"feature_{i}" for i in range(num_features)]
     important_feature_i = 2
 
@@ -56,6 +68,7 @@ def assert_tabular_simple_dummy_model(explainer_class):
         feature_names=feature_names,
         class_names=["class_1", "class_2"],
         keep_masks=True,
+        keep_masked=True,
         keep_predictions=True,
     )
     explanations = explainer.explain(
@@ -63,6 +76,8 @@ def assert_tabular_simple_dummy_model(explainer_class):
         input_data,
         labels=[0, 1],
     )
+
+    _pprint(explanations)
 
     assert np.argmax(explanations[0]) == important_feature_i
     assert np.argmin(explanations[1]) == important_feature_i

@@ -5,6 +5,7 @@ from typing import Union
 import numpy as np
 from numpy import ndarray
 from skimage.transform import resize
+from sklearn.impute import SimpleImputer
 
 
 def generate_tabular_masks(
@@ -94,6 +95,38 @@ def generate_channel_masks(input_data_shape: tuple[int], number_of_masks: int,
                                             number_of_channels_masked, False)
         masks[i, :, channels_to_mask] = False
     return masks
+
+
+def mask_data_tabular(data: np.array, masks: np.array, training_data: np.array,
+                      mask_type: Union[object, str]) -> np.array:
+    """Mask tabular data given using a set of masks.
+
+    Args:
+        data: Input data.
+        masks: an array with shape [number_of_masks] + data.shape
+        mask_type: Masking strategy.
+        training_data: Data used to sample from for imputation of masked values.
+
+    Returns:
+        Single array containing all masked input where the first dimension represents the batch.
+    """
+    if isinstance(mask_type, str):
+        strategy = mask_type
+    else:
+        raise NotImplementedError(
+            'Support for non-string mask_type is not implemented for tabular data.'
+        )
+
+    imputer = SimpleImputer(missing_values=np.nan, strategy=strategy)
+    imputer.fit(training_data)
+    masked_data_list = []
+    for mask in masks:
+        current_data = np.array(data)
+        current_data[~mask] = np.nan
+        current_data_masked = imputer.transform(current_data[None, ...])[0]
+        masked_data_list.append(current_data_masked)
+    masked_data = np.stack(masked_data_list)
+    return masked_data
 
 
 def mask_data(data: np.array, masks: np.array, mask_type: Union[object, str]):

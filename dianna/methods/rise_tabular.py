@@ -6,7 +6,7 @@ from typing import Union
 import numpy as np
 from dianna import utils
 from dianna.utils.maskers import generate_tabular_masks
-from dianna.utils.maskers import mask_data
+from dianna.utils.maskers import mask_data_tabular
 from dianna.utils.predict import make_predictions
 from dianna.utils.rise_utils import normalize
 
@@ -26,7 +26,7 @@ class RISETabular:
         preprocess_function: Optional[callable] = None,
         class_names=None,
         keep_masks: bool = False,
-        keep_masked_data: bool = False,
+        keep_masked: bool = False,
         keep_predictions: bool = False,
     ) -> np.ndarray:
         """RISE initializer.
@@ -42,9 +42,10 @@ class RISETabular:
             mode: Either classification of regression
             training_data: Training data used for imputation of masked features
             keep_masks: keep masks in memory for the user to inspect
-            keep_masked_data: keep masked data in memory for the user to inspect
+            keep_masked: keep masked data in memory for the user to inspect
             keep_predictions: keep model predictions in memory for the user to inspect
         """
+        self.training_data = training_data
         self.n_masks = n_masks
         self.feature_res = feature_res
         self.p_keep = p_keep
@@ -53,7 +54,7 @@ class RISETabular:
         self.masked = None
         self.predictions = None
         self.keep_masks = keep_masks
-        self.keep_masked_data = keep_masked_data
+        self.keep_masked = keep_masked
         self.keep_predictions = keep_predictions
 
     def explain(
@@ -61,7 +62,7 @@ class RISETabular:
         model_or_function: Union[str, callable],
         input_tabular: np.array,
         labels: Iterable[int],
-        mask_type: Optional[Union[str, callable]] = 'mean',
+        mask_type: Optional[Union[str, callable]] = 'most_frequent',
         batch_size: Optional[int] = 100,
     ) -> np.array:
         """Run the RISE explainer.
@@ -88,8 +89,11 @@ class RISETabular:
                                        p_keep=self.p_keep)))
         self.masks = masks if self.keep_masks else None
 
-        masked = mask_data(input_tabular, masks, mask_type=mask_type)
-        self.masked = masked if self.keep_masked_data else None
+        masked = mask_data_tabular(input_tabular,
+                                   masks,
+                                   self.training_data,
+                                   mask_type=mask_type)
+        self.masked = masked if self.keep_masked else None
         predictions = make_predictions(masked, runner, batch_size)
         self.predictions = predictions if self.keep_predictions else None
         n_labels = predictions.shape[1]
