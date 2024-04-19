@@ -333,6 +333,7 @@ Our goal is that the scientific community embrases XAI as a source for novel and
 Here, we offer [tutorials](./tutorials) on specific scientific use-cases of uisng XAI:
 | Use-case (data) \ XAI | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
 | :---------                                           | :-------- | :------------------------------ | :-------------------------- |
+| Biology (Phytomorphology): Tree Leaves classification (images)   |        |            ✅                     |                             |
 | Astronomy: Fast Radio Burst detection (timeseries)    | ✅       |                                 |                             |
 | Geo-science (images)       |   planned                |  ...      | ...                            |                  ...         |
 | Social sciences (text) | work in progress             |  ...      |...                             | ...                          |
