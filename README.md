@@ -321,10 +321,11 @@ DIANNA supports different data modalities and XAI methods (explainers). We have 
 | Text       | ✅                                                | ✅                                                                 |                                                                                                      |
 | Timeseries | ✅                                                | ✅                                                                 |                                                                                                                                                                       |
 | Tabular    | planned                                           | ✅                                                            | ✅                                                                                              |
-| Embedding  | planned                                           | planned                                                            | planned   
-| Graphs*    | work in progress                                  | work in progress                                                   | work in progress                                                                                     |
+| Embedding  | work in progress                                  |                                                             |  
+| Graphs*    | next steps                                  |                                                    |                                                                                     |
 
-[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers. **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
+[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers. 
+Also [GradCAM](https://www.codetrade.io/blog/grad-cam-a-complete-guide-with-example/) has been recently found to be *semantically continous*! **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
 
 ## Reference documentation
 
