@@ -322,10 +322,21 @@ DIANNA supports different data modalities and XAI methods (explainers). We have 
 | Timeseries | ✅                                                | ✅                                                                 |                                                                                                                                                                       |
 | Tabular    | planned                                           | ✅                                                            | ✅                                                                                              |
 | Embedding  | work in progress                                  |                                                             |  
-| Graphs*    | next steps                                  |                                                    |                                                                                     |
+| Graphs*    | next steps                                  |    ...                                                |     ...                                                                                |
 
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers. 
 Also [GradCAM](https://www.codetrade.io/blog/grad-cam-a-complete-guide-with-example/) has been recently found to be *semantically continous*! **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
+
+
+### Scientific use-cases
+Our goal is that the scientific community embrases XAI as a source for novel and unexplored perspectives on scientific problems. 
+Here, we offer [tutorials](./tutorials) on specific scientific use-cases of uisng XAI:
+| Use-case (data) \ XAI | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
+| :---------                                           | :-------- | :------------------------------ | :-------------------------- |
+| Astronomy: Fast Radio Burst detection (timeseries)    | ✅       |                                 |                             |
+| Geo-science (images)       |   planned                |  ...      | ...                            |                  ...         |
+| Social sciences (text) | work in progress             |  ...      |...                             | ...                          |
+| Climate                | planned                      |   ...     |       ...                      |                ...           |   
 
 ## Reference documentation
 
