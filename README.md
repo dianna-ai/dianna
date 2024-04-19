@@ -68,13 +68,14 @@ After studying the vast XAI landscape we have made choices in the parts of the [
 
 The key points of DIANNA:
 
-* Provides an easy-to-use interface for non (X)AI experts
-* Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
-* Supports the de-facto standard format for neural network models - ONNX.
-* Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and scikit-learn to ONNX.
-* Supports images, text and time series data modalities. Tabular data and even embeddings support is planned.
-* Comes with simple intuitive image and text benchmarks
-* Easily extendable to other XAI methods
+ *   Provides an easy-to-use interface for non (X)AI experts
+ *   Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
+ *   Supports the de-facto standard of neural network models - ONNX
+ *   Supports images, text, time series, and tabular data modalities, embeddings are currently being developed
+ *   Comes with simple intuitive image, text, time series, and tabular benchmarks, so can help you with your XAI research
+ *   Scientific use-cases tutorials
+ *   Easily extendable to other XAI methods
+
 
 For more information on the unique strengths of DIANNA with comparison to other tools, please see the [context landscape](https://dianna.readthedocs.io/en/latest/CONTEXT.html).
 
