@@ -104,29 +104,34 @@ def mask_data_tabular(data: np.array, masks: np.array, training_data: np.array,
     Args:
         data: Input data.
         masks: an array with shape [number_of_masks] + data.shape
-        mask_type: Masking strategy.
+        mask_type: Masking strategy. Can be 'most_frequent', 'mean' or a function f(data, masks, training_data).
         training_data: Data used to sample from for imputation of masked values.
 
     Returns:
         Single array containing all masked input where the first dimension represents the batch.
     """
     if isinstance(mask_type, str):
+
+        def strategy(data, masks, training_data):
+            imputer = SimpleImputer(missing_values=np.nan, strategy=mask_type)
+            imputer.fit(training_data)
+            masked_data_list = []
+            for mask in masks:
+                current_data = np.array(data)
+                current_data[~mask] = np.nan
+                current_data_masked = imputer.transform(current_data[None,
+                                                                     ...])[0]
+                masked_data_list.append(current_data_masked)
+            masked_data = np.stack(masked_data_list)
+            return masked_data
+    elif callable(mask_type):
         strategy = mask_type
     else:
-        raise NotImplementedError(
-            'Support for non-string mask_type is not implemented for tabular data.'
+        raise ValueError(
+            f'Mask type must be callable or type str but got type `{type(mask_type)}` instead.'
         )
 
-    imputer = SimpleImputer(missing_values=np.nan, strategy=strategy)
-    imputer.fit(training_data)
-    masked_data_list = []
-    for mask in masks:
-        current_data = np.array(data)
-        current_data[~mask] = np.nan
-        current_data_masked = imputer.transform(current_data[None, ...])[0]
-        masked_data_list.append(current_data_masked)
-    masked_data = np.stack(masked_data_list)
-    return masked_data
+    return strategy(data, masks, training_data)
 
 
 def mask_data(data: np.array, masks: np.array, mask_type: Union[object, str]):
