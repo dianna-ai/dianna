@@ -1,32 +1,48 @@
 import numpy as np
+import pytest
 import dianna
+from dianna.methods.kernelshap_tabular import KERNELSHAPTabular
+from dianna.methods.lime_tabular import LIMETabular
+from dianna.methods.rise_tabular import RISETabular
 from tests.utils import run_model
 
 
-def assert_tabular_regression_correct_output_shape(method):
+@pytest.mark.parametrize('method', [
+    'rise',
+    'lime',
+    'kernelshap',
+])
+def test_tabular_regression_correct_output_shape(method):
     """Runs the explainer class with random data and asserts the output shape."""
     training_data = np.random.random((10, 2))
     input_data = np.random.random(2)
     feature_names = ["feature_1", "feature_2"]
-    exp = dianna.explain_tabular(run_model,
-                                 input_tabular=input_data,
-                                 method=method,
-                                 mode='regression',
-                                 training_data=training_data,
-                                 feature_names=feature_names,
-                                 class_names=['class_1'])
+    exp = dianna.explain_tabular(
+        run_model,
+        input_tabular=input_data,
+        method=method,
+        mode='regression',
+        training_data=training_data,
+        feature_names=feature_names,
+    )
     assert len(exp) == len(feature_names)
 
 
-def assert_tabular_classification_correct_output_shape(explainer_class):
+@pytest.mark.parametrize('explainer_class', [
+    RISETabular,
+    LIMETabular,
+    KERNELSHAPTabular,
+])
+def test_tabular_classification_correct_output_shape(explainer_class):
     """Runs the explainer class with random data and asserts the output shape."""
     training_data = np.random.random((10, 2))
     input_data = np.random.random(2)
     feature_names = ["feature_1", "feature_2"]
-    explainer = explainer_class(training_data,
-                                mode='classification',
-                                feature_names=feature_names,
-                                class_names=["class_1", "class_2"])
+    explainer = explainer_class(
+        training_data,
+        mode='classification',
+        feature_names=feature_names,
+    )
     exp = explainer.explain(
         run_model,
         input_data,
@@ -46,7 +62,12 @@ def _pprint(explanations):
     print('\n'.join(rows))
 
 
-def assert_tabular_simple_dummy_model(explainer_class):
+@pytest.mark.parametrize('explainer_class', [
+    RISETabular,
+    LIMETabular,
+    KERNELSHAPTabular,
+])
+def test_tabular_simple_dummy_model(explainer_class):
     """Tests if the explainer can find the single important feature in otherwise random data."""
     np.random.seed(0)
     num_features = 25
@@ -66,10 +87,6 @@ def assert_tabular_simple_dummy_model(explainer_class):
         training_data,
         mode='classification',
         feature_names=feature_names,
-        class_names=["class_1", "class_2"],
-        keep_masks=True,
-        keep_masked=True,
-        keep_predictions=True,
     )
     explanations = explainer.explain(
         dummy_model,

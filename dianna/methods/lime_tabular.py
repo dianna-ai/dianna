@@ -1,4 +1,5 @@
 """LIME tabular explainer."""
+import sys
 from typing import Iterable
 from typing import List
 from typing import Union
@@ -62,7 +63,6 @@ class LIMETabular:
 
         # temporary solution for setting num_features and top_labels
         self.num_features = len(feature_names)
-        self.top_labels = len(class_names)
 
         self.explainer = LimeTabularExplainer(
             training_data,
@@ -111,7 +111,7 @@ class LIMETabular:
             input_tabular,
             runner,
             labels=labels,
-            top_labels=self.top_labels,
+            top_labels=sys.maxsize,
             num_features=self.num_features,
             num_samples=num_samples,
             **explain_instance_kwargs,
@@ -124,7 +124,7 @@ class LIMETabular:
         elif self.mode == 'classification':
             # extract scores from lime explainer
             saliency = []
-            for i in range(self.top_labels):
+            for i in range(len(explanation.local_exp.items())):
                 local_exp = sorted(explanation.local_exp[i])
                 # shape of local_exp [(index, saliency)]
                 selected_saliency = [x[1] for x in local_exp]
