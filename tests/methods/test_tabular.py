@@ -6,12 +6,20 @@ from dianna.methods.lime_tabular import LIMETabular
 from dianna.methods.rise_tabular import RISETabular
 from tests.utils import run_model
 
-
-@pytest.mark.parametrize('method', [
+explainer_names = [
     'rise',
     'lime',
     'kernelshap',
-])
+]
+
+explainer_classes = [
+    RISETabular,
+    LIMETabular,
+    KERNELSHAPTabular,
+]
+
+
+@pytest.mark.parametrize('method', explainer_names)
 def test_tabular_regression_correct_output_shape(method):
     """Runs the explainer class with random data and asserts the output shape."""
     training_data = np.random.random((10, 2))
@@ -28,16 +36,14 @@ def test_tabular_regression_correct_output_shape(method):
     assert len(exp) == len(feature_names)
 
 
-@pytest.mark.parametrize('explainer_class', [
-    RISETabular,
-    LIMETabular,
-    KERNELSHAPTabular,
-])
+@pytest.mark.parametrize('explainer_class', explainer_classes)
 def test_tabular_classification_correct_output_shape(explainer_class):
     """Runs the explainer class with random data and asserts the output shape."""
-    training_data = np.random.random((10, 2))
-    input_data = np.random.random(2)
-    feature_names = ["feature_1", "feature_2"]
+    number_of_features = 3
+    number_of_classes = 2
+    training_data = np.random.random((10, number_of_features))
+    input_data = np.random.random(number_of_features)
+    feature_names = ["feature_1", "feature_2", "feature_3"]
     explainer = explainer_class(
         training_data,
         mode='classification',
@@ -48,7 +54,7 @@ def test_tabular_classification_correct_output_shape(explainer_class):
         input_data,
         labels=[0],
     )
-    assert len(exp[0]) == len(feature_names)
+    assert exp.shape == (number_of_classes, number_of_features)
 
 
 def _pprint(explanations):
@@ -62,11 +68,7 @@ def _pprint(explanations):
     print('\n'.join(rows))
 
 
-@pytest.mark.parametrize('explainer_class', [
-    RISETabular,
-    LIMETabular,
-    KERNELSHAPTabular,
-])
+@pytest.mark.parametrize('explainer_class', explainer_classes)
 def test_tabular_simple_dummy_model(explainer_class):
     """Tests if the explainer can find the single important feature in otherwise random data."""
     np.random.seed(0)
