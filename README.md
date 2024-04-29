@@ -325,7 +325,7 @@ DIANNA supports different data modalities and XAI methods (explainers). We have 
 | Graphs*    | next steps                                  |    ...                                                |     ...                                                                                |
 
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers. 
-Also [GradCAM](https://www.codetrade.io/blog/grad-cam-a-complete-guide-with-example/) has been recently found to be *semantically continous*! **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
+Also [GradCAM](https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.pdf)) has been recently found to be *semantically continous*! **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
 
 
 ### Scientific use-cases
