@@ -68,7 +68,8 @@ To learn more about how we aproach the masking for time-series data, please read
 
 ### IMPORTANT: Hyperparameters
 The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [master Thesis](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity is researched and useful conclusions are drawn.
-The default hyperparameters used in DIANNA for each explainer as well as the choices for some tutorials and their data modality (*i* - images, *txt* - text, *ts* - time series and *tab* - tabular) are given below:
+The default hyperparameters used in DIANNA for each explainer as well as the choices for some tutorials and their data modality (*i* - images, *txt* - text, *ts* - time series and *tab* - tabular) are given in the tables below. 
+Also the main conclusions (🠊) from the thesis (on images and text) about the hyperparameters effect are listed.
 
 #### RISE
 | Hyperparameter  | Default value | <img width="94" alt="ImageNet_autocrop" src="https://user-images.githubusercontent.com/3244249/152542090-fd78fde1-6dec-43b6-a7ae-eea964b8ae28.png"> (*i*)| <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152540187-b7a8239f-6742-437f-8f9b-35b950ce5ddb.png">(*i*) | <img width="25" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152540890-c8e1e37d-f0cc-4f84-80a4-2c59176cbf4c.png"> (*txt*) | <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">  (*ts*)| <img width="25" alt="FRB logo" src="https://github.com/dianna-ai/dianna/assets/6370787/f53b280d-94b0-40ec-bfe7-ee48777d7964"> (*ts*)|
@@ -76,16 +77,27 @@ The default hyperparameters used in DIANNA for each explainer as well as the cho
 | $n_{masks}$  |**$1000$**  | default | $5000$ | default | $10000$ |$5000$ |
 | $p_{keep}$  | **optimized** (*i*, *txt*), **$0.5$** (*ts*) | $0.1$| $0.1$ |  default | $0.1$| $0.1$|
 | $n_{features}$ |**$8$** | $6$ |default |  default | default | $16$ |
+
+🠊 The most crucial parameter is $p_{keep}$. Lower values of $p_{keep}$ lead to more sentitive explanations (observed for both images and text).
+
+🠊 The feature resolution $n_{features}$ exhibited an optimum at a value of $6$. 
+
 #### LIME
 | Hyperparameter  | Default value |  <img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/151539100-dbdfe0f8-485f-45d4-a249-a1f79e970066.png"> (*i*) |<img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f"> (*ts*)| <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162">(*ts*)|
 | ------------- | ------------- |--------| -----| -----|
 | $n_{samples}$  | **$5000$**  | $1000$ | $10 000$| $500$|
-| Kernel Width | **$25$**| default | default| default|
+| *Kernel Width* | **$25$**| default | default| default|
 | $n_{features}$ | **$10$** | $30$ | default| default|
+
+🠊 The most crucial parameter is the *Kernel width*: low values cause high sensitivity, however that observaiton was dependant on the evaluaiton metric.
 
 #### KernalSHAP
 | Hyperparameter  | Default value | <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152540187-b7a8239f-6742-437f-8f9b-35b950ce5ddb.png"> (*i*)| <img width="20" alt="SimpleGeometric Logo" src="https://user-images.githubusercontent.com/3244249/151539027-f2fc3fc0-282a-4993-9680-74ee28bcd360.png"> (*i*)|
 | ------------- | ------------- |------------- |------------- |
 | $n_{samples}$  | **auto/int** | $1000$| $2000$ |
 | $n_{segments}$ | **$100$** |$200$ |$200$ |
+| $sigma$        |  **$0$**  |  default    | default |
 
+🠊 The most crucial parameter is the nubmer of super-pixels $n_{segments}. Higher values led to higher sensitivity, however that observaiton was dependant on the evaluaiton metric.
+
+🠊 Regularization had only a marginal detrimental effect, the best results were obtained using no regularization (no smoothing, $sigma = 0$) or least squares regression. 
