@@ -68,13 +68,14 @@ After studying the vast XAI landscape we have made choices in the parts of the [
 
 The key points of DIANNA:
 
-* Provides an easy-to-use interface for non (X)AI experts
-* Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
-* Supports the de-facto standard format for neural network models - ONNX.
-* Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and scikit-learn to ONNX.
-* Supports images, text and time series data modalities. Tabular data and even embeddings support is planned.
-* Comes with simple intuitive image and text benchmarks
-* Easily extendable to other XAI methods
+ *   Provides an easy-to-use interface for non (X)AI experts
+ *   Implements well-known XAI methods LIME, RISE and KernelSHAP, chosen by systematic and objective evaluation criteria
+ *   Supports the de-facto standard of neural network models - ONNX
+ *   Supports images, text, time series, and tabular data modalities, embeddings are currently being developed
+ *   Comes with simple intuitive image, text, time series, and tabular benchmarks, so can help you with your XAI research
+ *   Includes scientific use-cases tutorials
+ *   Easily extendable to other XAI methods
+
 
 For more information on the unique strengths of DIANNA with comparison to other tools, please see the [context landscape](https://dianna.readthedocs.io/en/latest/CONTEXT.html).
 
@@ -251,7 +252,7 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 
 | Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
-| [Coffee dataset](https://timeseriesclassification.com/description.php?Dataset=Coffee) <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162"> | Food spectographs time series dataset for a two class problem to distinguish between Robusta and Arabica coffee beans.                                         | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/763002c5-40ad-48cc-9de0-ea43d7fa8a75)"> | [data source](https://github.com/QIBChemometrics/Benchtop-NMR-Coffee-Survey) |
+| Coffee dataset  <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162"> | Food spectographs time series dataset for a two class problem to distinguish between Robusta and Arabica coffee beans.                                         | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/763002c5-40ad-48cc-9de0-ea43d7fa8a75)"> | [data source](https://github.com/QIBChemometrics/Benchtop-NMR-Coffee-Survey) |
 | [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d)"> | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
 
 ### Tabular 
@@ -320,10 +321,23 @@ DIANNA supports different data modalities and XAI methods (explainers). We have 
 | Text       | ✅                                                | ✅                                                                 |                                                                                                      |
 | Timeseries | ✅                                                | ✅                                                                 |                                                                                                                                                                       |
 | Tabular    | planned                                           | ✅                                                            | ✅                                                                                              |
-| Embedding  | planned                                           | planned                                                            | planned   
-| Graphs*    | work in progress                                  | work in progress                                                   | work in progress                                                                                     |
+| Embedding  | work in progress                                  |                                                             |  
+| Graphs*    | next steps                                  |    ...                                                |     ...                                                                                |
 
-[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers. **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
+[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers. 
+Also [GradCAM](https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.pdf)) has been recently found to be *semantically continous*! **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
+
+
+### Scientific use-cases
+Our goal is that the scientific community embrases XAI as a source for novel and unexplored perspectives on scientific problems. 
+Here, we offer [tutorials](./tutorials) on specific scientific use-cases of uisng XAI:
+| Use-case (data) \ XAI | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
+| :---------                                           | :-------- | :------------------------------ | :-------------------------- |
+| Biology (Phytomorphology): Tree Leaves classification (images)   |        |            ✅                     |                             |
+| Astronomy: Fast Radio Burst detection (timeseries)    | ✅       |                                 |                             |
+| Geo-science (raster data)       |   planned                |  ...      | ...                            |                  ...         |
+| Social sciences (text) | work in progress             |  ...      |...                             | ...                          |
+| Climate                | planned                      |   ...     |       ...                      |                ...           |   
 
 ## Reference documentation
 
