@@ -73,7 +73,7 @@ The key points of DIANNA:
  *   Supports the de-facto standard of neural network models - ONNX
  *   Supports images, text, time series, and tabular data modalities, embeddings are currently being developed
  *   Comes with simple intuitive image, text, time series, and tabular benchmarks, so can help you with your XAI research
- *   Scientific use-cases tutorials
+ *   Includes scientific use-cases tutorials
  *   Easily extendable to other XAI methods
 
 
