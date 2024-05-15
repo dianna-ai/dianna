@@ -42,20 +42,31 @@ def get_mnist_1_data():
     return np.loadtxt(_mnist_1_data.split()).reshape((1, 1, 28, 28))
 
 
-def run_model(input_data):
-    """Simulate a model that outputs 2-classes.
+def get_dummy_model_function(n_outputs):
+    """Create a function that simulates a model that outputs n_outputs.
 
     Args:
-        input_data: input data for the dummy model
+        n_outputs: number of outputs
 
     Returns:
-        semi random output
+        dummy model as a function
     """
-    n_class = 2
-    batch_size = input_data.shape[0]
 
-    np.random.seed(42)
-    return np.random.random((batch_size, n_class))
+    def run_model(input_data):
+        """Simulate a model that outputs n_outputs.
+
+        Args:
+            input_data: input data for the dummy model
+
+        Returns:
+            semi random output
+        """
+        batch_size = input_data.shape[0]
+
+        np.random.seed(42)
+        return np.random.random((batch_size, n_outputs))
+
+    return run_model
 
 
 class ModelRunner:

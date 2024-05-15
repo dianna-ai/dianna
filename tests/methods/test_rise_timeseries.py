@@ -4,7 +4,7 @@ import dianna
 from dianna.methods.rise_timeseries import RISETimeseries
 from tests.methods.time_series_test_case import average_temperature_timeseries_with_1_cold_and_1_hot_day
 from tests.methods.time_series_test_case import run_expert_model_3_step
-from tests.utils import run_model
+from tests.utils import get_dummy_model_function
 
 
 def test_rise_timeseries_correct_output_shape():
@@ -12,8 +12,12 @@ def test_rise_timeseries_correct_output_shape():
     input_data = np.random.random((10, 1))
     labels = [1]
 
-    heatmaps = dianna.explain_timeseries(run_model, input_data, "RISE", labels,
-                                         n_masks=200, p_keep=.5)
+    heatmaps = dianna.explain_timeseries(get_dummy_model_function(n_outputs=2),
+                                         input_data,
+                                         "RISE",
+                                         labels,
+                                         n_masks=200,
+                                         p_keep=.5)
 
     assert heatmaps.shape == (len(labels), *input_data.shape)
 

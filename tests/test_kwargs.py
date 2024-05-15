@@ -3,8 +3,8 @@ import numpy as np
 import pytest
 import dianna
 from tests.methods.test_onnx_runner import generate_data
+from tests.utils import get_dummy_model_function
 from tests.utils import load_movie_review_model
-from tests.utils import run_model
 
 
 class ImageKwargs(TestCase):
@@ -17,24 +17,25 @@ class ImageKwargs(TestCase):
         axis_labels = ('channels', 'y', 'x')
         labels = [1]
 
-        dianna.explain_image(model_filename,
-                                input_data,
-                                method='LIME',
-                                labels=labels,
-                                kernel=None,
-                                kernel_width=25,
-                                verbose=False,
-                                feature_selection='auto',
-                                random_state=None,
-                                axis_labels=axis_labels,
-                                preprocess_function=None,
-                                top_labels=None,
-                                num_features=10,
-                                num_samples=10,
-                                return_masks=True,
-                                positive_only=False,
-                                hide_rest=True,
-                                )
+        dianna.explain_image(
+            model_filename,
+            input_data,
+            method='LIME',
+            labels=labels,
+            kernel=None,
+            kernel_width=25,
+            verbose=False,
+            feature_selection='auto',
+            random_state=None,
+            axis_labels=axis_labels,
+            preprocess_function=None,
+            top_labels=None,
+            num_features=10,
+            num_samples=10,
+            return_masks=True,
+            positive_only=False,
+            hide_rest=True,
+        )
 
     def test_lime_image_extra_kwarg(self):
         """Test to ensure extra kwargs to lime raise warnings."""
@@ -45,24 +46,24 @@ class ImageKwargs(TestCase):
         error_message = "Error due to following unused kwargs: {'extra_kwarg': None}"
         with pytest.raises(TypeError, match=error_message):
             dianna.explain_image(model_filename,
-                                    input_data,
-                                    method='LIME',
-                                    labels=labels,
-                                    kernel=None,
-                                    kernel_width=25,
-                                    verbose=False,
-                                    feature_selection='auto',
-                                    random_state=None,
-                                    axis_labels=axis_labels,
-                                    preprocess_function=None,
-                                    top_labels=None,
-                                    num_features=10,
-                                    num_samples=10,
-                                    return_masks=True,
-                                    positive_only=False,
-                                    hide_rest=True,
-                                    extra_kwarg=None
-                                    )
+                                 input_data,
+                                 method='LIME',
+                                 labels=labels,
+                                 kernel=None,
+                                 kernel_width=25,
+                                 verbose=False,
+                                 feature_selection='auto',
+                                 random_state=None,
+                                 axis_labels=axis_labels,
+                                 preprocess_function=None,
+                                 top_labels=None,
+                                 num_features=10,
+                                 num_samples=10,
+                                 return_masks=True,
+                                 positive_only=False,
+                                 hide_rest=True,
+                                 extra_kwarg=None)
+
 
 class TextKwargs(TestCase):
     """Suite of tests for kwargs to explainers for Images."""
@@ -71,8 +72,7 @@ class TextKwargs(TestCase):
         """Test to ensure correct kwargs to lime run without issues."""
         review = "such a bad movie"
 
-        dianna.explain_text(
-                            self.runner,
+        dianna.explain_text(self.runner,
                             review,
                             tokenizer=self.runner.tokenizer,
                             method='RISE',
@@ -81,8 +81,7 @@ class TextKwargs(TestCase):
                             feature_res=8,
                             p_keep=0.5,
                             preprocess_function=None,
-                            batch_size=100
-                            )
+                            batch_size=100)
 
     def test_rise_text_extra_kwarg(self):
         """Test to ensure extra kwargs to lime raise warnings."""
@@ -90,8 +89,7 @@ class TextKwargs(TestCase):
 
         error_message = "Error due to following unused kwargs: {'extra_kwarg': None}"
         with pytest.raises(TypeError, match=error_message):
-            dianna.explain_text(
-                                self.runner,
+            dianna.explain_text(self.runner,
                                 review,
                                 tokenizer=self.runner.tokenizer,
                                 method='RISE',
@@ -101,13 +99,13 @@ class TextKwargs(TestCase):
                                 p_keep=0.5,
                                 preprocess_function=None,
                                 batch_size=100,
-                                extra_kwarg=None
-                                )
+                                extra_kwarg=None)
 
     def setUp(self) -> None:
         """Set seed and load runner."""
         np.random.seed(0)
         self.runner = load_movie_review_model()
+
 
 class TimeseriesKwargs(TestCase):
     """Suite of tests for kwargs to explainers for Images."""
@@ -117,22 +115,22 @@ class TimeseriesKwargs(TestCase):
         input_data = np.random.random((10, 1))
 
         dianna.explain_timeseries(
-                                    run_model,
-                                    input_timeseries=input_data,
-                                    method='LIME',
-                                    labels=[0,1],
-                                    class_names=["summer", "winter"],
-                                    kernel_width=25,
-                                    verbose=False,
-                                    preprocess_function=None,
-                                    feature_selection='auto',
-                                    num_features=10,
-                                    num_samples=10,
-                                    num_slices=10,
-                                    batch_size=10,
-                                    mask_type='mean',
-                                    distance_method='cosine',
-                                )
+            get_dummy_model_function(n_outputs=2),
+            input_timeseries=input_data,
+            method='LIME',
+            labels=[0, 1],
+            class_names=["summer", "winter"],
+            kernel_width=25,
+            verbose=False,
+            preprocess_function=None,
+            feature_selection='auto',
+            num_features=10,
+            num_samples=10,
+            num_slices=10,
+            batch_size=10,
+            mask_type='mean',
+            distance_method='cosine',
+        )
 
     def test_lime_timeseries_extra_kwargs(self):
         """Test to ensure extra kwargs to lime raise warnings."""
@@ -140,24 +138,23 @@ class TimeseriesKwargs(TestCase):
 
         error_message = "Error due to following unused kwargs: {'extra_kwarg': None}"
         with pytest.raises(TypeError, match=error_message):
-            dianna.explain_timeseries(
-                                        run_model,
-                                        input_timeseries=input_data,
-                                        method='LIME',
-                                        labels=[0,1],
-                                        class_names=["summer", "winter"],
-                                        kernel_width=25,
-                                        verbose=False,
-                                        preprocess_function=None,
-                                        feature_selection='auto',
-                                        num_features=10,
-                                        num_samples=10,
-                                        num_slices=10,
-                                        batch_size=10,
-                                        mask_type='mean',
-                                        distance_method='cosine',
-                                        extra_kwarg=None
-                                    )
+            dianna.explain_timeseries(get_dummy_model_function(n_outputs=2),
+                                      input_timeseries=input_data,
+                                      method='LIME',
+                                      labels=[0, 1],
+                                      class_names=["summer", "winter"],
+                                      kernel_width=25,
+                                      verbose=False,
+                                      preprocess_function=None,
+                                      feature_selection='auto',
+                                      num_features=10,
+                                      num_samples=10,
+                                      num_slices=10,
+                                      batch_size=10,
+                                      mask_type='mean',
+                                      distance_method='cosine',
+                                      extra_kwarg=None)
+
 
 class TabularKwargs(TestCase):
     """Suite of tests for kwargs to explainers for Images."""

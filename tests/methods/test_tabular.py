@@ -4,7 +4,7 @@ import dianna
 from dianna.methods.kernelshap_tabular import KERNELSHAPTabular
 from dianna.methods.lime_tabular import LIMETabular
 from dianna.methods.rise_tabular import RISETabular
-from tests.utils import run_model
+from tests.utils import get_dummy_model_function
 
 explainer_names = [
     'rise',
@@ -22,18 +22,20 @@ explainer_classes = [
 @pytest.mark.parametrize('method', explainer_names)
 def test_tabular_regression_correct_output_shape(method):
     """Runs the explainer class with random data and asserts the output shape."""
-    training_data = np.random.random((10, 2))
-    input_data = np.random.random(2)
+    number_of_features = 2
+    number_of_classes = 3
+    training_data = np.random.random((10, number_of_features))
+    input_data = np.random.random(number_of_features)
     feature_names = ["feature_1", "feature_2"]
     exp = dianna.explain_tabular(
-        run_model,
+        get_dummy_model_function(n_outputs=number_of_classes),
         input_tabular=input_data,
         method=method,
         mode='regression',
         training_data=training_data,
         feature_names=feature_names,
     )
-    assert len(exp) == len(feature_names)
+    assert exp.shape == (number_of_classes, number_of_features)
 
 
 @pytest.mark.parametrize('explainer_class', explainer_classes)
@@ -50,7 +52,7 @@ def test_tabular_classification_correct_output_shape(explainer_class):
         feature_names=feature_names,
     )
     exp = explainer.explain(
-        run_model,
+        get_dummy_model_function(n_outputs=number_of_classes),
         input_data,
         labels=[0],
     )

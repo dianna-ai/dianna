@@ -102,5 +102,5 @@ class RISETabular:
 
         saliency = predictions.T.dot(masks_reshaped).reshape(
             n_labels, *input_tabular.shape)
-        selected_saliency = saliency[labels]
+        selected_saliency = saliency if labels is None else saliency[labels]
         return normalize(selected_saliency, self.n_masks, self.p_keep)

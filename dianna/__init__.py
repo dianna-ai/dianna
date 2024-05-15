@@ -123,7 +123,7 @@ def explain_text(model_or_function, input_text, tokenizer, method, labels,
 def explain_tabular(model_or_function,
                     input_tabular,
                     method,
-                    labels=(1, ),
+                    labels=None,
                     **kwargs):
     """Explain tabular (input_text) given a model and a chosen method.
 
