@@ -91,7 +91,7 @@ Also the main conclusions (🠊) from the thesis (on images and text) about the 
 
 🠊 The most crucial parameter is the *Kernel width*: low values cause high sensitivity, however that observaiton was dependant on the evaluaiton metric.
 
-#### KernalSHAP
+#### KernelSHAP
 | Hyperparameter  | Default value | <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152540187-b7a8239f-6742-437f-8f9b-35b950ce5ddb.png"> (*i*)| <img width="20" alt="SimpleGeometric Logo" src="https://user-images.githubusercontent.com/3244249/151539027-f2fc3fc0-282a-4993-9680-74ee28bcd360.png"> (*i*)|
 | ------------- | ------------- |------------- |------------- |
 | $n_{samples}$  | **auto/int** | $1000$| $2000$ |
