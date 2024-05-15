@@ -335,7 +335,7 @@ Here, we offer [tutorials](./tutorials) on specific scientific use-cases of uisn
 | :---------                                           | :-------- | :------------------------------ | :-------------------------- |
 | Biology (Phytomorphology): Tree Leaves classification (images)   |        |            ✅                     |                             |
 | Astronomy: Fast Radio Burst detection (timeseries)    | ✅       |                                 |                             |
-| Geo-science (images)       |   planned                |  ...      | ...                            |                  ...         |
+| Geo-science (raster data)       |   planned                |  ...      | ...                            |                  ...         |
 | Social sciences (text) | work in progress             |  ...      |...                             | ...                          |
 | Climate                | planned                      |   ...     |       ...                      |                ...           |   
 
