@@ -82,7 +82,7 @@ Also the main conclusions (🠊) from the thesis (on images and text) about the 
 
 🠊 The feature resolution $n_{features}$ exhibited an optimum at a value of $6$. Higher values can offer a finer grained result but require (far) more $n_masks$. This is also dependent on the scale of the phenomena in the input data that we want to take into account in the explanation.
 
-🠊 Larger $n_masks$ results in more consistent results at the cost of computation time. If 2 identical runs yield (very) different results, the results are likely mostly noise and a higher value for $n_masks$ should be used.
+🠊 Larger $n_masks$ will return more consistent results at the cost of computation time. If 2 identical runs yield (very) different results, these will likely contain a lot of (or even mostly) noise and a higher value for $n_masks$ should be used instead.
 
 #### LIME
 | Hyperparameter  | Default value |  <img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/151539100-dbdfe0f8-485f-45d4-a249-a1f79e970066.png"> (*i*) |<img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f"> (*ts*)| <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162">(*ts*)|
