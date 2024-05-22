@@ -117,24 +117,24 @@ You need:
 
 ### Template example for any data modality and explainer
 
-1. Provide your trained model and data item ( *text, image, time series or tabular* )
+1. Provide your *trained model* and *data item* ( *text, image, time series or tabular* )
 
 ```python
 model_path = 'your_model.onnx'  # model trained on your data modality
 data_item = <data_item> # data item for which the model's prediction needs to be explained 
 ```
 
-2. If the task is classification: which are the classes your model has been trained for?
+2. If the task is classification: which are the *classes* your model has been trained for?
 
 ```python 
 labels = [class_a, class_b]   # example of binary classification labels
 ```
-Which of your model's classes do you want an explanation for?
+*Which* of these classes do you want an explanation for?
 ```python
 explained_class_index = labels.index(<explained_class>)  # explained_class can be any of the labels
 ```
 
-3. Run dianna with the explainer of your choice ( *'LIME', 'RISE' or 'KernalSHAP'*) and visualize the output:
+3. Run dianna with the *explainer* of your choice ( *'LIME', 'RISE' or 'KernalSHAP'*) and visualize the output:
 
 ```python
 explanation = dianna.<explanation_function>(model_path, data_item, explainer)
@@ -177,9 +177,8 @@ explained_class_index = labels.index('garden_spider') # interested in the image 
 explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
 dianna.visualization.plot_image(explanation[explained_class_index], original_data=image)
 ```
-TO DO: put the correct image below!
 
-![image](https://user-images.githubusercontent.com/6087314/155557077-e2052094-d8ac-49d3-a840-0160256d53a6.png)
+<img src="https://github.com/dianna-ai/dianna/assets/3244249/614a0474-1c03-42e7-973c-48c1cdedd9d3" width="215" height="215">
 
 ### Overview tutorial
 There are **full working examples** on how to use the supported explainers and how to use dianna for **all supported data modalities** in our [overview tutorial](./tutorials/overview.ipynb).
