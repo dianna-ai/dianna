@@ -6,7 +6,7 @@ This folder contains DIANNA tutorial notebooks. To install the dependencies for 
 pip install .[notebooks]
 ```
 
-🠊 For *general demonstration of DIANNA* click on the logo [<img width="75" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">](https://github.com/dianna-ai/dianna/blob/main/tutorials/demo.ipynb) or run it in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/demo.ipynb).
+🠊 For *general overview of DIANNA* click on the logo [<img width="75" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">](https://github.com/dianna-ai/dianna/blob/main/tutorials/demo.ipynb) or run it in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dianna-ai/dianna/blob/main/tutorials/overview.ipynb).
 
 🠊 For *tutorials on how to convert* an [Keras](https://keras.io/), [PyTorch](https://pytorch.org/), [Scikit-learn](https://scikit-learn.org/stable/) or [Tensorflow](https://github.com/tensorflow/) model to [ONNX](https://onnx.ai/), please see the [conversion tutorials](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/).
 
