@@ -146,27 +146,29 @@ Lets illustrate the template above with *textual* data. The data item of interes
 We are intersted which words are contributing positively (red) and which - negatively (blue) towards the model's desicion to classify the review as positive and we would like to use the *LIME* explainer:
 
 ```python
-model_path = 'your_model.onnx'  # ONNX model trained to classify text's sentiment into positive or negative
-text = 'The movie started great but the ending is boring and unoriginal.' # the movie review of interest
-labels = [positive_sentiment, negative_sentiment] # the model's labels
-explained_class_index = labels.index(positive_sentiment)  # interested in the positive sentiment prediciton
+model_path = 'your_text_model.onnx'
+# also define a model runner here (details in dedicated notebook)
+review = 'The movie started great but the ending is boring and unoriginal.' 
+labels = ["negative", "positive"] 
+explained_class_index = labels.index("positive")  
 explanation = dianna.explain_text(model_path, text, 'LIME')
-dianna.visualization.highlight_text(explanation[explained_class_index], text)
+dianna.visualization.highlight_text(explanation[explained_class_index], model_runner.tokenizer.tokenize(review))
 ```
 
 ![image](https://user-images.githubusercontent.com/6087314/155532504-6f90f032-cbb4-4e71-9b99-aa9c0de4e86a.png)
 
 Here is another illustration on how to use dianna to explain which parts of a bee *image* contributied positively (red) or negativey (blue) towards a classifying the image as a *'bee'* using *RISE*. 
-The Imagenet model has been traiend to distinguish between 1000 classes (specified in ```labels```).
+The Imagenet model has been trained to distinguish between 1000 classes (specified in ```labels```).
 For images, which are data of higher dimention compared to text, there are also some specifics to consider:
 
 ```python
-model_path = 'your_model.onnx'  # model trained on images
+model_path = 'your_image_model.onnx' 
 image = PIL.Image.open('your_bee_image.jpeg') 
-axis_labels = {0: 'channels'} # the order of channels or colors in the image.
-explained_class_index = labels.index('bee') # interested in the image being classified as a bee
+axis_labels = {2: 'channels'} 
+explained_class_index = labels.index('bee') 
 explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
-dianna.visualization.plot_image(explanation[explained_class_index], original_data=image)
+dianna.visualization.plot_image(explanation[explained_class_index], utils.img_to_array(image)/255., heatmap_cmap='jet')
+plt.show()
 ```
 
 ![image](https://user-images.githubusercontent.com/6087314/155557077-e2052094-d8ac-49d3-a840-0160256d53a6.png)
@@ -175,7 +177,8 @@ And why would Imagenet think the same image would be a *garden spider*?
 ```python
 explained_class_index = labels.index('garden_spider') # interested in the image being classified as a garden spider
 explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
-dianna.visualization.plot_image(explanation[explained_class_index], original_data=image)
+dianna.visualization.plot_image(explanation[explained_class_index], utils.img_to_array(image)/255., heatmap_cmap='jet')
+plt.show()
 ```
 
 <img src="https://github.com/dianna-ai/dianna/assets/3244249/614a0474-1c03-42e7-973c-48c1cdedd9d3" width="215" height="215">
