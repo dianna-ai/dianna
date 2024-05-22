@@ -109,116 +109,86 @@ If you get an error related to OpenMP when importing dianna, have a look at [thi
 You need:
 
 - your trained ONNX model ([convert my pytorch/tensorflow/keras/scikit-learn model to ONNX](https://github.com/dianna-ai/dianna#onnx-models))
-- 1 data item to be explained
+- a data item to be explained
 
  You get:
 
 - a relevance map overlayed over the data item
 
-In the library's documentation, the general usage is explained in [How to use DIANNA](https://dianna.readthedocs.io/en/latest/usage.html)
+### Template example for any data modality and explainer
 
-### Demo movie
-
-[![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
-
-### Text example:
+1. Provide your trained model and data item ( *text, image, time series or tabular* )
 
 ```python
-model_path = 'your_model.onnx'  # model trained on text
-text = 'The movie started great but the ending is boring and unoriginal.'
+model_path = 'your_model.onnx'  # model trained on your data modality
+data_item = <data_item> # data item for which the model's prediction needs to be explained 
 ```
 
+2. If the task is classification: which are the classes your model has been trained for?
+
+```python 
+labels = [class_a, class_b]   # example of binary classification labels
+```
 Which of your model's classes do you want an explanation for?
-
 ```python
-labels = [positive_class, negative_class]
+explained_class_index = labels.index(<explained_class>)  # explained_class can be any of the labels
 ```
 
-Run using the XAI method of your choice, for example LIME:
+3. Run dianna with the explainer of your choice ( *'LIME', 'RISE' or 'KernalSHAP'*) and visualize the output:
 
 ```python
+explanation = dianna.<explanation_function>(model_path, data_item, explainer)
+dianna.visualization.<visualization_function>(explanation[explained_class_index], data_item)
+```
+
+### Text and image usage examples
+Lets illustrate the template above with *textual* data. The data item of interest is a sentence being (a part of) a movie review and the model has been trained to classify reviews into positive and negative sentiment classes.
+We are intersted which words are contributing positively (red) and which - negatively (blue) towards the model's desicion to classify the review as positive and we would like to use the *LIME* explainer:
+
+```python
+model_path = 'your_model.onnx'  # ONNX model trained to classify text's sentiment into positive or negative
+text = 'The movie started great but the ending is boring and unoriginal.' # the movie review of interest
+labels = [positive_sentiment, negative_sentiment] # the model's labels
+explained_class_index = labels.index(positive_sentiment)  # interested in the positive sentiment prediciton
 explanation = dianna.explain_text(model_path, text, 'LIME')
-dianna.visualization.highlight_text(explanation[labels.index(positive_class)], text)
+dianna.visualization.highlight_text(explanation[explained_class_index], text)
 ```
 
 ![image](https://user-images.githubusercontent.com/6087314/155532504-6f90f032-cbb4-4e71-9b99-aa9c0de4e86a.png)
 
-### Image example:
+Here is another illustration on how to use dianna to explain which parts of a bee *image* contributied positively (red) or negativey (blue) towards a classifying the image as a *'bee'* using *RISE*. 
+The Imagenet model has been traiend to distinguish between 1000 classes (specified in ```labels```).
+For images, which are data of higher dimention compared to text, there are also some specifics to consider:
 
 ```python
 model_path = 'your_model.onnx'  # model trained on images
-image = PIL.Image.open('your_image.jpeg')
-```
-
-Tell us what label refers to the channels, or colors, in the image.
-
-```python
-axis_labels = {0: 'channels'}
-```
-
-Which of your model's classes do you want an explanation for?
-
-```python
-labels = [class_a, class_b]
-```
-
-Run using the XAI method of your choice, for example RISE:
-
-```python
+image = PIL.Image.open('your_bee_image.jpeg') 
+axis_labels = {0: 'channels'} # the order of channels or colors in the image.
+explained_class_index = labels.index('bee') # interested in the image being classified as a bee
 explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
-dianna.visualization.plot_image(explanation[labels.index(class_a)], original_data=image)
+dianna.visualization.plot_image(explanation[explained_class_index], original_data=image)
 ```
 
 ![image](https://user-images.githubusercontent.com/6087314/155557077-e2052094-d8ac-49d3-a840-0160256d53a6.png)
 
-### Time-series example:
-
+And why would Imagenet think the same image would be a *garden spider*?
 ```python
-model_path = 'your_model.onnx'  # model trained on images
-timeseries_instance = pd.read_csv('your_data_instance.csv').astype(float)
-
-num_features = len(timeseries_instance)  # The number of features to include in the explanation.
-num_samples = 500  # The number of samples to generate for the LIME explainer.
+explained_class_index = labels.index('garden_spider') # interested in the image being classified as a garden spider
+explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
+dianna.visualization.plot_image(explanation[explained_class_index], original_data=image)
 ```
+TO DO: put the correct image below!
 
-Which of your model's classes do you want an explanation for?
+![image](https://user-images.githubusercontent.com/6087314/155557077-e2052094-d8ac-49d3-a840-0160256d53a6.png)
 
-```python
-class_names= [class_a, class_b] # String representation of the different classes of interest
-labels = np.argsort(class_names) # Numerical representation of the different classes of interest for the model
-```
+### Overview tutorial
+There are **full working examples** on how to use the supported explainers and how to use dianna for **all supported data modalities** in our [overview tutorial](./tutorials/overview.ipynb).
 
-Run using the XAI method of your choice, for example LIME with the following additional arguments:
-
-```python
-explanation = dianna.explain_timeseries(model_path, timeseries_data=timeseries_instance , method='LIME', 
-					labels=labels, class_names=class_names, num_features=num_features,
-                                	num_samples=num_samples, distance_method='cosine')
-
-```
-
-For visualization of the heatmap please refer to the [tutorial](https://github.com/dianna-ai/dianna/blob/main/tutorials/explainers/LIME/lime_timeseries_coffee.ipynb)
-
-### Tabular example:
-
-```python
-model_path = 'your_model.onnx'  # model trained on tabular data
-tabular_instance = pd.read_csv('your_data_instance.csv')
-```
-
-Run using the XAI method of your choice. Note that you need to specify the mode, either regression or classification. This case, for instance a regression task using KernelSHAP with the following additional arguments:
-
-```python
-explanation = dianna.explain_tabular(run_model, input_tabular=data_instance, method='kernelshap',
-                                     mode ='regression', training_data = X_train,
-                                     training_data_kmeans = 5, feature_names=input_features.columns)
-plot_tabular(explanation, X_test.columns, num_features=10)  # display 10 most salient features
-```
-
-![image](https://github.com/dianna-ai/dianna/assets/25911757/ce0b76b8-f00c-468a-9732-c21704e289f6)
+#### Demo movie (update planned): 
+[![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
 
 ### IMPORTANT: Sensitivity to hyperparameters
-The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity to hyperparameters is researched and useful conclusions are drawn.
+The explainers are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity to hyperparameters is researched and useful conclusions are drawn.
 The default hyperparameters used in DIANNA for each explainer as well as the values for our tutorial examples are given in the Tutorials [README](./tutorials/README.md#important-hyperparameters).
 
 ## Dashboard
