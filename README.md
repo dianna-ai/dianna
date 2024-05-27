@@ -170,8 +170,7 @@ explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_l
 dianna.visualization.plot_image(explanation[explained_class_index], utils.img_to_array(image)/255., heatmap_cmap='jet')
 plt.show()
 ```
-
-![image](https://user-images.githubusercontent.com/6087314/155557077-e2052094-d8ac-49d3-a840-0160256d53a6.png)
+<img src="https://github.com/dianna-ai/dianna/assets/3244249/b03e4d4e-e3e8-4248-bf62-e3602b7f6d71" width="215" height="215">
 
 And why would Imagenet think the same image would be a *garden spider*?
 ```python
@@ -181,7 +180,7 @@ dianna.visualization.plot_image(explanation[explained_class_index], utils.img_to
 plt.show()
 ```
 
-<img src="https://github.com/dianna-ai/dianna/assets/3244249/614a0474-1c03-42e7-973c-48c1cdedd9d3" width="215" height="215">
+<img src="https://github.com/dianna-ai/dianna/assets/3244249/e7623803-2369-40ad-b4ef-4a6ae4e902f1" width="215" height="215">
 
 ### Overview tutorial
 There are **full working examples** on how to use the supported explainers and how to use dianna for **all supported data modalities** in our [overview tutorial](./tutorials/overview.ipynb).
