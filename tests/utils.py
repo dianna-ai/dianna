@@ -80,7 +80,7 @@ class ModelRunner:
         self.max_filter_size = max_filter_size
 
     def __call__(self, sentences):
-        """Call function."""
+        """Call Runner."""
         # ensure the input has a batch axis
         if isinstance(sentences, str):
             sentences = [sentences]
@@ -89,26 +89,28 @@ class ModelRunner:
         input_name = sess.get_inputs()[0].name
         output_name = sess.get_outputs()[0].name
 
-        tokenized_sentences = [
-            self.tokenize(sentence) for sentence in sentences
-        ]
+        output = []
+        for sentence in sentences:
+            # tokenize and pad to minimum length
+            tokens = self.tokenizer.tokenize(sentence.lower())
+            if len(tokens) < self.max_filter_size:
+                tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
 
-        expected_length = len(tokenized_sentences[0])
-        if not all(
-                len(tokens) == expected_length
-                for tokens in tokenized_sentences):
-            raise ValueError(
-                'Mismatch in length of tokenized sentences.'
-                'This is a problem in the tokenizer:'
-                'https://github.com/dianna-ai/dianna/issues/531', )
+            # numericalize the tokens
+            tokens_numerical = [
+                self.vocab.stoi[token]
+                if token in self.vocab.stoi else self.vocab.stoi['<unk>']
+                for token in tokens
+            ]
 
-        # run the model, applying a sigmoid because the model outputs logits
-        onnx_input = {input_name: tokenized_sentences}
-        logits = sess.run([output_name], onnx_input)[0]
-        pred = np.apply_along_axis(sigmoid, 1, logits)
+            # run the model, applying a sigmoid because the model outputs logits, remove any remaining batch axis
+            onnx_input = {input_name: [tokens_numerical]}
+            logits = sess.run([output_name], onnx_input)[0]
+            pred = float(sigmoid(logits))
+            output.append(pred)
 
-        # output pos/neg
-        positivity = pred[:, 0]
+        # output two classes
+        positivity = np.array(output)
         negativity = 1 - positivity
         return np.transpose([negativity, positivity])
 
