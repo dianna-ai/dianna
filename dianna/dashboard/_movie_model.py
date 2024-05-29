@@ -29,7 +29,7 @@ class MovieReviewsModelRunner:
         output = []
         for sentence in sentences:
             # tokenize and pad to minimum length
-            tokens = self.tokenizer.tokenize(sentence)
+            tokens = self.tokenizer.tokenize(sentence.lower())
             if len(tokens) < self.max_filter_size:
                 tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
 
