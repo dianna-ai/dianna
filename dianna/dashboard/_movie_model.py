@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from _shared import label_directory
+from _shared import data_directory
 from scipy.special import expit as sigmoid
 from torchtext.vocab import Vectors
 from dianna import utils
@@ -13,7 +13,7 @@ class MovieReviewsModelRunner:
     def __init__(self, model, word_vectors=None, max_filter_size=5):
         """Initializes the class."""
         if word_vectors is None:
-            word_vectors = label_directory / 'movie_reviews_word_vectors.txt'
+            word_vectors = data_directory / 'movie_reviews_word_vectors.txt'
 
         self.run_model = utils.get_function(model)
         self.vocab = Vectors(word_vectors, cache=os.path.dirname(word_vectors))
