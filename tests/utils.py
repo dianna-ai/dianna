@@ -1,4 +1,5 @@
 import numpy as np
+import onnxruntime as ort
 import spacy
 from scipy.special import expit as sigmoid
 from torchtext.vocab import Vectors
@@ -84,6 +85,10 @@ class ModelRunner:
         if isinstance(sentences, str):
             sentences = [sentences]
 
+        sess = ort.InferenceSession(self.filename)
+        input_name = sess.get_inputs()[0].name
+        output_name = sess.get_outputs()[0].name
+
         output = []
         for sentence in sentences:
             # tokenize and pad to minimum length
@@ -99,7 +104,9 @@ class ModelRunner:
             ]
 
             # run the model, applying a sigmoid because the model outputs logits, remove any remaining batch axis
-            pred = float(sigmoid(self.run_model([tokens_numerical])))
+            onnx_input = {input_name: [tokens_numerical]}
+            logits = sess.run([output_name], onnx_input)[0]
+            pred = float(sigmoid(logits))
             output.append(pred)
 
         # output two classes
