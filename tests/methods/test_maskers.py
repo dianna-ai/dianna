@@ -321,11 +321,12 @@ def test_tabular_mask_has_correct_shape():
     number_of_masks = 30
 
     masks = np.stack(
-        generate_tabular_masks(
-            input_data_shape,
-            number_of_masks,
-            p_keep=0.2,
-        ))
+        list(
+            generate_tabular_masks(
+                input_data_shape,
+                number_of_masks,
+                p_keep=0.2,
+            )))
 
     assert masks.shape == (number_of_masks, *input_data_shape)
 
@@ -348,11 +349,12 @@ def test_tabular_mask_has_correct_number_masked(p_keep_and_n_unmasked):
     p_keep, n_unmasked = p_keep_and_n_unmasked
 
     masks = np.stack(
-        generate_tabular_masks(
-            input_data_shape,
-            number_of_masks,
-            p_keep=p_keep,
-        ))
+        list(
+            generate_tabular_masks(
+                input_data_shape,
+                number_of_masks,
+                p_keep=p_keep,
+            )))
 
     mean_element = masks.sum() / (np.product(input_data_shape) *
                                   number_of_masks)
@@ -366,10 +368,11 @@ def test_tabular_mask_prob_masked_per_feature_correct():
     p_keep = 0.2
 
     masks = np.stack(
-        generate_tabular_masks(
-            input_data_shape,
-            number_of_masks,
-            p_keep=p_keep,
-        ))
+        list(
+            generate_tabular_masks(
+                input_data_shape,
+                number_of_masks,
+                p_keep=p_keep,
+            )))
 
     assert np.allclose(masks.mean(axis=0), p_keep, atol=0.05)
