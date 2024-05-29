@@ -2,6 +2,7 @@
 import sys
 from typing import Iterable
 from typing import List
+from typing import Optional
 from typing import Union
 import numpy as np
 from lime.lime_tabular import LimeTabularExplainer
@@ -82,7 +83,7 @@ class LIMETabular:
         self,
         model_or_function: Union[str, callable],
         input_tabular: np.array,
-        labels: Iterable[int],
+        labels: Optional[Iterable[int]] = None,
         num_samples: int = 5000,
         **kwargs,
     ) -> np.array:

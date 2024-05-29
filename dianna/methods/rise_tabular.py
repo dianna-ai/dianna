@@ -56,12 +56,13 @@ class RISETabular:
         self.keep_masks = keep_masks
         self.keep_masked = keep_masked
         self.keep_predictions = keep_predictions
+        self.mode = mode
 
     def explain(
         self,
         model_or_function: Union[str, callable],
         input_tabular: np.array,
-        labels: Iterable[int],
+        labels: Optional[Iterable[int]] = None,
         mask_type: Optional[Union[str, callable]] = 'most_frequent',
         batch_size: Optional[int] = 100,
     ) -> np.array:
@@ -102,5 +103,9 @@ class RISETabular:
 
         saliency = predictions.T.dot(masks_reshaped).reshape(
             n_labels, *input_tabular.shape)
+
+        if self.mode == 'regression':
+            return saliency[0]
+
         selected_saliency = saliency if labels is None else saliency[labels]
         return normalize(selected_saliency, self.n_masks, self.p_keep)

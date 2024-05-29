@@ -23,19 +23,19 @@ explainer_classes = [
 def test_tabular_regression_correct_output_shape(method):
     """Runs the explainer class with random data and asserts the output shape."""
     number_of_features = 2
-    number_of_classes = 3
+    number_of_outputs = 3  # Only the first is used for regression explanation
     training_data = np.random.random((10, number_of_features))
     input_data = np.random.random(number_of_features)
     feature_names = ["feature_1", "feature_2"]
     exp = dianna.explain_tabular(
-        get_dummy_model_function(n_outputs=number_of_classes),
+        get_dummy_model_function(n_outputs=number_of_outputs),
         input_tabular=input_data,
         method=method,
         mode='regression',
         training_data=training_data,
         feature_names=feature_names,
     )
-    assert exp.shape == (number_of_classes, number_of_features)
+    assert exp.shape == (number_of_features, )
 
 
 @pytest.mark.parametrize('explainer_class', explainer_classes)
@@ -54,7 +54,6 @@ def test_tabular_classification_correct_output_shape(explainer_class):
     exp = explainer.explain(
         get_dummy_model_function(n_outputs=number_of_classes),
         input_data,
-        labels=[0],
     )
     assert exp.shape == (number_of_classes, number_of_features)
 
