@@ -26,25 +26,26 @@ class MovieReviewsModelRunner:
         if isinstance(sentences, str):
             sentences = [sentences]
 
-        tokenized_sentences = [
-            self.tokenize(sentence) for sentence in sentences
-        ]
+        output = []
+        for sentence in sentences:
+            # tokenize and pad to minimum length
+            tokens = self.tokenizer.tokenize(sentence)
+            if len(tokens) < self.max_filter_size:
+                tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
 
-        expected_length = len(tokenized_sentences[0])
-        if not all(
-                len(tokens) == expected_length
-                for tokens in tokenized_sentences):
-            raise ValueError(
-                'Mismatch in length of tokenized sentences.'
-                'This is a problem in the tokenizer:'
-                'https://github.com/dianna-ai/dianna/issues/531', )
+            # numericalize the tokens
+            tokens_numerical = [
+                self.vocab.stoi[token]
+                if token in self.vocab.stoi else self.vocab.stoi['<unk>']
+                for token in tokens
+            ]
 
-        # run the model, applying a sigmoid because the model outputs logits
-        logits = self.run_model(tokenized_sentences)
-        pred = np.apply_along_axis(sigmoid, 1, logits)
+            # run the model, applying a sigmoid because the model outputs logits, remove any remaining batch axis
+            pred = float(sigmoid(self.run_model([tokens_numerical])))
+            output.append(pred)
 
-        # output pos/neg
-        positivity = pred[:, 0]
+        # output two classes
+        positivity = np.array(output)
         negativity = 1 - positivity
         return np.transpose([negativity, positivity])
 
