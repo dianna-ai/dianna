@@ -1,7 +1,7 @@
 from unittest import TestCase
 import numpy as np
 from dianna.methods.lime_timeseries import LIMETimeseries
-from dianna.utils.maskers import generate_timeseries_masks
+from dianna.utils.maskers import generate_time_series_masks
 from dianna.utils.maskers import mask_data
 from tests.utils import get_dummy_model_function
 
@@ -30,9 +30,9 @@ class LIMEOnTimeseries(TestCase):
         """Test the shape of returned distance array."""
         dummy_timeseries = np.random.random((50, 1))
         number_of_masks = 50
-        masks = generate_timeseries_masks(dummy_timeseries.shape,
-                                          number_of_masks,
-                                          p_keep=0.9)
+        masks = generate_time_series_masks(dummy_timeseries.shape,
+                                           number_of_masks,
+                                           p_keep=0.9)
         masked = mask_data(dummy_timeseries, masks, mask_type="mean")
         explainer = LIMETimeseries()
         distance = explainer._calculate_distance(masked.reshape((-1, 50)),

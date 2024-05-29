@@ -4,7 +4,7 @@ from fastdtw import fastdtw
 from lime import explanation
 from lime import lime_base
 from dianna import utils
-from dianna.utils.maskers import generate_timeseries_masks
+from dianna.utils.maskers import generate_time_series_masks
 from dianna.utils.maskers import mask_data
 from dianna.utils.predict import make_predictions
 
@@ -74,16 +74,16 @@ class LIMETimeseries:
             distance_method (str): The distance metric to use for LIME. Can be "cosine" or "euclidean".
 
         Returns:
-            explanation: An Explanation object containing the LIME explanations for each class.
+            np.ndarray: An array (np.ndarray) containing the LIME explanations for each class.
         """
         # TODO: p_keep does not exist in LIME. LIME will mask every point, which means the number
         #       of steps masked is 1. We should updating it after adapting maskers function to LIME.
         # wrap up the input model or function using the runner
         runner = utils.get_function(
             model_or_function, preprocess_function=self.preprocess_function)
-        masks = generate_timeseries_masks(input_timeseries.shape,
-                                          num_samples,
-                                          p_keep=0.1)
+        masks = generate_time_series_masks(input_timeseries.shape,
+                                           num_samples,
+                                           p_keep=0.1)
         # NOTE: Required by `lime_base` explainer since the first instance must be the original data
         # For more details, check this link
         # https://github.com/marcotcr/lime/blob/fd7eb2e6f760619c29fca0187c07b82157601b32/lime/lime_base.py#L148

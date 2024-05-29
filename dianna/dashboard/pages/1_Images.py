@@ -9,6 +9,8 @@ from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import data_directory
+from _shared import label_directory
+from _shared import model_directory
 from dianna.visualization import plot_image
 
 add_sidebar_logo()
@@ -37,8 +39,8 @@ image_label_file = st.sidebar.file_uploader('Select labels',
 
 if load_example:
     image_file = (data_directory / 'digit0.png')
-    image_model_file = (data_directory / 'mnist_model_tf.onnx')
-    image_label_file = (data_directory / 'labels_mnist.txt')
+    image_model_file = (model_directory / 'mnist_model_tf.onnx')
+    image_label_file = (label_directory / 'labels_mnist.txt')
 
 if not (image_file and image_model_file and image_label_file):
     st.info('Add your input data in the left panel to continue')
@@ -88,7 +90,7 @@ for index, label in zip(top_indices, top_labels):
             with st.spinner(f'Running {method}'):
                 heatmap = func(serialized_model, image, index, **kwargs)
 
-            fig = plot_image(heatmap,
+            fig, _ = plot_image(heatmap,
                              original_data=original_data,
                              heatmap_cmap='bwr',
                              show_plot=False)

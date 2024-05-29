@@ -1,7 +1,7 @@
 from typing import Optional
 import numpy as np
 from dianna import utils
-from dianna.utils.maskers import generate_timeseries_masks
+from dianna.utils.maskers import generate_time_series_masks
 from dianna.utils.maskers import mask_data
 from dianna.utils.predict import make_predictions
 from dianna.utils.rise_utils import normalize
@@ -68,10 +68,10 @@ class RISETimeseries:
         runner = utils.get_function(
             model_or_function, preprocess_function=self.preprocess_function)
 
-        masks = generate_timeseries_masks(input_timeseries.shape,
-                                          number_of_masks=self.n_masks,
-                                          feature_res=self.feature_res,
-                                          p_keep=self.p_keep)
+        masks = generate_time_series_masks(input_timeseries.shape,
+                                           number_of_masks=self.n_masks,
+                                           feature_res=self.feature_res,
+                                           p_keep=self.p_keep)
         self.masks = masks if self.keep_masks else None
         masked = mask_data(input_timeseries, masks, mask_type=mask_type)
         self.masked = masked if self.keep_masked_data else None

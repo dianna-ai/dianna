@@ -17,6 +17,9 @@ coverage.xml
 .tox
 *word_vectors.txt.pt
 
+# tutorial model that is downloaded automatically
+apertif_frb_dynamic_spectrum_model.onnx
+
 docs/_build
 
 # ide

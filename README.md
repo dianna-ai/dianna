@@ -68,13 +68,14 @@ After studying the vast XAI landscape we have made choices in the parts of the [
 
 The key points of DIANNA:
 
-* Provides an easy-to-use interface for non (X)AI experts
-* Implements well-known XAI methods (LIME, RISE and Kernal SHAP) chosen by systematic and objective evaluation criteria
-* Supports the de-facto standard format for neural network models - ONNX.
-* Includes clear instructions for export/conversions from Tensorflow, Pytorch, Keras and scikit-learn to ONNX.
-* Supports images, text and time series data modalities. Tabular data and even embeddings support is planned.
-* Comes with simple intuitive image and text benchmarks
-* Easily extendable to other XAI methods
+ *   Provides an easy-to-use interface for non (X)AI experts
+ *   Implements well-known XAI methods LIME, RISE and KernelSHAP, chosen by systematic and objective evaluation criteria
+ *   Supports the de-facto standard of neural network models - ONNX
+ *   Supports images, text, time series, and tabular data modalities, embeddings are currently being developed
+ *   Comes with simple intuitive image, text, time series, and tabular benchmarks, so can help you with your XAI research
+ *   Includes scientific use-cases tutorials
+ *   Easily extendable to other XAI methods
+
 
 For more information on the unique strengths of DIANNA with comparison to other tools, please see the [context landscape](https://dianna.readthedocs.io/en/latest/CONTEXT.html).
 
@@ -196,7 +197,7 @@ explanation = dianna.explain_timeseries(model_path, timeseries_data=timeseries_i
 
 ```
 
-For visualization of the heatmap please refer to the [tutorial](https://github.com/dianna-ai/dianna/blob/main/tutorials/lime_timeseries_coffee.ipynb)
+For visualization of the heatmap please refer to the [tutorial](https://github.com/dianna-ai/dianna/blob/main/tutorials/explainers/LIME/lime_timeseries_coffee.ipynb)
 
 ### Tabular example:
 
@@ -215,6 +216,10 @@ plot_tabular(explanation, X_test.columns, num_features=10)  # display 10 most sa
 ```
 
 ![image](https://github.com/dianna-ai/dianna/assets/25911757/ce0b76b8-f00c-468a-9732-c21704e289f6)
+
+### IMPORTANT: Sensitivity to hyperparameters
+The XAI methods (explainers) are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity to hyperparameters is researched and useful conclusions are drawn.
+The default hyperparameters used in DIANNA for each explainer as well as the values for our tutorial examples are given in the Tutorials [README](./tutorials/README.md#important-hyperparameters).
 
 ## Dashboard
 
@@ -247,7 +252,7 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 
 | Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
-| [Coffee dataset](https://timeseriesclassification.com/description.php?Dataset=Coffee) <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162"> | Food spectographs time series dataset for a two class problem to distinguish between Robusta and Arabica coffee beans.                                         | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/763002c5-40ad-48cc-9de0-ea43d7fa8a75)"> | [data source](https://github.com/QIBChemometrics/Benchtop-NMR-Coffee-Survey) |
+| Coffee dataset  <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162"> | Food spectographs time series dataset for a two class problem to distinguish between Robusta and Arabica coffee beans.                                         | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/763002c5-40ad-48cc-9de0-ea43d7fa8a75)"> | [data source](https://github.com/QIBChemometrics/Benchtop-NMR-Coffee-Survey) |
 | [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d)"> | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
 
 ### Tabular 
@@ -290,8 +295,9 @@ And here are links to notebooks showing how we created our models on the benchma
 
 | Models                                                    | Generation                                                                                                                                                        |
 | :-------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Coffee model](https://zenodo.org/records/10579458)          | [Coffee model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/coffee/generate_model.ipynb)                       |
-| [Season prediction model](https://zenodo.org/record/7543883) | [Season prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/season_prediction/generate_model.ipynb) |
+| [Coffee model](https://zenodo.org/records/10579458)                          | [Coffee model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/coffee/generate_model.ipynb)                       |
+| [Season prediction model](https://zenodo.org/record/7543883)                 | [Season prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/season_prediction/generate_model.ipynb) |
+| [Fast Radio Burst classification model](https://zenodo.org/records/10656614) | [Fast Radio Burst classification model generation](https://doi.org/10.3847/1538-3881/aae649) |
 
 ### Tabular
 
@@ -305,7 +311,7 @@ And here are links to notebooks showing how we created our models on the benchma
 
 ## Tutorials
 
-DIANNA supports different data modalities and XAI methods. The table contains links to the relevant XAI method's papers (for some explanatory videos on the methods, please see [tutorials](./tutorials)). The DIANNA [tutorials](./tutorials) cover each supported method and data modality on a least one dataset. Our future plans to expand DIANNA with more data modalities and XAI methods are given in the [ROADMAP](https://dianna.readthedocs.io/en/latest/ROADMAP.html).
+DIANNA supports different data modalities and XAI methods (explainers). We have evaluated many explainers using objective criteria (see the [How to find your AI explainer](https://blog.esciencecenter.nl/how-to-find-your-artificial-intelligence-explainer-dbb1ac608009) blog-post). The table below contains links to the relevant XAI method's papers (for some explanatory videos on the methods, please see [tutorials](./tutorials)). The DIANNA [tutorials](./tutorials) cover each supported method and data modality on a least one dataset using the default or tuned [hyperparameters](./tutorials/README.md#important-hyperparameters). Our plans to expand DIANNA with more data modalities and explainers are given in the [ROADMAP](https://dianna.readthedocs.io/en/latest/ROADMAP.html).
 
 <!-- see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
 
@@ -314,11 +320,24 @@ DIANNA supports different data modalities and XAI methods. The table contains li
 | Images     | ✅                                                | ✅                                                                 | ✅                                                                                                   |
 | Text       | ✅                                                | ✅                                                                 |                                                                                                      |
 | Timeseries | ✅                                                | ✅                                                                 |                                                                                                                                                                       |
-| Tabular    | planned                                           | ✅                                                            | planned                                                                                              |
-| Embedding  | planned                                           | planned                                                            | planned   
-| Graphs*    | work in progress                                  | work in progress                                                   | work in progress                                                                                     |
+| Tabular    | planned                                           | ✅                                                            | ✅                                                                                              |
+| Embedding  | work in progress                                  |                                                             |  
+| Graphs*    | next steps                                  |    ...                                                |     ...                                                                                |
 
-[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated XAI methods using objective criteria (details in coming blog-post). **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
+[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers. 
+Also [GradCAM](https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.pdf)) has been recently found to be *semantically continous*! **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
+
+
+### Scientific use-cases
+Our goal is that the scientific community embrases XAI as a source for novel and unexplored perspectives on scientific problems. 
+Here, we offer [tutorials](./tutorials) on specific scientific use-cases of uisng XAI:
+| Use-case (data) \ XAI | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
+| :---------                                           | :-------- | :------------------------------ | :-------------------------- |
+| Biology (Phytomorphology): Tree Leaves classification (images)   |        |            ✅                     |                             |
+| Astronomy: Fast Radio Burst detection (timeseries)    | ✅       |                                 |                             |
+| Geo-science (raster data)       |   planned                |  ...      | ...                            |                  ...         |
+| Social sciences (text) | work in progress             |  ...      |...                             | ...                          |
+| Climate                | planned                      |   ...     |       ...                      |                ...           |   
 
 ## Reference documentation
 

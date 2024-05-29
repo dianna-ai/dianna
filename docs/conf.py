@@ -26,7 +26,7 @@ author = u'DIANNA Team'
 # built documents.
 #
 # The short X.Y version.
-version = '1.4.0'
+version = '1.5.0'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -63,6 +63,7 @@ autoapi_dirs = ['../dianna']
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+html_logo = 'DIANNA_Logo_blueBG.png'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

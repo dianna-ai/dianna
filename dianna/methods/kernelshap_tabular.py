@@ -63,8 +63,7 @@ class KERNELSHAPTabular:
         https://github.com/shap/shap/blob/master/shap/explainers/_kernel.py
 
         Returns:
-            explanation: An Explanation object containing the KernelExplainer explanations
-                         for each class.
+            An array (np.ndarray) containing the KernelExplainer explanations for each class.
         """
         init_instance_kwargs = utils.get_kwargs_applicable_to_function(
             KernelExplainer, kwargs)
@@ -78,6 +77,6 @@ class KERNELSHAPTabular:
                                               **explain_instance_kwargs)
 
         if self.mode == 'regression':
-            return saliency[0]
+            saliency = saliency[0]
 
         return np.array(saliency)

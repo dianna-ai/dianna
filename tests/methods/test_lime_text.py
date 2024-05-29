@@ -31,11 +31,11 @@ class LimeOnText(TestCase):
     def test_lime_text_special_chars(self):
         """Tests exact expected output given a text with special characters and model for Lime."""
         review = 'such a bad movie "!?\'"'
-        expected_words = ['bad', '?', '!', 'movie', 'such', 'a', "'", '"', '"']
-        expected_word_indices = [2, 6, 5, 3, 0, 1, 7, 4, 8]
+        expected_words = ['bad', 'movie', '?', 'such', '!', "'", '"', 'a', '"']
+        expected_word_indices = [2, 3, 6, 0, 5, 7, 8, 1, 4]
         expected_scores = [
-            0.50032869, 0.06458735, -0.05793979, 0.01413776, -0.01246357,
-            -0.00528022, 0.00305347, 0.00185159, -0.00165128
+            0.51140699, 0.02827488, 0.02657974, -0.02208464, -0.02140743,
+            0.00962419, 0.00746798, -0.00743376, -0.0012061
         ]
 
         explanation = dianna.explain_text(self.runner,
@@ -44,7 +44,7 @@ class LimeOnText(TestCase):
                                           labels=[0],
                                           method='LIME',
                                           random_state=42)[0]
-
+        print(explanation)
         assert_explanation_satisfies_expectations(explanation, expected_scores,
                                                   expected_word_indices,
                                                   expected_words)

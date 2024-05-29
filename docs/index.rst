@@ -3,9 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to dianna's documentation!
+Welcome to Dianna's documentation!
 ==========================================================
-
 .. toctree::
   :maxdepth: 2
   :caption: Contents:
@@ -23,7 +22,7 @@ Examples
    :maxdepth: 1
    :caption: Examples
    :glob:
-   
+
    tutorials/*
 
 Indices and tables
