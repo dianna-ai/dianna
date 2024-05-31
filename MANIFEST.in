@@ -2,4 +2,6 @@ include CITATION.cff
 include LICENSE
 include README.md
 recursive-include dianna/dashboard *.md *.py *.toml
-recursive-include dianna/data *.jpg *.png *.npz *.jpeg *.png *.txt *.onnx
+recursive-include dianna/data *.jpg *.png *.npz *.jpeg *.png *.txt *.npy
+recursive-include dianna/labels *.csv *.txt
+recursive-include dianna/models *.onnx
