@@ -6,7 +6,7 @@ def highlight_text(explanation,
                    input_tokens=None,
                    show_plot=True,
                    output_filename=None,
-                   colormap="RdBu",
+                   colormap="bwr",
                    alpha=1.0,
                    heatmap_range=(-1, 1)):
     """Highlights a given text based on values in a given explanation object.
