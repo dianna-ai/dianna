@@ -97,18 +97,8 @@ data = {
         "https://github.com/dianna-ai/dianna/raw/main/dianna/data/binary-mnist.npz",
         "sha256:922f97603522504808deaaa144af7594454eb3cf048917fc1f88de0cd0012add"
     ],
-    # TODO: we have multiple versions of digit0, which one do we use?
-    # The three files are actually identical -- it's a jpg file, not png
-    "digit0.jpeg": [
-        "https://github.com/dianna-ai/dianna/raw/main/dianna/data/digit0.jpeg",
-        "sha256:2193cbb0ec58dbe4574b53476ed8ea15fdae09810a4fad7754e39954f252572a"
-    ],
     "digit0.jpg": [
         "https://github.com/dianna-ai/dianna/raw/main/dianna/data/digit0.jpg",
-        "sha256:2193cbb0ec58dbe4574b53476ed8ea15fdae09810a4fad7754e39954f252572a"
-    ],
-    "digit0.png": [
-        "https://github.com/dianna-ai/dianna/raw/main/dianna/data/digit0.png",
         "sha256:2193cbb0ec58dbe4574b53476ed8ea15fdae09810a4fad7754e39954f252572a"
     ],
     "digit1.png": [
