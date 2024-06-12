@@ -204,7 +204,7 @@ def _determine_number_masked(p_keep: float,
 def generate_time_step_masks(input_data_shape: tuple[int],
                              number_of_masks: int, p_keep: float,
                              number_of_features: int):
-    """Generate masks that masks complete time steps at a time while masking time steps in a segmented fashion.
+    """Generate masks that mask all channels simultaneously for clusters of time steps.
 
     For a conceptual description see:
     https://medium.com/escience-center/masking-time-series-for-explainable-ai-90247ac252b4.
