@@ -1,3 +1,15 @@
+"""DIANNA file downloader.
+
+Instructions for adding a new file:
+
+There are three dictionaries defining the available files:
+one for models, one for labels, one for data.
+Each entry has the (output) filename as key, and a list with the URL and sha256 hash as value.
+The sha256 hash can be obtained locally with `sha256sum <filename>`. Alternatively,
+set the hash to None and download the file with the `download` function.
+the sha256 sum will be printed to the command line and can be inserted into this file.
+Do not forget to prefix it with `sha256:`
+"""
 import pooch
 
 models = {
