@@ -88,11 +88,6 @@ def _get_params(method: str):
             'sigma': st.number_input('σ', value=0),
         }
 
-    elif method == 'LIME':
-        return {
-            'rand_state': st.number_input('Random state', value=2),
-        }
-
     else:
         raise ValueError(f'No such method: {method}')
 
