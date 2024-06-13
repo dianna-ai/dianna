@@ -23,6 +23,7 @@ class LIMETimeseries:
         verbose=False,
         preprocess_function=None,
         feature_selection='auto',
+        random_state = None
     ):
         """Initializes Lime explainer for timeseries.
 
