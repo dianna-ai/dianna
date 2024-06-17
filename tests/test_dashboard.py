@@ -184,17 +184,21 @@ def test_timeseries_page(page: Page):
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible()
 
+    page.locator('label').filter(has_text='LIME').locator('span').click()
     page.locator('label').filter(has_text='RISE').locator('span').click()
 
-    page.get_by_text('Running...').wait_for(state='detached', timeout=45_000)
+    page.get_by_text('Running...').wait_for(state='detached', timeout=60_000)
 
     for selector in (
+            page.get_by_role('heading', name='LIME').get_by_text('LIME'),
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             # first image
             page.get_by_role('heading', name='winter').get_by_text('winter'),
             page.get_by_role('img', name='0').first,
+            page.get_by_role('img', name='0').nth(1),
             # second image
             page.get_by_role('heading', name='summer').get_by_text('summer'),
-            page.get_by_role('img', name='0').nth(1),
+            page.get_by_role('img', name='0').nth(2),
+            page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible()
