@@ -144,17 +144,25 @@ def test_image_page(page: Page):
     expect(page.get_by_text('Select a method to continue')).to_be_visible()
 
     page.locator('label').filter(has_text='RISE').locator('span').click()
+    page.locator('label').filter(has_text='KernelSHAP').locator('span').click()
+    page.locator('label').filter(has_text='LIME').locator('span').click()
 
     page.get_by_text('Running...').wait_for(state='detached', timeout=45_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
+            page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
+            page.get_by_role('heading', name='LIME').get_by_text('LIME'),
             # first image
             page.get_by_role('heading', name='0').get_by_text('0'),
             page.get_by_role('img', name='0').first,
+            page.get_by_role('img', name='0').nth(1),
+            page.get_by_role('img', name='0').nth(2),
             # second image
             page.get_by_role('heading', name='1').get_by_text('1'),
-            page.get_by_role('img', name='0').nth(1),
+            page.get_by_role('img', name='0').nth(3),
+            page.get_by_role('img', name='0').nth(4),
+            page.get_by_role('img', name='0').nth(5),
     ):
         expect(selector).to_be_visible(timeout=45_000)
 
