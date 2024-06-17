@@ -109,11 +109,11 @@ def test_text_page(page: Page):
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
-            page.get_by_role('heading', name='LIME').get_by_text('LIME'),            
+            page.get_by_role('heading', name='LIME').get_by_text('LIME'),
             # Images for positive (RISE/LIME)
             page.get_by_role('heading',
                              name='positive').get_by_text('positive'),
-            page.get_by_role('img', name='0').first,            
+            page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
 
             # Images for negative (RISE/LIME)
