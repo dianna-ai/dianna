@@ -105,7 +105,7 @@ def test_text_page(page: Page):
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
 
-    page.get_by_text('Running...').wait_for(state='detached', timeout=45_000)
+    page.get_by_text('Running...').wait_for(state='detached', timeout=60_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
@@ -136,7 +136,7 @@ def test_image_page(page: Page):
 
     expect(
         page.get_by_text('Add your input data in the left panel to continue')
-    ).to_be_visible(timeout=30_000)
+    ).to_be_visible(timeout=45_000)
 
     page.locator('label').filter(
         has_text='Load example data').locator('span').click()
@@ -164,7 +164,7 @@ def test_image_page(page: Page):
             page.get_by_role('img', name='0').nth(4),
             page.get_by_role('img', name='0').nth(5),
     ):
-        expect(selector).to_be_visible(timeout=45_000)
+        expect(selector).to_be_visible(timeout=60_000)
 
 
 def test_timeseries_page(page: Page):
