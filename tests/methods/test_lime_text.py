@@ -31,14 +31,8 @@ class LimeOnText(TestCase):
     def test_lime_text_special_chars(self):
         """Tests exact expected output given a text with special characters and model for Lime."""
         review = 'such a bad movie "!?\'"'
-        # expected_words = ['bad', 'movie', '?', 'such', '!', "'", '"', 'a', '"']
         expected_words = ['such', 'a', 'bad', 'movie', '"', '!', '?', "'", '"']
-        # expected_word_indices = [2, 3, 6, 0, 5, 7, 8, 1, 4]
         expected_word_indices = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-        # expected_scores = [
-        #     0.51140699, 0.02827488, 0.02657974, -0.02208464, -0.02140743,
-        #     0.00962419, 0.00746798, -0.00743376, -0.0012061
-        # ]
         expected_scores = [
             -0.02208464, -0.00743376, 0.51140699, 0.02827488, -0.0012061,
             -0.02140743, 0.02657974, 0.00962419, 0.00746798
