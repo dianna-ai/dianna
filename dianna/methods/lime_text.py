@@ -111,4 +111,7 @@ class LIMEText:
             string_map: Lime's IndexedString, see documentation:
                 https://lime-ml.readthedocs.io/en/latest/lime.html?highlight=indexedstring#lime.lime_text.IndexedString
         """
-        return [(string_map.word(index), index, importance) for index, importance in local_explanation]
+        reshaped = [(string_map.word(index), index, importance) for index, importance in local_explanation]
+        # sort reshaped by index
+        sorted_reshaped = sorted(reshaped, key=lambda x: x[1])
+        return sorted_reshaped
