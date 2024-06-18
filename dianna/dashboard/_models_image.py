@@ -45,7 +45,6 @@ def _run_kernelshap_image(model, image, i, **kwargs):
                 image,
                 method='KernelSHAP',
                 **kwargs)
-    #return fill_segmentation(relevances[i][0], segments_slic)
     return relevances[0]
 
 
