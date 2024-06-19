@@ -35,7 +35,6 @@ models = {
         "https://github.com/dianna-ai/dianna/raw/main/dianna/models/mnist_model_tf.onnx",
         "sha256:ec944fa3ea327a9232451d7bd368e4fe3dea55aacae3c8dbaab1ee8b38873482"
     ],
-    # TODO: we do not use the full version of the season prediction model, only the binary one
     "season_prediction_model_temp_max_binary.onnx": [
         "https://github.com/dianna-ai/dianna/raw/main/dianna/models/season_prediction_model_temp_max_binary.onnx",
         "sha256:68335f069b673b90fac3b879d38b1471e05c1c1ca64b9045eb0d383534c2986a"
@@ -130,7 +129,6 @@ data = {
         "doi:10.5281/zenodo.5012824/shapes.npz",
         "sha256:58a644566482f5780b0e7132b3bcecfaf549ebef615f10912ba746a91ef588e1"
     ],
-    # ToDo: weather data is also available as csv on Zenodo, is this the same data as this npy file?. https://zenodo.org/records/5071376
     "weather_data.npy": [
         "https://github.com/dianna-ai/dianna/raw/main/dianna/data/weather_data.npy",
         "sha256:d848dfc1effc958ecf73a32134c582944f32f987c2924eebbd47a5020417a303"
