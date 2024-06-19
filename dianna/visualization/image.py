@@ -1,4 +1,6 @@
+from typing import Optional
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def _determine_vmax(max_data_value):
@@ -10,14 +12,15 @@ def _determine_vmax(max_data_value):
     return vmax
 
 
-def plot_image(heatmap,
-               original_data=None,
+def plot_image(heatmap: np.ndarray,
+               original_data: Optional[np.ndarray] = None,
                heatmap_cmap='bwr',
                heatmap_range=(None, None),  # (vmin, vmax)
                data_cmap=None,
-               show_plot=True,
+               show_plot: bool = True,
                output_filename=None,
-               ax=None):
+               ax: Optional[plt.Axes] = None,
+) -> plt.Figure:
     """Plots a heatmap image.
 
     Optionally, the heatmap (typically a saliency map of an explainer) can be
