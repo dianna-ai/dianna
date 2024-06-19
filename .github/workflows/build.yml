@@ -26,8 +26,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run unit tests
-        run: pytest -v
+      - name: Run unit tests including downloader
+        run: pytest -v --downloader
 
       - name: Verify that we can build the package
         run: python setup.py sdist bdist_wheel

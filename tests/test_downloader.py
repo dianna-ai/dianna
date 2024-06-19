@@ -1,3 +1,11 @@
+"""Module to test the downloader.
+
+Run these tests with:
+```bash
+pytest -v -m downloader --downloader
+```
+"""
+
 import os
 from shutil import rmtree
 import pooch
@@ -13,6 +21,8 @@ from dianna.utils.downloader import models
 # keys in this dict must match the available file types in the
 # download function
 all_files = {'model': models, 'data': data, 'label': labels}
+
+pytestmark = pytest.mark.downloader
 
 
 @pytest.mark.parametrize('file_type', ['model', 'data', 'label'])
