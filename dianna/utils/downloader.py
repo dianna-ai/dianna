@@ -102,11 +102,11 @@ data = {
         "sha256:922f97603522504808deaaa144af7594454eb3cf048917fc1f88de0cd0012add"
     ],
     "coffee_test.csv": [
-        "https://github.com/dianna-ai/dianna/raw/main/dianna/labels/coffee_test.csv",
+        "https://github.com/dianna-ai/dianna/raw/main/dianna/data/coffee_test.csv",
         "sha256:251c56a8d24abe1416f545907fb37cbbe0a03e92d6ad8e4b89641980289947de"
     ],
     "coffee_train.csv": [
-        "https://github.com/dianna-ai/dianna/raw/main/dianna/labels/coffee_train.csv",
+        "https://github.com/dianna-ai/dianna/raw/main/dianna/data/coffee_train.csv",
         "sha256:34cc37eff7310b33a7886a3d4bee42074126cb72287b39c58b369836bf56281e"
     ],
     "digit0.jpg": [
