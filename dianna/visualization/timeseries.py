@@ -10,15 +10,15 @@ from matplotlib import cm
 
 
 def plot_timeseries(
-    x: np.ndarray,
-    y: np.ndarray,
-    segments: List[Dict[str, Any]],
-    x_label: str = 't',
-    y_label: Union[str, Iterable[str]] = None,
-    cmap: Optional[str] = None,
-    show_plot: Optional[bool] = True,
-    output_filename: Optional[str] = None,
-    heatmap_range=(-1, 1),
+        x: np.ndarray,
+        y: np.ndarray,
+        segments: List[Dict[str, Any]],
+        x_label: str = 't',
+        y_label: Union[str, Iterable[str]] = None,
+        cmap: Optional[str] = 'bwr',
+        show_plot: Optional[bool] = True,
+        output_filename: Optional[str] = None,
+        heatmap_range=(-1, 1),
 ) -> plt.Figure:
     """Plot timeseries with segments highlighted.
 

@@ -38,7 +38,7 @@ image_label_file = st.sidebar.file_uploader('Select labels',
                                             disabled=load_example)
 
 if load_example:
-    image_file = (data_directory / 'digit0.png')
+    image_file = (data_directory / 'digit0.jpg')
     image_model_file = (model_directory / 'mnist_model_tf.onnx')
     image_label_file = (label_directory / 'labels_mnist.txt')
 
@@ -91,8 +91,8 @@ for index, label in zip(top_indices, top_labels):
                 heatmap = func(serialized_model, image, index, **kwargs)
 
             fig, _ = plot_image(heatmap,
-                             original_data=original_data,
-                             heatmap_cmap='bwr',
-                             show_plot=False)
+                                original_data=original_data,
+                                heatmap_cmap='bwr',
+                                show_plot=False)
 
             st.pyplot(fig)
