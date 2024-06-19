@@ -1,6 +1,8 @@
 """LIME tabular explainer."""
+import sys
 from typing import Iterable
 from typing import List
+from typing import Optional
 from typing import Union
 import numpy as np
 from lime.lime_tabular import LimeTabularExplainer
@@ -58,12 +60,10 @@ class LIMETabular:
         """
         self.mode = mode
         init_instance_kwargs = utils.get_kwargs_applicable_to_function(
-            LimeTabularExplainer, kwargs
-        )
+            LimeTabularExplainer, kwargs)
 
         # temporary solution for setting num_features and top_labels
         self.num_features = len(feature_names)
-        self.top_labels = len(class_names)
 
         self.explainer = LimeTabularExplainer(
             training_data,
@@ -83,7 +83,7 @@ class LIMETabular:
         self,
         model_or_function: Union[str, callable],
         input_tabular: np.array,
-        labels: Iterable[int] = (1,),
+        labels: Optional[Iterable[int]] = None,
         num_samples: int = 5000,
         **kwargs,
     ) -> np.array:
@@ -93,7 +93,7 @@ class LIMETabular:
             model_or_function (callable or str): The function that runs the model to be explained
                                                  or the path to a ONNX model on disk.
             input_tabular (np.ndarray): Data to be explained.
-            labels (Iterable(int), optional): Indices of classes to be explained.
+            labels (Iterable(int)): Indices of classes to be explained.
             num_samples (int, optional): Number of samples
             kwargs: These parameters are passed on
 
@@ -105,15 +105,14 @@ class LIMETabular:
         """
         # run the explanation.
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(
-            self.explainer.explain_instance, kwargs
-        )
+            self.explainer.explain_instance, kwargs)
         runner = utils.get_function(model_or_function)
 
         explanation = self.explainer.explain_instance(
             input_tabular,
             runner,
             labels=labels,
-            top_labels=self.top_labels,
+            top_labels=sys.maxsize,
             num_features=self.num_features,
             num_samples=num_samples,
             **explain_instance_kwargs,
@@ -126,10 +125,13 @@ class LIMETabular:
         elif self.mode == 'classification':
             # extract scores from lime explainer
             saliency = []
-            for i in range(self.top_labels):
+            for i in range(len(explanation.local_exp.items())):
                 local_exp = sorted(explanation.local_exp[i])
                 # shape of local_exp [(index, saliency)]
                 selected_saliency = [x[1] for x in local_exp]
                 saliency.append(selected_saliency[:])
+
+        else:
+            raise ValueError(f'Unsupported mode "{self.mode}"')
 
         return np.array(saliency)

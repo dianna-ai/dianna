@@ -83,7 +83,7 @@ class LIMETimeseries:
         # wrap up the input model or function using the runner
         runner = utils.get_function(
             model_or_function, preprocess_function=self.preprocess_function)
-        masks = generate_time_series_masks(input_timeseries,
+        masks = generate_time_series_masks(input_timeseries.shape,
                                            num_samples,
                                            p_keep=0.1)
         # NOTE: Required by `lime_base` explainer since the first instance must be the original data

@@ -131,7 +131,7 @@ def explain_text(model_or_function: Union[Callable,
 def explain_tabular(model_or_function: Union[Callable, str],
                     input_tabular: np.ndarray,
                     method: str,
-                    labels=(1, ),
+                    labels=None,
                     **kwargs) -> np.ndarray:
     """Explain tabular (input_text) given a model and a chosen method.
 

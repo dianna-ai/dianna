@@ -4,27 +4,28 @@ from pandas import DataFrame
 from dianna.utils.maskers import generate_channel_masks
 from dianna.utils.maskers import generate_interpolated_float_masks_for_image
 from dianna.utils.maskers import generate_interpolated_float_masks_for_timeseries
+from dianna.utils.maskers import generate_tabular_masks
 from dianna.utils.maskers import generate_time_series_masks
 from dianna.utils.maskers import generate_time_step_masks
 from dianna.utils.maskers import mask_data
 
 
-def test_mask_has_correct_shape_univariate():
+def test_timeseries_mask_has_correct_shape_univariate():
     """Test masked data has the correct shape for a univariate input."""
     input_data = _get_univariate_time_series()
     number_of_masks = 5
 
-    result = generate_time_series_masks(input_data, number_of_masks)
+    result = generate_time_series_masks(input_data.shape, number_of_masks)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
 
-def test_mask_has_correct_type_univariate():
+def test_timeseries_mask_has_correct_type_univariate():
     """Test masked data has the correct dtype for a univariate input."""
     input_data = _get_univariate_time_series()
     number_of_masks = 5
 
-    result = generate_time_series_masks(input_data,
+    result = generate_time_series_masks(input_data.shape,
                                         number_of_masks=number_of_masks)
 
     assert result.dtype == bool
@@ -35,7 +36,7 @@ def test_generate_time_step_masks_dtype_multivariate():
     input_data = _get_multivariate_time_series()
     number_of_masks = 5
 
-    result = generate_time_step_masks(input_data,
+    result = generate_time_step_masks(input_data.shape,
                                       number_of_masks=number_of_masks,
                                       number_of_features=8,
                                       p_keep=0.5)
@@ -48,7 +49,7 @@ def test_generate_segmented_time_step_masks_dtype_multivariate():
     input_data = _get_multivariate_time_series()
     number_of_masks = 5
 
-    result = generate_time_step_masks(input_data,
+    result = generate_time_step_masks(input_data.shape,
                                       number_of_masks=number_of_masks,
                                       number_of_features=8,
                                       p_keep=0.5)
@@ -56,13 +57,13 @@ def test_generate_segmented_time_step_masks_dtype_multivariate():
     assert result.dtype == bool
 
 
-def test_mask_has_correct_shape_multivariate():
+def test_timeseries_mask_has_correct_shape_multivariate():
     """Test masked data has the correct shape for a multivariate input."""
     input_data = _get_multivariate_time_series()
     number_of_masks = 5
 
-    result = _call_masking_function(input_data,
-                                    number_of_masks=number_of_masks)
+    result = _call_timeseries_masking_function(input_data,
+                                               number_of_masks=number_of_masks)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
@@ -76,24 +77,24 @@ def test_mask_has_correct_shape_multivariate():
         (0.5, 0.5),
         (0.99, 0.9),  # Mask only 1
     ])
-def test_mask_contains_correct_number_of_unmasked_parts(
+def test_timeseries_mask_contains_correct_number_of_unmasked_parts(
         p_keep_and_expected_rate):
     """Number of unmasked parts should be conforming the given p_keep."""
     p_keep, expected_rate = p_keep_and_expected_rate
     input_data = _get_univariate_time_series()
 
-    result = _call_masking_function(input_data, p_keep=p_keep)
+    result = _call_timeseries_masking_function(input_data, p_keep=p_keep)
 
     assert np.sum(result == input_data) / np.product(
         result.shape) == expected_rate
 
 
-def test_mask_contains_correct_parts_are_mean_masked():
+def test_timeseries_mask_contains_correct_parts_are_mean_masked():
     """All parts that are masked should now contain the mean of the input."""
     input_data = _get_univariate_time_series()
     mean = np.mean(input_data)
 
-    result = _call_masking_function(input_data, mask_type='mean')
+    result = _call_timeseries_masking_function(input_data, mask_type='mean')
 
     masked_parts = result[(result != input_data)]
     assert np.alltrue(
@@ -115,7 +116,7 @@ def _get_multivariate_time_series(number_of_channels: int = 6) -> np.array:
     ])
 
 
-def _call_masking_function(
+def _call_timeseries_masking_function(
     input_data,
     number_of_masks=5,
     p_keep=.3,
@@ -123,7 +124,7 @@ def _call_masking_function(
     feature_res=5,
 ):
     """Helper function with some defaults to call the code under test."""
-    masks = generate_time_series_masks(input_data,
+    masks = generate_time_series_masks(input_data.shape,
                                        number_of_masks,
                                        feature_res,
                                        p_keep=p_keep)
@@ -135,7 +136,7 @@ def test_channel_mask_has_correct_shape_multivariate():
     number_of_masks = 15
     input_data = _get_multivariate_time_series()
 
-    result = generate_channel_masks(input_data, number_of_masks, 0.5)
+    result = generate_channel_masks(input_data.shape, number_of_masks, 0.5)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
@@ -145,7 +146,7 @@ def test_channel_mask_has_does_not_contain_conflicting_values():
     number_of_masks = 15
     input_data = _get_multivariate_time_series()
 
-    result = generate_channel_masks(input_data, number_of_masks, 0.5)
+    result = generate_channel_masks(input_data.shape, number_of_masks, 0.5)
 
     unexpected_results = []
     for mask_i, mask in enumerate(result):
@@ -165,33 +166,33 @@ def test_channel_mask_masks_correct_number_of_cells():
     input_data = _get_multivariate_time_series(number_of_channels=10)
     p_keep = 0.3
 
-    result = generate_channel_masks(input_data, number_of_masks, p_keep)
+    result = generate_channel_masks(input_data.shape, number_of_masks, p_keep)
 
     assert result.sum() / np.product(result.shape) == p_keep
 
 
-def test_masking_has_correct_shape_multivariate():
+def test_timeseries_masking_has_correct_shape_multivariate():
     """Test for the correct output shape for the general masking function."""
     number_of_masks = 15
     input_data = _get_multivariate_time_series()
 
-    result = generate_time_series_masks(input_data, number_of_masks)
+    result = generate_time_series_masks(input_data.shape, number_of_masks)
 
     assert result.shape == tuple([number_of_masks] + list(input_data.shape))
 
 
-def test_masking_univariate_leaves_anything_unmasked():
+def test_timeseries_masking_univariate_leaves_anything_unmasked():
     """Tests that something remains unmasked and some parts are masked for the univariate case."""
     number_of_masks = 1
     input_data = _get_univariate_time_series()
 
-    result = generate_time_series_masks(input_data, number_of_masks)
+    result = generate_time_series_masks(input_data.shape, number_of_masks)
 
     assert np.any(result)
     assert np.any(~result)
 
 
-def test_masking_keep_first_instance():
+def test_timeseries_masking_keep_first_instance():
     """First instance must be the original data for Lime timeseries.
 
     Required by `lime_base` explainer, the first instance of masked (or perturbed)
@@ -202,7 +203,9 @@ def test_masking_keep_first_instance():
     """
     input_data = _get_multivariate_time_series()
     number_of_masks = 5
-    masks = generate_time_series_masks(input_data, number_of_masks, p_keep=0.9)
+    masks = generate_time_series_masks(input_data.shape,
+                                       number_of_masks,
+                                       p_keep=0.9)
     masks[0, :, :] = 1.0
     masked = mask_data(input_data, masks, mask_type="mean")
     assert np.array_equal(masked[0, :, :], input_data)
@@ -216,7 +219,7 @@ def test_masks_approximately_correct_number_of_masked_parts_per_time_step(
     number_of_masks = 500
     input_data = _get_univariate_time_series(num_steps=num_steps)
 
-    masks = generate_time_series_masks(input_data,
+    masks = generate_time_series_masks(input_data.shape,
                                        number_of_masks=number_of_masks,
                                        feature_res=num_steps,
                                        p_keep=p_keep)[:, :, 0]
@@ -235,7 +238,7 @@ def test_masks_approximately_correct_number_of_masked_parts_per_time_step_projec
     number_of_masks = 500
     input_data = _get_univariate_time_series(num_steps=num_steps)
 
-    masks = generate_time_series_masks(input_data,
+    masks = generate_time_series_masks(input_data.shape,
                                        number_of_masks=number_of_masks,
                                        feature_res=6,
                                        p_keep=p_keep)[:, :, 0]
@@ -310,3 +313,66 @@ def test_generate_interpolated_mean_float_masks_for_image(
     print('\n')
     print(masks_mean)
     assert np.allclose(masks_mean, p_keep, atol=0.1)
+
+
+def test_tabular_mask_has_correct_shape():
+    """Test whether tabular masks has the correct shape."""
+    input_data_shape = (10, )
+    number_of_masks = 30
+
+    masks = np.stack(
+        list(
+            generate_tabular_masks(
+                input_data_shape,
+                number_of_masks,
+                p_keep=0.2,
+            )))
+
+    assert masks.shape == (number_of_masks, *input_data_shape)
+
+
+@pytest.mark.parametrize('p_keep_and_n_unmasked', [
+    (0.2, 0.2),
+    (0.7, 0.7),
+    (0.75, 0.75),
+    (0.999, 0.9),
+    (0.01, 0.1),
+])
+def test_tabular_mask_has_correct_number_masked(p_keep_and_n_unmasked):
+    """Test whether the expected number of features was masked.
+
+    Also taking into account min=1 and max=n-1 of features per instance and edge cases where the exact p_keep can't
+    be met.
+    """
+    input_data_shape = (10, )
+    number_of_masks = 50
+    p_keep, n_unmasked = p_keep_and_n_unmasked
+
+    masks = np.stack(
+        list(
+            generate_tabular_masks(
+                input_data_shape,
+                number_of_masks,
+                p_keep=p_keep,
+            )))
+
+    mean_element = masks.sum() / (np.product(input_data_shape) *
+                                  number_of_masks)
+    assert np.isclose(mean_element, n_unmasked, atol=0.03)
+
+
+def test_tabular_mask_prob_masked_per_feature_correct():
+    """Test whether every feature has the same probability of being masked."""
+    input_data_shape = (10, )
+    number_of_masks = 1000
+    p_keep = 0.2
+
+    masks = np.stack(
+        list(
+            generate_tabular_masks(
+                input_data_shape,
+                number_of_masks,
+                p_keep=p_keep,
+            )))
+
+    assert np.allclose(masks.mean(axis=0), p_keep, atol=0.05)
