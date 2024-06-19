@@ -10,13 +10,14 @@ def _determine_vmax(max_data_value):
     return vmax
 
 
-def plot_image(heatmap,
-               original_data=None,
-               heatmap_cmap=None,
-               heatmap_range=(None, None),  # (vmin, vmax)
-               data_cmap=None,
-               show_plot=True,
-               output_filename=None):
+def plot_image(
+        heatmap,
+        original_data=None,
+        heatmap_cmap='bwr',
+        heatmap_range=(None, None),  # (vmin, vmax)
+        data_cmap=None,
+        show_plot=True,
+        output_filename=None):
     """Plots a heatmap image.
 
     Optionally, the heatmap (typically a saliency map of an explainer) can be
@@ -58,7 +59,11 @@ def plot_image(heatmap,
         alpha = .5
 
     vmin, vmax = heatmap_range
-    cax = ax.imshow(heatmap, vmin=vmin, vmax=vmax, cmap=heatmap_cmap, alpha=alpha)
+    cax = ax.imshow(heatmap,
+                    vmin=vmin,
+                    vmax=vmax,
+                    cmap=heatmap_cmap,
+                    alpha=alpha)
     fig.colorbar(cax)
     ax.tick_params(bottom=False,
                    left=False,
