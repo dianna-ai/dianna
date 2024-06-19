@@ -23,6 +23,7 @@ class LIMETimeseries:
         verbose=False,
         preprocess_function=None,
         feature_selection='auto',
+        random_state = None
     ):
         """Initializes Lime explainer for timeseries.
 
@@ -32,6 +33,7 @@ class LIMETimeseries:
             feature_selection (str): Feature selection method to be used by explainer.
             preprocess_function (callable, optional): Function to preprocess the time series data before passing it
                                                       to the explainer. Defaults to None.
+            random_state (int or np.RandomState, optional): seed or random state. Unused variable for current ts method
         """
 
         def kernel(d):

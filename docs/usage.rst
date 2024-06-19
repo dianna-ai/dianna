@@ -7,7 +7,7 @@ the output of the model. DIANNA calls an explainable AI method to
 produce a “heatmap” of the relevances of each data pont (e.g. pixel,
 word) to a given model’s decision overlaid on the data item.
 
-For example usage see the DIANNA `tutorials <./tutorials>`__. For
+For example usage see the DIANNA `tutorials <./tutorials/0-overview.nblink>`__. For
 creating or converting a trained model to ONNX see the **ONNX models**
 and for example datasets- the **Datasets** sections below.
 

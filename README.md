@@ -274,7 +274,7 @@ And here are links to notebooks showing how we created our models on the benchma
 
 | Models                                                    | Generation                                                                                                                                                        |
 | :-------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Penguin model    (classification)](https://zenodo.org/records/10580743)                         | [Penguin model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/penguin_species/generate_model.ipynb)                       |
+| [Penguin model    (classification)](https://zenodo.org/records/10580743)                         | [Penguin model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/penguin_species/generate_model.ipynb)          |
 | [Sunshine hours prediction model (regression)](https://zenodo.org/records/10580833) | [Sunshine hours prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/sunshine_prediction/generate_model.ipynb) |
 
 
@@ -288,13 +288,13 @@ DIANNA supports different data modalities and XAI methods (explainers). We have 
 
 | Data \ XAI | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
 | :--------- | :------------------------------------------------ | :----------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------- |
-| Images     | ✅                                                | ✅                                                                 | ✅                                                                                                   |
-| Text       | ✅                                                | ✅                                                                 |                                                                                                      |
-| Timeseries | ✅                                                | ✅                                                                 |                                                                                                                                                                       |
-| Tabular    | planned                                           | ✅                                                            | ✅                                                                                              |
-| Embedding  | work in progress                                  |                                                             |  
-| Graphs*    | next steps                                  |    ...                                                |     ...                                                                                |
-
+| Images     | ✅                                                | ✅                                                                 | ✅                                                                                                 |
+| Text       | ✅                                                | ✅                                                                 |                                                                                                     |
+| Timeseries | ✅                                                | ✅                                                                 |                                                                                                     |
+| Tabular    | planned                                           | ✅                                                                 | ✅                                                                                                  |
+| Embedding  | work in progress                                  |                                                                     |                                                                                                     |
+| Graphs*    | next steps                                        |    ...                                                              |     ...                                                                                             |
+      
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers. 
 Also [GradCAM](https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.pdf)) has been recently found to be *semantically continous*! **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
 
@@ -302,13 +302,14 @@ Also [GradCAM](https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_
 ### Scientific use-cases
 Our goal is that the scientific community embrases XAI as a source for novel and unexplored perspectives on scientific problems. 
 Here, we offer [tutorials](./tutorials) on specific scientific use-cases of uisng XAI:
-| Use-case (data) \ XAI | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
-| :---------                                           | :-------- | :------------------------------ | :-------------------------- |
-| Biology (Phytomorphology): Tree Leaves classification (images)   |        |            ✅                     |                             |
-| Astronomy: Fast Radio Burst detection (timeseries)    | ✅       |                                 |                             |
-| Geo-science (raster data)       |   planned                |  ...      | ...                            |                  ...         |
-| Social sciences (text) | work in progress             |  ...      |...                             | ...                          |
-| Climate                | planned                      |   ...     |       ...                      |                ...           |   
+
+| Use-case (data) \ XAI                                            | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
+| :----------------------------------------------------------------| :----------------------------------------------------| :---------------------------------------------------------------------| :-------------------------------------------------------------------------------------------------------|
+| Biology (Phytomorphology): Tree Leaves classification (images)   |                                                      |            ✅                                                        |                                                                                                         |
+| Astronomy: Fast Radio Burst detection (timeseries)               | ✅                                                  |                                                                       |                                                                                                         |
+| Geo-science (raster data)                                        |   planned                                            |  ...                                                                  | ...                                                                                                     |   
+| Social sciences (text)                                           | work in progress                                     |  ...                                                                  |...                                                                                                     | 
+| Climate                                                          | planned                                              |   ...                                                                 |       ...                                                                                              |            
 
 ## Reference documentation
 
