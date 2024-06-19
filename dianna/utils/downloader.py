@@ -12,6 +12,8 @@ Do not forget to prefix it with `sha256:`
 """
 import pooch
 
+__all__ = ["list_available_files", "download"]
+
 models = {
     "mnist_model.onnx": [
         "doi:10.5281/zenodo.5907176/mnist_model.onnx",
