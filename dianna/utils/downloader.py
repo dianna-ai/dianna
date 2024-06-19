@@ -53,6 +53,10 @@ models = {
         "doi:10.5281/zenodo.10580832/sunshine_hours_regression_model.onnx",
         "sha256:65904d98fc281c3d2604b646d2c85eb6ebe710340fb01466fb3d571a51810c7e"
     ],
+    "apertif_frb_dynamic_spectrum_model.onnx": [
+        "doi:10.5281/zenodo.10656613/apertif_frb_dynamic_spectrum_model.onnx",
+        "sha256:3c87db3c6257d7f251a7bdceb3197d5bb482b8edc19870219fb7ca7c204dd257"
+    ],
 }
 
 labels = {
