@@ -30,8 +30,12 @@ models = {
         "sha256:919b878a759151111fb273cebc4e32de2e133b2993e7f1402645db4e13e9bfc9"
     ],
     # "mnist_model_tf.onnx": [],  # do we need this one? not available on zenodo
-    # TODO: check if season prediction model is the correct one
+    # TODO: we do not use the full version of the season prediction model, only the binary one
     "season_prediction_model_temp_max_binary.onnx": [
+        "https://github.com/dianna-ai/dianna/raw/main/dianna/models/season_prediction_model_temp_max_binary.onnx",
+        "sha256:68335f069b673b90fac3b879d38b1471e05c1c1ca64b9045eb0d383534c2986a"
+    ],
+    "season_prediction_model.onnx": [
         "doi:10.5281/zenodo.7543882/season_prediction_model.onnx",
         "sha256:38395a100f0379d11e7249c1491e8e4735e2704ed07b747d71431b6e572a732a"
     ],
@@ -53,14 +57,6 @@ labels = {
     "apertif_frb_classes.txt": [
         "https://github.com/dianna-ai/dianna/raw/main/dianna/labels/apertif_frb_classes.txt",
         "sha256:7df809e9f028e59021c819408c2e3d06c7c1903b1d45c05847b0d22a6d8d43e2"
-    ],
-    "coffee_test.csv": [
-        "https://github.com/dianna-ai/dianna/raw/main/dianna/labels/coffee_test.csv",
-        "sha256:251c56a8d24abe1416f545907fb37cbbe0a03e92d6ad8e4b89641980289947de"
-    ],
-    "coffee_train.csv": [
-        "https://github.com/dianna-ai/dianna/raw/main/dianna/labels/coffee_train.csv",
-        "sha256:34cc37eff7310b33a7886a3d4bee42074126cb72287b39c58b369836bf56281e"
     ],
     "labels_mnist.txt": [
         "https://github.com/dianna-ai/dianna/raw/main/dianna/labels/labels_mnist.txt",
@@ -97,6 +93,14 @@ data = {
         "https://github.com/dianna-ai/dianna/raw/main/dianna/data/binary-mnist.npz",
         "sha256:922f97603522504808deaaa144af7594454eb3cf048917fc1f88de0cd0012add"
     ],
+    "coffee_test.csv": [
+        "https://github.com/dianna-ai/dianna/raw/main/dianna/labels/coffee_test.csv",
+        "sha256:251c56a8d24abe1416f545907fb37cbbe0a03e92d6ad8e4b89641980289947de"
+    ],
+    "coffee_train.csv": [
+        "https://github.com/dianna-ai/dianna/raw/main/dianna/labels/coffee_train.csv",
+        "sha256:34cc37eff7310b33a7886a3d4bee42074126cb72287b39c58b369836bf56281e"
+    ],
     "digit0.jpg": [
         "https://github.com/dianna-ai/dianna/raw/main/dianna/data/digit0.jpg",
         "sha256:2193cbb0ec58dbe4574b53476ed8ea15fdae09810a4fad7754e39954f252572a"
@@ -117,10 +121,18 @@ data = {
         "doi:10.5281/zenodo.5012824/shapes.npz",
         "sha256:58a644566482f5780b0e7132b3bcecfaf549ebef615f10912ba746a91ef588e1"
     ],
-    # ToDo: the weather data is available as csv on Zenodo, is this the same data as this npy file?. https://zenodo.org/records/5071376
+    # ToDo: weather data is also available as csv on Zenodo, is this the same data as this npy file?. https://zenodo.org/records/5071376
     "weather_data.npy": [
         "https://github.com/dianna-ai/dianna/raw/main/dianna/data/weather_data.npy",
         "sha256:d848dfc1effc958ecf73a32134c582944f32f987c2924eebbd47a5020417a303"
+    ],
+    "weather_prediction_dataset.csv": [
+        "doi:10.5281/zenodo.4770936/weather_prediction_dataset.csv",
+        "sha256:296220187f8eb8f1b3d0138dfd121683b1daa36983fed5e547f59e0d93c3d004"
+    ],
+    "weather_prediction_dataset_light.csv": [
+        "doi:10.5281/zenodo.5071376/weather_prediction_dataset_light.csv",
+        "sha256:945883204cae14251aec44e78845eb880ed3c04ac56a26fb5283c20f149be960"
     ],
 }
 
