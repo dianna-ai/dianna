@@ -35,7 +35,8 @@ class KERNELSHAPTabular:
                                                  weighted kmeans
         """
         if training_data_kmeans:
-            self.training_data = shap.kmeans(training_data, training_data_kmeans)
+            self.training_data = shap.kmeans(training_data,
+                                             training_data_kmeans)
         else:
             self.training_data = training_data
         self.feature_names = feature_names
@@ -67,15 +68,12 @@ class KERNELSHAPTabular:
             An array (np.ndarray) containing the KernelExplainer explanations for each class.
         """
         init_instance_kwargs = utils.get_kwargs_applicable_to_function(
-            KernelExplainer, kwargs
-        )
-        self.explainer = KernelExplainer(
-            model_or_function, self.training_data, link, **init_instance_kwargs
-        )
+            KernelExplainer, kwargs)
+        self.explainer = KernelExplainer(model_or_function, self.training_data,
+                                         link, **init_instance_kwargs)
 
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(
-            self.explainer.shap_values, kwargs
-        )
+            self.explainer.shap_values, kwargs)
 
         saliency = self.explainer.shap_values(input_tabular, silent=self.silent, **explain_instance_kwargs)
 

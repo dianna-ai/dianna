@@ -90,7 +90,7 @@ def _get_params(method: str):
 
     elif method == 'LIME':
         return {
-            'rand_state': st.number_input('Random state', value=2),
+            'random_state': st.number_input('Random state', value=2),
         }
 
     else:

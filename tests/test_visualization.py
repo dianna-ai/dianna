@@ -142,3 +142,17 @@ class TestHighlightText:
 
         # check that the plot is closed
         assert not plt.fignum_exists(fig.number)
+
+    def test_highlight_text_ends_with_dots(self):
+        """Test highlight multiline text with dots in text."""
+        explanation = [
+            ("Hello", 0, 0.5), ("world", 1, -0.5), (".", 2, 0.0),
+            ("This", 3, 0.5), ("is", 4, -0.5), ("a", 5, 0.0),
+            ("test", 6, 0.5), (".", 7, -0.5),
+            ("Another", 8, 0.0), ("test", 9, 0.5), (".", 10, -0.5),
+            ]
+
+        fig, ax = highlight_text(explanation=explanation)
+
+        assert fig is not None
+        assert ax is not None

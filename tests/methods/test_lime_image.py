@@ -4,7 +4,7 @@ import numpy as np
 import dianna
 from dianna.methods.lime_image import LIMEImage
 from tests.methods.test_onnx_runner import generate_data
-from tests.utils import run_model
+from tests.utils import get_dummy_model_function
 
 
 class LimeOnImages(TestCase):
@@ -18,7 +18,7 @@ class LimeOnImages(TestCase):
         labels = [1]
 
         explainer = LIMEImage(random_state=42)
-        heatmap = explainer.explain(run_model,
+        heatmap = explainer.explain(get_dummy_model_function(n_outputs=2),
                                     input_data,
                                     labels,
                                     num_samples=100)
@@ -53,7 +53,7 @@ class LimeOnImages(TestCase):
         labels = [1]
 
         explainer = LIMEImage(random_state=42)
-        heatmap = explainer.explain(run_model,
+        heatmap = explainer.explain(get_dummy_model_function(n_outputs=2),
                                     input_data,
                                     labels,
                                     return_masks=False,
