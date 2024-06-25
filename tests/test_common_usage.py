@@ -1,7 +1,7 @@
 import numpy as np
 import dianna
 import dianna.visualization
-from tests.utils import run_model
+from tests.utils import get_dummy_model_function
 
 
 def test_common_RISE_image_pipeline():  # noqa: N802 ignore case
@@ -10,7 +10,7 @@ def test_common_RISE_image_pipeline():  # noqa: N802 ignore case
     axis_labels = {-1: 'channels'}
     labels = [0, 1]
 
-    heatmap = dianna.explain_image(run_model,
+    heatmap = dianna.explain_image(get_dummy_model_function(n_outputs=2),
                                    input_image,
                                    'RISE',
                                    labels,
@@ -26,8 +26,8 @@ def test_common_RISE_timeseries_pipeline():  # noqa: N802 ignore case
     input_timeseries = np.random.random((31, 1))
     labels = [0]
 
-    heatmap = dianna.explain_timeseries(run_model, input_timeseries, 'RISE',
-                                        labels)[0]
+    heatmap = dianna.explain_timeseries(get_dummy_model_function(n_outputs=2),
+                                        input_timeseries, 'RISE', labels)[0]
     segments = []
     for channel_number in range(heatmap.shape[1]):
         heatmap_channel = heatmap[:, channel_number]

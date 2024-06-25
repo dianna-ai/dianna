@@ -5,8 +5,8 @@ import dianna
 from dianna.methods.rise_image import RISEImage
 from dianna.utils import get_function
 from tests.methods.test_onnx_runner import generate_data
+from tests.utils import get_dummy_model_function
 from tests.utils import get_mnist_1_data
-from tests.utils import run_model
 
 
 class RiseOnImages(TestCase):
@@ -22,7 +22,7 @@ class RiseOnImages(TestCase):
             "tests/test_data/heatmap_rise_function.npy")
 
         heatmaps = dianna.explain_image(
-            run_model,
+            get_dummy_model_function(n_outputs=2),
             input_data,
             "RISE",
             labels,

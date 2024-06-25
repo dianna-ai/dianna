@@ -68,7 +68,7 @@ class RISETimeseries:
         runner = utils.get_function(
             model_or_function, preprocess_function=self.preprocess_function)
 
-        masks = generate_time_series_masks(input_timeseries,
+        masks = generate_time_series_masks(input_timeseries.shape,
                                            number_of_masks=self.n_masks,
                                            feature_res=self.feature_res,
                                            p_keep=self.p_keep)

@@ -1,6 +1,5 @@
 import tempfile
 import streamlit as st
-from _model_utils import fill_segmentation
 from _model_utils import preprocess_function
 from onnx_tf.backend import prepare
 from dianna import explain_image
@@ -42,12 +41,11 @@ def _run_kernelshap_image(model, image, i, **kwargs):
     with tempfile.NamedTemporaryFile() as f:
         f.write(model)
         f.flush()
-        shap_values, segments_slic = explain_image(f.name,
-                                                   image,
-                                                   method='KernelSHAP',
-                                                   **kwargs)
-
-    return fill_segmentation(shap_values[i][0], segments_slic)
+        relevances = explain_image(f.name,
+                image,
+                method='KernelSHAP',
+                **kwargs)
+    return relevances[0]
 
 
 explain_image_dispatcher = {
