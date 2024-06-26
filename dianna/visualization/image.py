@@ -1,4 +1,6 @@
+from typing import Optional
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def _determine_vmax(max_data_value):
@@ -10,14 +12,15 @@ def _determine_vmax(max_data_value):
     return vmax
 
 
-def plot_image(
-        heatmap,
-        original_data=None,
-        heatmap_cmap='bwr',
-        heatmap_range=(None, None),  # (vmin, vmax)
-        data_cmap=None,
-        show_plot=True,
-        output_filename=None):
+def plot_image(heatmap: np.ndarray,
+               original_data: Optional[np.ndarray] = None,
+               heatmap_cmap='bwr',
+               heatmap_range=(None, None),  # (vmin, vmax)
+               data_cmap=None,
+               show_plot: bool = True,
+               output_filename=None,
+               ax: Optional[plt.Axes] = None,
+) -> plt.Figure:
     """Plots a heatmap image.
 
     Optionally, the heatmap (typically a saliency map of an explainer) can be
@@ -39,13 +42,18 @@ def plot_image(
         show_plot: Shows plot if true (for testing or writing plots to disk
                    instead).
         output_filename: Name of the file to save the plot to (optional).
+        ax: matplotlib.Axes object to plot on (optional).
 
     Returns:
         None
     """
     # default cmap depends on shape: grayscale or colour
 
-    fig, ax = plt.subplots()
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.get_figure()
+
     alpha = 1
     if original_data is not None:
         if len(original_data.shape) == 2 and data_cmap is None:
