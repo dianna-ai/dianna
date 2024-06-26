@@ -24,10 +24,11 @@ def get_base64_of_bin_file(png_file):
 
 def build_markup_for_logo(
     png_file,
-    background_position='50% 10%',
-    margin_top='10%',
+    background_position='10% 10%',
+    margin_top='0%',
     image_width='60%',
     image_height='',
+    padding_top='70px'
 ):
     binary_string = get_base64_of_bin_file(png_file)
     return f"""
@@ -38,6 +39,7 @@ def build_markup_for_logo(
                     background-position: {background_position};
                     margin-top: {margin_top};
                     background-size: {image_width} {image_height};
+                    padding-top: {padding_top};
                 }}
             </style>
             """
