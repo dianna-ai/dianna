@@ -90,7 +90,7 @@ def test_text_page(page: Page):
 
     page.get_by_text('Running...').wait_for(state='detached')
 
-    expect(page).to_have_title('Text · Streamlit')
+    expect(page).to_have_title('Text')
 
     selector = page.get_by_text(
         'Add your input data in the left panel to continue')
@@ -132,7 +132,7 @@ def test_image_page(page: Page):
 
     page.get_by_text('Running...').wait_for(state='detached')
 
-    expect(page).to_have_title('Images · Streamlit')
+    expect(page).to_have_title('Images')
 
     expect(
         page.get_by_text('Add your input data in the left panel to continue')
@@ -173,7 +173,7 @@ def test_timeseries_page(page: Page):
 
     page.get_by_text('Running...').wait_for(state='detached')
 
-    expect(page).to_have_title('Time_series · Streamlit')
+    expect(page).to_have_title('Time_series')
 
     expect(
         page.get_by_text('Add your input data in the left panel to continue')
