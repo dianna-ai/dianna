@@ -16,6 +16,7 @@ class KERNELSHAPTabular:
         mode: str = "classification",
         feature_names: List[int] = None,
         training_data_kmeans: Optional[int] = None,
+        silent: bool = False,
     ) -> None:
         """Initializer of KERNELSHAPTabular.
 
@@ -41,6 +42,7 @@ class KERNELSHAPTabular:
         self.feature_names = feature_names
         self.mode = mode
         self.explainer: KernelExplainer
+        self.silent = silent
 
     def explain(
         self,
@@ -73,8 +75,7 @@ class KERNELSHAPTabular:
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(
             self.explainer.shap_values, kwargs)
 
-        saliency = self.explainer.shap_values(input_tabular,
-                                              **explain_instance_kwargs)
+        saliency = self.explainer.shap_values(input_tabular, silent=self.silent, **explain_instance_kwargs)
 
         if self.mode == 'regression':
             saliency = saliency[0]
