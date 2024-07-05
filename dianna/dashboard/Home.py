@@ -1,6 +1,8 @@
 import streamlit as st
 from _shared import add_sidebar_logo
 from _shared import data_directory
+from streamlit_option_menu import option_menu
+
 
 st.set_page_config(page_title="Dianna's dashboard",
                    page_icon='📊',
@@ -15,6 +17,33 @@ st.set_page_config(page_title="Dianna's dashboard",
                        ("Dianna's dashboard. Created by the Dianna team: "
                         'https://github.com/dianna-ai/dianna')
                    })
+
+pages = {
+    "Home": "home",
+    "Images": "pages.Images",
+    "Text": "pages.Text",
+    "Time series": "pages.Time_series"
+}
+
+# Set up the top menu
+selected = option_menu(
+    menu_title=None,  # required
+    options=["Home", "Images", "Text", "Time series"],  # required
+    icons=["house", "file-earmark", "file-earmark"],  # optional
+    menu_icon="cast",  # optional
+    default_index=0,  # optional
+    orientation="horizontal"
+)
+
+# Display the content of the selected page
+if selected == "Home":
+    st.title("Home Page")
+    st.write("Welcome to the home page of the dashboard.")
+else:
+    # Dynamically import and execute the page
+    page_module = pages[selected]
+    exec(f"import {page_module} as page")
+    exec("page.st._main()")  # Ensure the code executes in the Streamlit context
 
 add_sidebar_logo()
 
