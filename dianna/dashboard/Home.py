@@ -18,6 +18,7 @@ st.set_page_config(page_title="Dianna's dashboard",
                         'https://github.com/dianna-ai/dianna')
                    })
 
+# Define dictionary of dashboard pages
 pages = {
     "Home": "home",
     "Images": "pages.Images",
@@ -27,11 +28,11 @@ pages = {
 
 # Set up the top menu
 selected = option_menu(
-    menu_title=None,  # required
-    options=["Home", "Images", "Text", "Time series"],  # required
-    icons=["house", "file-earmark", "file-earmark"],  # optional
-    menu_icon="cast",  # optional
-    default_index=0,  # optional
+    menu_title=None,
+    options=["Home", "Images", "Text", "Time series"],
+    icons=["house", "file-earmark", "file-earmark"],
+    menu_icon="cast",
+    default_index=0,
     orientation="horizontal"
 )
 
@@ -43,7 +44,7 @@ else:
     # Dynamically import and execute the page
     page_module = pages[selected]
     exec(f"import {page_module} as page")
-    exec("page.st._main()")  # Ensure the code executes in the Streamlit context
+    exec("page.st._main()")
 
 add_sidebar_logo()
 
