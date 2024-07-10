@@ -61,7 +61,7 @@ models = {
     ],
     "stemmus_scope_emulator_model_LEtot.onnx": [
         "doi:10.5281/zenodo.12623256/stemmus_scope_emulator_model_LEtot.onnx",
-        "sha256:"
+        "sha256:8c8f34ad5a2c519b1f3c67a4eb0c645c96cac1de166277bfb24e7887c2ce83be"
     ],
 }
 
@@ -147,7 +147,7 @@ data = {
     ],
     "stemmus_scope_emulator_train_test_2014_data.csv": [
         "doi:10.5281/zenodo.12623256/stemmus_scope_emulator_train_test_2014_data.csv",
-        "sha256:"
+        "sha256:d30970c152f00dc45be7775361f4c88dfb084b13dd8e41fdb001c5306c136519"
     ],
 }
 
