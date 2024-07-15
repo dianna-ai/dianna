@@ -33,4 +33,4 @@ jobs:
 
       - name: Check code style
         run: |
-          ruff dianna tests
+          ruff check dianna tests
