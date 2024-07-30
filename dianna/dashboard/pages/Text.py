@@ -88,3 +88,5 @@ for index, label in zip(top_indices, top_labels):
 
     # add some white space to separate rows
     st.markdown('')
+
+st.stop()

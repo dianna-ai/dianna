@@ -96,3 +96,5 @@ for index, label in zip(top_indices, top_labels):
                                 show_plot=False)
 
             st.pyplot(fig)
+
+st.stop()
