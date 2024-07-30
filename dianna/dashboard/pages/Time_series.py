@@ -20,7 +20,7 @@ st.title('Time series explanation')
 
 st.sidebar.header('Input data')
 
-load_example = st.sidebar.checkbox('Load example data', key='ts_example_check')
+load_example = st.sidebar.checkbox('Load example data', key='TS_example_check')
 
 ts_file = st.sidebar.file_uploader('Select input data',
                                    type='npy',
@@ -52,9 +52,9 @@ serialized_model = model.SerializeToString()
 labels = load_labels(ts_label_file)
 
 choices = ('LIME', 'RISE')
-methods = _methods_checkboxes(choices=choices)
+methods = _methods_checkboxes(choices=choices, key='TS_cb_')
 
-method_params = _get_method_params(methods)
+method_params = _get_method_params(methods, key='TS_params_')
 
 with st.spinner('Predicting class'):
     predictions = predict(model=serialized_model, ts_data=ts_data)
