@@ -19,7 +19,7 @@ st.title('Text explanation')
 st.sidebar.header('Input data')
 
 load_example = st.sidebar.checkbox('Load example data',
-                                   key='text_example_check')
+                                key='Text_example_check')
 
 text_input = st.sidebar.text_input('Input string', disabled=load_example)
 
@@ -49,9 +49,9 @@ serialized_model = model.SerializeToString()
 labels = load_labels(text_label_file)
 
 choices = ('RISE', 'LIME')
-methods = _methods_checkboxes(choices=choices)
+methods = _methods_checkboxes(choices=choices, key='Text_cb_')
 
-method_params = _get_method_params(methods)
+method_params = _get_method_params(methods, key='Text_params_')
 
 model_runner = MovieReviewsModelRunner(serialized_model)
 
