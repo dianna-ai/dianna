@@ -55,13 +55,13 @@ def add_sidebar_logo():
     )
 
 
-def _methods_checkboxes(*, choices: Sequence):
+def _methods_checkboxes(*, choices: Sequence, key):
     """Get methods from a horizontal row of checkboxes."""
     n_choices = len(choices)
     methods = []
     for col, method in zip(st.columns(n_choices), choices):
         with col:
-            if st.checkbox(method):
+            if st.checkbox(method, key=key + method):
                 methods.append(method)
 
     if not methods:
@@ -71,42 +71,42 @@ def _methods_checkboxes(*, choices: Sequence):
     return methods
 
 
-def _get_params(method: str):
+def _get_params(method: str, key):
     if method == 'RISE':
         return {
             'n_masks':
-            st.number_input('Number of masks', value=1000),
+            st.number_input('Number of masks', value=1000, key=key + method + 'nmasks'),
             'feature_res':
-            st.number_input('Feature resolution', value=6),
+            st.number_input('Feature resolution', value=6, key=key + method + 'fr'),
             'p_keep':
-            st.number_input('Probability to be kept unmasked', value=0.1),
+            st.number_input('Probability to be kept unmasked', value=0.1, key=key + method + 'pkeep'),
         }
 
     elif method == 'KernelSHAP':
         return {
-            'nsamples': st.number_input('Number of samples', value=1000),
-            'background': st.number_input('Background', value=0),
-            'n_segments': st.number_input('Number of segments', value=200),
-            'sigma': st.number_input('σ', value=0),
+            'nsamples': st.number_input('Number of samples', value=1000, key=key + method + 'nsamp'),
+            'background': st.number_input('Background', value=0, key=key + method + 'background'),
+            'n_segments': st.number_input('Number of segments', value=200, key=key + method + 'nseg'),
+            'sigma': st.number_input('σ', value=0, key=key + method + 'sigma'),
         }
 
     elif method == 'LIME':
         return {
-            'random_state': st.number_input('Random state', value=2),
+            'random_state': st.number_input('Random state', value=2, key=key + method + 'rs'),
         }
 
     else:
         raise ValueError(f'No such method: {method}')
 
 
-def _get_method_params(methods: Sequence[str]) -> Dict[str, Dict[str, Any]]:
+def _get_method_params(methods: Sequence[str], key) -> Dict[str, Dict[str, Any]]:
     method_params = {}
 
     with st.expander('Click to modify method parameters'):
         for method, col in zip(methods, st.columns(len(methods))):
             with col:
                 st.header(method)
-                method_params[method] = _get_params(method)
+                method_params[method] = _get_params(method, key=key)
 
     return method_params
 
