@@ -92,15 +92,9 @@ def test_text_page(page: Page):
 
     expect(page).to_have_title('Text')
 
-    selector = page.get_by_text(
-        'Add your input data in the left panel to continue')
-
-    expect(selector).to_be_visible(timeout=30_000)
-
-    page.locator('label').filter(
-        has_text='Load example data').locator('span').click()
-
-    expect(page.get_by_text('Select a method to continue')).to_be_visible()
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
+    page.get_by_text("Movie sentiment").click()
+    expect(page.get_by_text("Select a method to continue")).to_be_visible()
 
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
@@ -125,6 +119,18 @@ def test_text_page(page: Page):
         print(selector)
         expect(selector).to_be_visible()
 
+    # own data option
+    page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
+    selector = page.get_by_text(
+        'Add your input data in the left panel to continue')
+
+    expect(selector).to_be_visible(timeout=30_000)
+
+    # check input panel
+    page.get_by_label("Input string").click()
+    expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
+    page.get_by_label("Select labels").get_by_test_id("baseButton-secondary").click()
+
 
 def test_image_page(page: Page):
     """Test performance of image page."""
@@ -135,11 +141,12 @@ def test_image_page(page: Page):
     expect(page).to_have_title('Images')
 
     expect(
-        page.get_by_text('Add your input data in the left panel to continue')
+        page.get_by_text('Select which input type to')
     ).to_be_visible(timeout=100_000)
 
-    page.locator('label').filter(
-        has_text='Load example data').locator('span').click()
+    # Example
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
+    page.get_by_text("Hand-written digits").click()
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible()
 
@@ -166,6 +173,12 @@ def test_image_page(page: Page):
     ):
         expect(selector).to_be_visible(timeout=100_000)
 
+    # own data
+    page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
+    expect(page.get_by_label("Select image").get_by_test_id("baseButton-secondary")).to_be_visible()
+    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select labels").get_by_test_id("baseButton-secondary").click()
+
 
 def test_timeseries_page(page: Page):
     """Test performance of timeseries page."""
@@ -175,14 +188,16 @@ def test_timeseries_page(page: Page):
 
     expect(page).to_have_title('Time_series')
 
-    expect(
-        page.get_by_text('Add your input data in the left panel to continue')
-    ).to_be_visible()
+    expect(page.get_by_text("Select which input type to")).to_be_visible()
 
-    page.locator('label').filter(
-        has_text='Load example data').locator('span').click()
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
+    expect(page.get_by_text("Select an example in the left")).to_be_visible()
+    expect(page.get_by_text("Weather")).to_be_visible()
+    expect(page.get_by_text("FRB")).to_be_visible()
 
-    expect(page.get_by_text('Select a method to continue')).to_be_visible()
+    page.locator("label").filter(has_text="Weather").locator("div").nth(1).click()
+    expect(page.get_by_text("Select a method to continue")).to_be_visible()
+
 
     page.locator('label').filter(has_text='LIME').locator('span').click()
     page.locator('label').filter(has_text='RISE').locator('span').click()
@@ -202,3 +217,8 @@ def test_timeseries_page(page: Page):
             page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible()
+    
+    page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
+    page.get_by_label("Select input data").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select labels").get_by_test_id("baseButton-secondary").click()
