@@ -41,12 +41,12 @@ if load_example_weather:
     ts_label_file = (label_directory / 'weather_data_labels.txt')
 
     st.markdown(
-        """This example is based on a binary classification task to predict which season it is, only cosidering summer and winter.
-        The input data is the [weather prediction dataset](https://zenodo.org/records/5071376).
-        This classification model uses time (days) as function of mean temperature to classify the whole time series is either 
-        summer or winter.
-        In this example DIANNA is used to compute the relevance scores on top of the displayed timeseries. The days contributing
-        positively towards the classification decision are indicated in red and those who contribute negatively in blue.
+        """This example demonstrates the use of DIANNA 
+        on a pre-trained binary classification model for season prediction.
+        The input data is the
+        [weather prediction dataset](https://zenodo.org/records/5071376).
+        This classification model uses time (days) as function of mean temperature to predict if the whole time series is either summer or winter.
+        Using a chosen XAI method the relevance scores are displayed on top of the timeseries. The days contributing positively towards the classification decision are indicated in red and those who contribute negatively in blue.
         """)
 
 if not (ts_file and ts_model_file and ts_label_file):
