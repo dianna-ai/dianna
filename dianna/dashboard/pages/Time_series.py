@@ -23,7 +23,7 @@ st.title('Time series explanation')
 st.sidebar.header('Input data')
 
 load_example = st.sidebar.radio(
-    label = "Load example data",
+    label="Use example",
     options = ("Weather", "FRB"),
     index = None,
     on_change = reset_method,
