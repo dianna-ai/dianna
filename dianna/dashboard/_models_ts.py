@@ -21,6 +21,10 @@ def predict(*, model, ts_data):
 
 @st.cache_data
 def _run_rise_timeseries(_model, ts_data, **kwargs):
+    # convert streamlit kwarg requirement back to dianna kwarg requirement
+    if "_preprocess_function" in kwargs:
+        kwargs["preprocess_function"] = kwargs["_preprocess_function"]
+        del kwargs["_preprocess_function"]
 
     def run_model(ts_data):
         return predict(model=_model, ts_data=ts_data)
