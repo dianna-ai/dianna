@@ -42,6 +42,14 @@ if load_example_digits:
     image_model_file = (model_directory / 'mnist_model_tf.onnx')
     image_label_file = (label_directory / 'labels_mnist.txt')
 
+    st.markdown(
+        """
+        This example demonstrates the use of DIANNA on a pretrained binary [MNIST](https://yann.lecun.com/exdb/mnist/) model using a hand-written digit images.
+        The model predict for an image of a hand-written 0 or 1, which of the two it most likely is.
+        This example visualizes the relevance attributions for each pixel/super-pixel by displaying them on top of the input image.
+        """
+    )
+
 if not (image_file and image_model_file and image_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
