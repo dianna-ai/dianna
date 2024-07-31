@@ -12,6 +12,7 @@ from _shared import label_directory
 from _shared import model_directory
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
+from _shared import reset_method
 from dianna.visualization import plot_timeseries, plot_image
 import numpy as np
 
@@ -25,6 +26,7 @@ load_example = st.sidebar.radio(
     label = "Load example data",
     options = ("Weather", "FRB"),
     index = None,
+    on_change = reset_method,
     key = "TS_load_example"
 )
 
