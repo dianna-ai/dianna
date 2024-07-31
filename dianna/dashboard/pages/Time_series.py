@@ -28,7 +28,7 @@ input_type = st.sidebar.radio(
         options = ('Use an example', 'Use your own data'),
         index = None,
         on_change = reset_example,
-        key = 'input_type'
+        key = 'TS_input_type'
     )
 
 # Use the examples
@@ -94,6 +94,7 @@ if input_type == 'Use your own data':
                                             type='txt')
 
 if input_type == None:
+    st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
 
