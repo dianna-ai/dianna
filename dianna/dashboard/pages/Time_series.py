@@ -21,9 +21,6 @@ st.title('Time series explanation')
 
 st.sidebar.header('Input data')
 
-#load_example_weather = st.sidebar.checkbox('Load weather example', key='TS_weather_example_check')
-#load_example_frb = st.sidebar.checkbox('Load FRB example', key='TS_frb_example_check')
-
 load_example = st.sidebar.radio(
     label = "Load example data",
     options = ("Weather", "FRB"),
