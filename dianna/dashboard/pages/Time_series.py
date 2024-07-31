@@ -13,6 +13,7 @@ from _shared import model_directory
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
 from dianna.visualization import plot_timeseries
+import numpy as np
 
 add_sidebar_logo()
 
@@ -67,6 +68,11 @@ elif load_example == "FRB":
                     'apertif_frb_dynamic_spectrum_model.onnx')
     ts_label_file = (label_directory / 'apertif_frb_classes.txt')
 
+    # FRB data must be preprocessed
+    data = open_timeseries(ts_file)
+    dataTranspose = data.T[None, ...]
+    ts_data = np.transpose(dataTranspose, (0, 2, 1))[..., None].astype(np.float32)
+
     st.markdown(
         """This example demonstrates the use of DIANNA 
         on a pre-trained binary classification model trained to classify Fast Radio Burst (FRB) timeseries data.
@@ -78,7 +84,8 @@ if not (ts_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
-ts_data = open_timeseries(ts_file)
+if load_example != "FRB":
+    ts_data = open_timeseries(ts_file)
 
 model = load_model(ts_model_file)
 serialized_model = model.SerializeToString()
