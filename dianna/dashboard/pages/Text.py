@@ -10,6 +10,7 @@ from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import label_directory
 from _shared import model_directory
+from _shared import reset_method
 from dianna.visualization.text import highlight_text
 
 add_sidebar_logo()
@@ -18,23 +19,32 @@ st.title('Text explanation')
 
 st.sidebar.header('Input data')
 
-load_example_moviesentiment = st.sidebar.checkbox('Load movie sentiment example',
-                                key='Text_example_check_moviesentiment')
+load_example = st.sidebar.radio(
+    label='Use example',
+    options=('Movie sentiment',),
+    index = None,
+    on_change = reset_method,
+    key='Text_example_check_moviesentiment')
 
-text_input = st.sidebar.text_input('Input string', disabled=load_example_moviesentiment)
+if load_example == None:
+    disable_upload = 0
+else:
+    disable_upload = 1
+
+text_input = st.sidebar.text_input('Input string', disabled=disable_upload)
 
 if text_input:
     st.sidebar.write(text_input)
 
 text_model_file = st.sidebar.file_uploader('Select model',
                                            type='onnx',
-                                           disabled=load_example_moviesentiment)
+                                           disabled=disable_upload)
 
 text_label_file = st.sidebar.file_uploader('Select labels',
                                            type='txt',
-                                           disabled=load_example_moviesentiment)
+                                           disabled=disable_upload)
 
-if load_example_moviesentiment:
+if load_example == 'Movie sentiment':
     text_input = 'The movie started out great but the ending was dissappointing'
     text_model_file = model_directory / 'movie_review_model.onnx'
     text_label_file = label_directory / 'labels_text.txt'

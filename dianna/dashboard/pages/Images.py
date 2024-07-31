@@ -11,6 +11,7 @@ from _shared import add_sidebar_logo
 from _shared import data_directory
 from _shared import label_directory
 from _shared import model_directory
+from _shared import reset_method
 from dianna.visualization import plot_image
 
 add_sidebar_logo()
@@ -19,25 +20,35 @@ st.title('Image explanation')
 
 st.sidebar.header('Input data')
 
-load_example_digits = st.sidebar.checkbox('Load hand-written digits example',
-                                   key='Image_digits_example_check')
+load_example = st.sidebar.radio(
+    label='Load example',
+    options=('Load hand-written digits example',),
+    index = None,
+    on_change = reset_method,
+    key='Image_load example'
+    )
+
+if load_example == None:
+    disable_upload = 0
+else:
+    disable_upload = 1
 
 image_file = st.sidebar.file_uploader('Select image',
                                       type=('png', 'jpg', 'jpeg'),
-                                      disabled=load_example_digits)
+                                      disabled=disable_upload)
 
 if image_file:
     st.sidebar.image(image_file)
 
 image_model_file = st.sidebar.file_uploader('Select model',
                                             type='onnx',
-                                            disabled=load_example_digits)
+                                            disabled=disable_upload)
 
 image_label_file = st.sidebar.file_uploader('Select labels',
                                             type='txt',
-                                            disabled=load_example_digits)
+                                            disabled=disable_upload)
 
-if load_example_digits:
+if load_example == 'Load hand-written digits example':
     image_file = (data_directory / 'digit0.jpg')
     image_model_file = (model_directory / 'mnist_model_tf.onnx')
     image_label_file = (label_directory / 'labels_mnist.txt')
