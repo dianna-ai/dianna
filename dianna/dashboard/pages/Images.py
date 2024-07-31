@@ -33,13 +33,13 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Load example',
-        options=('Hand-written digits',),
+        options=('Hand-written digit recognition',),
         index = None,
         on_change = reset_method,
         key='Image_load example'
         )
 
-    if load_example == 'Hand-written digits':
+    if load_example == 'Hand-written digit recognition':
         image_file = (data_directory / 'digit0.jpg')
         image_model_file = (model_directory / 'mnist_model_tf.onnx')
         image_label_file = (label_directory / 'labels_mnist.txt')
