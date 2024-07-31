@@ -19,7 +19,7 @@ st.title('Text explanation')
 st.sidebar.header('Input data')
 
 load_example_moviesentiment = st.sidebar.checkbox('Load movie sentiment example',
-                                key='Text_example_check')
+                                key='Text_example_check_moviesentiment')
 
 text_input = st.sidebar.text_input('Input string', disabled=load_example_moviesentiment)
 
