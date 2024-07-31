@@ -77,6 +77,7 @@ if input_type == 'Use an example':
             FRB-like signal, whereby the two classes are noise and FRB.
             """)
     else:
+        st.info('Select an example in the left panel to coninue')
         st.stop()
 
 
