@@ -35,7 +35,7 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Select example',
-        options = ('Weather', 'FRB'),
+        options = ('Weather', 'Scientific case: FRB'),
         index = None,
         on_change = reset_method,
         key = 'TS_load_example'
@@ -55,7 +55,7 @@ if input_type == 'Use an example':
             This classification model uses time (days) as function of mean temperature to predict if the whole time series is either summer or winter.
             Using a chosen XAI method the relevance scores are displayed on top of the timeseries. The days contributing positively towards the classification decision are indicated in red and those who contribute negatively in blue.
             """)
-    elif load_example == "FRB":
+    elif load_example == "Scientific case: FRB":
         ts_file = (data_directory / 'FRB211024.npy')
         ts_model_file = (model_directory /
                         'apertif_frb_dynamic_spectrum_model.onnx')
@@ -103,7 +103,7 @@ if not (ts_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
-if load_example != "FRB":
+if load_example != "Scientific case: FRB":
     ts_data_model = open_timeseries(ts_file)
     ts_data_dianna = ts_data_model
 
@@ -137,7 +137,7 @@ for index, label in zip(top_indices, top_labels):
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
         kwargs['labels'] = [index]
-        if load_example == "FRB":
+        if load_example == "Scientific case: FRB":
             kwargs['_preprocess_function'] = preprocess
 
         func = explain_ts_dispatcher[method]
@@ -146,7 +146,7 @@ for index, label in zip(top_indices, top_labels):
             with st.spinner(f'Running {method}'):
                 explanation = func(serialized_model, ts_data=ts_data_dianna, **kwargs)
 
-            if load_example == "FRB":
+            if load_example == "Scientific case: FRB":
                 # normalize FRB data and get rid of last dimension
                 fig, _ = plot_image(explanation[0, :, ::-1].T,
                                     ((ts_data + np.min(ts_data)) / (np.max(ts_data) + np.min(ts_data)))[::-1]
