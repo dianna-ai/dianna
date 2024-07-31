@@ -47,23 +47,32 @@ ts_label_file = st.sidebar.file_uploader('Select labels',
                                          type='txt',
                                          disabled=disable_upload)
 
-#print(load_example)
-#if load_example:
-#    print('load example')
-#    if load_example == "Weather":
-#        ts_file = (data_directory / 'weather_data.npy')
-#        ts_model_file = (model_directory /
-#                        'season_prediction_model_temp_max_binary.onnx')
-#        ts_label_file = (label_directory / 'weather_data_labels.txt')
+if load_example == "Weather":
+    ts_file = (data_directory / 'weather_data.npy')
+    ts_model_file = (model_directory /
+                    'season_prediction_model_temp_max_binary.onnx')
+    ts_label_file = (label_directory / 'weather_data_labels.txt')
 
-#        st.markdown(
-#            """This example demonstrates the use of DIANNA 
-#            on a pre-trained binary classification model for season prediction.
-#            The input data is the
-#            [weather prediction dataset](https://zenodo.org/records/5071376).
-#            This classification model uses time (days) as function of mean temperature to predict if the whole time series is either summer or winter.
-#            Using a chosen XAI method the relevance scores are displayed on top of the timeseries. The days contributing positively towards the classification decision are indicated in red and those who contribute negatively in blue.
-#            """)
+    st.markdown(
+        """This example demonstrates the use of DIANNA 
+        on a pre-trained binary classification model for season prediction.
+        The input data is the
+        [weather prediction dataset](https://zenodo.org/records/5071376).
+        This classification model uses time (days) as function of mean temperature to predict if the whole time series is either summer or winter.
+        Using a chosen XAI method the relevance scores are displayed on top of the timeseries. The days contributing positively towards the classification decision are indicated in red and those who contribute negatively in blue.
+        """)
+elif load_example == "FRB":
+    ts_file = (data_directory / 'FRB211024.npy')
+    ts_model_file = (model_directory /
+                    'apertif_frb_dynamic_spectrum_model.onnx')
+    ts_label_file = (label_directory / 'apertif_frb_classes.txt')
+
+    st.markdown(
+        """This example demonstrates the use of DIANNA 
+        on a pre-trained binary classification model trained to classify Fast Radio Burst (FRB) timeseries data.
+        The goal of the pre-trained convolutional neural network is to determine whether or not the input data contains an
+        FRB-like signal, whereby the two classes are noise and FRB.
+        """)
 
 if not (ts_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
