@@ -11,6 +11,7 @@ from _shared import add_sidebar_logo
 from _shared import label_directory
 from _shared import model_directory
 from _shared import reset_method
+from _shared import reset_example
 from dianna.visualization.text import highlight_text
 
 add_sidebar_logo()
@@ -19,41 +20,53 @@ st.title('Text explanation')
 
 st.sidebar.header('Input data')
 
-load_example = st.sidebar.radio(
-    label='Use example',
-    options=('Movie sentiment',),
-    index = None,
-    on_change = reset_method,
-    key='Text_example_check_moviesentiment')
+input_type = st.sidebar.radio(
+        label='Select which input to use',
+        options = ('Use an example', 'Use your own data'),
+        index = None,
+        on_change = reset_example,
+        key = 'Text_input_type'
+    )
 
-if load_example == None:
-    disable_upload = 0
-else:
-    disable_upload = 1
+# Use the examples
+if input_type == 'Use an example':
+    load_example = st.sidebar.radio(
+        label='Use example',
+        options=('Movie sentiment',),
+        index = None,
+        on_change = reset_method,
+        key='Text_example_check_moviesentiment')
+    
+    if load_example == 'Movie sentiment':
+        text_input = 'The movie started out great but the ending was dissappointing'
+        text_model_file = model_directory / 'movie_review_model.onnx'
+        text_label_file = label_directory / 'labels_text.txt'
 
-text_input = st.sidebar.text_input('Input string', disabled=disable_upload)
+        st.markdown(
+            """
+            This example demonstrates the use of DIANNA on the
+            [Stanford Sentiment Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which contains one-sentence movie reviews. A pre-trained neural network classifier is used, which identifies whether a movie review is positive or negative.
+            """)
+    else:
+        st.info('Select an example in the left panel to coninue')
+        st.stop()
 
-if text_input:
-    st.sidebar.write(text_input)
+# Option to upload your own data
+if input_type == 'Use your own data':
+    text_input = st.sidebar.text_input('Input string')
 
-text_model_file = st.sidebar.file_uploader('Select model',
-                                           type='onnx',
-                                           disabled=disable_upload)
+    if text_input:
+        st.sidebar.write(text_input)
 
-text_label_file = st.sidebar.file_uploader('Select labels',
-                                           type='txt',
-                                           disabled=disable_upload)
+    text_model_file = st.sidebar.file_uploader('Select model',
+                                            type='onnx')
 
-if load_example == 'Movie sentiment':
-    text_input = 'The movie started out great but the ending was dissappointing'
-    text_model_file = model_directory / 'movie_review_model.onnx'
-    text_label_file = label_directory / 'labels_text.txt'
+    text_label_file = st.sidebar.file_uploader('Select labels',
+                                            type='txt')
 
-    st.markdown(
-        """
-        This example demonstrates the use of DIANNA on the
-        [Stanford Sentiment Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which contains one-sentence movie reviews. A pre-trained neural network classifier is used, which identifies whether a movie review is positive or negative.
-        """)
+if input_type == None:
+    st.info('Select which input type to use in the left panel to continue')
+    st.stop()
 
 if not (text_input and text_model_file and text_label_file):
     st.info('Add your input data in the left panel to continue')
