@@ -12,7 +12,7 @@ from _shared import label_directory
 from _shared import model_directory
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
-from dianna.visualization import plot_timeseries
+from dianna.visualization import plot_timeseries, plot_image
 import numpy as np
 
 add_sidebar_logo()
@@ -69,9 +69,13 @@ elif load_example == "FRB":
     ts_label_file = (label_directory / 'apertif_frb_classes.txt')
 
     # FRB data must be preprocessed
-    data = open_timeseries(ts_file)
-    dataTranspose = data.T[None, ...]
-    ts_data = np.transpose(dataTranspose, (0, 2, 1))[..., None].astype(np.float32)
+    def preprocess(data):
+        # Preprocessing function for FRB use case to get the data in the rightshape
+        return np.transpose(data, (0, 2, 1))[..., None].astype(np.float32)
+    
+    ts_data = open_timeseries(ts_file)
+    ts_data_dianna = ts_data.T[None, ...]
+    ts_data_model = ts_data[None, ..., None]
 
     st.markdown(
         """This example demonstrates the use of DIANNA 
@@ -85,7 +89,8 @@ if not (ts_file and ts_model_file and ts_label_file):
     st.stop()
 
 if load_example != "FRB":
-    ts_data = open_timeseries(ts_file)
+    ts_data_model = open_timeseries(ts_file)
+    ts_data_dianna = ts_data_model
 
 model = load_model(ts_model_file)
 serialized_model = model.SerializeToString()
@@ -98,7 +103,7 @@ methods = _methods_checkboxes(choices=choices, key='TS_cb_')
 method_params = _get_method_params(methods, key='TS_params_')
 
 with st.spinner('Predicting class'):
-    predictions = predict(model=serialized_model, ts_data=ts_data)
+    predictions = predict(model=serialized_model, ts_data=ts_data_model)
 
 top_indices, top_labels = _get_top_indices_and_labels(
     predictions=predictions[0], labels=labels)
@@ -117,16 +122,24 @@ for index, label in zip(top_indices, top_labels):
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
         kwargs['labels'] = [index]
+        if load_example == "FRB":
+            kwargs['_preprocess_function'] = preprocess
 
         func = explain_ts_dispatcher[method]
 
         with col:
             with st.spinner(f'Running {method}'):
-                explanation = func(serialized_model, ts_data=ts_data, **kwargs)
+                explanation = func(serialized_model, ts_data=ts_data_dianna, **kwargs)
 
-            segments = _convert_to_segments(explanation)
+            if load_example == "FRB":
+                # normalize FRB data and get rid of last dimension
+                fig, _ = plot_image(explanation[0, :, ::-1].T,
+                                    ((ts_data + np.min(ts_data)) / (np.max(ts_data) + np.min(ts_data)))[::-1]
+                                    )
+            else:
+                segments = _convert_to_segments(explanation)
 
-            fig, _ = plot_timeseries(range(len(ts_data[0])), ts_data[0], segments)
+                fig, _ = plot_timeseries(range(len(ts_data_dianna[0])), ts_data_dianna[0], segments)
 
             st.pyplot(fig)
 
