@@ -113,15 +113,17 @@ serialized_model = model.SerializeToString()
 labels = load_labels(ts_label_file)
 
 choices = ('LIME', 'RISE')
-methods = _methods_checkboxes(choices=choices, key='TS_cb_')
 
-method_params = _get_method_params(methods, key='TS_params_')
+with st.container(border=True):
+    methods = _methods_checkboxes(choices=choices, key='TS_cb_')
 
-with st.spinner('Predicting class'):
-    predictions = predict(model=serialized_model, ts_data=ts_data_model)
+    method_params = _get_method_params(methods, key='TS_params_')
 
-top_indices, top_labels = _get_top_indices_and_labels(
-    predictions=predictions[0], labels=labels)
+    with st.spinner('Predicting class'):
+        predictions = predict(model=serialized_model, ts_data=ts_data_model)
+
+    top_indices, top_labels = _get_top_indices_and_labels(
+        predictions=predictions[0], labels=labels)
 
 weight = 0.9 / len(methods)
 column_spec = [0.1, *[weight for _ in methods]]

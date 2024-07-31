@@ -78,17 +78,19 @@ serialized_model = model.SerializeToString()
 labels = load_labels(text_label_file)
 
 choices = ('RISE', 'LIME')
-methods = _methods_checkboxes(choices=choices, key='Text_cb_')
 
-method_params = _get_method_params(methods, key='Text_params_')
+with st.container(border=True):
+    methods = _methods_checkboxes(choices=choices, key='Text_cb_')
 
-model_runner = MovieReviewsModelRunner(serialized_model)
+    method_params = _get_method_params(methods, key='Text_params_')
 
-with st.spinner('Predicting class'):
-    predictions = predict(model=serialized_model, text_input=text_input)
+    model_runner = MovieReviewsModelRunner(serialized_model)
 
-top_indices, top_labels = _get_top_indices_and_labels(
-    predictions=predictions[0], labels=labels)
+    with st.spinner('Predicting class'):
+        predictions = predict(model=serialized_model, text_input=text_input)
+
+    top_indices, top_labels = _get_top_indices_and_labels(
+        predictions=predictions[0], labels=labels)
 
 weight = 0.85 / len(methods)
 column_spec = [0.15, *[weight for _ in methods]]

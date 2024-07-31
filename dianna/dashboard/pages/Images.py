@@ -87,15 +87,17 @@ serialized_model = model.SerializeToString()
 labels = load_labels(image_label_file)
 
 choices = ('RISE', 'KernelSHAP', 'LIME')
-methods = _methods_checkboxes(choices=choices, key='Image_cb_')
 
-method_params = _get_method_params(methods, key='Image_params_')
+with st.container(border=True):
+    methods = _methods_checkboxes(choices=choices, key='Image_cb_')
 
-with st.spinner('Predicting class'):
-    predictions = predict(model=model, image=image)
+    method_params = _get_method_params(methods, key='Image_params_')
 
-top_indices, top_labels = _get_top_indices_and_labels(predictions=predictions,
-                                                      labels=labels)
+    with st.spinner('Predicting class'):
+        predictions = predict(model=model, image=image)
+
+    top_indices, top_labels = _get_top_indices_and_labels(predictions=predictions,
+                                                        labels=labels)
 
 # check which axis is color channel
 original_data = image[:, :, 0] if image.shape[2] <= 3 else image[1, :, :]
