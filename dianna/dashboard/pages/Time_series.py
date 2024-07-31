@@ -13,6 +13,7 @@ from _shared import model_directory
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
 from _shared import reset_method
+from _shared import reset_example
 from dianna.visualization import plot_timeseries, plot_image
 import numpy as np
 
@@ -24,16 +25,16 @@ st.sidebar.header('Input data')
 
 input_type = st.sidebar.radio(
         label='Select which input to use',
-        options = ('Use example', 'Use your own data'),
+        options = ('Use an example', 'Use your own data'),
         index = None,
-        on_change = reset_method,
+        on_change = reset_example,
         key = 'input_type'
     )
 
 # Use the examples
-if input_type == 'Use example':
+if input_type == 'Use an example':
     load_example = st.sidebar.radio(
-        label='Load example',
+        label='Select example',
         options = ('Weather', 'FRB'),
         index = None,
         on_change = reset_method,
