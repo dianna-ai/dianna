@@ -18,23 +18,23 @@ st.title('Text explanation')
 
 st.sidebar.header('Input data')
 
-load_example = st.sidebar.checkbox('Load example data',
+load_example_moviesentiment = st.sidebar.checkbox('Load movie sentiment example',
                                 key='Text_example_check')
 
-text_input = st.sidebar.text_input('Input string', disabled=load_example)
+text_input = st.sidebar.text_input('Input string', disabled=load_example_moviesentiment)
 
 if text_input:
     st.sidebar.write(text_input)
 
 text_model_file = st.sidebar.file_uploader('Select model',
                                            type='onnx',
-                                           disabled=load_example)
+                                           disabled=load_example_moviesentiment)
 
 text_label_file = st.sidebar.file_uploader('Select labels',
                                            type='txt',
-                                           disabled=load_example)
+                                           disabled=load_example_moviesentiment)
 
-if load_example:
+if load_example_moviesentiment:
     text_input = 'The movie started out great but the ending was dissappointing'
     text_model_file = model_directory / 'movie_review_model.onnx'
     text_label_file = label_directory / 'labels_text.txt'
