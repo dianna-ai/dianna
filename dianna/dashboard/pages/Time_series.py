@@ -20,21 +20,21 @@ st.title('Time series explanation')
 
 st.sidebar.header('Input data')
 
-load_example = st.sidebar.checkbox('Load example data', key='TS_example_check')
+load_example_weather = st.sidebar.checkbox('Load weather example', key='TS_weather_example_check')
 
 ts_file = st.sidebar.file_uploader('Select input data',
                                    type='npy',
-                                   disabled=load_example)
+                                   disabled=load_example_weather)
 
 ts_model_file = st.sidebar.file_uploader('Select model',
                                          type='onnx',
-                                         disabled=load_example)
+                                         disabled=load_example_weather)
 
 ts_label_file = st.sidebar.file_uploader('Select labels',
                                          type='txt',
-                                         disabled=load_example)
+                                         disabled=load_example_weather)
 
-if load_example:
+if load_example_weather:
     ts_file = (data_directory / 'weather_data.npy')
     ts_model_file = (model_directory /
                      'season_prediction_model_temp_max_binary.onnx')
