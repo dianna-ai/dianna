@@ -97,7 +97,7 @@ column_spec = [0.15, *[weight for _ in methods]]
 
 _, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    col.markdown(f'##### {method}')
+    col.markdown(f"<h4 style='text-align: center; '>{method}</h4>", unsafe_allow_html=True)
 
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
