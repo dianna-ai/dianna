@@ -112,7 +112,7 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(ts_label_file)
 
-choices = ('LIME', 'RISE')
+choices = ('RISE', 'LIME')
 
 with st.container(border=True):
     methods = _methods_checkboxes(choices=choices, key='TS_cb_')
