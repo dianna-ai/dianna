@@ -113,12 +113,16 @@ labels = load_labels(ts_label_file)
 
 choices = ('RISE', 'LIME')
 
+prediction_placeholder = st.empty()
+
 with st.container(border=True):
+
     methods, method_params = _methods_checkboxes(choices=choices, key='TS_cb_')
 
     with st.spinner('Predicting class'):
         predictions = predict(model=serialized_model, ts_data=ts_data_model)
 
+with prediction_placeholder:
     top_indices, top_labels = _get_top_indices_and_labels(
         predictions=predictions[0], labels=labels)
 

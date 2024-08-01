@@ -87,14 +87,17 @@ labels = load_labels(image_label_file)
 
 choices = ('RISE', 'KernelSHAP', 'LIME')
 
+prediction_placeholder = st.empty()
+
 with st.container(border=True):
     methods, method_params = _methods_checkboxes(choices=choices, key='Image_cb_')
 
     with st.spinner('Predicting class'):
         predictions = predict(model=model, image=image)
 
-    top_indices, top_labels = _get_top_indices_and_labels(predictions=predictions,
-                                                        labels=labels)
+with prediction_placeholder:
+    top_indices, top_labels = _get_top_indices_and_labels(
+        predictions=predictions,labels=labels)
 
 # check which axis is color channel
 original_data = image[:, :, 0] if image.shape[2] <= 3 else image[1, :, :]
