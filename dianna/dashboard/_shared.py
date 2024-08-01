@@ -122,7 +122,7 @@ def _get_top_indices_and_labels(*, predictions, labels):
     c1, c2 = st.columns(2)
 
     with c2:
-        n_top = st.number_input('Number of top results to show',
+        n_top = st.number_input('Number of top classes to show',
                                 value=2,
                                 min_value=1,
                                 max_value=len(labels))
