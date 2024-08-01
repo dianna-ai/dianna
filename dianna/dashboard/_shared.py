@@ -56,10 +56,12 @@ def add_sidebar_logo():
 
 
 def _methods_checkboxes(*, choices: Sequence, key):
-    """Get methods from a horizontal row of checkboxes."""
+    """Get methods from a horizontal row of checkboxes
+    and the corresponding parameters."""
     n_choices = len(choices)
     methods = []
-    
+    method_params = {}
+
     # Create a container for the message
     message_container = st.empty()
 
@@ -67,13 +69,15 @@ def _methods_checkboxes(*, choices: Sequence, key):
         with col:
             if st.checkbox(method, key=key + method):
                 methods.append(method)
+                with st.expander(f'Click to modify {method} parameters'):
+                    st.header(method)
+                    method_params[method] = _get_params(method, key=key)
 
     if not methods:
-        # Pu the message in the container above
+        # Put the message in the container above
         message_container.info('Select a method to continue')
         st.stop()
-
-    return methods
+    return methods, method_params
 
 
 def _get_params(method: str, key):
@@ -102,18 +106,6 @@ def _get_params(method: str, key):
 
     else:
         raise ValueError(f'No such method: {method}')
-
-
-def _get_method_params(methods: Sequence[str], key) -> Dict[str, Dict[str, Any]]:
-    method_params = {}
-
-    with st.expander('Click to modify method parameters'):
-        for method, col in zip(methods, st.columns(len(methods))):
-            with col:
-                st.header(method)
-                method_params[method] = _get_params(method, key=key)
-
-    return method_params
 
 
 def _get_top_indices(predictions, n_top):
