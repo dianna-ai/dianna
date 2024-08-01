@@ -127,7 +127,7 @@ column_spec = [0.1, *[weight for _ in methods]]
 
 _, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    col.header(method)
+    col.markdown(f'##### {method}')
 
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
