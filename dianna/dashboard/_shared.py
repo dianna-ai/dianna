@@ -59,13 +59,18 @@ def _methods_checkboxes(*, choices: Sequence, key):
     """Get methods from a horizontal row of checkboxes."""
     n_choices = len(choices)
     methods = []
+    
+    # Create a container for the message
+    message_container = st.empty()
+
     for col, method in zip(st.columns(n_choices), choices):
         with col:
             if st.checkbox(method, key=key + method):
                 methods.append(method)
 
     if not methods:
-        st.info('Select a method to continue')
+        # Pu the message in the container above
+        message_container.info('Select a method to continue')
         st.stop()
 
     return methods
