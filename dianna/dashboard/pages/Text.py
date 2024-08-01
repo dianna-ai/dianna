@@ -4,7 +4,6 @@ from _model_utils import load_model
 from _models_text import explain_text_dispatcher
 from _models_text import predict
 from _movie_model import MovieReviewsModelRunner
-from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
@@ -80,9 +79,7 @@ labels = load_labels(text_label_file)
 choices = ('RISE', 'LIME')
 
 with st.container(border=True):
-    methods = _methods_checkboxes(choices=choices, key='Text_cb_')
-
-    method_params = _get_method_params(methods, key='Text_params_')
+    methods, method_params = _methods_checkboxes(choices=choices, key='Text_cb_')
 
     model_runner = MovieReviewsModelRunner(serialized_model)
 

@@ -4,7 +4,6 @@ from _model_utils import load_labels
 from _model_utils import load_model
 from _models_image import explain_image_dispatcher
 from _models_image import predict
-from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
@@ -89,9 +88,7 @@ labels = load_labels(image_label_file)
 choices = ('RISE', 'KernelSHAP', 'LIME')
 
 with st.container(border=True):
-    methods = _methods_checkboxes(choices=choices, key='Image_cb_')
-
-    method_params = _get_method_params(methods, key='Image_params_')
+    methods, method_params = _methods_checkboxes(choices=choices, key='Image_cb_')
 
     with st.spinner('Predicting class'):
         predictions = predict(model=model, image=image)

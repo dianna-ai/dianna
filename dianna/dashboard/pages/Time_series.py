@@ -3,7 +3,6 @@ from _model_utils import load_labels
 from _model_utils import load_model
 from _models_ts import explain_ts_dispatcher
 from _models_ts import predict
-from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
@@ -115,9 +114,7 @@ labels = load_labels(ts_label_file)
 choices = ('RISE', 'LIME')
 
 with st.container(border=True):
-    methods = _methods_checkboxes(choices=choices, key='TS_cb_')
-
-    method_params = _get_method_params(methods, key='TS_params_')
+    methods, method_params = _methods_checkboxes(choices=choices, key='TS_cb_')
 
     with st.spinner('Predicting class'):
         predictions = predict(model=serialized_model, ts_data=ts_data_model)
