@@ -126,6 +126,9 @@ with prediction_placeholder:
     top_indices, top_labels = _get_top_indices_and_labels(
         predictions=predictions[0], labels=labels)
 
+st.text("")
+st.text("")
+
 weight = 0.9 / len(methods)
 column_spec = [0.1, *[weight for _ in methods]]
 

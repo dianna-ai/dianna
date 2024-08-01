@@ -99,6 +99,9 @@ with prediction_placeholder:
     top_indices, top_labels = _get_top_indices_and_labels(
         predictions=predictions,labels=labels)
 
+st.text("")
+st.text("")
+
 # check which axis is color channel
 original_data = image[:, :, 0] if image.shape[2] <= 3 else image[1, :, :]
 axis_labels = {2: 'channels'} if image.shape[2] <= 3 else {0: 'channels'}
