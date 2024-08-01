@@ -70,7 +70,6 @@ def _methods_checkboxes(*, choices: Sequence, key):
             if st.checkbox(method, key=key + method):
                 methods.append(method)
                 with st.expander(f'Click to modify {method} parameters'):
-                    st.header(method)
                     method_params[method] = _get_params(method, key=key)
 
     if not methods:
