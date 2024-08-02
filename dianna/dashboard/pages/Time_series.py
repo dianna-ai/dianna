@@ -100,6 +100,17 @@ if input_type == None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
+    st.markdown(
+        """This example demonstrates the use of DIANNA
+        on a pre-trained binary classification model for season prediction. The
+        input data is the [weather prediction
+        dataset](https://zenodo.org/records/5071376). This classification model
+        uses time (days) as function of mean temperature to predict if the whole
+        time series is either summer or winter. Using a chosen XAI method the
+        relevance scores are displayed on top of the timeseries. The days
+        contributing positively towards the classification decision are
+        indicated in red and those who contribute negatively in blue.
+        """)
 
 if not (ts_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')

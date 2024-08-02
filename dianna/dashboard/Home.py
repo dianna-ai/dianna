@@ -1,8 +1,8 @@
+import importlib
 import streamlit as st
 from _shared import add_sidebar_logo
 from _shared import data_directory
 from streamlit_option_menu import option_menu
-import importlib
 
 st.set_page_config(page_title="Dianna's dashboard",
                    page_icon='📊',
@@ -29,7 +29,7 @@ pages = {
 # Set up the top menu
 selected = option_menu(
     menu_title=None,
-    options=["Home", "Images", "Text", "Time series"],
+    options=list(pages.keys()),
     icons=["house", "camera", "alphabet", "clock"],
     menu_icon="cast",
     default_index=0,
