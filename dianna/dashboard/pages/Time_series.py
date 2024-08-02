@@ -6,6 +6,7 @@ from _models_ts import predict
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
+from _shared import build_markup_for_logo
 from _shared import data_directory
 from _shared import label_directory
 from _shared import model_directory
@@ -16,10 +17,12 @@ from _shared import reset_example
 from dianna.visualization import plot_timeseries, plot_image
 import numpy as np
 
-add_sidebar_logo()
+
+
 
 st.title('Time series explanation')
 
+add_sidebar_logo()
 st.sidebar.header('Input data')
 
 input_type = st.sidebar.radio(
@@ -115,18 +118,18 @@ choices = ('RISE', 'LIME')
 
 st.text("")
 st.text("")
-prediction_placeholder = st.empty()
+
 
 with st.container(border=True):
-
+    prediction_placeholder = st.empty()
     methods, method_params = _methods_checkboxes(choices=choices, key='TS_cb_')
 
     with st.spinner('Predicting class'):
         predictions = predict(model=serialized_model, ts_data=ts_data_model)
 
-with prediction_placeholder:
-    top_indices, top_labels = _get_top_indices_and_labels(
-        predictions=predictions[0], labels=labels)
+    with prediction_placeholder:
+        top_indices, top_labels = _get_top_indices_and_labels(
+            predictions=predictions[0], labels=labels)
 
 st.text("")
 st.text("")
