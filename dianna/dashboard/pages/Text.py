@@ -78,6 +78,8 @@ labels = load_labels(text_label_file)
 
 choices = ('RISE', 'LIME')
 
+st.text("")
+st.text("")
 prediction_placeholder = st.empty()
 
 with st.container(border=True):

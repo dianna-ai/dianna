@@ -87,6 +87,8 @@ labels = load_labels(image_label_file)
 
 choices = ('RISE', 'KernelSHAP', 'LIME')
 
+st.text("")
+st.text("")
 prediction_placeholder = st.empty()
 
 with st.container(border=True):
