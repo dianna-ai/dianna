@@ -116,9 +116,9 @@ def _get_top_indices(predictions, n_top):
 
 
 def _get_top_indices_and_labels(*, predictions, labels):
-    c1, c2 = st.columns(2)
+    cols = st.columns(4)
 
-    with c2:
+    with cols[-1]:
         n_top = st.number_input('Number of top classes to show',
                                 value=2,
                                 min_value=1,
@@ -127,7 +127,7 @@ def _get_top_indices_and_labels(*, predictions, labels):
     top_indices = _get_top_indices(predictions, n_top)
     top_labels = [labels[i] for i in top_indices]
 
-    with c1:
+    with cols[0]:
         st.metric('Predicted class:', top_labels[0])
 
     return top_indices, top_labels
