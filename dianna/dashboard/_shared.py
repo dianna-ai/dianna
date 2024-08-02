@@ -46,13 +46,8 @@ def build_markup_for_logo(
 
 
 def add_sidebar_logo():
-    """Based on: https://stackoverflow.com/a/73278825."""
-    png_file = data_directory / 'logo.png'
-    logo_markup = build_markup_for_logo(png_file)
-    st.markdown(
-        logo_markup,
-        unsafe_allow_html=True,
-    )
+    "Upload DIANNA logo to sidebar element"
+    st.sidebar.image(str(data_directory / 'logo.png'))
 
 
 def _methods_checkboxes(*, choices: Sequence, key):
