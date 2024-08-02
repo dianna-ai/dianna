@@ -38,8 +38,6 @@ selected = option_menu(
 
 # Display the content of the selected page
 if selected == "Home":
-    add_sidebar_logo()
-
     st.image(str(data_directory / 'logo.png'))
 
     st.markdown("""
