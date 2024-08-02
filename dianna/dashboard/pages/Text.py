@@ -41,8 +41,11 @@ if load_example_moviesentiment:
 
     st.markdown(
         """
-        This example demonstrates the use of DIANNA on the
-        [Stanford Sentiment Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which contains one-sentence movie reviews. A pre-trained neural network classifier is used, which identifies whether a movie review is positive or negative.
+        This example demonstrates the use of DIANNA on the [Stanford Sentiment
+        Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which
+        contains one-sentence movie reviews. A pre-trained neural network
+        classifier is used, which identifies whether a movie review is positive
+        or negative.
         """)
 
 if not (text_input and text_model_file and text_label_file):
