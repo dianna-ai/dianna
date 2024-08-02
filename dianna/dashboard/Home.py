@@ -29,7 +29,7 @@ pages = {
 # Set up the top menu
 selected = option_menu(
     menu_title=None,
-    options=["Home", "Images", "Text", "Time series"],
+    options=list(pages.keys()),
     icons=["house", "camera", "alphabet", "clock"],
     menu_icon="cast",
     default_index=0,
