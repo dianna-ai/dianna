@@ -89,17 +89,17 @@ choices = ('RISE', 'KernelSHAP', 'LIME')
 
 st.text("")
 st.text("")
-prediction_placeholder = st.empty()
 
 with st.container(border=True):
+    prediction_placeholder = st.empty()
     methods, method_params = _methods_checkboxes(choices=choices, key='Image_cb_')
 
     with st.spinner('Predicting class'):
         predictions = predict(model=model, image=image)
 
-with prediction_placeholder:
-    top_indices, top_labels = _get_top_indices_and_labels(
-        predictions=predictions,labels=labels)
+    with prediction_placeholder:
+        top_indices, top_labels = _get_top_indices_and_labels(
+            predictions=predictions,labels=labels)
 
 st.text("")
 st.text("")

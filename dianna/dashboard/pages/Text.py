@@ -80,9 +80,9 @@ choices = ('RISE', 'LIME')
 
 st.text("")
 st.text("")
-prediction_placeholder = st.empty()
 
 with st.container(border=True):
+    prediction_placeholder = st.empty()
     methods, method_params = _methods_checkboxes(choices=choices, key='Text_cb_')
 
     model_runner = MovieReviewsModelRunner(serialized_model)
@@ -90,9 +90,9 @@ with st.container(border=True):
     with st.spinner('Predicting class'):
         predictions = predict(model=serialized_model, text_input=text_input)
 
-with prediction_placeholder:
-    top_indices, top_labels = _get_top_indices_and_labels(
-        predictions=predictions[0], labels=labels)
+    with prediction_placeholder:
+        top_indices, top_labels = _get_top_indices_and_labels(
+            predictions=predictions[0], labels=labels)
 
 st.text("")
 st.text("")
