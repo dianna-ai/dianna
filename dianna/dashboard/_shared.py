@@ -76,6 +76,7 @@ def _methods_checkboxes(*, choices: Sequence, key):
         # Put the message in the container above
         message_container.info('Select a method to continue')
         st.stop()
+    
     return methods, method_params
 
 
@@ -127,7 +128,7 @@ def _get_top_indices_and_labels(*, predictions, labels):
     top_labels = [labels[i] for i in top_indices]
 
     with c1:
-        st.metric('Predicted class', top_labels[0])
+        st.metric('Predicted class:', top_labels[0])
 
     return top_indices, top_labels
 
