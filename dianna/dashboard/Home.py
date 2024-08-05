@@ -23,14 +23,15 @@ pages = {
     "Home": "home",
     "Images": "pages.Images",
     "Text": "pages.Text",
-    "Time series": "pages.Time_series"
+    "Time series": "pages.Time_series",
+    "Tabular": "pages.Tabular"
 }
 
 # Set up the top menu
 selected = option_menu(
     menu_title=None,
     options=list(pages.keys()),
-    icons=["house", "camera", "alphabet", "clock"],
+    icons=["house", "camera", "alphabet", "clock", "table"],
     menu_icon="cast",
     default_index=0,
     orientation="horizontal"
