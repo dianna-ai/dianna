@@ -6,7 +6,7 @@ from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="Dianna's dashboard",
                    page_icon='📊',
-                   layout='centered',
+                   layout='wide',
                    initial_sidebar_state='auto',
                    menu_items={
                        'Get help':
