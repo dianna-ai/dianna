@@ -20,7 +20,7 @@ st.title('Image explanation')
 st.sidebar.header('Input data')
 
 load_example = st.sidebar.checkbox('Load example data',
-                                   key='image_example_check')
+                                   key='Image_example_check')
 
 image_file = st.sidebar.file_uploader('Select image',
                                       type=('png', 'jpg', 'jpeg'),
@@ -54,9 +54,9 @@ serialized_model = model.SerializeToString()
 labels = load_labels(image_label_file)
 
 choices = ('RISE', 'KernelSHAP', 'LIME')
-methods = _methods_checkboxes(choices=choices)
+methods = _methods_checkboxes(choices=choices, key='Image_cb_')
 
-method_params = _get_method_params(methods)
+method_params = _get_method_params(methods, key='Image_params_')
 
 with st.spinner('Predicting class'):
     predictions = predict(model=model, image=image)
@@ -96,3 +96,5 @@ for index, label in zip(top_indices, top_labels):
                                 show_plot=False)
 
             st.pyplot(fig)
+
+st.stop()

@@ -8,3 +8,6 @@ secondaryBackgroundColor="#e4f3f9"
 
 [browser]
 gatherUsageStats = false
+
+[client]
+showSidebarNavigation = false
