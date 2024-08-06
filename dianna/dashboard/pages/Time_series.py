@@ -125,7 +125,11 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(ts_label_file)
 
-choices = ('RISE', 'LIME')
+if load_example == "Scientific case: FRB":
+    choices = ('RISE',)
+else:
+    choices = ('RISE', 'LIME')
+methods = _methods_checkboxes(choices=choices, key='TS_cb_')
 
 st.text("")
 st.text("")
