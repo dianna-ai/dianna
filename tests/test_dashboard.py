@@ -198,7 +198,6 @@ def test_timeseries_page(page: Page):
     page.locator("label").filter(has_text="Weather").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible()
 
-
     page.locator('label').filter(has_text='LIME').locator('span').click()
     page.locator('label').filter(has_text='RISE').locator('span').click()
 
@@ -217,8 +216,12 @@ def test_timeseries_page(page: Page):
             page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible()
-    
-    page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
-    page.get_by_label("Select input data").get_by_test_id("baseButton-secondary").click()
-    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
-    page.get_by_label("Select labels").get_by_test_id("baseButton-secondary").click()
+
+    page.locator("label").filter(
+        has_text="Use your own data").locator("div").nth(1).click()
+    page.get_by_label("Select input data").get_by_test_id(
+        "baseButton-secondary").click()
+    page.get_by_label("Select model").get_by_test_id(
+        "baseButton-secondary").click()
+    page.get_by_label("Select labels").get_by_test_id(
+        "baseButton-secondary").click()

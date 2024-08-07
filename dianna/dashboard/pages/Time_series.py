@@ -67,17 +67,21 @@ if input_type == 'Use an example':
 
         # FRB data must be preprocessed
         def preprocess(data):
-            # Preprocessing function for FRB use case to get the data in the rightshape
+            """
+            Preprocessing function for FRB use case to get the data in the right shape.
+            """
             return np.transpose(data, (0, 2, 1))[..., None].astype(np.float32)
-        
+
         ts_data = open_timeseries(ts_file)
         ts_data_dianna = ts_data.T[None, ...]
         ts_data_model = ts_data[None, ..., None]
 
         st.markdown(
-            """This example demonstrates the use of DIANNA 
-            on a pre-trained binary classification model trained to classify Fast Radio Burst (FRB) timeseries data.
-            The goal of the pre-trained convolutional neural network is to determine whether or not the input data contains an
+            """This example demonstrates the use of DIANNA
+            on a pre-trained binary classification model trained to classify
+            Fast Radio Burst (FRB) timeseries data.
+            The goal of the pre-trained convolutional neural network is to
+            determine whether or not the input data contains an
             FRB-like signal, whereby the two classes are noise and FRB.
             """)
     else:
@@ -98,7 +102,7 @@ if input_type == 'Use your own data':
     ts_label_file = st.sidebar.file_uploader('Select labels',
                                             type='txt')
 
-if input_type == None:
+if input_type None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
