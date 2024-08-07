@@ -36,7 +36,7 @@ if input_type == 'Use an example':
         options=('Hand-written digit recognition',),
         index = None,
         on_change = reset_method,
-        key='Image_load example'
+        key='Image_load_example'
         )
 
     if load_example == 'Hand-written digit recognition':
