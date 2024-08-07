@@ -1,21 +1,18 @@
+import numpy as np
 import streamlit as st
-from _model_utils import load_labels
-from _model_utils import load_model
-from _models_ts import explain_ts_dispatcher
-from _models_ts import predict
+from _model_utils import load_labels, load_model
+from _models_ts import explain_ts_dispatcher, predict
 from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
-from _shared import _methods_checkboxes
-from _shared import add_sidebar_logo
+from _shared import methods_checkboxes
+from _shared import  add_sidebar_logo
 from _shared import data_directory
 from _shared import label_directory
 from _shared import model_directory
-from _ts_utils import _convert_to_segments
-from _ts_utils import open_timeseries
-from _shared import reset_method
 from _shared import reset_example
-from dianna.visualization import plot_timeseries, plot_image
-import numpy as np
+from _shared import reset_method
+from _ts_utils import _convert_to_segments, open_timeseries
+from dianna.visualization import plot_image, plot_timeseries
 
 add_sidebar_logo()
 
