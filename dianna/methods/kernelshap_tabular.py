@@ -33,6 +33,7 @@ class KERNELSHAPTabular:
                                                  in the training data.
             training_data_kmeans(int, optional): summarize the whole training set with
                                                  weighted kmeans
+            silent (bool, optional): whether to print progress messages
         """
         if training_data_kmeans:
             self.training_data = shap.kmeans(training_data,
