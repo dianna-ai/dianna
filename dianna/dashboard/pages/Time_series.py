@@ -6,6 +6,7 @@ from _models_ts import explain_ts_dispatcher
 from _models_ts import predict
 from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
+from _shared import _methods_checkboxes
 from _shared import  add_sidebar_logo
 from _shared import data_directory
 from _shared import label_directory
@@ -67,8 +68,7 @@ if input_type == 'Use an example':
 
         # FRB data must be preprocessed
         def preprocess(data):
-            """Preprocessing function for FRB use case to get the data
-            in the right shape."""
+            """Preprocessing function for FRB use case to get the data in the right shape."""
             return np.transpose(data, (0, 2, 1))[..., None].astype(np.float32)
 
         ts_data = open_timeseries(ts_file)
