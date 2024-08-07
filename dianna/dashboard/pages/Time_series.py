@@ -1,3 +1,4 @@
+import numpy as np
 import streamlit as st
 from _model_utils import load_labels
 from _model_utils import load_model
@@ -6,16 +7,15 @@ from _models_ts import predict
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
-from _shared import build_markup_for_logo
 from _shared import data_directory
 from _shared import label_directory
 from _shared import model_directory
+from _shared import reset_example
+from _shared import reset_method
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
-from _shared import reset_method
-from _shared import reset_example
-from dianna.visualization import plot_timeseries, plot_image
-import numpy as np
+from dianna.visualization import plot_image
+from dianna.visualization import plot_timeseries
 
 
 
@@ -50,13 +50,17 @@ if input_type == 'Use an example':
         ts_label_file = (label_directory / 'weather_data_labels.txt')
 
         st.markdown(
-            """This example demonstrates the use of DIANNA 
-            on a pre-trained binary classification model for season prediction.
-            The input data is the
-            [weather prediction dataset](https://zenodo.org/records/5071376).
-            This classification model uses time (days) as function of mean temperature to predict if the whole time series is either summer or winter.
-            Using a chosen XAI method the relevance scores are displayed on top of the timeseries. The days contributing positively towards the classification decision are indicated in red and those who contribute negatively in blue.
-            """)
+        """
+        This example demonstrates the use of DIANNA
+        on a pre-trained binary classification model for season prediction. The
+        input data is the [weather prediction
+        dataset](https://zenodo.org/records/5071376). This classification model
+        uses time (days) as function of mean temperature to predict if the whole
+        time series is either summer or winter. Using a chosen XAI method the
+        relevance scores are displayed on top of the timeseries. The days
+        contributing positively towards the classification decision are
+        indicated in red and those who contribute negatively in blue.
+        """)
     elif load_example == "Scientific case: FRB":
         ts_file = (data_directory / 'FRB211024.npy')
         ts_model_file = (model_directory /
@@ -65,17 +69,19 @@ if input_type == 'Use an example':
 
         # FRB data must be preprocessed
         def preprocess(data):
-            # Preprocessing function for FRB use case to get the data in the rightshape
+            """Preprocessing function for FRB use case to get the data in the right shape."""
             return np.transpose(data, (0, 2, 1))[..., None].astype(np.float32)
-        
+
         ts_data = open_timeseries(ts_file)
         ts_data_dianna = ts_data.T[None, ...]
         ts_data_model = ts_data[None, ..., None]
 
         st.markdown(
-            """This example demonstrates the use of DIANNA 
-            on a pre-trained binary classification model trained to classify Fast Radio Burst (FRB) timeseries data.
-            The goal of the pre-trained convolutional neural network is to determine whether or not the input data contains an
+            """This example demonstrates the use of DIANNA
+            on a pre-trained binary classification model trained to classify
+            Fast Radio Burst (FRB) timeseries data.
+            The goal of the pre-trained convolutional neural network is to
+            determine whether or not the input data contains an
             FRB-like signal, whereby the two classes are noise and FRB.
             """)
     else:
@@ -96,21 +102,9 @@ if input_type == 'Use your own data':
     ts_label_file = st.sidebar.file_uploader('Select labels',
                                             type='txt')
 
-if input_type == None:
+if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
-
-    st.markdown(
-        """This example demonstrates the use of DIANNA
-        on a pre-trained binary classification model for season prediction. The
-        input data is the [weather prediction
-        dataset](https://zenodo.org/records/5071376). This classification model
-        uses time (days) as function of mean temperature to predict if the whole
-        time series is either summer or winter. Using a chosen XAI method the
-        relevance scores are displayed on top of the timeseries. The days
-        contributing positively towards the classification decision are
-        indicated in red and those who contribute negatively in blue.
-        """)
 
 if not (ts_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
