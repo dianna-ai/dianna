@@ -123,7 +123,6 @@ if load_example == "Scientific case: FRB":
     choices = ('RISE',)
 else:
     choices = ('RISE', 'LIME')
-methods = _methods_checkboxes(choices=choices, key='TS_cb_')
 
 st.text("")
 st.text("")
