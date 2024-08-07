@@ -20,25 +20,37 @@ st.title('Time series explanation')
 
 st.sidebar.header('Input data')
 
-load_example = st.sidebar.checkbox('Load example data', key='TS_example_check')
+load_example_weather = st.sidebar.checkbox('Load weather example', key='TS_weather_example_check')
 
 ts_file = st.sidebar.file_uploader('Select input data',
                                    type='npy',
-                                   disabled=load_example)
+                                   disabled=load_example_weather)
 
 ts_model_file = st.sidebar.file_uploader('Select model',
                                          type='onnx',
-                                         disabled=load_example)
+                                         disabled=load_example_weather)
 
 ts_label_file = st.sidebar.file_uploader('Select labels',
                                          type='txt',
-                                         disabled=load_example)
+                                         disabled=load_example_weather)
 
-if load_example:
+if load_example_weather:
     ts_file = (data_directory / 'weather_data.npy')
     ts_model_file = (model_directory /
                      'season_prediction_model_temp_max_binary.onnx')
     ts_label_file = (label_directory / 'weather_data_labels.txt')
+
+    st.markdown(
+        """This example demonstrates the use of DIANNA
+        on a pre-trained binary classification model for season prediction. The
+        input data is the [weather prediction
+        dataset](https://zenodo.org/records/5071376). This classification model
+        uses time (days) as function of mean temperature to predict if the whole
+        time series is either summer or winter. Using a chosen XAI method the
+        relevance scores are displayed on top of the timeseries. The days
+        contributing positively towards the classification decision are
+        indicated in red and those who contribute negatively in blue.
+        """)
 
 if not (ts_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')

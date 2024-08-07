@@ -98,7 +98,7 @@ def test_text_page(page: Page):
     expect(selector).to_be_visible(timeout=30_000)
 
     page.locator('label').filter(
-        has_text='Load example data').locator('span').click()
+        has_text='Load movie sentiment example').locator('span').click()
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible()
 
@@ -139,7 +139,7 @@ def test_image_page(page: Page):
     ).to_be_visible(timeout=100_000)
 
     page.locator('label').filter(
-        has_text='Load example data').locator('span').click()
+        has_text='Load hand-written digits example').locator('span').click()
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible()
 
@@ -180,7 +180,7 @@ def test_timeseries_page(page: Page):
     ).to_be_visible()
 
     page.locator('label').filter(
-        has_text='Load example data').locator('span').click()
+        has_text='Load weather example').locator('span').click()
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible()
 
