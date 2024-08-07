@@ -74,7 +74,7 @@ if input_type == 'Use your own data':
     image_label_file = st.sidebar.file_uploader('Select labels',
                                                 type='txt')
 
-if input_type == None:
+if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
