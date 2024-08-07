@@ -45,8 +45,8 @@ if load_example_digits:
     st.markdown(
         """
         This example demonstrates the use of DIANNA on a pretrained binary
-        [MNIST](https://yann.lecun.com/exdb/mnist/) model using a hand-written
-        digit images. The model predict for an image of a hand-written 0 or 1,
+        [MNIST](https://yann.lecun.com/exdb/mnist/) model using hand-written
+        digit images. The model predicts for an image of a hand-written 0 or 1,
         which of the two it most likely is. This example visualizes the
         relevance attributions for each pixel/super-pixel by displaying them on
         top of the input image.
