@@ -35,7 +35,7 @@ if input_type == 'Use an example':
         options=('Hand-written digit recognition',),
         index = None,
         on_change = reset_method,
-        key='Image_load example'
+        key='Image_load_example'
         )
 
     if load_example == 'Hand-written digit recognition':
@@ -131,6 +131,7 @@ for index, label in zip(top_indices, top_labels):
 
         with col:
             with st.spinner(f'Running {method}'):
+                print('index', index)
                 heatmap = func(serialized_model, image, index, **kwargs)
 
             fig, _ = plot_image(heatmap,
