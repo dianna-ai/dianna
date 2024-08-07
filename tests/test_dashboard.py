@@ -146,7 +146,7 @@ def test_image_page(page: Page):
 
     # Example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
-    page.get_by_text("Hand-written digits").click()
+    page.get_by_text("Hand-written digit recognition").click()
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible()
 
