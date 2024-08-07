@@ -34,7 +34,7 @@ if input_type == 'Use an example':
         options=('Movie sentiment',),
         index = None,
         on_change = reset_method,
-        key='Text_example_check_moviesentiment')
+        key='Text_load_example')
 
     if load_example == 'Movie sentiment':
         text_input = 'The movie started out great but the ending was dissappointing'
