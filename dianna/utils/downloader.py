@@ -59,6 +59,10 @@ models = {
         "doi:10.5281/zenodo.10656613/apertif_frb_dynamic_spectrum_model.onnx",
         "sha256:3c87db3c6257d7f251a7bdceb3197d5bb482b8edc19870219fb7ca7c204dd257"
     ],
+    "stemmus_scope_emulator_model_LEtot.onnx": [
+        "doi:10.5281/zenodo.12623256/stemmus_scope_emulator_model_LEtot.onnx",
+        "sha256:8c8f34ad5a2c519b1f3c67a4eb0c645c96cac1de166277bfb24e7887c2ce83be"
+    ],
 }
 
 labels = {
@@ -140,6 +144,10 @@ data = {
     "weather_prediction_dataset_light.csv": [
         "doi:10.5281/zenodo.5071376/weather_prediction_dataset_light.csv",
         "sha256:945883204cae14251aec44e78845eb880ed3c04ac56a26fb5283c20f149be960"
+    ],
+    "stemmus_scope_emulator_train_test_2014_data.csv": [
+        "doi:10.5281/zenodo.12623256/stemmus_scope_emulator_train_test_2014_data.csv",
+        "sha256:d30970c152f00dc45be7775361f4c88dfb084b13dd8e41fdb001c5306c136519"
     ],
 }
 
