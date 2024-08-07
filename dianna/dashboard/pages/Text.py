@@ -36,7 +36,7 @@ if input_type == 'Use an example':
         index = None,
         on_change = reset_method,
         key='Text_example_check_moviesentiment')
-    
+
     if load_example == 'Movie sentiment':
         text_input = 'The movie started out great but the ending was dissappointing'
         text_model_file = model_directory / 'movie_review_model.onnx'
@@ -67,7 +67,7 @@ if input_type == 'Use your own data':
     text_label_file = st.sidebar.file_uploader('Select labels',
                                             type='txt')
 
-if input_type == None:
+if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
