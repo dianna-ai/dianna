@@ -16,7 +16,7 @@ from _shared import reset_method
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
 from dianna.visualization import plot_image
-from.dianna.visualization import plot_timeseries
+from dianna.visualization import plot_timeseries
 
 add_sidebar_logo()
 
