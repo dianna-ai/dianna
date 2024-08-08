@@ -235,7 +235,7 @@ def test_timeseries_page(page: Page):
             page.get_by_role('img', name='0').nth(1),
     ):
         expect(selector).to_be_visible()
-    
+
     # Test using your own data
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
