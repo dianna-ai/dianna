@@ -71,6 +71,10 @@ else:
         for k in st.session_state.keys():
             if 'Image' in k:
                 st.session_state.pop(k, None)
+    if selected != 'Tabular':
+        for k in st.session_state.keys():
+            if 'Tabular' in k:
+                st.session_state.pop(k, None)
     if selected != 'Text':
         for k in st.session_state.keys():
             if 'Text' in k:
