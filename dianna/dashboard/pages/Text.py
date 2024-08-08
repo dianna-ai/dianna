@@ -10,7 +10,7 @@ from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import reset_example
 from _shared import reset_method
-from dianna.utils import downloader as download
+from dianna.utils.downloader import download
 from dianna.visualization.text import highlight_text
 
 add_sidebar_logo()
