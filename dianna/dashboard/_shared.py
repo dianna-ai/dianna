@@ -65,7 +65,7 @@ def _methods_checkboxes(*, choices: Sequence, key):
             if st.checkbox(method, key=key + method):
                 methods.append(method)
                 with st.expander(f'Click to modify {method} parameters'):
-                    method_params[method] = _get_params(method, key=key)
+                    method_params[method] = _get_params(method, key=f'{key}param_')
 
     if not methods:
         # Put the message in the container above
@@ -130,10 +130,10 @@ def _get_top_indices_and_labels(*, predictions, labels):
 def reset_method():
     # Clear selection
     for k in st.session_state.keys():
-        if '_cb_' in k:
-            st.session_state[k] = False
-        if 'params' in k:
+        if '_param' in k:
             st.session_state.pop(k)
+        elif '_cb' in k:
+            st.session_state[k] = False
 
 def reset_example():
     # Clear selection
