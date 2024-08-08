@@ -44,10 +44,10 @@ if input_type == 'Use an example':
     )
 
     if load_example == "Weather":
-        ts_data_file = (data_directory / 'weather_data.npy')
-        ts_model_file = (model_directory /
-                        'season_prediction_model_temp_max_binary.onnx')
-        ts_label_file = (label_directory / 'weather_data_labels.txt')
+        ts_data_file = download('weather_data.npy', 'data')
+        ts_model_file = download(
+                        'season_prediction_model_temp_max_binary.onnx', 'model')
+        ts_label_file = download('weather_data_labels.txt', 'label')
 
         st.markdown(
         """

@@ -12,6 +12,7 @@ from _shared import label_directory
 from _shared import model_directory
 from _shared import reset_example
 from _shared import reset_method
+from dianna.utils import downloader as download
 from dianna.visualization.text import highlight_text
 
 add_sidebar_logo()
@@ -39,8 +40,8 @@ if input_type == 'Use an example':
 
     if load_example == 'Movie sentiment':
         text_input = 'The movie started out great but the ending was dissappointing'
-        text_model_file = model_directory / 'movie_review_model.onnx'
-        text_label_file = label_directory / 'labels_text.txt'
+        text_model_file = download('movie_review_model.onnx', 'model')
+        text_label_file = download('labels_text.txt', 'label')
 
         st.markdown(
         """

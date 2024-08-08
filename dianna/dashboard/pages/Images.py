@@ -13,6 +13,7 @@ from _shared import label_directory
 from _shared import model_directory
 from _shared import reset_example
 from _shared import reset_method
+from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 
 add_sidebar_logo()
@@ -40,9 +41,9 @@ if input_type == 'Use an example':
         )
 
     if load_example == 'Hand-written digit recognition':
-        image_file = (data_directory / 'digit0.jpg')
-        image_model_file = (model_directory / 'mnist_model_tf.onnx')
-        image_label_file = (label_directory / 'labels_mnist.txt')
+        image_file = download('digit0.jpg', 'data')
+        image_model_file = download('mnist_model_tf.onnx', 'model')
+        image_label_file = download('labels_mnist.txt', 'label')
 
         st.markdown(
             """
