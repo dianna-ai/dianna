@@ -44,7 +44,7 @@ if input_type == 'Use an example':
     )
 
     if load_example == "Weather":
-        ts_file = (data_directory / 'weather_data.npy')
+        ts_data_file = (data_directory / 'weather_data.npy')
         ts_model_file = (model_directory /
                         'season_prediction_model_temp_max_binary.onnx')
         ts_label_file = (label_directory / 'weather_data_labels.txt')
@@ -64,14 +64,14 @@ if input_type == 'Use an example':
     elif load_example == "Scientific case: FRB":
         ts_model_file = download('apertif_frb_dynamic_spectrum_model.onnx', 'model')
         ts_label_file = download('apertif_frb_classes.txt', 'label')
-        ts_file = download('FRB211024.npy', 'data')
+        ts_data_file = download('FRB211024.npy', 'data')
 
         # FRB data must be preprocessed
         def preprocess(data):
             """Preprocessing function for FRB use case to get the data in the right shape."""
             return np.transpose(data, (0, 2, 1))[..., None].astype(np.float32)
 
-        ts_data = open_timeseries(ts_file)
+        ts_data = open_timeseries(ts_data_file)
         ts_data_dianna = ts_data.T[None, ...]
         ts_data_model = ts_data[None, ..., None]
 
@@ -92,7 +92,7 @@ if input_type == 'Use an example':
 if input_type == 'Use your own data':
     load_example = None
 
-    ts_file = st.sidebar.file_uploader('Select input data',
+    ts_data_file = st.sidebar.file_uploader('Select input data',
                                     type='npy')
 
     ts_model_file = st.sidebar.file_uploader('Select model',
@@ -106,12 +106,12 @@ if input_type is None:
     st.stop()
 
 
-if not (ts_file and ts_model_file and ts_label_file):
+if not (ts_data_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
 if load_example != "Scientific case: FRB":
-    ts_data_model = open_timeseries(ts_file)
+    ts_data_model = open_timeseries(ts_data_file)
     ts_data_dianna = ts_data_model
 
 model = load_model(ts_model_file)
