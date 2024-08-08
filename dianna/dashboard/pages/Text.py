@@ -86,7 +86,7 @@ st.text("")
 
 with st.container(border=True):
     prediction_placeholder = st.empty()
-    methods, method_params = _methods_checkboxes(choices=choices, key='Text_cb_')
+    methods, method_params = _methods_checkboxes(choices=choices, key='Text_cb')
 
     model_runner = MovieReviewsModelRunner(serialized_model)
 

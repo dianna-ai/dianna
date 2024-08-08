@@ -62,10 +62,10 @@ def _methods_checkboxes(*, choices: Sequence, key):
 
     for col, method in zip(st.columns(n_choices), choices):
         with col:
-            if st.checkbox(method, key=key + method):
+            if st.checkbox(method, key=f'{key}_{method}'):
                 methods.append(method)
                 with st.expander(f'Click to modify {method} parameters'):
-                    method_params[method] = _get_params(method, key=f'{key}param_')
+                    method_params[method] = _get_params(method, key=f'{key}_param')
 
     if not methods:
         # Put the message in the container above
@@ -79,24 +79,24 @@ def _get_params(method: str, key):
     if method == 'RISE':
         return {
             'n_masks':
-            st.number_input('Number of masks', value=1000, key=key + method + 'nmasks'),
+            st.number_input('Number of masks', value=1000, key=f'{key}_{method}_nmasks'),
             'feature_res':
-            st.number_input('Feature resolution', value=6, key=key + method + 'fr'),
+            st.number_input('Feature resolution', value=6, key=f'{key}_{method}_fr'),
             'p_keep':
-            st.number_input('Probability to be kept unmasked', value=0.1, key=key + method + 'pkeep'),
+            st.number_input('Probability to be kept unmasked', value=0.1, key=f'{key}_{method}_pkeep'),
         }
 
     elif method == 'KernelSHAP':
         return {
-            'nsamples': st.number_input('Number of samples', value=1000, key=key + method + 'nsamp'),
-            'background': st.number_input('Background', value=0, key=key + method + 'background'),
-            'n_segments': st.number_input('Number of segments', value=200, key=key + method + 'nseg'),
-            'sigma': st.number_input('σ', value=0, key=key + method + 'sigma'),
+            'nsamples': st.number_input('Number of samples', value=1000, key=f'{key}_{method}_nsamp'),
+            'background': st.number_input('Background', value=0, key=f'{key}_{method}_background'),
+            'n_segments': st.number_input('Number of segments', value=200, key=f'{key}_{method}_nseg'),
+            'sigma': st.number_input('σ', value=0, key=f'{key}_{method}_sigma'),
         }
 
     elif method == 'LIME':
         return {
-            'random_state': st.number_input('Random state', value=2, key=key + method + 'rs'),
+            'random_state': st.number_input('Random state', value=2, key=f'{key}_{method}_rs'),
         }
 
     else:

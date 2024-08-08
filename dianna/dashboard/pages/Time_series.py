@@ -130,7 +130,7 @@ st.text("")
 
 with st.container(border=True):
     prediction_placeholder = st.empty()
-    methods, method_params = _methods_checkboxes(choices=choices, key='TS_cb_')
+    methods, method_params = _methods_checkboxes(choices=choices, key='TS_cb')
 
     with st.spinner('Predicting class'):
         predictions = predict(model=serialized_model, ts_data=ts_data_model)
