@@ -22,6 +22,7 @@ st.set_page_config(page_title="Dianna's dashboard",
 pages = {
     "Home": "home",
     "Images": "pages.Images",
+    "Tabular": "pages.Tabular",
     "Text": "pages.Text",
     "Time series": "pages.Time_series"
 }
@@ -30,7 +31,7 @@ pages = {
 selected = option_menu(
     menu_title=None,
     options=list(pages.keys()),
-    icons=["house", "camera", "alphabet", "clock"],
+    icons=["house", "camera", "table", "alphabet", "clock"],
     menu_icon="cast",
     default_index=0,
     orientation="horizontal"
