@@ -7,7 +7,7 @@ from _models_ts import predict
 from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
-from _shared import  add_sidebar_logo
+from _shared import add_sidebar_logo
 from _shared import data_directory
 from _shared import label_directory
 from _shared import model_directory
@@ -15,6 +15,7 @@ from _shared import reset_example
 from _shared import reset_method
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
+from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 from dianna.visualization import plot_timeseries
 
@@ -61,10 +62,9 @@ if input_type == 'Use an example':
         indicated in red and those who contribute negatively in blue.
         """)
     elif load_example == "Scientific case: FRB":
-        ts_file = (data_directory / 'FRB211024.npy')
-        ts_model_file = (model_directory /
-                        'apertif_frb_dynamic_spectrum_model.onnx')
-        ts_label_file = (label_directory / 'apertif_frb_classes.txt')
+        ts_model_file = download('apertif_frb_dynamic_spectrum_model.onnx', 'model')
+        ts_label_file = download('apertif_frb_classes.txt', 'label')
+        ts_file = download('FRB211024.npy', 'data')
 
         # FRB data must be preprocessed
         def preprocess(data):
