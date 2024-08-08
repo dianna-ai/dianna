@@ -71,9 +71,11 @@ if input_type == 'Use an example':
             """Preprocessing function for FRB use case to get the data in the right shape."""
             return np.transpose(data, (0, 2, 1))[..., None].astype(np.float32)
 
+        # Transform FRB data for the model prediction and dianna explanation, which have different
+        # requirements for this specific data
         ts_data = open_timeseries(ts_data_file)
-        ts_data_dianna = ts_data.T[None, ...]
-        ts_data_model = ts_data[None, ..., None]
+        ts_data_explainer = ts_data.T[None, ...]
+        ts_data_predictor = ts_data[None, ..., None]
 
         st.markdown(
             """This example demonstrates the use of DIANNA
@@ -111,8 +113,9 @@ if not (ts_data_file and ts_model_file and ts_label_file):
     st.stop()
 
 if load_example != "Scientific case: FRB":
-    ts_data_model = open_timeseries(ts_data_file)
-    ts_data_dianna = ts_data_model
+    # For normal cases, the input data does not need transformation for either the
+    # model explainer nor the model predictor
+    ts_data_explainer = ts_data_predictor = open_timeseries(ts_data_file)
 
 model = load_model(ts_model_file)
 serialized_model = model.SerializeToString()
@@ -128,7 +131,7 @@ methods = _methods_checkboxes(choices=choices, key='TS_cb_')
 method_params = _get_method_params(methods, key='TS_params_')
 
 with st.spinner('Predicting class'):
-    predictions = predict(model=serialized_model, ts_data=ts_data_model)
+    predictions = predict(model=serialized_model, ts_data=ts_data_predictor)
 
 top_indices, top_labels = _get_top_indices_and_labels(
     predictions=predictions[0], labels=labels)
@@ -154,7 +157,7 @@ for index, label in zip(top_indices, top_labels):
 
         with col:
             with st.spinner(f'Running {method}'):
-                explanation = func(serialized_model, ts_data=ts_data_dianna, **kwargs)
+                explanation = func(serialized_model, ts_data=ts_data_explainer, **kwargs)
 
             if load_example == "Scientific case: FRB":
                 # normalize FRB data and get rid of last dimension
@@ -164,7 +167,7 @@ for index, label in zip(top_indices, top_labels):
             else:
                 segments = _convert_to_segments(explanation)
 
-                fig, _ = plot_timeseries(range(len(ts_data_dianna[0])), ts_data_dianna[0], segments)
+                fig, _ = plot_timeseries(range(len(ts_data_explainer[0])), ts_data_explainer[0], segments)
 
             st.pyplot(fig)
 
