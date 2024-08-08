@@ -92,6 +92,7 @@ def test_text_page(page: Page):
 
     expect(page).to_have_title('Text')
 
+    # Movie sentiment example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.get_by_text("Movie sentiment").click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible()
@@ -119,14 +120,14 @@ def test_text_page(page: Page):
         print(selector)
         expect(selector).to_be_visible()
 
-    # own data option
+    # Own data option
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
     selector = page.get_by_text(
         'Add your input data in the left panel to continue')
 
     expect(selector).to_be_visible(timeout=30_000)
 
-    # check input panel
+    # Check input panel
     page.get_by_label("Input string").click()
     expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
     page.get_by_label("Select labels").get_by_test_id("baseButton-secondary").click()
@@ -144,7 +145,7 @@ def test_image_page(page: Page):
         page.get_by_text('Select which input type to')
     ).to_be_visible(timeout=100_000)
 
-    # Example
+    # Digits example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.get_by_text("Hand-written digit recognition").click()
 
@@ -173,7 +174,7 @@ def test_image_page(page: Page):
     ):
         expect(selector).to_be_visible(timeout=100_000)
 
-    # own data
+    # Own data
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
     expect(page.get_by_label("Select image").get_by_test_id("baseButton-secondary")).to_be_visible()
     page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
@@ -195,6 +196,7 @@ def test_timeseries_page(page: Page):
     expect(page.get_by_text("Weather")).to_be_visible()
     expect(page.get_by_text("FRB")).to_be_visible()
 
+    # Test weather example
     page.locator("label").filter(has_text="Weather").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible()
 
@@ -206,17 +208,35 @@ def test_timeseries_page(page: Page):
     for selector in (
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
-            # first image
+            # First image
             page.get_by_role('heading', name='winter').get_by_text('winter'),
             page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
-            # second image
+            # Second image
             page.get_by_role('heading', name='summer').get_by_text('summer'),
             page.get_by_role('img', name='0').nth(2),
             page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible()
 
+    # Test FRB example
+    page.locator("label").filter(has_text="FRB").locator("div").nth(1).click()
+    expect(page.get_by_text("Select a method to continue")).to_be_visible()
+
+    page.locator('label').filter(has_text='RISE').locator('span').click()
+
+    page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
+
+    for selector in (
+            page.get_by_role('heading', name='RISE').get_by_text('RISE'),
+            # First image
+            page.get_by_role('heading', name='FRB').get_by_text('FRB'),
+            page.get_by_role('img', name='0').first,
+            page.get_by_role('img', name='0').nth(1),
+    ):
+        expect(selector).to_be_visible()
+
+    # Test using your own data
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
     page.get_by_label("Select input data").get_by_test_id(

@@ -7,13 +7,11 @@ from _models_ts import predict
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
-from _shared import data_directory
-from _shared import label_directory
-from _shared import model_directory
 from _shared import reset_example
 from _shared import reset_method
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
+from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 from dianna.visualization import plot_timeseries
 
@@ -44,10 +42,10 @@ if input_type == 'Use an example':
     )
 
     if load_example == "Weather":
-        ts_file = (data_directory / 'weather_data.npy')
-        ts_model_file = (model_directory /
-                        'season_prediction_model_temp_max_binary.onnx')
-        ts_label_file = (label_directory / 'weather_data_labels.txt')
+        ts_data_file = download('weather_data.npy', 'data')
+        ts_model_file = download(
+                        'season_prediction_model_temp_max_binary.onnx', 'model')
+        ts_label_file = download('weather_data_labels.txt', 'label')
 
         st.markdown(
         """
@@ -62,19 +60,20 @@ if input_type == 'Use an example':
         indicated in red and those who contribute negatively in blue.
         """)
     elif load_example == "Scientific case: FRB":
-        ts_file = (data_directory / 'FRB211024.npy')
-        ts_model_file = (model_directory /
-                        'apertif_frb_dynamic_spectrum_model.onnx')
-        ts_label_file = (label_directory / 'apertif_frb_classes.txt')
+        ts_model_file = download('apertif_frb_dynamic_spectrum_model.onnx', 'model')
+        ts_label_file = download('apertif_frb_classes.txt', 'label')
+        ts_data_file = download('FRB211024.npy', 'data')
 
         # FRB data must be preprocessed
         def preprocess(data):
             """Preprocessing function for FRB use case to get the data in the right shape."""
             return np.transpose(data, (0, 2, 1))[..., None].astype(np.float32)
 
-        ts_data = open_timeseries(ts_file)
-        ts_data_dianna = ts_data.T[None, ...]
-        ts_data_model = ts_data[None, ..., None]
+        # Transform FRB data for the model prediction and dianna explanation, which have different
+        # requirements for this specific data
+        ts_data = open_timeseries(ts_data_file)
+        ts_data_explainer = ts_data.T[None, ...]
+        ts_data_predictor = ts_data[None, ..., None]
 
         st.markdown(
             """This example demonstrates the use of DIANNA
@@ -93,7 +92,7 @@ if input_type == 'Use an example':
 if input_type == 'Use your own data':
     load_example = None
 
-    ts_file = st.sidebar.file_uploader('Select input data',
+    ts_data_file = st.sidebar.file_uploader('Select input data',
                                     type='npy')
 
     ts_model_file = st.sidebar.file_uploader('Select model',
@@ -106,13 +105,14 @@ if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
-if not (ts_file and ts_model_file and ts_label_file):
+if not (ts_data_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
 if load_example != "Scientific case: FRB":
-    ts_data_model = open_timeseries(ts_file)
-    ts_data_dianna = ts_data_model
+    # For normal cases, the input data does not need transformation for either the
+    # model explainer nor the model predictor
+    ts_data_explainer = ts_data_predictor = open_timeseries(ts_data_file)
 
 model = load_model(ts_model_file)
 serialized_model = model.SerializeToString()
@@ -127,6 +127,8 @@ else:
 st.text("")
 st.text("")
 
+with st.spinner('Predicting class'):
+    predictions = predict(model=serialized_model, ts_data=ts_data_predictor)
 
 with st.container(border=True):
     prediction_placeholder = st.empty()
@@ -163,7 +165,7 @@ for index, label in zip(top_indices, top_labels):
 
         with col:
             with st.spinner(f'Running {method}'):
-                explanation = func(serialized_model, ts_data=ts_data_dianna, **kwargs)
+                explanation = func(serialized_model, ts_data=ts_data_explainer, **kwargs)
 
             if load_example == "Scientific case: FRB":
                 # normalize FRB data and get rid of last dimension
@@ -173,7 +175,7 @@ for index, label in zip(top_indices, top_labels):
             else:
                 segments = _convert_to_segments(explanation)
 
-                fig, _ = plot_timeseries(range(len(ts_data_dianna[0])), ts_data_dianna[0], segments)
+                fig, _ = plot_timeseries(range(len(ts_data_explainer[0])), ts_data_explainer[0], segments)
 
             st.pyplot(fig)
 
