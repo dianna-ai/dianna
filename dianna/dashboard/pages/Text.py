@@ -4,7 +4,6 @@ from _model_utils import load_model
 from _models_text import explain_text_dispatcher
 from _models_text import predict
 from _movie_model import MovieReviewsModelRunner
-from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
@@ -34,7 +33,7 @@ if input_type == 'Use an example':
         options=('Movie sentiment',),
         index = None,
         on_change = reset_method,
-        key='Text_example_check_moviesentiment')
+        key='Text_load_example')
 
     if load_example == 'Movie sentiment':
         text_input = 'The movie started out great but the ending was dissappointing'
@@ -80,29 +79,37 @@ serialized_model = model.SerializeToString()
 labels = load_labels(text_label_file)
 
 choices = ('RISE', 'LIME')
-methods = _methods_checkboxes(choices=choices, key='Text_cb_')
 
-method_params = _get_method_params(methods, key='Text_params_')
+st.text("")
+st.text("")
 
-model_runner = MovieReviewsModelRunner(serialized_model)
+with st.container(border=True):
+    prediction_placeholder = st.empty()
+    methods, method_params = _methods_checkboxes(choices=choices, key='Text_cb')
 
-with st.spinner('Predicting class'):
-    predictions = predict(model=serialized_model, text_input=text_input)
+    model_runner = MovieReviewsModelRunner(serialized_model)
 
-top_indices, top_labels = _get_top_indices_and_labels(
-    predictions=predictions[0], labels=labels)
+    with st.spinner('Predicting class'):
+        predictions = predict(model=serialized_model, text_input=text_input)
+
+    with prediction_placeholder:
+        top_indices, top_labels = _get_top_indices_and_labels(
+            predictions=predictions[0], labels=labels)
+
+st.text("")
+st.text("")
 
 weight = 0.85 / len(methods)
 column_spec = [0.15, *[weight for _ in methods]]
 
 _, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    col.header(method)
+    col.markdown(f"<h4 style='text-align: center; '>{method}</h4>", unsafe_allow_html=True)
 
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
 
-    index_col.markdown(f'##### {label}')
+    index_col.markdown(f'##### Class: {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()

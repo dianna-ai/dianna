@@ -4,7 +4,6 @@ from _model_utils import load_labels
 from _model_utils import load_model
 from _models_image import explain_image_dispatcher
 from _models_image import predict
-from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
@@ -88,15 +87,23 @@ serialized_model = model.SerializeToString()
 labels = load_labels(image_label_file)
 
 choices = ('RISE', 'KernelSHAP', 'LIME')
-methods = _methods_checkboxes(choices=choices, key='Image_cb_')
 
-method_params = _get_method_params(methods, key='Image_params_')
+st.text("")
+st.text("")
 
-with st.spinner('Predicting class'):
-    predictions = predict(model=model, image=image)
+with st.container(border=True):
+    prediction_placeholder = st.empty()
+    methods, method_params = _methods_checkboxes(choices=choices, key='Image_cb')
 
-top_indices, top_labels = _get_top_indices_and_labels(predictions=predictions,
-                                                      labels=labels)
+    with st.spinner('Predicting class'):
+        predictions = predict(model=model, image=image)
+
+    with prediction_placeholder:
+        top_indices, top_labels = _get_top_indices_and_labels(
+            predictions=predictions,labels=labels)
+
+st.text("")
+st.text("")
 
 # check which axis is color channel
 original_data = image[:, :, 0] if image.shape[2] <= 3 else image[1, :, :]
@@ -107,11 +114,11 @@ column_spec = [0.1, *[weight for _ in methods]]
 
 _, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    col.header(method)
+    col.markdown(f"<h4 style='text-align: center; '>{method}</h4>", unsafe_allow_html=True)
 
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
-    index_col.markdown(f'##### {label}')
+    index_col.markdown(f'##### Class: {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()

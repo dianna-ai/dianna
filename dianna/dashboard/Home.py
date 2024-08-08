@@ -6,7 +6,7 @@ from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="Dianna's dashboard",
                    page_icon='📊',
-                   layout='centered',
+                   layout='wide',
                    initial_sidebar_state='auto',
                    menu_items={
                        'Get help':
@@ -39,8 +39,6 @@ selected = option_menu(
 
 # Display the content of the selected page
 if selected == "Home":
-    add_sidebar_logo()
-
     st.image(str(data_directory / 'logo.png'))
 
     st.markdown("""
