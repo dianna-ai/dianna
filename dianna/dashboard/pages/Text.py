@@ -10,8 +10,8 @@ from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import label_directory
 from _shared import model_directory
-from _shared import reset_method
 from _shared import reset_example
+from _shared import reset_method
 from dianna.visualization.text import highlight_text
 
 add_sidebar_logo()

@@ -11,8 +11,8 @@ from _shared import add_sidebar_logo
 from _shared import data_directory
 from _shared import label_directory
 from _shared import model_directory
-from _shared import reset_method
 from _shared import reset_example
+from _shared import reset_method
 from dianna.visualization import plot_image
 
 add_sidebar_logo()
