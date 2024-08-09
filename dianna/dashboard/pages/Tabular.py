@@ -74,9 +74,8 @@ st.text("")
 
 # Get predictions and create parameter box
 with st.container(border=True):
-    #prediction_placeholder = st.empty()
+    prediction_placeholder = st.empty()
     methods, method_params = _methods_checkboxes(choices=choices, key='Tabular_cb')
-    #prediction_placeholder = 'hello'
 
 st.info("Select the input data either by clicking the corresponding row in the table or input the row index above to continue.")
 
