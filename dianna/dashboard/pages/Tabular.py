@@ -51,7 +51,7 @@ if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
-if not (tabular_data_file and tabular_model_file and tabular_label_file):
+if not (tabular_data_file and tabular_model_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
