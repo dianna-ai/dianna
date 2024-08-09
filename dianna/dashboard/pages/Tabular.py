@@ -92,9 +92,20 @@ grid_response = AgGrid(
     theme='streamlit'
 )
 
-selected_row = grid_response['selected_rows']
+selected_row = grid_response['selected_rows']['Index'][0]
+selected_data = data.iloc[selected_row, 1:].to_numpy()
 
 
+if selected_row is not None:
+    with st.spinner('Predicting class'):
+        predictions = predict(modelfile=tabular_model_file, tabular_input=selected_data)
+
+    with prediction_placeholder:
+        top_indices, top_labels = _get_top_indices_and_labels(
+            predictions=predictions[0], labels=labels)
+
+else:
+    st.write('No row selected')
 
 st.text("")
 st.text("")
