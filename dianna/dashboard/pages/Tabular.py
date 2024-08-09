@@ -37,4 +37,20 @@ if input_type == 'Use an example':
     st.info("No examples availble yet")
     st.stop()
 
+# Option to upload your own data
+if input_type == 'Use your own data':
+    tabular_data_file = st.sidebar.file_uploader('Select tabular data', type='csv')
+    tabular_model_file = st.sidebar.file_uploader('Select model',
+                                            type='onnx')
+    tabular_label_file = st.sidebar.file_uploader('Select labels',
+                                            type='txt')
+
+if input_type is None:
+    st.info('Select which input type to use in the left panel to continue')
+    st.stop()
+
+if not (tabular_data_file and tabular_model_file and tabular_label_file):
+    st.info('Add your input data in the left panel to continue')
+    st.stop()
+
 st.stop()
