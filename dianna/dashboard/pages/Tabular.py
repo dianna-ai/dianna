@@ -62,7 +62,10 @@ data = load_data(tabular_data_file)
 
 model = SimpleModelRunner(tabular_model_file)
 
-labels = load_labels(tabular_label_file)
+if tabular_label_file:
+    labels = load_labels(tabular_label_file)
+else:
+    labels = None
 
 choices = ('RISE', 'LIME', 'KernelSHAP')
 
