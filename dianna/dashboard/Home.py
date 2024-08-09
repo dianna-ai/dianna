@@ -49,9 +49,10 @@ if selected == "Home":
 
     ### Pages
 
-    - <a href="/Images" target="_parent">Images</a>
-    - <a href="/Text" target="_parent">Text</a>
-    - <a href="/Time_series" target="_parent">Time series</a>
+    - <a href="/Images" target="_parent">Image data</a>
+    - <a href="/Tabular" target="_parent">Tabular data</a>
+    - <a href="/Text" target="_parent">Text data</a>
+    - <a href="/Time_series" target="_parent">Time series data</a>
 
 
     ### More information
