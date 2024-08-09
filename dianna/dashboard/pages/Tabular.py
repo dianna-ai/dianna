@@ -25,3 +25,16 @@ input_type = st.sidebar.radio(
         on_change = reset_example,
         key = 'Tabular_input_type'
     )
+
+# Use the examples
+if input_type == 'Use an example':
+    """load_example = st.sidebar.radio(
+        label='Use example',
+        options=(''),
+        index = None,
+        on_change = reset_method,
+        key='Tabular_load_example')"""
+    st.info("No examples availble yet")
+    st.stop()
+
+st.stop()
