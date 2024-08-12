@@ -95,7 +95,7 @@ if grid_response['selected_rows'] is not None:
     selected_row = grid_response['selected_rows']['Index'][0]
     selected_data = data.iloc[selected_row, 1:].to_numpy()
     with st.spinner('Predicting class'):
-        predictions = predict(modelfile=tabular_model_file, tabular_input=selected_data)
+        predictions = predict(model_path=tabular_model_file.name, tabular_input=selected_data)
 
     with prediction_placeholder:
         top_indices, top_labels = _get_top_indices_and_labels(
