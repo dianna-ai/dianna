@@ -3,6 +3,7 @@ from _model_utils import load_data
 from _model_utils import load_labels
 from _model_utils import load_model
 from _models_tabular import predict
+from _models_tabular import explain_tabular_dispatcher
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
