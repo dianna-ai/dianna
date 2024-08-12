@@ -127,7 +127,7 @@ def _get_top_indices_and_labels(*, predictions, labels):
             st.metric('Predicted class:', top_labels[0])
     else:
         # If not a classifier, only return the predicted value
-        top_indices = top_labels = 0
+        top_indices = top_labels = " "
         with cols[0]:
             st.metric('Predicted value:', f"{predictions[0]:.2f}")
 
