@@ -6,7 +6,8 @@ from dianna.utils.onnx_runner import SimpleModelRunner
 
 @st.cache_data
 def predict(*, model, tabular_input):
-    model_runner = SimpleModelRunner(model)
+    serialized_model = model.SerializeToString()
+    model_runner = SimpleModelRunner(serialized_model)
     predictions = model_runner(tabular_input.reshape(1,-1).astype(np.float32))
     return predictions
 
