@@ -77,7 +77,6 @@ with st.container(border=True):
     prediction_placeholder = st.empty()
     methods, method_params = _methods_checkboxes(choices=choices, key='Tabular_cb')
 
-st.info("Select the input data either by clicking the corresponding row in the table or input the row index above to continue.")
 
 # Configure Ag-Grid options
 gb = GridOptionsBuilder.from_dataframe(data)
@@ -103,7 +102,7 @@ if grid_response['selected_rows'] is not None:
             predictions=predictions[0], labels=labels)
 
 else:
-    st.write('No row selected')
+    st.info("Select the input data either by clicking the corresponding row in the table or input the row index above to continue.")
 
 st.text("")
 st.text("")
