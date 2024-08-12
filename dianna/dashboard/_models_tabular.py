@@ -34,10 +34,10 @@ def _run_lime_tabular(_model, table, **kwargs):
     return relevances
 
 @st.cache_data
-def _run_kernelshap_tabular(model, image, i, **kwargs):
+def _run_kernelshap_tabular(_model, table, i, **kwargs):
     # Kernelshap interface is different. Write model to temporary file.
     with tempfile.NamedTemporaryFile() as f:
-        f.write(model)
+        f.write(_model)
         f.flush()
         relevances = explain_tabular(
             _model,
@@ -48,7 +48,7 @@ def _run_kernelshap_tabular(model, image, i, **kwargs):
     return relevances
 
 
-explain_text_dispatcher = {
+explain_tabular_dispatcher = {
     'RISE': _run_rise_tabular,
     'LIME': _run_lime_tabular,
     'KernelSHAP': _run_kernelshap_tabular
