@@ -92,11 +92,9 @@ grid_response = AgGrid(
     theme='streamlit'
 )
 
-selected_row = grid_response['selected_rows']['Index'][0]
-selected_data = data.iloc[selected_row, 1:].to_numpy()
-
-
-if selected_row is not None:
+if grid_response['selected_rows'] is not None:
+    selected_row = grid_response['selected_rows']['Index'][0]
+    selected_data = data.iloc[selected_row, 1:].to_numpy()
     with st.spinner('Predicting class'):
         predictions = predict(modelfile=tabular_model_file, tabular_input=selected_data)
 
