@@ -59,6 +59,7 @@ if not (tabular_data_file and tabular_model_file):
 data = load_data(tabular_data_file)
 
 model = load_model(tabular_model_file)
+serialized_model = model.SerializeToString()
 
 if tabular_label_file:
     labels = load_labels(tabular_label_file)
@@ -93,7 +94,7 @@ if grid_response['selected_rows'] is not None:
     selected_row = grid_response['selected_rows']['Index'].iloc[0]
     selected_data = data.iloc[selected_row, 1:].to_numpy()
     with st.spinner('Predicting class'):
-        predictions = predict(model=model, tabular_input=selected_data)
+        predictions = predict(model=serialized_model, tabular_input=selected_data)
 
     with prediction_placeholder:
         top_indices, top_labels = _get_top_indices_and_labels(
