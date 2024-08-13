@@ -40,3 +40,7 @@ def load_labels(file):
     if labels is None or labels == ['']:
         raise ValueError(labels)
     return labels
+
+
+def load_training_data(file):
+    return np.load(file, allow_pickle=False)
