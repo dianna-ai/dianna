@@ -46,7 +46,7 @@ if input_type == 'Use your own data':
     tabular_data_file = st.sidebar.file_uploader('Select tabular data', type='csv')
     tabular_model_file = st.sidebar.file_uploader('Select model', type='onnx')
     tabular_training_data_file = st.sidebar.file_uploader('Select training data', type='npy')
-    tabular_label_file = st.sidebar.file_uploader('Select labels', type='txt')
+    tabular_label_file = st.sidebar.file_uploader('Select labels in case of classification model', type='txt')
 
 if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
@@ -65,8 +65,10 @@ training_data = load_training_data(tabular_training_data_file)
 
 if tabular_label_file:
     labels = load_labels(tabular_label_file)
+    mode = 'classification'
 else:
     labels = None
+    mode = 'regression'
 
 choices = ('RISE', 'LIME', 'KernelSHAP')
 
@@ -124,6 +126,7 @@ for index, label in zip(top_indices, top_labels):
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
         kwargs['labels'] = [index]
+        kwargs['mode'] = mode
 
         func = explain_tabular_dispatcher[method]
         
