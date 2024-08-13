@@ -2,6 +2,7 @@ import streamlit as st
 from _model_utils import load_data
 from _model_utils import load_labels
 from _model_utils import load_model
+from _model_utils import load_training_data
 from _models_tabular import predict
 from _models_tabular import explain_tabular_dispatcher
 from _shared import _get_top_indices_and_labels
@@ -43,17 +44,15 @@ if input_type == 'Use an example':
 # Option to upload your own data
 if input_type == 'Use your own data':
     tabular_data_file = st.sidebar.file_uploader('Select tabular data', type='csv')
-    tabular_model_file = st.sidebar.file_uploader('Select model',
-                                            type='onnx'),
-    tabular_trainingdata_file = st.sidebar.file_uploader('Select training data', type='npy')
-    tabular_label_file = st.sidebar.file_uploader('Select labels',
-                                            type='txt')
+    tabular_model_file = st.sidebar.file_uploader('Select model', type='onnx')
+    tabular_training_data_file = st.sidebar.file_uploader('Select training data', type='npy')
+    tabular_label_file = st.sidebar.file_uploader('Select labels', type='txt')
 
 if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
-if not (tabular_data_file and tabular_model_file):
+if not (tabular_data_file and tabular_model_file and tabular_training_data_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
@@ -61,6 +60,8 @@ data = load_data(tabular_data_file)
 
 model = load_model(tabular_model_file)
 serialized_model = model.SerializeToString()
+
+training_data = load_training_data(tabular_training_data_file)
 
 if tabular_label_file:
     labels = load_labels(tabular_label_file)
