@@ -13,7 +13,6 @@ from _shared import reset_method
 from dianna.utils.downloader import download
 from dianna.utils.onnx_runner import SimpleModelRunner
 from dianna.visualization import plot_tabular
-import pandas as pd
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 add_sidebar_logo()
