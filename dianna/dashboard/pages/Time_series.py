@@ -1,3 +1,4 @@
+import numpy as np
 import streamlit as st
 from _model_utils import load_labels
 from _model_utils import load_model
@@ -7,11 +8,12 @@ from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
-from _shared import data_directory
-from _shared import label_directory
-from _shared import model_directory
+from _shared import reset_example
+from _shared import reset_method
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
+from dianna.utils.downloader import download
+from dianna.visualization import plot_image
 from dianna.visualization import plot_timeseries
 
 add_sidebar_logo()
@@ -20,28 +22,33 @@ st.title('Time series explanation')
 
 st.sidebar.header('Input data')
 
-load_example_weather = st.sidebar.checkbox('Load weather example', key='TS_weather_example_check')
+input_type = st.sidebar.radio(
+        label='Select which input to use',
+        options = ('Use an example', 'Use your own data'),
+        index = None,
+        on_change = reset_example,
+        key = 'TS_input_type'
+    )
 
-ts_file = st.sidebar.file_uploader('Select input data',
-                                   type='npy',
-                                   disabled=load_example_weather)
+# Use the examples
+if input_type == 'Use an example':
+    load_example = st.sidebar.radio(
+        label='Select example',
+        options = ('Weather', 'Scientific case: FRB'),
+        index = None,
+        on_change = reset_method,
+        key = 'TS_load_example'
+    )
 
-ts_model_file = st.sidebar.file_uploader('Select model',
-                                         type='onnx',
-                                         disabled=load_example_weather)
+    if load_example == "Weather":
+        ts_data_file = download('weather_data.npy', 'data')
+        ts_model_file = download(
+                        'season_prediction_model_temp_max_binary.onnx', 'model')
+        ts_label_file = download('weather_data_labels.txt', 'label')
 
-ts_label_file = st.sidebar.file_uploader('Select labels',
-                                         type='txt',
-                                         disabled=load_example_weather)
-
-if load_example_weather:
-    ts_file = (data_directory / 'weather_data.npy')
-    ts_model_file = (model_directory /
-                     'season_prediction_model_temp_max_binary.onnx')
-    ts_label_file = (label_directory / 'weather_data_labels.txt')
-
-    st.markdown(
-        """This example demonstrates the use of DIANNA
+        st.markdown(
+        """
+        This example demonstrates the use of DIANNA
         on a pre-trained binary classification model for season prediction. The
         input data is the [weather prediction
         dataset](https://zenodo.org/records/5071376). This classification model
@@ -51,25 +58,77 @@ if load_example_weather:
         contributing positively towards the classification decision are
         indicated in red and those who contribute negatively in blue.
         """)
+    elif load_example == "Scientific case: FRB":
+        ts_model_file = download('apertif_frb_dynamic_spectrum_model.onnx', 'model')
+        ts_label_file = download('apertif_frb_classes.txt', 'label')
+        ts_data_file = download('FRB211024.npy', 'data')
 
-if not (ts_file and ts_model_file and ts_label_file):
+        # FRB data must be preprocessed
+        def preprocess(data):
+            """Preprocessing function for FRB use case to get the data in the right shape."""
+            return np.transpose(data, (0, 2, 1))[..., None].astype(np.float32)
+
+        # Transform FRB data for the model prediction and dianna explanation, which have different
+        # requirements for this specific data
+        ts_data = open_timeseries(ts_data_file)
+        ts_data_explainer = ts_data.T[None, ...]
+        ts_data_predictor = ts_data[None, ..., None]
+
+        st.markdown(
+            """This example demonstrates the use of DIANNA
+            on a pre-trained binary classification model trained to classify
+            Fast Radio Burst (FRB) timeseries data.
+            The goal of the pre-trained convolutional neural network is to
+            determine whether or not the input data contains an
+            FRB-like signal, whereby the two classes are noise and FRB.
+            """)
+    else:
+        st.info('Select an example in the left panel to coninue')
+        st.stop()
+
+
+# Option to upload your own data
+if input_type == 'Use your own data':
+    load_example = None
+
+    ts_data_file = st.sidebar.file_uploader('Select input data',
+                                    type='npy')
+
+    ts_model_file = st.sidebar.file_uploader('Select model',
+                                            type='onnx')
+
+    ts_label_file = st.sidebar.file_uploader('Select labels',
+                                            type='txt')
+
+if input_type is None:
+    st.info('Select which input type to use in the left panel to continue')
+    st.stop()
+
+
+if not (ts_data_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
-ts_data = open_timeseries(ts_file)
+if load_example != "Scientific case: FRB":
+    # For normal cases, the input data does not need transformation for either the
+    # model explainer nor the model predictor
+    ts_data_explainer = ts_data_predictor = open_timeseries(ts_data_file)
 
 model = load_model(ts_model_file)
 serialized_model = model.SerializeToString()
 
 labels = load_labels(ts_label_file)
 
-choices = ('LIME', 'RISE')
+if load_example == "Scientific case: FRB":
+    choices = ('RISE',)
+else:
+    choices = ('RISE', 'LIME')
 methods = _methods_checkboxes(choices=choices, key='TS_cb_')
 
 method_params = _get_method_params(methods, key='TS_params_')
 
 with st.spinner('Predicting class'):
-    predictions = predict(model=serialized_model, ts_data=ts_data)
+    predictions = predict(model=serialized_model, ts_data=ts_data_predictor)
 
 top_indices, top_labels = _get_top_indices_and_labels(
     predictions=predictions[0], labels=labels)
@@ -88,16 +147,22 @@ for index, label in zip(top_indices, top_labels):
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
         kwargs['labels'] = [index]
+        if load_example == "Scientific case: FRB":
+            kwargs['_preprocess_function'] = preprocess
 
         func = explain_ts_dispatcher[method]
 
         with col:
             with st.spinner(f'Running {method}'):
-                explanation = func(serialized_model, ts_data=ts_data, **kwargs)
+                explanation = func(serialized_model, ts_data=ts_data_explainer, **kwargs)
 
-            segments = _convert_to_segments(explanation)
+            if load_example == "Scientific case: FRB":
+                # FRB data: get rid of last dimension
+                fig, _ = plot_image(explanation[0, :, ::-1].T)
+            else:
+                segments = _convert_to_segments(explanation)
 
-            fig, _ = plot_timeseries(range(len(ts_data[0])), ts_data[0], segments)
+                fig, _ = plot_timeseries(range(len(ts_data_explainer[0])), ts_data_explainer[0], segments)
 
             st.pyplot(fig)
 

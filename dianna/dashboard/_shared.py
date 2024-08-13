@@ -134,3 +134,17 @@ def _get_top_indices_and_labels(*, predictions, labels):
         st.metric('Predicted class', top_labels[0])
 
     return top_indices, top_labels
+
+def reset_method():
+    # Clear selection
+    for k in st.session_state.keys():
+        if '_cb_' in k:
+            st.session_state[k] = False
+        if 'params' in k:
+            st.session_state.pop(k)
+
+def reset_example():
+    # Clear selection
+    for k in st.session_state.keys():
+        if '_load_' in k:
+            st.session_state.pop(k)
