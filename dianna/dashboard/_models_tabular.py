@@ -13,28 +13,30 @@ def predict(*, model, tabular_input):
 
 
 @st.cache_data
-def _run_rise_tabular(_model, table, **kwargs):
+def _run_rise_tabular(_model, table, training_data, **kwargs):
     relevances = explain_tabular(
         _model,
         table,
         method='RISE',
+        training_data=training_data,
         **kwargs,
     )
     return relevances
 
 
 @st.cache_data
-def _run_lime_tabular(_model, table, **kwargs):
+def _run_lime_tabular(_model, table, training_data, **kwargs):
     relevances = explain_tabular(
         _model,
         table,
         method='LIME',
+        training_data=training_data,
         **kwargs,
     )
     return relevances
 
 @st.cache_data
-def _run_kernelshap_tabular(_model, table, i, **kwargs):
+def _run_kernelshap_tabular(_model, table, training_data, **kwargs):
     # Kernelshap interface is different. Write model to temporary file.
     with tempfile.NamedTemporaryFile() as f:
         f.write(_model)
@@ -43,6 +45,7 @@ def _run_kernelshap_tabular(_model, table, i, **kwargs):
             _model,
             table,
             method='KernelSHAP',
+            training_data=training_data,
             **kwargs,
         )
     return relevances
