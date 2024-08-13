@@ -121,7 +121,7 @@ for col, method in zip(columns, methods):
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
 
-    index_col.markdown(f'##### Class: {label}')
+    if mode == 'classification': index_col.markdown(f'##### Class: {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
