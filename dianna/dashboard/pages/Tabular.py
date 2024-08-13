@@ -134,9 +134,8 @@ for index, label in zip(top_indices, top_labels):
         with col:
             with st.spinner(f'Running {method}'):
                 relevances = func(serialized_model, selected_data, training_data, **kwargs)
-            st.stop()
-            #fig, _ = highlight_text(explanation=relevances[0], show_plot=False)
-            #st.pyplot(fig)
+            fig, _ = plot_tabular(x=relevances, y=data[:1].columns, num_features=10, show_plot=False)
+            st.pyplot(fig)
 
     # add some white space to separate rows
     st.markdown('')
