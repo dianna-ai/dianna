@@ -44,7 +44,8 @@ if input_type == 'Use an example':
 if input_type == 'Use your own data':
     tabular_data_file = st.sidebar.file_uploader('Select tabular data', type='csv')
     tabular_model_file = st.sidebar.file_uploader('Select model',
-                                            type='onnx')
+                                            type='onnx'),
+    tabular_trainingdata_file = st.sidebar.file_uploader('Select training data', type='npy')
     tabular_label_file = st.sidebar.file_uploader('Select labels',
                                             type='txt')
 
