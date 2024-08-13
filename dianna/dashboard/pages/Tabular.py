@@ -1,3 +1,4 @@
+import numpy as np
 import streamlit as st
 from _model_utils import load_data
 from _model_utils import load_labels
@@ -103,6 +104,7 @@ if grid_response['selected_rows'] is not None:
 
 else:
     st.info("Select the input data either by clicking the corresponding row in the table or input the row index above to continue.")
+    st.stop()
 
 st.text("")
 st.text("")
