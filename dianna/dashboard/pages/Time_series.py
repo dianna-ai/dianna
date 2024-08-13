@@ -157,7 +157,7 @@ for index, label in zip(top_indices, top_labels):
                 explanation = func(serialized_model, ts_data=ts_data_explainer, **kwargs)
 
             if load_example == "Scientific case: FRB":
-                # normalize FRB data and get rid of last dimension
+                # FRB data: get rid of last dimension
                 fig, _ = plot_image(explanation[0, :, ::-1].T)
             else:
                 segments = _convert_to_segments(explanation)
