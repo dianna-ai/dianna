@@ -63,6 +63,7 @@ class LIMETabular:
             LimeTabularExplainer, kwargs)
 
         # temporary solution for setting num_features and top_labels
+        # when fixed, also fix in dashboard Tabular.py -> _feature_names
         self.num_features = len(feature_names)
 
         self.explainer = LimeTabularExplainer(
