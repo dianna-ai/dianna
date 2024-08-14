@@ -18,7 +18,7 @@ def plot_tabular(
     """Plot feature importance with segments highlighted.
 
     Args:
-        x (np.ndarray): Array of feature importance scores
+        x (np.ndarray): 1D array of feature importance scores of one instance
         y (List[str]): List of feature names
         x_label (str): Label for the x-axis
         y_label (str): Label or list of labels for the y-axis
@@ -32,6 +32,12 @@ def plot_tabular(
     Returns:
         plt.Figure
     """
+    # check type and shape of x should be 1D array
+    if not isinstance(x, np.ndarray):
+        raise TypeError("x should be a numpy array")
+    if x.ndim != 1:
+        raise ValueError("x should be a 1D array")
+
     if not num_features:
         num_features = len(x)
     abs_values = [abs(i) for i in x]
