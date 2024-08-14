@@ -127,6 +127,8 @@ for index, label in zip(top_indices, top_labels):
         kwargs = method_params[method].copy()
         kwargs['labels'] = [index]
         kwargs['mode'] = mode
+        if method == 'LIME':
+            kwargs['_feature_names']=data[:1].columns.to_list()
 
         func = explain_tabular_dispatcher[method]
         
