@@ -36,7 +36,7 @@ pip install .[notebooks]
 |*Images*|[Simple Scientific (LeafSnap30)](https://zenodo.org/record/5061353/)| $30$ tree species leaves *classification* | <img width="20" alt="LeafSnap30 Logo" src="https://user-images.githubusercontent.com/3244249/151539100-dbdfe0f8-485f-45d4-a249-a1f79e970066.png"> |
 |*Text*|  | | |
 |*Timeseries* |  Fast Radio Burst (FRB) dataset (not publicly available) | Binary *classificaiton* of Fast Radio Burst (FRB) timeseries data : noise or a real FRB. | <img width="25" alt="FRB logo" src="https://github.com/dianna-ai/dianna/assets/6370787/f53b280d-94b0-40ec-bfe7-ee48777d7964">|
-|*Tabular*| | | |
+|*Tabular*|  [Land atmosphere dataset](https://zenodo.org/records/12623257)| developing a random forests regression algorithm to predict target variable "latent heat flux (LEtot)". The model will be used as an emulator to replace the physical model. | |
 
 ### Models
 
