@@ -100,6 +100,6 @@ Also the main conclusions (🠊) from the thesis (on images and text) about the 
 | $n_{segments}$ | **$100$** |$200$ |$200$ |  |
 | $sigma$        |  **$0$**  |  default    | default | |
 
-🠊 The most crucial parameter is the nubmer of super-pixels $n_{segments}. Higher values led to higher sensitivity, however that observaiton was dependant on the evaluaiton metric.
+🠊 The most crucial parameter is the nubmer of super-pixels $n_{segments}$. Higher values led to higher sensitivity, however that observaiton was dependant on the evaluaiton metric.
 
 🠊 Regularization had only a marginal detrimental effect, the best results were obtained using no regularization (no smoothing, $sigma = 0$) or least squares regression.
