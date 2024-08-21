@@ -43,4 +43,4 @@ def load_labels(file):
 
 
 def load_training_data(file):
-    return np.load(file, allow_pickle=False)
+    return np.float32(np.load(file, allow_pickle=False))
