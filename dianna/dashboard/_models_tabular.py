@@ -25,12 +25,13 @@ def _run_rise_tabular(_model, table, training_data, **kwargs):
 
 
 @st.cache_data
-def _run_lime_tabular(_model, table, training_data, **kwargs):
+def _run_lime_tabular(_model, table, training_data, _feature_names, **kwargs):
     relevances = explain_tabular(
         _model,
         table,
         method='LIME',
         training_data=training_data,
+        feature_names=_feature_names,
         **kwargs,
     )
     return relevances
