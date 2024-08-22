@@ -96,9 +96,9 @@ Also the main conclusions (🠊) from the thesis (on images and text) about the 
 #### KernelSHAP
 | Hyperparameter  | Default value | <img width="25" alt="mnist_zero_and_one_half_size" src="https://user-images.githubusercontent.com/3244249/152540187-b7a8239f-6742-437f-8f9b-35b950ce5ddb.png"> (*i*)| <img width="20" alt="SimpleGeometric Logo" src="https://user-images.githubusercontent.com/3244249/151539027-f2fc3fc0-282a-4993-9680-74ee28bcd360.png"> (*i*) | <img width="25" alt="Atmosphere Logo" src="https://github.com/user-attachments/assets/bee353dd-c19a-4aec-a778-4ca3574765f0"> (*tab*) |
 | ------------- | ------------- |------------- |------------- | ------------- |
-| $n_{samples}$  | **auto/int** | $1000$| $2000$ |  |
-| $n_{segments}$ | **$100$** |$200$ |$200$ |  |
-| $sigma$        |  **$0$**  |  default    | default | |
+| $n_{samples}$  | **auto/int** | $1000$| $2000$ |  $136588$|
+| $n_{segments}$ | **$100$** |$200$ |$200$ |default  |
+| $sigma$        |  **$0$**  |  default    | default | default|
 
 🠊 The most crucial parameter is the nubmer of super-pixels $n_{segments}$. Higher values led to higher sensitivity, however that observaiton was dependant on the evaluaiton metric.
 
