@@ -261,11 +261,7 @@ def test_tabular_page(page: Page):
     # Test using your own data
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
-    page.get_by_label("Select input data").get_by_test_id(
-        "baseButton-secondary").click()
-    page.get_by_label("Select model").get_by_test_id(
-        "baseButton-secondary").click()
-    page.get_by_label("Select training data").get_by_test_id(
-        "baseButton-secondary").click()
-    page.get_by_label("Select labels in case of classification model").get_by_test_id(
-        "baseButton-secondary").click()
+    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click()
