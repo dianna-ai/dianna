@@ -1,5 +1,4 @@
 import onnxruntime as ort
-import numpy as np
 
 
 class SimpleModelRunner:
