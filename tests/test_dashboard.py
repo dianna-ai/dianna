@@ -153,7 +153,7 @@ def test_image_page(page: Page):
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='KernelSHAP').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-
+    page.get_by_test_id("stNumberInput-StepUp").click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=45_000)
 
     for selector in (
@@ -201,7 +201,7 @@ def test_timeseries_page(page: Page):
 
     page.locator('label').filter(has_text='LIME').locator('span').click()
     page.locator('label').filter(has_text='RISE').locator('span').click()
-
+    page.get_by_test_id("stNumberInput-StepUp").click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     for selector in (
