@@ -70,7 +70,7 @@ else:
     labels = None
     mode = 'regression'
 
-choices = ('RISE', 'LIME', 'KernelSHAP')
+choices = ('RISE', 'LIME')
 
 st.text("")
 st.text("")
