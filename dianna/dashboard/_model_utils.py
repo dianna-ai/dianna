@@ -7,11 +7,9 @@ import onnx
 def load_data(file):
     """Open data from a file and returns it as pandas DataFrame"""
     df = pd.read_csv(file, parse_dates=True)
-    # FIXME: only for weather example
-    data = df.drop(columns=['DATE', 'MONTH'])[:-1]
     # Add index column
-    data.insert(0, 'Index', data.index)
-    return data
+    df.insert(0, 'Index', df.index)
+    return df
 
 
 def preprocess_function(image):
