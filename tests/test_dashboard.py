@@ -117,7 +117,6 @@ def test_text_page(page: Page):
             page.get_by_role('img', name='0').nth(2),
             page.get_by_role('img', name='0').nth(3),
     ):
-        print(selector)
         expect(selector).to_be_visible()
 
     # Own data option
