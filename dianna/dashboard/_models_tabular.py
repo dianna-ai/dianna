@@ -37,19 +37,17 @@ def _run_lime_tabular(_model, table, training_data, _feature_names, **kwargs):
     return relevances
 
 @st.cache_data
-def _run_kernelshap_tabular(_model, table, training_data, **kwargs):
+def _run_kernelshap_tabular(model, table, training_data, **kwargs):
     # Kernelshap interface is different. Write model to temporary file.
     with tempfile.NamedTemporaryFile() as f:
-        f.write(_model)
+        f.write(model)
         f.flush()
-        relevances = explain_tabular(
-            _model,
-            table,
-            method='KernelSHAP',
-            training_data=training_data,
-            **kwargs,
-        )
-    return relevances
+        relevances = explain_tabular(f.name,
+                table,
+                method='KernelSHAP',
+                training_data=training_data,
+                **kwargs)
+    return relevances[0]
 
 
 explain_tabular_dispatcher = {
