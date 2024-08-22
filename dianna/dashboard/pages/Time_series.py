@@ -127,15 +127,12 @@ else:
 st.text("")
 st.text("")
 
-with st.spinner('Predicting class'):
-    predictions = predict(model=serialized_model, ts_data=ts_data_predictor)
-
 with st.container(border=True):
     prediction_placeholder = st.empty()
     methods, method_params = _methods_checkboxes(choices=choices, key='TS_cb')
 
     with st.spinner('Predicting class'):
-        predictions = predict(model=serialized_model, ts_data=ts_data_model)
+        predictions = predict(model=serialized_model, ts_data=ts_data_predictor)
 
     with prediction_placeholder:
         top_indices, top_labels = _get_top_indices_and_labels(
