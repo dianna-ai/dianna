@@ -245,3 +245,28 @@ def test_timeseries_page(page: Page):
         "baseButton-secondary").click()
     page.get_by_label("Select labels").get_by_test_id(
         "baseButton-secondary").click()
+
+
+def test_tabular_page(page: Page):
+    """Test performance of tabular page"""
+    page.goto(f'{BASE_URL}/Tabular')
+
+    page.get_by_text('Running...').wait_for(state='detached')
+
+    expect(page).to_have_title('Tabular')
+
+    expect(page.get_by_text("Select which input type to")).to_be_visible()
+
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
+
+    # Test using your own data
+    page.locator("label").filter(
+        has_text="Use your own data").locator("div").nth(1).click()
+    page.get_by_label("Select input data").get_by_test_id(
+        "baseButton-secondary").click()
+    page.get_by_label("Select model").get_by_test_id(
+        "baseButton-secondary").click()
+    page.get_by_label("Select training data").get_by_test_id(
+        "baseButton-secondary").click()
+    page.get_by_label("Select labels in case of classification model").get_by_test_id(
+        "baseButton-secondary").click()
