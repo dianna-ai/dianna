@@ -10,9 +10,6 @@ from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import reset_example
-from _shared import reset_method
-from dianna.utils.downloader import download
-from dianna.utils.onnx_runner import SimpleModelRunner
 from dianna.visualization import plot_tabular
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
