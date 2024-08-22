@@ -13,6 +13,7 @@ from _shared import reset_example
 from dianna.visualization import plot_tabular
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
+
 add_sidebar_logo()
 
 st.title('Tabular data explanation')
@@ -118,7 +119,8 @@ for col, method in zip(columns, methods):
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
 
-    if mode == 'classification': index_col.markdown(f'##### Class: {label}')
+    if mode == 'classification':
+        index_col.markdown(f'##### Class: {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
@@ -128,7 +130,6 @@ for index, label in zip(top_indices, top_labels):
             kwargs['_feature_names']=data[:1].columns.to_list()
 
         func = explain_tabular_dispatcher[method]
-        
 
         with col:
             with st.spinner(f'Running {method}'):

@@ -1,6 +1,5 @@
 import importlib
 import streamlit as st
-from _shared import add_sidebar_logo
 from _shared import data_directory
 from streamlit_option_menu import option_menu
 

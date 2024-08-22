@@ -247,7 +247,7 @@ def test_timeseries_page(page: Page):
 
 
 def test_tabular_page(page: Page):
-    """Test performance of tabular page"""
+    """Test performance of tabular page."""
     page.goto(f'{BASE_URL}/Tabular')
 
     page.get_by_text('Running...').wait_for(state='detached')
