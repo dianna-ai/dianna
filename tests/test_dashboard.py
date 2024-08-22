@@ -99,7 +99,7 @@ def test_text_page(page: Page):
 
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-
+    page.get_by_test_id("stNumberInput-StepUp").click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     for selector in (
@@ -117,7 +117,6 @@ def test_text_page(page: Page):
             page.get_by_role('img', name='0').nth(2),
             page.get_by_role('img', name='0').nth(3),
     ):
-        print(selector)
         expect(selector).to_be_visible()
 
     # Own data option
@@ -154,7 +153,7 @@ def test_image_page(page: Page):
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='KernelSHAP').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-
+    page.get_by_test_id("stNumberInput-StepUp").click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=45_000)
 
     for selector in (
@@ -202,7 +201,7 @@ def test_timeseries_page(page: Page):
 
     page.locator('label').filter(has_text='LIME').locator('span').click()
     page.locator('label').filter(has_text='RISE').locator('span').click()
-
+    page.get_by_test_id("stNumberInput-StepUp").click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     for selector in (
@@ -248,7 +247,7 @@ def test_timeseries_page(page: Page):
 
 
 def test_tabular_page(page: Page):
-    """Test performance of tabular page"""
+    """Test performance of tabular page."""
     page.goto(f'{BASE_URL}/Tabular')
 
     page.get_by_text('Running...').wait_for(state='detached')
@@ -262,11 +261,7 @@ def test_tabular_page(page: Page):
     # Test using your own data
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
-    page.get_by_label("Select input data").get_by_test_id(
-        "baseButton-secondary").click()
-    page.get_by_label("Select model").get_by_test_id(
-        "baseButton-secondary").click()
-    page.get_by_label("Select training data").get_by_test_id(
-        "baseButton-secondary").click()
-    page.get_by_label("Select labels in case of classification model").get_by_test_id(
-        "baseButton-secondary").click()
+    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click()

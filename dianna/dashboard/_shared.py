@@ -1,7 +1,5 @@
 import base64
 import sys
-from typing import Any
-from typing import Dict
 from typing import Sequence
 import numpy as np
 import streamlit as st
@@ -46,13 +44,12 @@ def build_markup_for_logo(
 
 
 def add_sidebar_logo():
-    "Upload DIANNA logo to sidebar element"
+    """Upload DIANNA logo to sidebar element."""
     st.sidebar.image(str(data_directory / 'logo.png'))
 
 
 def _methods_checkboxes(*, choices: Sequence, key):
-    """Get methods from a horizontal row of checkboxes
-    and the corresponding parameters."""
+    """Get methods from a horizontal row of checkboxes and the corresponding parameters."""
     n_choices = len(choices)
     methods = []
     method_params = {}
@@ -71,7 +68,7 @@ def _methods_checkboxes(*, choices: Sequence, key):
         # Put the message in the container above
         message_container.info('Select a method to continue')
         st.stop()
-    
+
     return methods, method_params
 
 
@@ -88,7 +85,8 @@ def _get_params(method: str, key):
 
     elif method == 'KernelSHAP':
         if 'Tabular' in key:
-            return {'training_data_kmeans': st.number_input('Training data kmeans', value=5, key=f'{key}_{method}_training_data_kmeans'),
+            return {'training_data_kmeans': st.number_input('Training data kmeans', value=5,
+                                                            key=f'{key}_{method}_training_data_kmeans'),
             }
         else:
             return {

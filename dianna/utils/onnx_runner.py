@@ -1,5 +1,4 @@
 import onnxruntime as ort
-import numpy as np
 
 
 class SimpleModelRunner:
@@ -30,6 +29,6 @@ class SimpleModelRunner:
         if self.preprocess_function is not None:
             input_data = self.preprocess_function(input_data)
 
-        onnx_input = {input_name: input_data.astype(np.float32)}
+        onnx_input = {input_name: input_data}
         pred_onnx = sess.run([output_name], onnx_input)[0]
         return pred_onnx
