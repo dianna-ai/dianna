@@ -105,7 +105,7 @@ if grid_response['selected_rows'] is not None:
             predictions=predictions[0], labels=labels)
 
 else:
-    st.info("Select the input data either by clicking the corresponding row in the table or input the row index above to continue.")
+    st.info("Select the input data by clicking a row in the table.")
     st.stop()
 
 st.text("")
