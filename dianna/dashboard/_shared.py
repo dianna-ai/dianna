@@ -87,12 +87,16 @@ def _get_params(method: str, key):
         }
 
     elif method == 'KernelSHAP':
-        return {
-            'nsamples': st.number_input('Number of samples', value=1000, key=f'{key}_{method}_nsamp'),
-            'background': st.number_input('Background', value=0, key=f'{key}_{method}_background'),
-            'n_segments': st.number_input('Number of segments', value=200, key=f'{key}_{method}_nseg'),
-            'sigma': st.number_input('σ', value=0, key=f'{key}_{method}_sigma'),
-        }
+        if 'Tabular' in key:
+            return {'training_data_kmeans': st.number_input('Training data kmeans', value=5, key=f'{key}_{method}_training_data_kmeans'),
+            }
+        else:
+            return {
+                'nsamples': st.number_input('Number of samples', value=1000, key=f'{key}_{method}_nsamp'),
+                'background': st.number_input('Background', value=0, key=f'{key}_{method}_background'),
+                'n_segments': st.number_input('Number of segments', value=200, key=f'{key}_{method}_nseg'),
+                'sigma': st.number_input('σ', value=0, key=f'{key}_{method}_sigma'),
+            }
 
     elif method == 'LIME':
         return {
