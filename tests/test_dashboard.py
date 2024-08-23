@@ -254,7 +254,7 @@ def test_tabular_page(page: Page):
 
     expect(page).to_have_title('Tabular')
 
-    expect(page.get_by_text("Select which input type to")).to_be_visible()
+    expect(page.get_by_text("Select which input type to")).to_be_visible(timeout=10000)
 
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
 
