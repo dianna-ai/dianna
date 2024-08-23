@@ -35,15 +35,16 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Use example',
-        options=('Weather prediction', 'Penguin identification'),
+        options=('Sunshine hours prediction', 'Penguin identification'),
         index = None,
         on_change = reset_method,
         key='Tabular_load_example')
     
-    if load_example == "Weather prediction":
+    if load_example == "Sunshine hours prediction":
         tabular_data_file = download('weather_prediction_dataset_light.csv', 'data')
         tabular_model_file = download('sunshine_hours_regression_model.onnx', 'model')
-        tabular_training_data_file = None#
+        tabular_training_data_file = tabular_data_file
+        tabular_label_file = None
 
         st.markdown(
         """
