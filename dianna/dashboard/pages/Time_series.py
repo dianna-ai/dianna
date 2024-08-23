@@ -1,3 +1,4 @@
+from matplotlib import pyplot as plt
 import numpy as np
 import streamlit as st
 from _model_utils import load_labels
@@ -164,8 +165,20 @@ for index, label in zip(top_indices, top_labels):
                 explanation = func(serialized_model, ts_data=ts_data_explainer, **kwargs)
 
             if load_example == "Scientific case: FRB":
-                # FRB data: get rid of last dimension
-                fig, _ = plot_image(explanation[0, :, ::-1].T)
+                fig, axes = plt.subplots(ncols=2, figsize=(14, 6))
+                # FRB: plot original data
+                ax = axes[0]
+                ax.imshow(ts_data, aspect='auto', origin='lower')
+                ax.set_xlabel('Time step')
+                ax.set_ylabel('Channel index')
+                ax.set_title('Input data')
+                # FRB data explanation has to be transposed
+                ax = axes[1]
+                ax.imshow(explanation[0].T, aspect='auto', origin='lower', cmap='bwr')
+                ax.set_xlabel('Time step')
+                ax.set_ylabel('Channel index')
+                ax.set_title(f'Explanation')
+
             else:
                 segments = _convert_to_segments(explanation)
 
