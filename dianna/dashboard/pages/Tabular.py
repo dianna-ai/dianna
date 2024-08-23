@@ -10,9 +10,11 @@ from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import reset_example
+from _shared import reset_method
 from st_aggrid import AgGrid
 from st_aggrid import GridOptionsBuilder
 from st_aggrid import GridUpdateMode
+from dianna.utils.downloader import download
 from dianna.visualization import plot_tabular
 
 add_sidebar_logo()
@@ -31,14 +33,38 @@ input_type = st.sidebar.radio(
 
 # Use the examples
 if input_type == 'Use an example':
-    """load_example = st.sidebar.radio(
+    load_example = st.sidebar.radio(
         label='Use example',
-        options=(''),
+        options=('Weather prediction', 'Penguin identification'),
         index = None,
         on_change = reset_method,
-        key='Tabular_load_example')"""
-    st.info("No examples availble yet")
-    st.stop()
+        key='Tabular_load_example')
+    
+    if load_example == "Weather prediction":
+        tabular_data_file = download('weather_prediction_dataset_light.csv', 'data')
+        tabular_model_file = download('sunshine_hours_regression_model.onnx', 'model')
+        tabular_training_data_file = None#
+
+        st.markdown(
+        """
+        This example demonstrates the use of DIANNA on a pre-trained regression
+        [model to predict tomorrow's sunshine hours](https://zenodo.org/records/10580833)
+        based on meteorological data from today.
+        The model is trained on the
+        [weather prediction dataset](https://zenodo.org/records/5071376).
+        The meteorological data includes for various European cities the
+        cloud coverage,humidity, air pressure, global radiation, precipitation, and
+        mean, min and max temeprature.
+
+        DIANNA's visualisation shows the top most important features contributing to the
+        sunshine hours prediction, where features contrinuting positively are indicated in red
+        and those who contribute negatively in blue.
+        """)
+    elif load_example == 'Penguin identification':
+        st.stop()
+    else:
+        st.info('Select an example in the left panel to coninue')
+        st.stop()
 
 # Option to upload your own data
 if input_type == 'Use your own data':
