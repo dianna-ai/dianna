@@ -74,11 +74,17 @@ def _methods_checkboxes(*, choices: Sequence, key):
 
 def _get_params(method: str, key):
     if method == 'RISE':
+        if 'FRB' in key:
+            n_masks = 5000
+            fr = 16
+        else:
+            n_masks = 1000
+            fr = 6
         return {
             'n_masks':
-            st.number_input('Number of masks', value=1000, key=f'{key}_{method}_nmasks'),
+            st.number_input('Number of masks', value=n_masks, key=f'{key}_{method}_nmasks'),
             'feature_res':
-            st.number_input('Feature resolution', value=6, key=f'{key}_{method}_fr'),
+            st.number_input('Feature resolution', value=fr, key=f'{key}_{method}_fr'),
             'p_keep':
             st.number_input('Probability to be kept unmasked', value=0.1, key=f'{key}_{method}_pkeep'),
         }
