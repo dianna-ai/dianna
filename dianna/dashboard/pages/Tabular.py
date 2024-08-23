@@ -4,6 +4,7 @@ from _model_utils import load_data
 from _model_utils import load_labels
 from _model_utils import load_model
 from _model_utils import load_training_data
+from _model_utils import load_train_test_sunshine
 from _models_tabular import explain_tabular_dispatcher
 from _models_tabular import predict
 from _shared import _get_top_indices_and_labels
