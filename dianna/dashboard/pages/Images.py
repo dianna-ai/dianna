@@ -12,7 +12,6 @@ from _shared import reset_method
 from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 
-
 add_sidebar_logo()
 
 st.title('Image explanation')

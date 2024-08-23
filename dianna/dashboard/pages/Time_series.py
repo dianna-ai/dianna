@@ -15,7 +15,6 @@ from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 from dianna.visualization import plot_timeseries
 
-
 st.title('Time series explanation')
 
 add_sidebar_logo()

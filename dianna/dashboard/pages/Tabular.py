@@ -13,7 +13,6 @@ from _shared import reset_example
 from dianna.visualization import plot_tabular
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
-
 add_sidebar_logo()
 
 st.title('Tabular data explanation')
