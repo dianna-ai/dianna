@@ -82,12 +82,15 @@ if not (tabular_data_file and tabular_model_file and tabular_training_data_file)
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
-data = load_data(tabular_data_file)
+
+if load_example == "Sunshine hours prediction":
+    training_data, data = load_train_test_sunshine(tabular_data_file)
+else:
+    data = load_data(tabular_data_file)
+    training_data = load_training_data(tabular_training_data_file)
 
 model = load_model(tabular_model_file)
 serialized_model = model.SerializeToString()
-
-training_data = load_training_data(tabular_training_data_file)
 
 if tabular_label_file:
     labels = load_labels(tabular_label_file)
