@@ -118,15 +118,17 @@ labels = load_labels(ts_label_file)
 
 if load_example == "Scientific case: FRB":
     choices = ('RISE',)
+    param_key = 'FRB_TS_cb'
 else:
     choices = ('RISE', 'LIME')
+    param_key = 'TS_cb'
 
 st.text("")
 st.text("")
 
 with st.container(border=True):
     prediction_placeholder = st.empty()
-    methods, method_params = _methods_checkboxes(choices=choices, key='TS_cb')
+    methods, method_params = _methods_checkboxes(choices=choices, key=param_key)
 
     with st.spinner('Predicting class'):
         predictions = predict(model=serialized_model, ts_data=ts_data_predictor)
