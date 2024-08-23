@@ -4,14 +4,16 @@ from _model_utils import load_data
 from _model_utils import load_labels
 from _model_utils import load_model
 from _model_utils import load_training_data
-from _models_tabular import predict
 from _models_tabular import explain_tabular_dispatcher
+from _models_tabular import predict
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import reset_example
+from st_aggrid import AgGrid
+from st_aggrid import GridOptionsBuilder
+from st_aggrid import GridUpdateMode
 from dianna.visualization import plot_tabular
-from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 add_sidebar_logo()
 
