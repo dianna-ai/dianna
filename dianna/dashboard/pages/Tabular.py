@@ -128,7 +128,7 @@ if grid_response['selected_rows'] is not None:
     selected_row = grid_response['selected_rows']['Index'].iloc[0]
     selected_data = data.iloc[selected_row, 1:].to_numpy(dtype=np.float32)
     with st.spinner('Predicting class'):
-        predictions = predict(model=serialized_model, tabular_input=selected_data)
+        predictions = predict(model=serialized_model, tabular_input=selected_data.reshape(1,-1).astype(np.float32))
 
     with prediction_placeholder:
         top_indices, top_labels = _get_top_indices_and_labels(
