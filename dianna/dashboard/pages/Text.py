@@ -36,7 +36,7 @@ if input_type == 'Use an example':
         key='Text_load_example')
 
     if load_example == 'Movie sentiment':
-        text_input = 'The movie started out great but the ending was disappointing'
+        text_input = st.sidebar.text_input('Input string', value='The movie started out great but the ending was disappointing')
         text_model_file = download('movie_review_model.onnx', 'model')
         text_label_file = download('labels_text.txt', 'label')
 
@@ -46,7 +46,8 @@ if input_type == 'Use an example':
         Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which
         contains one-sentence movie reviews. A pre-trained neural network
         classifier is used, which identifies whether a movie review is positive
-        or negative.
+        or negative. The input string to which the model is applied can be modified
+        in the left menu.
         """)
     else:
         st.info('Select an example in the left panel to coninue')
