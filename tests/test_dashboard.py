@@ -259,8 +259,12 @@ def test_tabular_page(page: Page):
     expect(page.get_by_text("Select which input type to")).to_be_visible(timeout=100_000)
 
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
+    expect(page.get_by_text("Select an example in the left")).to_be_visible()
+    expect(page.get_by_text("Sunshine hours prediction")).to_be_visible()
+    expect(page.get_by_text("Penguin identification")).to_be_visible()
 
     # Test sunshine example
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="Sunshine hours prediction").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
