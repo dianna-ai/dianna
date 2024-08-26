@@ -183,7 +183,6 @@ for index, label in zip(top_indices, top_labels):
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
-        kwargs['labels'] = [index]
         kwargs['mode'] = mode
         kwargs['_feature_names']=data.columns.to_list()[1:]
 
