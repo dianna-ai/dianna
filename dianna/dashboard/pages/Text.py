@@ -36,7 +36,9 @@ if input_type == 'Use an example':
         key='Text_load_example')
 
     if load_example == 'Movie sentiment':
-        text_input = st.sidebar.text_input('Input string', value='The movie started out great but the ending was disappointing')
+        text_input = st.sidebar.text_input(
+            'Input string',
+            value='The movie started out great but the ending was disappointing')
         text_model_file = download('movie_review_model.onnx', 'model')
         text_label_file = download('labels_text.txt', 'label')
 

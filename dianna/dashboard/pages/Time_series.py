@@ -13,7 +13,6 @@ from _shared import reset_method
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
 from dianna.utils.downloader import download
-from dianna.visualization import plot_image
 from dianna.visualization import plot_timeseries
 
 st.title('Time series explanation')
@@ -177,7 +176,7 @@ for index, label in zip(top_indices, top_labels):
                 ax.imshow(explanation[0].T, aspect='auto', origin='lower', cmap='bwr')
                 ax.set_xlabel('Time step')
                 ax.set_ylabel('Channel index')
-                ax.set_title(f'Explanation')
+                ax.set_title('Explanation')
 
             else:
                 segments = _convert_to_segments(explanation)
