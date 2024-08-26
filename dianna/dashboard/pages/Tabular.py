@@ -47,6 +47,10 @@ if input_type == 'Use an example':
         tabular_training_data_file = tabular_data_file
         tabular_label_file = None
 
+        training_data, data = load_sunshine(tabular_data_file)
+        labels =  None
+
+        mode = 'regression'
         st.markdown(
         """
         This example demonstrates the use of DIANNA on a pre-trained regression
