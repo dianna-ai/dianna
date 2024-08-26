@@ -289,7 +289,6 @@ def test_tabular_page(page: Page):
     # Test penguin example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="Penguin identification").locator("div").nth(1).click()
-    #expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
     page.locator("label").filter(has_text="RISE").locator("span").click()
     page.locator("label").filter(has_text="LIME").locator("span").click()
