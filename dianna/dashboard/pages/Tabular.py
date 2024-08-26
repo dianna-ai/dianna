@@ -192,7 +192,12 @@ for index, label in zip(top_indices, top_labels):
         with col:
             with st.spinner(f'Running {method}'):
                 relevances = func(serialized_model, selected_data, training_data, **kwargs)
-            fig, _ = plot_tabular(x=relevances, y=kwargs['_feature_names'], num_features=10, show_plot=False)
+            if mode == 'classification':
+                plot_relevances = relevances[np.argmax(predictions)]
+            else:
+                plot_relevances = relevances
+
+            fig, _ = plot_tabular(x=plot_relevances, y=kwargs['_feature_names'], num_features=10, show_plot=False)
             st.pyplot(fig)
 
     # add some white space to separate rows
