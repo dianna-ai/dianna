@@ -285,14 +285,23 @@ def test_tabular_page(page: Page):
             page.get_by_role('img', name='0').nth(2),
     ):
         expect(selector).to_be_visible()
-    
+
+    # Test using your own data
+    page.locator("label").filter(
+        has_text="Use your own data").locator("div").nth(1).click()
+    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click()
+
     # Test penguin example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="Penguin identification").locator("div").nth(1).click()
-
-    #page.locator("label").filter(has_text="RISE").locator("span").click()
-    #page.locator("label").filter(has_text="LIME").locator("span").click()
-    #page.locator("label").filter(has_text="KernelSHAP").locator("span").click()
+    
+    expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
+    page.locator("label").filter(has_text="RISE").locator("span").click()
+    page.locator("label").filter(has_text="LIME").locator("span").click()
+    page.locator("label").filter(has_text="KernelSHAP").locator("span").click()
 
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
     page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role("gridcell", name="10", exact=True).click(timeout=100_000)
@@ -307,11 +316,3 @@ def test_tabular_page(page: Page):
             page.get_by_role('img', name='0').nth(2),
     ):
         expect(selector).to_be_visible(timeout=100_000)
-
-    # Test using your own data
-    page.locator("label").filter(
-        has_text="Use your own data").locator("div").nth(1).click()
-    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click()
-    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
-    page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click()
-    page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click()
