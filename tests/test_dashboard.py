@@ -196,6 +196,7 @@ def test_timeseries_page(page: Page):
     expect(page.get_by_text("FRB")).to_be_visible()
 
     # Test weather example
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="Weather").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
@@ -219,6 +220,7 @@ def test_timeseries_page(page: Page):
         expect(selector).to_be_visible()
 
     # Test FRB example
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="FRB").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
@@ -272,13 +274,16 @@ def test_tabular_page(page: Page):
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
+            page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
+            page.get_by_role('heading', name='LIME').get_by_text('LIME'),
+            page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
             page.get_by_role('img', name='0').nth(2),
-            page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible()
     
     # Test penguin example
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="Penguin identification").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
@@ -287,14 +292,17 @@ def test_tabular_page(page: Page):
     page.locator("label").filter(has_text="KernelSHAP").locator("span").click()
 
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
+
     page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role("gridcell", name="10", exact=True).click(timeout=100_000)
     page.get_by_test_id("stMetricValue").get_by_text("Gentoo").click(timeout=100_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
+            page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
+            page.get_by_role('heading', name='LIME').get_by_text('LIME'),
+            page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
             page.get_by_role('img', name='0').nth(2),
-            page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible(timeout=100_000)
 
