@@ -45,7 +45,7 @@ def load_training_data(file):
     return np.float32(np.load(file, allow_pickle=False))
 
 
-def load_train_test_sunshine(file):
+def load_sunshine(file):
     """For the tabular sunshine example load the csv file in a pandas dataframe and split the data
     in a train and test set."""
     data = load_data(file)
@@ -59,4 +59,22 @@ def load_train_test_sunshine(file):
     _, X_test, _, _ = train_test_split(X_holdout, y_holdout, test_size=0.5, random_state=0)
     X_test = X_test.reset_index(drop=True)
     X_test.insert(0, 'Index', X_test.index)
+
+    return X_train.to_numpy(dtype=np.float32), X_test
+
+def load_penguins(penguins):
+    # Remove categorial columns and NaN values
+    penguins_filtered = penguins.drop(columns=['island', 'sex']).dropna()
+
+
+    # Extract inputs and target
+    input_features = penguins_filtered.drop(columns=['species'])
+    target = pd.get_dummies(penguins_filtered['species'])
+
+    X_train, X_test, _, _ = train_test_split(input_features, target, test_size=0.2,
+                                                    random_state=0, shuffle=True, stratify=target)
+    
+    X_test = X_test.reset_index(drop=True)
+    X_test.insert(0, 'Index', X_test.index)
+
     return X_train.to_numpy(dtype=np.float32), X_test
