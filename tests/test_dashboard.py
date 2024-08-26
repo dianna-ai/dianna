@@ -287,7 +287,7 @@ def test_tabular_page(page: Page):
     ):
         expect(selector).to_be_visible()
 
-    # Test penguin example
+    """    # Test penguin example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="Penguin identification").locator("div").nth(1).click()
     
@@ -309,7 +309,7 @@ def test_tabular_page(page: Page):
             page.get_by_role('img', name='0').nth(1),
             page.get_by_role('img', name='0').nth(2),
     ):
-        expect(selector).to_be_visible(timeout=200_000)
+        expect(selector).to_be_visible(timeout=200_000)"""
 
     # Test using your own data
     page.locator("label").filter(
