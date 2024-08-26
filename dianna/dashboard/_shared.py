@@ -77,16 +77,22 @@ def _get_params(method: str, key):
         if 'FRB' in key:
             n_masks = 5000
             fr = 16
+            pkeep= 0.1
+        elif 'Tabular' in key:
+            n_masks = 1000
+            fr = 8
+            pkeep = 0.5
         else:
             n_masks = 1000
             fr = 6
+            pkeep = 0.1
         return {
             'n_masks':
             st.number_input('Number of masks', value=n_masks, key=f'{key}_{method}_nmasks'),
             'feature_res':
             st.number_input('Feature resolution', value=fr, key=f'{key}_{method}_fr'),
             'p_keep':
-            st.number_input('Probability to be kept unmasked', value=0.1, key=f'{key}_{method}_pkeep'),
+            st.number_input('Probability to be kept unmasked', value=pkeep, key=f'{key}_{method}_pkeep'),
         }
 
     elif method == 'KernelSHAP':
