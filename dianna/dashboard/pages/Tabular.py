@@ -3,9 +3,9 @@ import streamlit as st
 from _model_utils import load_data
 from _model_utils import load_labels
 from _model_utils import load_model
-from _model_utils import load_training_data
-from _model_utils import load_sunshine
 from _model_utils import load_penguins
+from _model_utils import load_sunshine
+from _model_utils import load_training_data
 from _models_tabular import explain_tabular_dispatcher
 from _models_tabular import predict
 from _shared import _get_top_indices_and_labels
@@ -41,7 +41,7 @@ if input_type == 'Use an example':
         index = None,
         on_change = reset_method,
         key='Tabular_load_example')
-    
+
     if load_example == "Sunshine hours prediction":
         tabular_data_file = download('weather_prediction_dataset_light.csv', 'data')
         tabular_model_file = download('sunshine_hours_regression_model.onnx', 'model')
@@ -72,7 +72,7 @@ if input_type == 'Use an example':
         tabular_model_file = download('penguin_model.onnx', 'model')
         data_penguins = sns.load_dataset('penguins')
         labels = data_penguins['species'].unique()
-        
+
         training_data, data = load_penguins(data_penguins)
 
         mode = 'classification'
@@ -83,7 +83,7 @@ if input_type == 'Use an example':
         [model to classify penguin in to three different species](https://zenodo.org/records/10580743)
         based on a number of measurable physical characteristics.
         The model is trained on the
-        [weather prediction dataset](https://zenodo.org/records/5071376). The data is obtained from 
+        [weather prediction dataset](https://zenodo.org/records/5071376). The data is obtained from
         the Python seaborn package
         The penguin characteristics include the bill length, bill depth, flipper length and body mass.
 
@@ -112,7 +112,7 @@ if input_type == 'Use your own data':
     else:
         labels = None
         mode = 'regression'
-    
+
     if not (tabular_data_file and tabular_model_file and tabular_training_data_file):
         st.info('Add your input data in the left panel to continue')
         st.stop()
@@ -193,7 +193,8 @@ for index, label in zip(top_indices, top_labels):
             else:
                 plot_relevances = relevances
 
-            fig, _ = plot_tabular(x=plot_relevances, y=kwargs['_feature_names'], num_features=10, show_plot=False)
+            fig, _ = plot_tabular(x=plot_relevances, y=kwargs['_feature_names'],
+                                  num_features=10, show_plot=False)
             st.pyplot(fig)
 
     # add some white space to separate rows

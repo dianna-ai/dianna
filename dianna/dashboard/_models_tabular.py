@@ -1,6 +1,5 @@
-import tempfile
-import onnxruntime as ort
 import numpy as np
+import onnxruntime as ort
 import streamlit as st
 from dianna import explain_tabular
 
@@ -27,7 +26,7 @@ def _run_rise_tabular(_model, table, training_data,_feature_names, **kwargs):
 
     def run_model(tabular_input):
         return predict(model=_model, tabular_input=tabular_input)
-    
+
     relevances = explain_tabular(
         run_model,
         table,
@@ -48,7 +47,7 @@ def _run_lime_tabular(_model, table, training_data, _feature_names, **kwargs):
 
     def run_model(tabular_input):
         return predict(model=_model, tabular_input=tabular_input)
-    
+
     relevances = explain_tabular(
         run_model,
         table,
@@ -68,7 +67,7 @@ def _run_kernelshap_tabular(model, table, training_data, _feature_names, **kwarg
 
     def run_model(tabular_input):
         return predict(model=model, tabular_input=tabular_input)
-    
+
     relevances = explain_tabular(run_model,
                 table,
                 method='KernelSHAP',
