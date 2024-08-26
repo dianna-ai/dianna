@@ -4,7 +4,8 @@ from _model_utils import load_data
 from _model_utils import load_labels
 from _model_utils import load_model
 from _model_utils import load_training_data
-from _model_utils import load_train_test_sunshine
+from _model_utils import load_sunshine
+from _model_utils import load_penguins
 from _models_tabular import explain_tabular_dispatcher
 from _models_tabular import predict
 from _shared import _get_top_indices_and_labels
@@ -67,7 +68,29 @@ if input_type == 'Use an example':
         and those who contribute negatively in blue.
         """)
     elif load_example == 'Penguin identification':
-        st.stop()
+        import seaborn as sns
+        tabular_model_file = download('penguin_model.onnx', 'model')
+        data_penguins = sns.load_dataset('penguins')
+        labels = data_penguins['species'].unique()
+        
+        training_data, data = load_penguins(data_penguins)
+
+        mode = 'classification'
+
+        st.markdown(
+        """
+        This example demonstrates the use of DIANNA on a pre-trained classification
+        [model to classify penguin in to three different species](https://zenodo.org/records/10580743)
+        based on a number of measurable physical characteristics.
+        The model is trained on the
+        [weather prediction dataset](https://zenodo.org/records/5071376). The data is obtained from 
+        the Python seaborn package
+        The penguin characteristics include the bill length, bill depth, flipper length and body mass.
+
+        DIANNA's visualisation shows the top most important characteristics contributing to the
+        penguin species classification, where characteristics contrinuting positively are indicated in red
+        and those who contribute negatively in blue.
+        """)
     else:
         st.info('Select an example in the left panel to coninue')
         st.stop()
