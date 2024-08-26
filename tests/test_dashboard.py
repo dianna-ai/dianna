@@ -299,9 +299,9 @@ def test_tabular_page(page: Page):
     page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
     page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role(
         "gridcell", name="10", exact=True).click(timeout=200_000)
-    """page.get_by_test_id("stMetricValue").get_by_text("Gentoo").click(timeout=200_000)
+    page.get_by_test_id("stMetricValue").get_by_text("Gentoo").click(timeout=200_000)
 
-    for selector in (
+    """for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
