@@ -102,6 +102,10 @@ if input_type == 'Use your own data':
     tabular_training_data_file = st.sidebar.file_uploader('Select training data', type='npy')
     tabular_label_file = st.sidebar.file_uploader('Select labels in case of classification model', type='txt')
 
+    if not (tabular_data_file and tabular_model_file and tabular_training_data_file):
+        st.info('Add your input data in the left panel to continue')
+        st.stop()
+    
     data = load_data(tabular_data_file)
     model = load_model(tabular_model_file)
     training_data = load_training_data(tabular_training_data_file)
@@ -112,10 +116,6 @@ if input_type == 'Use your own data':
     else:
         labels = None
         mode = 'regression'
-
-    if not (tabular_data_file and tabular_model_file and tabular_training_data_file):
-        st.info('Add your input data in the left panel to continue')
-        st.stop()
 
 if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
