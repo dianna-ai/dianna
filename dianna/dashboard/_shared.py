@@ -103,9 +103,14 @@ def _get_params(method: str, key):
             }
 
     elif method == 'LIME':
-        return {
-            'random_state': st.number_input('Random state', value=2, key=f'{key}_{method}_rs'),
+        if 'Tabular' in key:
+            return {
+            'random_state': st.number_input('Random state', value=0, key=f'{key}_{method}_rs'),
         }
+        else:
+            return {
+                'random_state': st.number_input('Random state', value=2, key=f'{key}_{method}_rs'),
+            }
 
     else:
         raise ValueError(f'No such method: {method}')
