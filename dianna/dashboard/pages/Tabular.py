@@ -125,8 +125,8 @@ grid_response = AgGrid(
 )
 
 if grid_response['selected_rows'] is not None:
-    selected_row = grid_response['selected_rows']['Index'].iloc[0]
-    selected_data = data.iloc[selected_row, 1:].to_numpy(dtype=np.float32)
+    selected_row = int(grid_response['selected_rows'].index[0])
+    selected_data = data.iloc[selected_row].to_numpy()[1:]
     with st.spinner('Predicting class'):
         predictions = predict(model=serialized_model, tabular_input=selected_data.reshape(1,-1).astype(np.float32))
 
