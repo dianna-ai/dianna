@@ -290,20 +290,34 @@ def test_tabular_page(page: Page):
         expect(selector).to_be_visible(timeout=100_000)
 
     # Test penguin example
+    # Use pauses to make sure elements are loaded
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="Penguin identification").locator("div").nth(1).click()
     
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=200_000)
+
+    time.sleep(3)
+
     page.locator("label").filter(has_text="RISE").locator("span").click()
     page.locator("label").filter(has_text="LIME").locator("span").click()
     page.locator("label").filter(has_text="KernelSHAP").locator("span").click()
 
-    page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
-    page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role(
-        "gridcell", name="10", exact=True).click(timeout=200_000)
-    page.get_by_test_id("stMetricValue").get_by_text("Gentoo").click(timeout=200_000)
+    time.sleep(3)
 
-    """for selector in (
+    expect(page.get_by_text("Select the input data by")).to_be_visible()
+    page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
+
+    time.sleep(3)
+    
+    page.frame_locator('iframe[title=\"st_aggrid\\.agGrid\"]').get_by_role(
+        'gridcell', name='10', exact=True).click(timeout=200_000)
+    page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
+
+    time.sleep(6)
+
+    for selector in (
+            page.get_by_text('Predicted class:'),
+            page.get_by_test_id('stMetricValue').get_by_text('Gentoo'),
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
@@ -311,7 +325,7 @@ def test_tabular_page(page: Page):
             page.get_by_role('img', name='0').nth(1),
             page.get_by_role('img', name='0').nth(2),
     ):
-        expect(selector).to_be_visible(timeout=200_000)"""
+        expect(selector).to_be_visible(timeout=200_000)
 
     # Test using your own data
     page.locator("label").filter(
