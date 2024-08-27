@@ -273,9 +273,10 @@ def test_tabular_page(page: Page):
     page.locator("label").filter(has_text="KernelSHAP").locator("span").click()
     page.locator("summary").filter(has_text="Click to modify RISE").get_by_test_id("stExpanderToggleIcon").click()
 
-    page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
+    expect(page.get_by_text("Select the input data by")).to_be_visible()
     page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role(
         "gridcell", name="10", exact=True).click()
+    page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
     expect(page.get_by_text("3.07")).to_be_visible(timeout=100_000)
 
     for selector in (
