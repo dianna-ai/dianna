@@ -1,4 +1,5 @@
 import numpy as np
+import seaborn as sns
 import streamlit as st
 from _model_utils import load_data
 from _model_utils import load_labels
@@ -68,7 +69,6 @@ if input_type == 'Use an example':
         and those who contribute negatively in blue.
         """)
     elif load_example == 'Penguin identification':
-        import seaborn as sns
         tabular_model_file = download('penguin_model.onnx', 'model')
         data_penguins = sns.load_dataset('penguins')
         labels = data_penguins['species'].unique()
