@@ -41,20 +41,26 @@ if selected == "Home":
     st.image(str(data_directory / 'logo.png'))
 
     st.markdown("""
-    DIANNA (Deep Insight And Neural Network Analysis) is a Python package that brings explainable AI (XAI) to your research project.
+    DIANNA (Deep Insight And Neural Network Analysis)
+    is a Python package that brings explainable AI (XAI) to your research project.
     It wraps carefully selected XAI methods in a simple, uniform interface. It's built by,
     with and for (academic) researchers and research software engineers working on machine
     learning projects. DIANNA supports the de-facto standard of neural network models - ONNX.
 
     ### Dashboard
-    The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained for the tasks and datasets presented in the [DIANNA Tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials#datasets-and-tasks ). The dashboard shows the visual explanation of a models' decision on a selected data item by a selected XAI method (explainer). It allows you to compare the results of different explainers, as well as explanations of the top ranked predicted labels. The dashboard was created using [streamlit](https://streamlit.io/ ).
+    The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained
+    for the tasks and datasets presented in the
+    [DIANNA Tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials#datasets-and-tasks ).
+    The dashboard shows the visual explanation of a models' decision on a selected data item by a
+    selected XAI method (explainer). It allows you to compare the results of different explainers,
+    as well as explanations of the top ranked predicted labels. The dashboard was created using
+    [streamlit](https://streamlit.io/ ).
     
     This dashboard provides pages for the different data items for which DIANNA can be used; 
-                <a href="/Images" target="_parent">Image data</a>,
-                <a href="/Tabular " target="_parent">Tabular data</a>,
-                <a href="/Text" target="_parent">Text data</a>, and
-                <a href="/Time_series" target="_parent">Time series data</a>.
-    Here you can upload a trained (onnx) model, data item and the other data required for the specific data item. You can then select the explainer you want to use and set the different explainer variables. It is also possible to load example data items on each page.
+    Image data, Tabular data, Text data, and Time series data.
+    Here you can upload a trained (onnx) model, data item and the other data required for the
+    specific data item. You can then select the explainer you want to use and set the different
+    explainer variables. It is also possible to load example data items on each page.
     
     ### More information
 
