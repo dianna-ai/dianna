@@ -297,7 +297,7 @@ def test_tabular_page(page: Page):
     # Use pauses to make sure elements are loaded
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="Penguin identification").locator("div").nth(1).click()
-    
+
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=200_000)
 
     time.sleep(3)
@@ -312,7 +312,7 @@ def test_tabular_page(page: Page):
     page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
 
     time.sleep(3)
-    
+
     page.frame_locator('iframe[title=\"st_aggrid\\.agGrid\"]').get_by_role(
         'gridcell', name='10', exact=True).click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
