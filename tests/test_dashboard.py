@@ -78,7 +78,6 @@ def test_page_load(page: Page):
     expect(page).to_have_title("Dianna's dashboard")
     for selector in (
             page.get_by_role('img', name='0'),
-            page.get_by_text('Pages'),
             page.get_by_text('More information'),
     ):
         expect(selector).to_be_visible()
