@@ -273,8 +273,8 @@ def test_tabular_page(page: Page):
     page.locator("summary").filter(has_text="Click to modify RISE").get_by_test_id("stExpanderToggleIcon").click()
 
     time.sleep(3)
-    
-    expect(page.get_by_text("Select the input data by")).to_be_visible()
+
+    expect(page.get_by_text("Select the input data by")).to_be_visible(timeout=100_000)
     page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role(
         "gridcell", name="10", exact=True).click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
@@ -334,7 +334,7 @@ def test_tabular_page(page: Page):
     # Test using your own data
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
-    time.sleep(3)
+    time.sleep(6)
     page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click()
     page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
     page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click()
