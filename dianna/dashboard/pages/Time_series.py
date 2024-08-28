@@ -44,6 +44,8 @@ if input_type == 'Use an example':
                         'season_prediction_model_temp_max_binary.onnx', 'model')
         ts_label_file = download('weather_data_labels.txt', 'label')
 
+        param_key = 'Weather_TS_cb'
+
         st.markdown(
         """
         This example demonstrates the use of DIANNA
@@ -72,6 +74,8 @@ if input_type == 'Use an example':
         ts_data_explainer = ts_data.T[None, ...]
         ts_data_predictor = ts_data[None, ..., None]
 
+        param_key = 'FRB_TS_cb'
+
         st.markdown(
             """This example demonstrates the use of DIANNA
             on a pre-trained binary classification model trained to classify
@@ -98,6 +102,8 @@ if input_type == 'Use your own data':
     ts_label_file = st.sidebar.file_uploader('Select labels',
                                             type='txt')
 
+    param_key = 'TS_cb'
+    
 if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
@@ -118,10 +124,8 @@ labels = load_labels(ts_label_file)
 
 if load_example == "Scientific case: FRB":
     choices = ('RISE',)
-    param_key = 'FRB_TS_cb'
 else:
     choices = ('RISE', 'LIME')
-    param_key = 'TS_cb'
 
 st.text("")
 st.text("")

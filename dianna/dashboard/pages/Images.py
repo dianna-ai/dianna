@@ -41,6 +41,8 @@ if input_type == 'Use an example':
         image_model_file = download('mnist_model_tf.onnx', 'model')
         image_label_file = download('labels_mnist.txt', 'label')
 
+        imagekey = 'Digits_Image_cb'
+        
         st.markdown(
             """
             This example demonstrates the use of DIANNA on a pretrained binary
@@ -70,6 +72,8 @@ if input_type == 'Use your own data':
 
     image_label_file = st.sidebar.file_uploader('Select labels',
                                                 type='txt')
+    
+    imagekey = 'Image_cb'
 
 if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
@@ -93,7 +97,7 @@ st.text("")
 
 with st.container(border=True):
     prediction_placeholder = st.empty()
-    methods, method_params = _methods_checkboxes(choices=choices, key='Image_cb')
+    methods, method_params = _methods_checkboxes(choices=choices, key=imagekey)
 
     with st.spinner('Predicting class'):
         predictions = predict(model=model, image=image)

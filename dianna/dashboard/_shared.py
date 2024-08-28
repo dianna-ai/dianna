@@ -74,18 +74,18 @@ def _methods_checkboxes(*, choices: Sequence, key):
 
 def _get_params(method: str, key):
     if method == 'RISE':
+        n_masks = 1000
+        fr = 8
+        pkeep = 0.1
         if 'FRB' in key:
             n_masks = 5000
             fr = 16
-            pkeep= 0.1
         elif 'Tabular' in key:
-            n_masks = 1000
-            fr = 8
             pkeep = 0.5
-        else:
-            n_masks = 1000
-            fr = 6
-            pkeep = 0.1
+        elif 'Weather' in key:
+            n_masks = 10000
+        elif 'Digits' in key:
+            n_masks = 5000
         return {
             'n_masks':
             st.number_input('Number of masks', value=n_masks, key=f'{key}_{method}_nmasks'),
