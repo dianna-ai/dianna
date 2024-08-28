@@ -103,7 +103,7 @@ if input_type == 'Use your own data':
                                             type='txt')
 
     param_key = 'TS_cb'
-    
+
 if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()

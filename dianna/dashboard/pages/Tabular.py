@@ -105,7 +105,7 @@ if input_type == 'Use your own data':
     if not (tabular_data_file and tabular_model_file and tabular_training_data_file):
         st.info('Add your input data in the left panel to continue')
         st.stop()
-    
+
     data = load_data(tabular_data_file)
     model = load_model(tabular_model_file)
     training_data = load_training_data(tabular_training_data_file)

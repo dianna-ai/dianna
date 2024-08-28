@@ -42,7 +42,7 @@ if input_type == 'Use an example':
         image_label_file = download('labels_mnist.txt', 'label')
 
         imagekey = 'Digits_Image_cb'
-        
+
         st.markdown(
             """
             This example demonstrates the use of DIANNA on a pretrained binary
@@ -72,7 +72,7 @@ if input_type == 'Use your own data':
 
     image_label_file = st.sidebar.file_uploader('Select labels',
                                                 type='txt')
-    
+
     imagekey = 'Image_cb'
 
 if input_type is None:
