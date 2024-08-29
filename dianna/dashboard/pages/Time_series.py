@@ -1,4 +1,3 @@
-from matplotlib import pyplot as plt
 import numpy as np
 import streamlit as st
 from _model_utils import load_labels
@@ -12,6 +11,7 @@ from _shared import reset_example
 from _shared import reset_method
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
+from matplotlib import pyplot as plt
 from dianna.utils.downloader import download
 from dianna.visualization import plot_timeseries
 
