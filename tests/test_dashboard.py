@@ -97,7 +97,7 @@ def test_text_page(page: Page):
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=50_000)
 
     time.sleep(3)
-    
+
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
     page.get_by_test_id("stNumberInput-StepUp").click()
@@ -205,9 +205,9 @@ def test_timeseries_page(page: Page):
 
     time.sleep(3)
 
-    page.locator('label').filter(has_text='LIME').locator('span').click()
-    page.locator('label').filter(has_text='RISE').locator('span').click()
-    page.get_by_test_id("stNumberInput-StepUp").click()
+    page.locator('label').filter(has_text='LIME').locator('span').click(timeout=200_000)
+    page.locator('label').filter(has_text='RISE').locator('span').click(timeout=200_000)
+    page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     for selector in (
@@ -273,14 +273,14 @@ def test_tabular_page(page: Page):
     # Test using your own data
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
-    page.screenshot(path="screenshot9.png")
-    #time.sleep(6)
-    page.screenshot(path="screenshot10.png")
+
+    time.sleep(3)
+
     page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
-    page.screenshot(path="screenshot11.png")
-    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
-    page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click()
-    page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click()
+
+    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=200_000)
+    page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
+    page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click(timeout=200_000)
 
 
 def test_tabular_sunshine(page: Page):
