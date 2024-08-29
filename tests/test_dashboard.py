@@ -96,6 +96,8 @@ def test_text_page(page: Page):
     page.get_by_text("Movie sentiment").click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=50_000)
 
+    time.sleep(3)
+    
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
     page.get_by_test_id("stNumberInput-StepUp").click()
@@ -149,6 +151,8 @@ def test_image_page(page: Page):
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible(timeout=100_000)
 
+    time.sleep(6)
+
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='KernelSHAP').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
@@ -199,6 +203,8 @@ def test_timeseries_page(page: Page):
     page.locator("label").filter(has_text="Weather").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
+    time.sleep(3)
+
     page.locator('label').filter(has_text='LIME').locator('span').click()
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.get_by_test_id("stNumberInput-StepUp").click()
@@ -222,6 +228,8 @@ def test_timeseries_page(page: Page):
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.locator("label").filter(has_text="FRB").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
+
+    time.sleep(3)
 
     page.locator('label').filter(has_text='RISE').locator('span').click()
 
