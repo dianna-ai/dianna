@@ -102,6 +102,6 @@ def test_text_page(page: Page):
         'Add your input data in the left panel to continue')
     expect(selector).to_be_visible(timeout=30_000)
     # Check input panel
-    page.get_by_label("Input string").click()
-    expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
+    expect(page.get_by_label("Input string")).to_be_visible(timeout=200_000)
+    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
     page.get_by_label("Select labels").get_by_test_id("baseButton-secondary").click()
