@@ -71,23 +71,16 @@ def run_streamlit():
 def test_text_page(page: Page):
     """Test performance of text page."""
     page.goto(f'{BASE_URL}/Text')
-
     page.get_by_text('Running...').wait_for(state='detached')
-
     expect(page).to_have_title('Text')
-
     # Movie sentiment example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.get_by_text("Movie sentiment").click()
-    expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=200_000)
-
-    time.sleep(5)
-
+    expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=50_000)
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-    page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
-    page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
-
+    page.get_by_test_id("stNumberInput-StepUp").click()
+    page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
@@ -96,7 +89,6 @@ def test_text_page(page: Page):
                              name='positive').get_by_text('positive'),
             page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
-
             # Images for negative (RISE/LIME)
             page.get_by_role('heading',
                              name='negative').get_by_text('negative'),
@@ -104,19 +96,12 @@ def test_text_page(page: Page):
             page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible()
-
     # Own data option
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
-
-    time.sleep(3)
-
     selector = page.get_by_text(
         'Add your input data in the left panel to continue')
-
-    expect(selector).to_be_visible(timeout=200_000)
-
+    expect(selector).to_be_visible(timeout=30_000)
     # Check input panel
     page.get_by_label("Input string").click()
     expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
     page.get_by_label("Select labels").get_by_test_id("baseButton-secondary").click()
-
