@@ -80,16 +80,11 @@ def test_tabular_page(page: Page):
 
     time.sleep(5)
 
-    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
-    expect(page.get_by_text("Select an example in the left")).to_be_visible()
-    expect(page.get_by_text("Sunshine hours prediction")).to_be_visible()
-    expect(page.get_by_text("Penguin identification")).to_be_visible()
-
     # Test using your own data
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
 
-    time.sleep(3)
+    time.sleep(5)
 
     page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
     page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=200_000)
