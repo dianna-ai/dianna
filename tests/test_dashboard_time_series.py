@@ -120,6 +120,8 @@ def test_timeseries_page(page: Page):
 
     page.locator('label').filter(has_text='RISE').locator('span').click()
 
+    time.sleep(3)
+
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     time.sleep(5)
