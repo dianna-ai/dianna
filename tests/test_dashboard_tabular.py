@@ -78,6 +78,8 @@ def test_tabular_page(page: Page):
 
     expect(page.get_by_text("Select which input type to")).to_be_visible(timeout=100_000)
 
+    time.sleep(5)
+
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     expect(page.get_by_text("Select an example in the left")).to_be_visible()
     expect(page.get_by_text("Sunshine hours prediction")).to_be_visible()
@@ -87,8 +89,9 @@ def test_tabular_page(page: Page):
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
 
-    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
+    time.sleep(3)
 
+    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
     page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=200_000)
     page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
     page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click(timeout=200_000)
@@ -114,15 +117,21 @@ def test_tabular_sunshine(page: Page):
     page.locator("label").filter(has_text="Sunshine hours prediction").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
+    time.sleep(5)
+
     page.locator("label").filter(has_text="RISE").locator("span").click()
     page.locator("label").filter(has_text="LIME").locator("span").click()
     page.locator("label").filter(has_text="KernelSHAP").locator("span").click()
     page.locator("summary").filter(has_text="Click to modify RISE").get_by_test_id("stExpanderToggleIcon").click()
 
+    time.sleep(3)
+
     expect(page.get_by_text("Select the input data by")).to_be_visible(timeout=100_000)
     page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role(
         "gridcell", name="10", exact=True).click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
+
+    time.sleep(3)
 
     expect(page.get_by_text("3.07")).to_be_visible(timeout=200_000)
 
@@ -155,6 +164,8 @@ def test_tabular_penguin(page: Page):
     page.locator("label").filter(has_text="Penguin identification").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
+    time.sleep(5)
+
     page.locator("label").filter(has_text="RISE").locator("span").click(timeout=300_000)
     page.locator("label").filter(has_text="LIME").locator("span").click(timeout=300_000)
     page.locator("label").filter(has_text="KernelSHAP").locator("span").click(timeout=300_000)
@@ -163,6 +174,8 @@ def test_tabular_penguin(page: Page):
     page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role(
         "gridcell", name="10", exact=True).click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=300_000)
+
+    time.sleep(5)
 
     for selector in (
         page.get_by_text('Predicted class:'),

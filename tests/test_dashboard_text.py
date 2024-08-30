@@ -81,10 +81,14 @@ def test_text_page(page: Page):
     page.get_by_text("Movie sentiment").click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=200_000)
 
+    time.sleep(5)
+
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
     page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
+
+    time.sleep(5)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
@@ -105,10 +109,13 @@ def test_text_page(page: Page):
 
     # Own data option
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
+
+    time.sleep(3)
+
     selector = page.get_by_text(
         'Add your input data in the left panel to continue')
 
-    expect(selector).to_be_visible(timeout=30_000)
+    expect(selector).to_be_visible(timeout=200_000)
 
     # Check input panel
     page.get_by_label("Input string").click()

@@ -88,10 +88,14 @@ def test_timeseries_page(page: Page):
     page.locator("label").filter(has_text="Weather").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
+    time.sleep(5)
+
     page.locator('label').filter(has_text='LIME').locator('span').click(timeout=200_000)
     page.locator('label').filter(has_text='RISE').locator('span').click(timeout=200_000)
     page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
+
+    time.sleep(5)
 
     for selector in (
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
@@ -112,9 +116,13 @@ def test_timeseries_page(page: Page):
     page.locator("label").filter(has_text="FRB").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
+    time.sleep(3)
+
     page.locator('label').filter(has_text='RISE').locator('span').click()
 
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
+
+    time.sleep(5)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
