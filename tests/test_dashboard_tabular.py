@@ -84,8 +84,6 @@ def test_tabular_page(page: Page):
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
 
-    time.sleep(5)
-
     page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
     page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=200_000)
     page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
