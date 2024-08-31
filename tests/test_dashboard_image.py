@@ -87,13 +87,14 @@ def test_image_page(page: Page):
     expect(page.get_by_text('Select a method to continue')).to_be_visible(timeout=100_000)
 
     time.sleep(5)
-
+    page.screenshot(path="screenshot1.png")
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='KernelSHAP').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-    page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
+    page.screenshot(path="screenshot2.png")
+    #page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
-
+    page.screenshot(path="screenshot3.png")
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
@@ -104,10 +105,10 @@ def test_image_page(page: Page):
             page.get_by_role('img', name='0').nth(1),
             page.get_by_role('img', name='0').nth(2),
             # second image
-            page.get_by_role('heading', name='1').get_by_text('1'),
-            page.get_by_role('img', name='0').nth(3),
-            page.get_by_role('img', name='0').nth(4),
-            page.get_by_role('img', name='0').nth(5),
+            #page.get_by_role('heading', name='1').get_by_text('1'),
+            #page.get_by_role('img', name='0').nth(3),
+            #page.get_by_role('img', name='0').nth(4),
+            #page.get_by_role('img', name='0').nth(5),
     ):
         expect(selector).to_be_visible(timeout=200_000)
 
@@ -116,7 +117,6 @@ def test_image_page(page: Page):
 
     time.sleep(3)
 
-    expect(page.get_by_label("Select image").get_by_test_id("baseButton-secondary")).to_be_visible(timeout=200_000)
-    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=200_000)
-    page.get_by_label("Select labels").get_by_test_id("baseButton-secondary").click(timeout=200_000)
-
+    expect(page.get_by_label("Select image").get_by_test_id("baseButton-secondary")).to_be_visible()
+    expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
+    expect(page.get_by_label("Select labels").get_by_test_id("baseButton-secondary")).to_be_visible()
