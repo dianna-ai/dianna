@@ -79,7 +79,7 @@ def test_text_page(page: Page):
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=50_000)
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-#    page.get_by_test_id("stNumberInput-StepUp").click()
+    page.get_by_test_id("stNumberInput-StepUp").click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
@@ -90,10 +90,10 @@ def test_text_page(page: Page):
             page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
 #            # Images for negative (RISE/LIME)
-#            page.get_by_role('heading',
-#                             name='negative').get_by_text('negative'),
-#            page.get_by_role('img', name='0').nth(2),
-#            page.get_by_role('img', name='0').nth(3),
+            page.get_by_role('heading',
+                             name='negative').get_by_text('negative'),
+            page.get_by_role('img', name='0').nth(2),
+            page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible()
     # Own data option

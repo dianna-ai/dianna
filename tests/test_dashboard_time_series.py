@@ -92,7 +92,7 @@ def test_timeseries_page(page: Page):
 
     page.locator('label').filter(has_text='LIME').locator('span').click(timeout=200_000)
     page.locator('label').filter(has_text='RISE').locator('span').click(timeout=200_000)
-    #page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
+    page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     time.sleep(5)
@@ -105,9 +105,9 @@ def test_timeseries_page(page: Page):
             page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
             # Second image
-            #page.get_by_role('heading', name='summer').get_by_text('summer'),
-            #page.get_by_role('img', name='0').nth(2),
-            #page.get_by_role('img', name='0').nth(3),
+            page.get_by_role('heading', name='summer').get_by_text('summer'),
+            page.get_by_role('img', name='0').nth(2),
+            page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible()
 
@@ -122,6 +122,7 @@ def test_timeseries_page(page: Page):
 
     time.sleep(3)
 
+    page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     time.sleep(5)
@@ -132,6 +133,10 @@ def test_timeseries_page(page: Page):
             page.get_by_role('heading', name='FRB').get_by_text('FRB'),
             page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
+            # Second image
+            page.get_by_role('heading', name='summer').get_by_text('noise'),
+            page.get_by_role('img', name='0').nth(2),
+            page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible(timeout=200_000)
 
