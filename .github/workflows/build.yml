@@ -60,7 +60,8 @@ jobs:
 
   test_dashboard:
     name: Test dashboard
-    if: github.event.pull_request.draft == false
+    if: always()
+      #github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
