@@ -74,11 +74,13 @@ jobs:
         run: python -m playwright install chromium
 
       - name: Test dashboard
+        if: always()
         run: pytest -v -m dashboard --dashboard
       
         # Upload the artifact
       - name: Upload output file
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: screenshots
           path: |
@@ -89,5 +91,6 @@ jobs:
             "screenshotfrbbutton.png"
             "screenshottabularbutton.png"
             "screenshotimage.png"
+          if-no-files-found: warn
 
 
