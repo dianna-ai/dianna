@@ -79,8 +79,9 @@ def test_text_page(page: Page):
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=50_000)
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
+    time.sleep(4)
     page.screenshot(path="screenshottext.png")
-    page.get_by_test_id("stNumberInput-StepUp").click()
+    page.get_by_test_id("stNumberInput-StepUp").click(timeout=100_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),

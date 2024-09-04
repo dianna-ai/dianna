@@ -93,6 +93,7 @@ def test_timeseries_page(page: Page):
 
     page.locator('label').filter(has_text='LIME').locator('span').click(timeout=200_000)
     page.locator('label').filter(has_text='RISE').locator('span').click(timeout=200_000)
+    time.sleep(1)
     page.screenshot(path="screenshotweather-button.png")
     page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
