@@ -89,9 +89,11 @@ def test_timeseries_page(page: Page):
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
     time.sleep(5)
+    page.screenshot(path="screenshotweather-methods.png")
 
     page.locator('label').filter(has_text='LIME').locator('span').click(timeout=200_000)
     page.locator('label').filter(has_text='RISE').locator('span').click(timeout=200_000)
+    page.screenshot(path="screenshotweather-button.png")
     page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
@@ -121,7 +123,7 @@ def test_timeseries_page(page: Page):
     page.locator('label').filter(has_text='RISE').locator('span').click()
 
     time.sleep(3)
-
+    page.screenshot(path="screenshotfrbbutton.png")
     page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 

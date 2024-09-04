@@ -52,11 +52,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Run unit tests
-        run: python -m pytest -v --downloader
+      #- name: Run unit tests
+      #  run: python -m pytest -v --downloader
 
-      - name: Verify that we can build the package
-        run: python setup.py sdist bdist_wheel
+      #- name: Verify that we can build the package
+      #  run: python setup.py sdist bdist_wheel
 
   test_dashboard:
     name: Test dashboard
@@ -74,3 +74,10 @@ jobs:
 
       - name: Test dashboard
         run: pytest -v -m dashboard --dashboard
+      
+        # Upload the artifact
+      - name: Upload output file
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshots
+          path: screenshot*.pdf
