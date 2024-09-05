@@ -83,13 +83,8 @@ jobs:
         with:
           name: screenshots
           path: |
-            screenshotsetup.png
-            screenshottext.png
-            screenshotweather-methods.png
-            screenshotweather-button.png
-            screenshotfrbbutton.png
-            screenshottabularbutton.png
-            screenshotimage.png
+            screenshot*.png
+            trace*.zip
           if-no-files-found: warn
 
 
