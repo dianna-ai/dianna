@@ -68,10 +68,9 @@ def run_streamlit():
         p.kill()
 
 
-def test_image_page(context: BrowserContext, page: Page):
+def test_image_page(page: Page):
     """Test performance of image page."""
     # Start tracing
-    context.tracing.start(screenshots=True, snapshots=True, sources=True)
 
     page.goto(f'{BASE_URL}/Images')
 
@@ -126,4 +125,3 @@ def test_image_page(context: BrowserContext, page: Page):
     expect(page.get_by_label("Select image").get_by_test_id("baseButton-secondary")).to_be_visible()
     expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
     expect(page.get_by_label("Select labels").get_by_test_id("baseButton-secondary")).to_be_visible()
-    context.tracing.stop(path="traceimage.zip")
