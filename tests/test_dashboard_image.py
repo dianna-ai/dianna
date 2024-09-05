@@ -29,7 +29,7 @@ For Code generation (https://playwright.dev/python/docs/codegen):
 import time
 from contextlib import contextmanager
 import pytest
-from playwright.sync_api import Page, BrowserContext
+from playwright.sync_api import Page
 from playwright.sync_api import expect
 
 LOCAL = False
@@ -70,7 +70,7 @@ def run_streamlit():
 
 def test_image_page(page: Page):
     """Test performance of image page."""
-    # Start tracing
+    page.set_viewport_size({"width": 1920, "height": 1080})
 
     page.goto(f'{BASE_URL}/Images')
 

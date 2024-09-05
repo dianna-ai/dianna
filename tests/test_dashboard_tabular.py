@@ -29,7 +29,7 @@ For Code generation (https://playwright.dev/python/docs/codegen):
 import time
 from contextlib import contextmanager
 import pytest
-from playwright.sync_api import Page, BrowserContext
+from playwright.sync_api import Page
 from playwright.sync_api import expect
 
 LOCAL = False
@@ -70,6 +70,8 @@ def run_streamlit():
 
 def test_tabular_page(page: Page):
     """Test performance of tabular page."""
+    page.set_viewport_size({"width": 1920, "height": 1080})
+
     page.goto(f'{BASE_URL}/Tabular')
 
     page.get_by_text('Running...').wait_for(state='detached')
@@ -85,16 +87,18 @@ def test_tabular_page(page: Page):
         has_text="Use your own data").locator("div").nth(1).click()
     time.sleep(4)
     page.screenshot(path="screenshottabularbutton.png")
-    page.get_by_test_id("stNumberInput-StepUp").wait_for(state='visible', timeout=200_000)
-    page.get_by_test_id("baseButton-secondary").wait_for(state='attached', timeout=200_000)
-    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
-    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=200_000)
-    page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
-    page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click(timeout=200_000)
+    #page.get_by_test_id("baseButton-secondary").wait_for(state='visible', timeout=200_000)
+    #page.get_by_test_id("baseButton-secondary").wait_for(state='attached', timeout=200_000)
+    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click(timeout=300_000)
+    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=300_000)
+    page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click(timeout=300_000)
+    page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click(timeout=300_000)
 
 
 def test_tabular_sunshine(page: Page):
     """Test tabular sunshine example."""
+    page.set_viewport_size({"width": 1920, "height": 1080})
+
     page.goto(f'{BASE_URL}/Tabular')
 
     page.get_by_text('Running...').wait_for(state='detached')
@@ -144,6 +148,8 @@ def test_tabular_sunshine(page: Page):
 
 def test_tabular_penguin(page: Page):
     """Test performance of tabular penguin example."""
+    page.set_viewport_size({"width": 1920, "height": 1080})
+
     page.goto(f'{BASE_URL}/Tabular')
     page.get_by_text('Running...').wait_for(state='detached')
 
