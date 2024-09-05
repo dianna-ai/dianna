@@ -70,6 +70,7 @@ def run_streamlit():
 
 def test_tabular_page(page: Page):
     """Test performance of tabular page."""
+    page.tracing.start(screenshots=True, snapshots=True, sources=True)
     page.goto(f'{BASE_URL}/Tabular')
 
     page.get_by_text('Running...').wait_for(state='detached')
@@ -89,6 +90,7 @@ def test_tabular_page(page: Page):
     page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=200_000)
     page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
     page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click(timeout=200_000)
+    page.tracing.stop(path="tracetabular.zip")
 
 
 def test_tabular_sunshine(page: Page):

@@ -70,6 +70,9 @@ def run_streamlit():
 
 def test_image_page(page: Page):
     """Test performance of image page."""
+    # Start tracing
+    page.tracing.start(screenshots=True, snapshots=True, sources=True)
+
     page.goto(f'{BASE_URL}/Images')
 
     page.get_by_text('Running...').wait_for(state='detached')
@@ -121,3 +124,4 @@ def test_image_page(page: Page):
     expect(page.get_by_label("Select image").get_by_test_id("baseButton-secondary")).to_be_visible()
     expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
     expect(page.get_by_label("Select labels").get_by_test_id("baseButton-secondary")).to_be_visible()
+    page.tracing.stop(path="traceimage.zip")

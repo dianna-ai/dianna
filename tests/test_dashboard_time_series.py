@@ -69,6 +69,7 @@ def run_streamlit():
 
 
 def test_timeseries_page(page: Page):
+    page.tracing.start(screenshots=True, snapshots=True, sources=True)
     """Test performance of timeseries page."""
     page.goto(f'{BASE_URL}/Time_series')
 
@@ -149,4 +150,5 @@ def test_timeseries_page(page: Page):
     expect(page.get_by_label("Select input data").get_by_test_id("baseButton-secondary")).to_be_visible()
     expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
     expect(page.get_by_label("Select labels").get_by_test_id("baseButton-secondary")).to_be_visible()
+    page.tracing.stop(path="tracetimeseries.zip")
 

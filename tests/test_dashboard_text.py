@@ -70,6 +70,7 @@ def run_streamlit():
 
 def test_text_page(page: Page):
     """Test performance of text page."""
+    page.tracing.start(screenshots=True, snapshots=True, sources=True)
     page.goto(f'{BASE_URL}/Text')
     page.get_by_text('Running...').wait_for(state='detached')
     expect(page).to_have_title('Text')
@@ -107,3 +108,4 @@ def test_text_page(page: Page):
     expect(page.get_by_label("Input string")).to_be_visible(timeout=200_000)
     expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
     expect(page.get_by_label("Select labels").get_by_test_id("baseButton-secondary")).to_be_visible()
+    page.tracing.stop(path="tracetext.zip")
