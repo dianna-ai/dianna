@@ -126,7 +126,8 @@ def test_timeseries_page(page: Page, context: BrowserContext):
 
     time.sleep(3)
     page.screenshot(path="screenshotfrbbutton.png")
-    page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
+    page.get_by_test_id("stNumberInput-StepUp").wait_for(state='attached', timeout=200_000)
+    page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000, force=True)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     time.sleep(5)

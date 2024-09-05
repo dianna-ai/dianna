@@ -82,6 +82,7 @@ def test_text_page(page: Page, context: BrowserContext):
     page.locator('label').filter(has_text='LIME').locator('span').click()
     time.sleep(4)
     page.screenshot(path="screenshottext.png")
+    page.get_by_test_id("stNumberInput-StepUp").wait_for(state='attached', timeout=200_000)
     page.get_by_test_id("stNumberInput-StepUp").click(timeout=100_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
     for selector in (
