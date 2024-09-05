@@ -29,7 +29,7 @@ For Code generation (https://playwright.dev/python/docs/codegen):
 import time
 from contextlib import contextmanager
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Page, BrowserContext
 from playwright.sync_api import expect
 
 LOCAL = False
@@ -68,10 +68,10 @@ def run_streamlit():
         p.kill()
 
 
-def test_image_page(page: Page):
+def test_image_page(context: BrowserContext, page: Page):
     """Test performance of image page."""
     # Start tracing
-    page.tracing.start(screenshots=True, snapshots=True, sources=True)
+    context.tracing.start(screenshots=True, snapshots=True, sources=True)
 
     page.goto(f'{BASE_URL}/Images')
 
@@ -124,4 +124,4 @@ def test_image_page(page: Page):
     expect(page.get_by_label("Select image").get_by_test_id("baseButton-secondary")).to_be_visible()
     expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
     expect(page.get_by_label("Select labels").get_by_test_id("baseButton-secondary")).to_be_visible()
-    page.tracing.stop(path="traceimage.zip")
+    context.tracing.stop(path="traceimage.zip")
