@@ -89,7 +89,7 @@ def test_tabular_page(page: Page):
     page.screenshot(path="screenshottabularbutton.png")
     #page.get_by_test_id("baseButton-secondary").wait_for(state='visible', timeout=200_000)
     #page.get_by_test_id("baseButton-secondary").wait_for(state='attached', timeout=200_000)
-    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click(timeout=300_000)
+    expect(page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary")).to_be_visible(timeout=300_000)
     page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=300_000)
     page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click(timeout=300_000)
     page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click(timeout=300_000)
