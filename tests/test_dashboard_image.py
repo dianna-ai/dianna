@@ -96,6 +96,7 @@ def test_image_page(context: BrowserContext, page: Page):
     page.locator('label').filter(has_text='LIME').locator('span').click()
     time.sleep(5)
     page.screenshot(path="screenshotimage.png")
+    page.get_by_test_id("stNumberInput-StepUp").wait_for(state='visible', timeout=200_000)
     page.get_by_test_id("stNumberInput-StepUp").wait_for(state='attached', timeout=200_000)
     page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000, force=True)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)

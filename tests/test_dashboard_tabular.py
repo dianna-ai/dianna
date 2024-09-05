@@ -86,6 +86,7 @@ def test_tabular_page(page: Page, context: BrowserContext):
         has_text="Use your own data").locator("div").nth(1).click()
     time.sleep(4)
     page.screenshot(path="screenshottabularbutton.png")
+    page.get_by_test_id("stNumberInput-StepUp").wait_for(state='visible', timeout=200_000)
     page.get_by_test_id("baseButton-secondary").wait_for(state='attached', timeout=200_000)
     page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click(timeout=200_000)
     page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click(timeout=200_000)
