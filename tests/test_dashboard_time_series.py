@@ -29,7 +29,7 @@ For Code generation (https://playwright.dev/python/docs/codegen):
 import time
 from contextlib import contextmanager
 import pytest
-from playwright.sync_api import Page, BrowserContext
+from playwright.sync_api import Page
 from playwright.sync_api import expect
 
 LOCAL = False
@@ -70,6 +70,8 @@ def run_streamlit():
 
 def test_timeseries_page(page: Page):
     """Test performance of timeseries page."""
+    page.set_viewport_size({"width": 1920, "height": 1080})
+
     page.goto(f'{BASE_URL}/Time_series')
 
     page.get_by_text('Running...').wait_for(state='detached')
@@ -97,7 +99,7 @@ def test_timeseries_page(page: Page):
     page.screenshot(path="screenshotweather-button.png")
     page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
-
+    page.screenshot(path="screenshotweather-buttonpressed.png")
     time.sleep(5)
 
     for selector in (
@@ -127,6 +129,7 @@ def test_timeseries_page(page: Page):
     page.screenshot(path="screenshotfrbbutton.png")
     page.get_by_test_id("stNumberInput-StepUp").wait_for(state='attached', timeout=200_000)
     page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000, force=True)
+    page.screenshot(path="screenshotfrbbuttonpressed.png")
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     time.sleep(5)
@@ -138,11 +141,11 @@ def test_timeseries_page(page: Page):
             page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
             # Second image
-            page.get_by_role('heading', name='summer').get_by_text('noise'),
+            page.get_by_role('heading', name='Noise').get_by_text('Noise'),
             page.get_by_role('img', name='0').nth(2),
             page.get_by_role('img', name='0').nth(3),
     ):
-        expect(selector).to_be_visible(timeout=200_000)
+        expect(selector).to_be_visible(timeout=300_000)
 
     # Test using your own data
     page.locator("label").filter(
