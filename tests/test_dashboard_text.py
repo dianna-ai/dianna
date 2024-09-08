@@ -108,5 +108,5 @@ def test_text_page(page: Page):
     expect(selector).to_be_visible(timeout=30_000)
     # Check input panel
     expect(page.get_by_label("Input string")).to_be_visible(timeout=200_000)
-    expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
-    expect(page.get_by_label("Select labels").get_by_test_id("baseButton-secondary")).to_be_visible()
+    page.get_by_label("Select model").click()
+    page.get_by_label("Select labels").click()

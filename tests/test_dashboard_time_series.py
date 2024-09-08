@@ -97,7 +97,8 @@ def test_timeseries_page(page: Page):
     page.locator('label').filter(has_text='RISE').locator('span').click(timeout=200_000)
     time.sleep(1)
     page.screenshot(path="screenshotweather-button.png")
-    page.get_by_test_id("stNumberInput-StepUp").click(timeout=200_000)
+    page.get_by_label("Number of top classes to show").fill("2")
+    page.get_by_label("Number of top classes to show").press("Enter")
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
     page.screenshot(path="screenshotweather-buttonpressed.png")
     time.sleep(5)
@@ -150,6 +151,6 @@ def test_timeseries_page(page: Page):
     # Test using your own data
     page.locator("label").filter(
         has_text="Use your own data").locator("div").nth(1).click()
-    expect(page.get_by_label("Select input data").get_by_test_id("baseButton-secondary")).to_be_visible()
-    expect(page.get_by_label("Select model").get_by_test_id("baseButton-secondary")).to_be_visible()
-    expect(page.get_by_label("Select labels").get_by_test_id("baseButton-secondary")).to_be_visible()
+    page.get_by_label("Select input data").click()
+    page.get_by_label("Select model").click()
+    page.get_by_label("Select labels").click()
