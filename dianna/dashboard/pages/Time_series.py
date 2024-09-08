@@ -168,7 +168,7 @@ for index, label in zip(top_indices, top_labels):
                 explanation = func(serialized_model, ts_data=ts_data_explainer, **kwargs)
 
             if load_example == "Scientific case: FRB":
-                fig, axes = plt.subplots(ncols=2, figsize=(14, 6))
+                fig, axes = plt.subplots(ncols=2, figsize=(14, 5))
                 # FRB: plot original data
                 ax = axes[0]
                 ax.imshow(ts_data, aspect='auto', origin='lower')
@@ -177,10 +177,11 @@ for index, label in zip(top_indices, top_labels):
                 ax.set_title('Input data')
                 # FRB data explanation has to be transposed
                 ax = axes[1]
-                ax.imshow(explanation[0].T, aspect='auto', origin='lower', cmap='bwr')
+                plot = ax.imshow(explanation[0].T, aspect='auto', origin='lower', cmap='bwr')
                 ax.set_xlabel('Time step')
                 ax.set_ylabel('Channel index')
                 ax.set_title('Explanation')
+                fig.colorbar(plot)
 
             else:
                 segments = _convert_to_segments(explanation)
