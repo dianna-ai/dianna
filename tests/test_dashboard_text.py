@@ -79,13 +79,15 @@ def test_text_page(page: Page):
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.get_by_text("Movie sentiment").click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=50_000)
+
+    time.sleep(2)
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-    time.sleep(4)
-    page.screenshot(path="screenshottext.png")
+
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
+
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
@@ -101,6 +103,7 @@ def test_text_page(page: Page):
             page.get_by_role('img', name='0').nth(3),
     ):
         expect(selector).to_be_visible(timeout=100_000)
+
     # Own data option
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
     selector = page.get_by_text(

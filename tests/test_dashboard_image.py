@@ -88,13 +88,12 @@ def test_image_page(page: Page):
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible(timeout=100_000)
 
-    time.sleep(5)
+    time.sleep(2)
 
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='KernelSHAP').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-    time.sleep(5)
-    page.screenshot(path="screenshotimage.png")
+
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
@@ -118,8 +117,6 @@ def test_image_page(page: Page):
 
     # Own data
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
-
-    time.sleep(3)
 
     page.get_by_label("Select image").click()
     page.get_by_label("Select model").click()
