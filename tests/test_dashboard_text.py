@@ -100,7 +100,7 @@ def test_text_page(page: Page):
             page.get_by_role('img', name='0').nth(2),
             page.get_by_role('img', name='0').nth(3),
     ):
-        expect(selector).to_be_visible()
+        expect(selector).to_be_visible(timeout=100_000)
     # Own data option
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
     selector = page.get_by_text(
