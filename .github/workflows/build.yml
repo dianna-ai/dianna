@@ -75,18 +75,3 @@ jobs:
 
       - name: Test dashboard
         run: pytest -v -m dashboard --dashboard
-      
-        # Upload the artifact
-      - name: Upload output file
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots
-          path: |
-            screenshotimage.png
-            screenshottext.png
-            screenshotfrbbutton.png
-            screenshottabularbutton.png
-          if-no-files-found: warn
-
-
