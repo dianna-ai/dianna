@@ -67,7 +67,7 @@ Most libraries support at most 2 modalities: images and text. While DIANNA has a
 
 *	**Simple datasets**
 
-To demonstrate the usefulness and enable studying the properties of the relevances on an intuitive level, DIANNA comes with new and exsisting [datasets](https://github.com/dianna-ai/dianna/tree/main?tab=readme-ov-file#datasets) and [models](https://github.com/dianna-ai/dianna/tree/main?tab=readme-ov-file#onnx-models) for both classification and regression tasks for image, text, time series and tabular data.
+To demonstrate the usefulness and enable studying the properties of the relevances on an intuitive level, DIANNA comes with new and existing [datasets](https://github.com/dianna-ai/dianna/tree/main?tab=readme-ov-file#datasets) and [models](https://github.com/dianna-ai/dianna/tree/main?tab=readme-ov-file#onnx-models) for both classification and regression tasks for image, text, time series and tabular data.
 
 * **Scientific use cases** 
 
