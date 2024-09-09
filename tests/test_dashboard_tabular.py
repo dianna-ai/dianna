@@ -88,8 +88,8 @@ def test_tabular_page(page: Page):
     time.sleep(4)
 
     page.get_by_label("Select tabular data").click()
-    page.get_by_label("Select image").click()
     page.get_by_label("Select model").click()
+    page.get_by_label("Select training data").click()
     page.get_by_label("Select labels in case of").click()
 
 
