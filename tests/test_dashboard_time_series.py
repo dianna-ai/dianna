@@ -91,7 +91,7 @@ def test_timeseries_page(page: Page):
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
     time.sleep(2)
-    
+
     page.locator('label').filter(has_text='LIME').locator('span').click(timeout=200_000)
     page.locator('label').filter(has_text='RISE').locator('span').click(timeout=200_000)
 
