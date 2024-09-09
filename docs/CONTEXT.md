@@ -63,7 +63,7 @@ DIANNA is future-proof, the library is conforming with the [Open Neural Network 
 
 * **Multiple data modalities** 
 
-Most libraries support at most 2 modalities: images and text. While DIANNA has also started with these two, now it also supports time series and tabular data with embeddings beging work in progress. 
+Most libraries support at most 2 modalities: images and text. While DIANNA has also started with these two, now it also supports time series and tabular data with embeddings being work in progress. 
 
 *	**Simple datasets**
 
