@@ -55,7 +55,7 @@ DIANNA includes few XAI approaches which have been evaluated using [systematical
 
 * **Simple unified interface**
   
-DIANNA provided a simle unified interface to the chosen XAI methods (explainers). The library can be used both from the command-line and from its easy to use [dashboard](https://github.com/dianna-ai/dianna/tree/main?tab=readme-ov-file#dashboard).
+DIANNA provided a simple unified interface to the chosen XAI methods (explainers). The library can be used both from the command-line and we are working on an easy to use [dashboard](https://github.com/dianna-ai/dianna/tree/main?tab=readme-ov-file#dashboard), which can already be run with some of our examples for demo purposes.
 
 *	**Standard DNN format**
 
