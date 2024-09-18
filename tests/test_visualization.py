@@ -18,6 +18,14 @@ def test_plot_tabular(tmpdir):
 
     assert output_path.exists()
 
+def test_plot_tabular_with_ndarray():
+    """Test plot tabular data with ndarray."""
+    x = np.random.rand(5, 3)
+    y = [f"Feature {i}" for i in range(x.shape[1])]
+    # check ValueError
+    with pytest.raises(ValueError):
+        plot_tabular(x=x, y=y, show_plot=False)
+
 
 def test_plot_timeseries_univariate(tmpdir, random):
     """Test plot univariate time series."""

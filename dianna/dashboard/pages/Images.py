@@ -8,9 +8,9 @@ from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
-from _shared import data_directory
-from _shared import label_directory
-from _shared import model_directory
+from _shared import reset_example
+from _shared import reset_method
+from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 
 add_sidebar_logo()
@@ -19,39 +19,62 @@ st.title('Image explanation')
 
 st.sidebar.header('Input data')
 
-load_example_digits = st.sidebar.checkbox('Load hand-written digits example',
-                                   key='Image_digits_example_check')
-
-image_file = st.sidebar.file_uploader('Select image',
-                                      type=('png', 'jpg', 'jpeg'),
-                                      disabled=load_example_digits)
-
-if image_file:
-    st.sidebar.image(image_file)
-
-image_model_file = st.sidebar.file_uploader('Select model',
-                                            type='onnx',
-                                            disabled=load_example_digits)
-
-image_label_file = st.sidebar.file_uploader('Select labels',
-                                            type='txt',
-                                            disabled=load_example_digits)
-
-if load_example_digits:
-    image_file = (data_directory / 'digit0.jpg')
-    image_model_file = (model_directory / 'mnist_model_tf.onnx')
-    image_label_file = (label_directory / 'labels_mnist.txt')
-
-    st.markdown(
-        """
-        This example demonstrates the use of DIANNA on a pretrained binary
-        [MNIST](https://yann.lecun.com/exdb/mnist/) model using hand-written
-        digit images. The model predicts for an image of a hand-written 0 or 1,
-        which of the two it most likely is. This example visualizes the
-        relevance attributions for each pixel/super-pixel by displaying them on
-        top of the input image.
-        """
+input_type = st.sidebar.radio(
+        label='Select which input to use',
+        options = ('Use an example', 'Use your own data'),
+        index = None,
+        on_change = reset_example,
+        key = 'Image_input_type'
     )
+
+# Use the examples
+if input_type == 'Use an example':
+    load_example = st.sidebar.radio(
+        label='Load example',
+        options=('Hand-written digit recognition',),
+        index = None,
+        on_change = reset_method,
+        key='Image_load_example'
+        )
+
+    if load_example == 'Hand-written digit recognition':
+        image_file = download('digit0.jpg', 'data')
+        image_model_file = download('mnist_model_tf.onnx', 'model')
+        image_label_file = download('labels_mnist.txt', 'label')
+
+        st.markdown(
+            """
+            This example demonstrates the use of DIANNA on a pretrained binary
+            [MNIST](https://yann.lecun.com/exdb/mnist/) model using a hand-written digit images.
+            The model predict for an image of a hand-written 0 or 1, which of the two it most
+            likely is.
+            This example visualizes the relevance attributions for each pixel/super-pixel by
+            displaying them on top of the input image.
+            """
+        )
+    else:
+        st.info('Select an example in the left panel to coninue')
+        st.stop()
+
+# Option to upload your own data
+if input_type == 'Use your own data':
+    load_example = None
+
+    image_file = st.sidebar.file_uploader('Select image',
+                                        type=('png', 'jpg', 'jpeg'))
+
+    if image_file:
+        st.sidebar.image(image_file)
+
+    image_model_file = st.sidebar.file_uploader('Select model',
+                                                type='onnx')
+
+    image_label_file = st.sidebar.file_uploader('Select labels',
+                                                type='txt')
+
+if input_type is None:
+    st.info('Select which input type to use in the left panel to continue')
+    st.stop()
 
 if not (image_file and image_model_file and image_label_file):
     st.info('Add your input data in the left panel to continue')
