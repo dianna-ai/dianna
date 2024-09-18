@@ -1,12 +1,11 @@
 import importlib
 import streamlit as st
-from _shared import add_sidebar_logo
 from _shared import data_directory
 from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="Dianna's dashboard",
                    page_icon='📊',
-                   layout='centered',
+                   layout='wide',
                    initial_sidebar_state='auto',
                    menu_items={
                        'Get help':
@@ -22,6 +21,7 @@ st.set_page_config(page_title="Dianna's dashboard",
 pages = {
     "Home": "home",
     "Images": "pages.Images",
+    "Tabular": "pages.Tabular",
     "Text": "pages.Text",
     "Time series": "pages.Time_series"
 }
@@ -30,7 +30,7 @@ pages = {
 selected = option_menu(
     menu_title=None,
     options=list(pages.keys()),
-    icons=["house", "camera", "alphabet", "clock"],
+    icons=["house", "camera", "table", "alphabet", "clock"],
     menu_icon="cast",
     default_index=0,
     orientation="horizontal"
@@ -38,8 +38,6 @@ selected = option_menu(
 
 # Display the content of the selected page
 if selected == "Home":
-    add_sidebar_logo()
-
     st.image(str(data_directory / 'logo.png'))
 
     st.markdown("""
@@ -50,9 +48,10 @@ if selected == "Home":
 
     ### Pages
 
-    - <a href="/Images" target="_parent">Images</a>
-    - <a href="/Text" target="_parent">Text</a>
-    - <a href="/Time_series" target="_parent">Time series</a>
+    - <a href="/Images" target="_parent">Image data</a>
+    - <a href="/Tabular" target="_parent">Tabular data</a>
+    - <a href="/Text" target="_parent">Text data</a>
+    - <a href="/Time_series" target="_parent">Time series data</a>
 
 
     ### More information
@@ -69,6 +68,10 @@ else:
     if selected != 'Images':
         for k in st.session_state.keys():
             if 'Image' in k:
+                st.session_state.pop(k, None)
+    if selected != 'Tabular':
+        for k in st.session_state.keys():
+            if 'Tabular' in k:
                 st.session_state.pop(k, None)
     if selected != 'Text':
         for k in st.session_state.keys():

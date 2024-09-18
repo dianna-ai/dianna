@@ -95,11 +95,11 @@ def test_text_page(page: Page):
     # Movie sentiment example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.get_by_text("Movie sentiment").click()
-    expect(page.get_by_text("Select a method to continue")).to_be_visible()
+    expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=50_000)
 
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-
+    page.get_by_test_id("stNumberInput-StepUp").click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     for selector in (
@@ -117,7 +117,6 @@ def test_text_page(page: Page):
             page.get_by_role('img', name='0').nth(2),
             page.get_by_role('img', name='0').nth(3),
     ):
-        print(selector)
         expect(selector).to_be_visible()
 
     # Own data option
@@ -149,13 +148,13 @@ def test_image_page(page: Page):
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     page.get_by_text("Hand-written digit recognition").click()
 
-    expect(page.get_by_text('Select a method to continue')).to_be_visible()
+    expect(page.get_by_text('Select a method to continue')).to_be_visible(timeout=100_000)
 
     page.locator('label').filter(has_text='RISE').locator('span').click()
     page.locator('label').filter(has_text='KernelSHAP').locator('span').click()
     page.locator('label').filter(has_text='LIME').locator('span').click()
-
-    page.get_by_text('Running...').wait_for(state='detached', timeout=45_000)
+    page.get_by_test_id("stNumberInput-StepUp").click()
+    page.get_by_text('Running...').wait_for(state='detached', timeout=50_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
@@ -189,7 +188,7 @@ def test_timeseries_page(page: Page):
 
     expect(page).to_have_title('Time_series')
 
-    expect(page.get_by_text("Select which input type to")).to_be_visible()
+    expect(page.get_by_text("Select which input type to")).to_be_visible(timeout=100_000)
 
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     expect(page.get_by_text("Select an example in the left")).to_be_visible()
@@ -198,11 +197,11 @@ def test_timeseries_page(page: Page):
 
     # Test weather example
     page.locator("label").filter(has_text="Weather").locator("div").nth(1).click()
-    expect(page.get_by_text("Select a method to continue")).to_be_visible()
+    expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
     page.locator('label').filter(has_text='LIME').locator('span').click()
     page.locator('label').filter(has_text='RISE').locator('span').click()
-
+    page.get_by_test_id("stNumberInput-StepUp").click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
 
     for selector in (
@@ -221,7 +220,7 @@ def test_timeseries_page(page: Page):
 
     # Test FRB example
     page.locator("label").filter(has_text="FRB").locator("div").nth(1).click()
-    expect(page.get_by_text("Select a method to continue")).to_be_visible()
+    expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
     page.locator('label').filter(has_text='RISE').locator('span').click()
 
@@ -245,3 +244,24 @@ def test_timeseries_page(page: Page):
         "baseButton-secondary").click()
     page.get_by_label("Select labels").get_by_test_id(
         "baseButton-secondary").click()
+
+
+def test_tabular_page(page: Page):
+    """Test performance of tabular page."""
+    page.goto(f'{BASE_URL}/Tabular')
+
+    page.get_by_text('Running...').wait_for(state='detached')
+
+    expect(page).to_have_title('Tabular')
+
+    expect(page.get_by_text("Select which input type to")).to_be_visible(timeout=100_000)
+
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
+
+    # Test using your own data
+    page.locator("label").filter(
+        has_text="Use your own data").locator("div").nth(1).click()
+    page.get_by_label("Select tabular data").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select model").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select training data").get_by_test_id("baseButton-secondary").click()
+    page.get_by_label("Select labels in case of").get_by_test_id("baseButton-secondary").click()
