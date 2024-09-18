@@ -17,17 +17,19 @@ on:
 jobs:
 
   notebooks:
-    name: Run notebooks on (3.10, ${{ matrix.os }})
+    name: Run notebooks on (${{ matrix.python-version }}, ${{ matrix.os }})
     if: github.event.pull_request.draft == false
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        python-version: ['3.10']
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/install-python-and-package
         with:
+          python-version: ${{ matrix.python-version }}
           extras-require: dev,notebooks
       - name: Run tutorial notebooks
         run: pytest --nbmake tutorials

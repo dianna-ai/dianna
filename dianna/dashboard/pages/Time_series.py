@@ -4,7 +4,6 @@ from _model_utils import load_labels
 from _model_utils import load_model
 from _models_ts import explain_ts_dispatcher
 from _models_ts import predict
-from _shared import _get_method_params
 from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
@@ -16,10 +15,9 @@ from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 from dianna.visualization import plot_timeseries
 
-add_sidebar_logo()
-
 st.title('Time series explanation')
 
+add_sidebar_logo()
 st.sidebar.header('Input data')
 
 input_type = st.sidebar.radio(
@@ -104,7 +102,6 @@ if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
-
 if not (ts_data_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
@@ -123,26 +120,34 @@ if load_example == "Scientific case: FRB":
     choices = ('RISE',)
 else:
     choices = ('RISE', 'LIME')
-methods = _methods_checkboxes(choices=choices, key='TS_cb_')
 
-method_params = _get_method_params(methods, key='TS_params_')
+st.text("")
+st.text("")
 
-with st.spinner('Predicting class'):
-    predictions = predict(model=serialized_model, ts_data=ts_data_predictor)
+with st.container(border=True):
+    prediction_placeholder = st.empty()
+    methods, method_params = _methods_checkboxes(choices=choices, key='TS_cb')
 
-top_indices, top_labels = _get_top_indices_and_labels(
-    predictions=predictions[0], labels=labels)
+    with st.spinner('Predicting class'):
+        predictions = predict(model=serialized_model, ts_data=ts_data_predictor)
+
+    with prediction_placeholder:
+        top_indices, top_labels = _get_top_indices_and_labels(
+            predictions=predictions[0], labels=labels)
+
+st.text("")
+st.text("")
 
 weight = 0.9 / len(methods)
 column_spec = [0.1, *[weight for _ in methods]]
 
 _, *columns = st.columns(column_spec)
 for col, method in zip(columns, methods):
-    col.header(method)
+    col.markdown(f"<h4 style='text-align: center; '>{method}</h4>", unsafe_allow_html=True)
 
 for index, label in zip(top_indices, top_labels):
     index_col, *columns = st.columns(column_spec)
-    index_col.markdown(f'##### {label}')
+    index_col.markdown(f'##### Class: {label}')
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
