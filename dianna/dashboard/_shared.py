@@ -74,13 +74,25 @@ def _methods_checkboxes(*, choices: Sequence, key):
 
 def _get_params(method: str, key):
     if method == 'RISE':
+        n_masks = 1000
+        fr = 8
+        pkeep = 0.1
+        if 'FRB' in key:
+            n_masks = 5000
+            fr = 16
+        elif 'Tabular' in key:
+            pkeep = 0.5
+        elif 'Weather' in key:
+            n_masks = 10000
+        elif 'Digits' in key:
+            n_masks = 5000
         return {
             'n_masks':
-            st.number_input('Number of masks', value=1000, key=f'{key}_{method}_nmasks'),
+            st.number_input('Number of masks', value=n_masks, key=f'{key}_{method}_nmasks'),
             'feature_res':
-            st.number_input('Feature resolution', value=6, key=f'{key}_{method}_fr'),
+            st.number_input('Feature resolution', value=fr, key=f'{key}_{method}_fr'),
             'p_keep':
-            st.number_input('Probability to be kept unmasked', value=0.1, key=f'{key}_{method}_pkeep'),
+            st.number_input('Probability to be kept unmasked', value=pkeep, key=f'{key}_{method}_pkeep'),
         }
 
     elif method == 'KernelSHAP':
@@ -97,9 +109,14 @@ def _get_params(method: str, key):
             }
 
     elif method == 'LIME':
-        return {
-            'random_state': st.number_input('Random state', value=2, key=f'{key}_{method}_rs'),
+        if 'Tabular' in key:
+            return {
+            'random_state': st.number_input('Random state', value=0, key=f'{key}_{method}_rs'),
         }
+        else:
+            return {
+                'random_state': st.number_input('Random state', value=2, key=f'{key}_{method}_rs'),
+            }
 
     else:
         raise ValueError(f'No such method: {method}')

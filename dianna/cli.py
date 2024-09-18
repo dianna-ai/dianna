@@ -21,6 +21,7 @@ def dashboard():
         *('--theme.primaryColor', '7030a0'),
         *('--theme.secondaryBackgroundColor', 'e4f3f9'),
         *('--browser.gatherUsageStats', 'false'),
+        *('--client.showSidebarNavigation', 'false'),
         *args,
     ]
 
