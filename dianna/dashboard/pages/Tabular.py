@@ -80,7 +80,7 @@ if input_type == 'Use an example':
         st.markdown(
         """
         This example demonstrates the use of DIANNA on a pre-trained classification
-        [model to classify penguin in to three different species](https://zenodo.org/records/10580743)
+        [model to classify penguins in to three different species](https://zenodo.org/records/10580743)
         based on a number of measurable physical characteristics.
         The model is trained on the
         [weather prediction dataset](https://zenodo.org/records/5071376). The data is obtained from
@@ -88,7 +88,7 @@ if input_type == 'Use an example':
         The penguin characteristics include the bill length, bill depth, flipper length and body mass.
 
         DIANNA's visualisation shows the top most important characteristics contributing to the
-        penguin species classification, where characteristics contrinuting positively are indicated in red
+        penguin species classification, where characteristics contributing positively are indicated in red
         and those who contribute negatively in blue.
         """)
     else:
