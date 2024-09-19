@@ -1,6 +1,15 @@
 from pathlib import Path
 import numpy as np
 import onnx
+import pandas as pd
+
+
+def load_data(file):
+    """Open data from a file and returns it as pandas DataFrame."""
+    df = pd.read_csv(file, parse_dates=True)
+    # Add index column
+    df.insert(0, 'Index', df.index)
+    return df
 
 
 def preprocess_function(image):
@@ -29,3 +38,7 @@ def load_labels(file):
     if labels is None or labels == ['']:
         raise ValueError(labels)
     return labels
+
+
+def load_training_data(file):
+    return np.float32(np.load(file, allow_pickle=False))

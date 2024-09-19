@@ -22,6 +22,13 @@ extras = dev
 """
 
 [tool.ruff]
+extend-exclude = [
+    "scripts",
+]
+
+target-version = "py310"
+line-length = 120
+
 # Enable Pyflakes `E` and `F` codes by default.
 select = [
     "F",  # Pyflakes
@@ -35,7 +42,6 @@ select = [
     # "PLE",  # Error
     # "PLR",  # Refactor
     # "PLW",  # Warning
-
 ]
 ignore = [
     'D100',  # Missing module docstring
@@ -58,37 +64,10 @@ ignore = [
 fixable = ["A", "B", "C", "D", "E", "F", "I"]
 unfixable = []
 
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
-    ".venv",
-    "scripts",
-]
 per-file-ignores = {}
-
 
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-
-target-version = "py310"
-line-length = 120
 
 [tool.ruff.isort]
 known-first-party = ["dianna"]

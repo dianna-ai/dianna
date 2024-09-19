@@ -27,16 +27,16 @@ authors:
     affiliation: 1
   - name: Laura Ootes^[co-first author] # note this makes a footnote saying 'co-first author'
     orcid: 0000-0002-2800-8309
-    affiliation: 1  
+    affiliation: 1
   - name: Pranav Chandramouli^[co-first author] # note this makes a footnote saying 'co-first author'
     orcid: 0000-0002-7896-2969
-    affiliation: 1  
+    affiliation: 1
   - name: Aron Jansen^[co-first author] # note this makes a footnote saying 'co-first author'
     orcid: 0000-0002-4764-9347
-    affiliation: 1  
+    affiliation: 1
   - name: Stef Smeets^[co-first author] # note this makes a footnote saying 'co-first author'
     orcid: 0000-0002-5413-9038
-    affiliation: 1  
+    affiliation: 1
 affiliations:
  - name: Netherlands eScience Center, Amsterdam, the Netherlands
    index: 1
@@ -121,12 +121,12 @@ You need:
 
 ```python
 model_path = 'your_model.onnx'  # model trained on your data modality
-data_item = <data_item> # data item for which the model's prediction needs to be explained 
+data_item = <data_item> # data item for which the model's prediction needs to be explained
 ```
 
 2. If the task is classification: which are the *classes* your model has been trained for?
 
-```python 
+```python
 labels = [class_a, class_b]   # example of binary classification labels
 ```
 *Which* of these classes do you want an explanation for?
@@ -148,24 +148,24 @@ We are intersted which words are contributing positively (red) and which - negat
 ```python
 model_path = 'your_text_model.onnx'
 # also define a model runner here (details in dedicated notebook)
-review = 'The movie started great but the ending is boring and unoriginal.' 
-labels = ["negative", "positive"] 
-explained_class_index = labels.index("positive")  
+review = 'The movie started great but the ending is boring and unoriginal.'
+labels = ["negative", "positive"]
+explained_class_index = labels.index("positive")
 explanation = dianna.explain_text(model_path, text, 'LIME')
 dianna.visualization.highlight_text(explanation[explained_class_index], model_runner.tokenizer.tokenize(review))
 ```
 
 ![image](https://user-images.githubusercontent.com/6087314/155532504-6f90f032-cbb4-4e71-9b99-aa9c0de4e86a.png)
 
-Here is another illustration on how to use dianna to explain which parts of a bee *image* contributied positively (red) or negativey (blue) towards a classifying the image as a *'bee'* using *RISE*. 
+Here is another illustration on how to use dianna to explain which parts of a bee *image* contributied positively (red) or negativey (blue) towards a classifying the image as a *'bee'* using *RISE*.
 The Imagenet model has been trained to distinguish between 1000 classes (specified in ```labels```).
 For images, which are data of higher dimention compared to text, there are also some specifics to consider:
 
 ```python
-model_path = 'your_image_model.onnx' 
-image = PIL.Image.open('your_bee_image.jpeg') 
-axis_labels = {2: 'channels'} 
-explained_class_index = labels.index('bee') 
+model_path = 'your_image_model.onnx'
+image = PIL.Image.open('your_bee_image.jpeg')
+axis_labels = {2: 'channels'}
+explained_class_index = labels.index('bee')
 explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
 dianna.visualization.plot_image(explanation[explained_class_index], utils.img_to_array(image)/255., heatmap_cmap='bwr')
 plt.show()
@@ -185,7 +185,7 @@ plt.show()
 ### Overview tutorial
 There are **full working examples** on how to use the supported explainers and how to use dianna for **all supported data modalities** in our [overview tutorial](./tutorials/overview.ipynb).
 
-#### Demo movie (update planned): 
+#### Demo movie (update planned):
 [![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
 
 ### IMPORTANT: Sensitivity to hyperparameters
@@ -194,7 +194,7 @@ The default hyperparameters used in DIANNA for each explainer as well as the val
 
 ## Dashboard
 
-Explore the explanations of your trained model using the DIANNA dashboard (for now images, text and time series classification is supported). 
+Explore the explanations of your trained model using the DIANNA dashboard (for now images, text and time series classification is supported).
 [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
 
 <a href="https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard" target="_blank">
@@ -223,17 +223,17 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 
 | Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
-| [Coffee dataset](https://www.timeseriesclassification.com/description.php?Dataset=Coffee)  <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162"> | Food spectographs time series dataset for a two class problem to distinguish between Robusta and Arabica coffee beans.                                         | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/763002c5-40ad-48cc-9de0-ea43d7fa8a75)"> | [data source](https://github.com/QIBChemometrics/Benchtop-NMR-Coffee-Survey) |
-| [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d)"> | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
+| [Coffee dataset](https://www.timeseriesclassification.com/description.php?Dataset=Coffee)  <img width="25" alt="Coffe Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/9ab50a0f-5da3-41d2-80e9-70d2c8769162"> | Food spectographs time series dataset for a two class problem to distinguish between Robusta and Arabica coffee beans.                                         | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/763002c5-40ad-48cc-9de0-ea43d7fa8a75"> | [data source](https://github.com/QIBChemometrics/Benchtop-NMR-Coffee-Survey) |
+| [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d"> | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
 
-### Tabular 
+### Tabular
 
 | Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
-| [Pengiun dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris) <img width="75" alt="Penguins Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57)"> | Palmer Archipelago (Antarctica) penguin dataset is a great intro dataset for data exploration & visualization similar to the famous Iris dataset.                                         | <img width="500" alt="example image" src="https://github.com/allisonhorst/palmerpenguins/blob/main/man/figures/README-mass-flipper-1.png"> | [data source](https://github.com/allisonhorst/palmerpenguins) |
-| [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d)"> | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
-
-## ONNX models
+| [Pengiun dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris) <img width="75" alt="Penguins Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57"> | Palmer Archipelago (Antarctica) penguin dataset is a great intro dataset for data exploration & visualization similar to the famous Iris dataset.                                         | <img width="500" alt="example image" src="https://github.com/allisonhorst/palmerpenguins/blob/main/man/figures/README-mass-flipper-1.png"> | [data source](https://github.com/allisonhorst/palmerpenguins) |
+| [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d"> | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
+| [Land atmosphere dataset](https://zenodo.org/records/12623257) <img width="25" alt="Atmosphere Logo" src="https://github.com/user-attachments/assets/bee353dd-c19a-4aec-a778-4ca3574765f0"> | It contains land-atmosphere variables and latent heat flux (LEtot) simulated by STEMMUS-SCOPE (soil-plant model), version 1.5.0,  over 19 Fluxnet sites and for the year 2014 with hourly intervals. | <img width="500" alt="example image" src="https://github.com/user-attachments/assets/a6e10b08-08d8-4e57-887a-cd4fca9f2ff0"> | [data source](https://zenodo.org/records/12623257)   |
+## ONNX model
 
 <!-- TODO: Add all links, see issue https://github.com/dianna-ai/dianna/issues/135 -->
 
@@ -276,6 +276,7 @@ And here are links to notebooks showing how we created our models on the benchma
 | :-------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Penguin model    (classification)](https://zenodo.org/records/10580743)                         | [Penguin model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/penguin_species/generate_model.ipynb)          |
 | [Sunshine hours prediction model (regression)](https://zenodo.org/records/10580833) | [Sunshine hours prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/sunshine_prediction/generate_model.ipynb) |
+| [Latent heat flux prediction model (regression)](https://zenodo.org/records/12623257) | [Latent heat flux prediction model](doi:10.5281/zenodo.12623256/stemmus_scope_emulator_model_LEtot.onnx)   |
 
 
 **_We envision the birth of the ONNX Scientific models zoo soon..._**
@@ -294,22 +295,22 @@ DIANNA supports different data modalities and XAI methods (explainers). We have 
 | Tabular    | planned                                           | ✅                                                                 | ✅                                                                                                  |
 | Embedding  | work in progress                                  |                                                                     |                                                                                                     |
 | Graphs*    | next steps                                        |    ...                                                              |     ...                                                                                             |
-      
-[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers. 
+
+[LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers.
 Also [GradCAM](https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.pdf)) has been recently found to be *semantically continous*! **Contributing by adding these and more (new) post-hoc explainability methods on ONNX models is very welcome!**
 
 
 ### Scientific use-cases
-Our goal is that the scientific community embrases XAI as a source for novel and unexplored perspectives on scientific problems. 
+Our goal is that the scientific community embrases XAI as a source for novel and unexplored perspectives on scientific problems.
 Here, we offer [tutorials](./tutorials) on specific scientific use-cases of uisng XAI:
 
 | Use-case (data) \ XAI                                            | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
 | :----------------------------------------------------------------| :----------------------------------------------------| :---------------------------------------------------------------------| :-------------------------------------------------------------------------------------------------------|
 | Biology (Phytomorphology): Tree Leaves classification (images)   |                                                      |            ✅                                                        |                                                                                                         |
 | Astronomy: Fast Radio Burst detection (timeseries)               | ✅                                                  |                                                                       |                                                                                                         |
-| Geo-science (raster data)                                        |   planned                                            |  ...                                                                  | ...                                                                                                     |   
-| Social sciences (text)                                           | work in progress                                     |  ...                                                                  |...                                                                                                     | 
-| Climate                                                          | planned                                              |   ...                                                                 |       ...                                                                                              |            
+| Land-atmosphere modeling: Latent heat flux prediction (tabular)                                        |                                               |                                                                    | ✅                                                                                                     |
+| Social sciences (text)                                           | work in progress                                     |  ...                                                                  |...                                                                                                     |
+| Climate                                                          | planned                                              |   ...                                                                 |       ...                                                                                              |
 
 ## Reference documentation
 
