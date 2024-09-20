@@ -41,38 +41,52 @@ if selected == "Home":
     st.image(str(data_directory / 'logo.png'), width = 360)
 
     st.markdown("""
-    DIANNA (Deep Insight And Neural Network Analysis) is a Python package that brings explainable AI (XAI)
-    to your research project.
-
-    It wraps carefully selected XAI methods (explainers) in a simple, uniform interface.
-    It's built by, with and for (academic) researchers and research software engineers
-    working on machine learning projects.
-
-    DIANNA supports the de-facto standard of neural network models - ONNX.
+    **DIANNA** (Deep Insight And Neural Network Analysis) is a Python package that brings explainable AI (XAI)
+    to your research project. <br>
+    It wraps _systematically_ selected XAI methods (**explainers**) in a simple, uniform interface.<br>
+    It's built by, with and for academic researchers and research software engineers
+    who use AI, but users not need to be XAI experts! <br>
+    DIANNA supports the de-facto standard format of neural network models - [ONNX](https://onnx.ai/:).
 
     ### Dashboard
-    The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained for the tasks
+    The DIANNA dashboard can be used for explanation of the outcomes of several ONNX models trained for the tasks
     and datasets presented
     in the [DIANNA Tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials#datasets-and-tasks).
 
-    The dashboard shows the visual explanation of a models' decision on a selected data item
-    by a selected XAI method (explainer).
+    The dashboard shows the visual explanation of a models' outcome
+    on a selected data _instance_ by one or more selected explainers. <br>
     It allows you to compare the results of different explainers, as well as explanations
-    of the top ranked predicted labels.
-    The dashboard was created using [streamlit](https://streamlit.io/).
+    of the top ranked predicted model outcomes.
 
-    There are separate interfaces to the different data modalities supported by DIANNA:
-    Image, Text, Tabular, and Time series data.
+    There are separate sections for each of the different _data modalities_ supported by DIANNA:
+    :gray-background[**Image**], :gray-background[**Text**],
+    :gray-background[**Tabular**], and :gray-background[**Time series**] data. <br>
+    The visual explanation is an overlaid on the data instance :rainbow-background[**heatmap**]
+    highlighting the relevance (attribution) of each data instance _element_ to a selected model's outcome.<br>
+    The data element for images is a (super)pixel, for text - a word, for tabular data - an attribute,
+    and for time-series -  a time interval. Attributions can be positive, negative or irrelevant.<br>
+    To interpret heatmaps, note that attributions are bound between -1 and 1.
+    The maximum (positive) value is set to 1 and the minimum (negative)  value to -1.<br>
+    The dashboard uses the _bwr  (blue white red)_ colormap assigning :blue[**blue**] color to negative
+    relevances, **white** color to near-zero values, and :red[**red**] color to positive values.
 
-    It primarily illustrates the examples from the DIANNA tutorials.
-    It is also possible to upload own trained (onnx) model, a data item for which you would like
-    the model's decision explanation and other data required by the specific explainer.
+    """,
+                unsafe_allow_html=True)
+
+    st.image(str(data_directory / 'colormap.png'), width = 660)
+
+    st.markdown("""
+    The dashboard _primarily_ illustrates the examples from the DIANNA tutorials.
+
+    It is also possible to upload _own_ trained (ONNX) model and data item for which you would like
+    the model's decision explanation.<br>
     You can then select the explainer you want to use and set its hyperparameters.
 
      ### More information
 
     - [Source code](https://github.com/dianna-ai/dianna)
     - [Documentation](https://dianna.readthedocs.io/)
+    - [XAI choice](https://blog.esciencecenter.nl/how-to-find-your-artificial-intelligence-explainer-dbb1ac608009)
     """,
                 unsafe_allow_html=True)
 
