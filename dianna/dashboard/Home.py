@@ -45,17 +45,15 @@ if selected == "Home":
     It wraps carefully selected XAI methods in a simple, uniform interface. It's built by,
     with and for (academic) researchers and research software engineers working on machine
     learning projects. DIANNA supports the de-facto standard of neural network models - ONNX.
-    
     ### Dashboard
     The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained
     for the tasks and datasets presented in the
-    [DIANNA Tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials#datasets-and-tasks ).
+    [DIANNA Tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials#datasets-and-tasks).
     The dashboard shows the visual explanation of a models' decision on a selected data item by a
     selected XAI method (explainer). It allows you to compare the results of different explainers,
     as well as explanations of the top ranked predicted labels. The dashboard was created using
     [streamlit](https://streamlit.io/).
-    
-    This dashboard provides pages for the different data items for which DIANNA can be used; 
+    This dashboard provides pages for the different data items for which DIANNA can be used: 
     Image data, Tabular data, Text data, and Time series data.
     Here you can upload a trained (onnx) model, data item and the other data required for the
     specific data item. You can then select the explainer you want to use and set the different
