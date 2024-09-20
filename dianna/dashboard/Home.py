@@ -41,9 +41,11 @@ if selected == "Home":
     st.image(str(data_directory / 'logo_smaller.png'))
 
     st.markdown("""
-    DIANNA (Deep Insight And Neural Network Analysis) is a Python package that brings explainable AI (XAI) to your research project. 
+    DIANNA (Deep Insight And Neural Network Analysis) is a Python package that brings explainable AI (XAI)
+    to your research project.
     It wraps carefully selected XAI methods (explainers) in a simple, uniform interface.
-    It's built by, with and for (academic) researchers and research software engineers working on machine learning projects.
+    It's built by, with and for (academic) researchers and research software engineers
+    working on machine learning projects.
     DIANNA supports the de-facto standard of neural network models - ONNX.
     ### Dashboard
     The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained for the tasks
@@ -55,7 +57,6 @@ if selected == "Home":
     It primarily illustrates the examples from the DIANNA tutorials.
     It is also possible to upload own trained (onnx) model, a data item for which you would like the model's decision explanation
     and other data required by the specific explainer. You can then select the explainer you want to use and set its hyperparameters.
-    
     ### More information
 
     - [Source code](https://github.com/dianna-ai/dianna)
