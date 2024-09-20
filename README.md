@@ -197,9 +197,11 @@ The default hyperparameters used in DIANNA for each explainer as well as the val
 Explore the explanations of your trained model using the DIANNA dashboard (for now images, text and time series classification is supported).
 [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
 
-<a href="https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard" target="_blank">
-  <img width="1000" align="center" alt="Dianna dashboard screenshot" src="https://raw.githubusercontent.com/dianna-ai/dianna/main/dianna/dashboard/dashboard-screenshot.png">
-</a>
+_Dianna dashboard screenshot here_
+<!-- <a href="https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard" target="_blank">
+   <img width="1000" align="center" alt="Dianna dashboard screenshot" src="https://raw.githubusercontent.com/dianna-ai/dianna/main/dianna/dashboard/dashboard-screenshot.png">
+</a> 
+-->
 
 ## Datasets
 
