@@ -45,7 +45,7 @@ if selected == "Home":
     It wraps carefully selected XAI methods in a simple, uniform interface. It's built by,
     with and for (academic) researchers and research software engineers working on machine
     learning projects. DIANNA supports the de-facto standard of neural network models - ONNX.
-
+    
     ### Dashboard
     The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained
     for the tasks and datasets presented in the
