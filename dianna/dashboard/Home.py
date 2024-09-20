@@ -41,22 +41,21 @@ if selected == "Home":
     st.image(str(data_directory / 'logo_smaller.png'))
 
     st.markdown("""
-    DIANNA (Deep Insight And Neural Network Analysis) is a Python package that brings explainable AI (XAI) to your research project.
-    It wraps carefully selected XAI methods (explainers) in a simple, uniform interface. 
+    DIANNA (Deep Insight And Neural Network Analysis) is a Python package that brings explainable AI (XAI) to your research project. 
+    It wraps carefully selected XAI methods (explainers) in a simple, uniform interface.
     It's built by, with and for (academic) researchers and research software engineers working on machine learning projects.
     DIANNA supports the de-facto standard of neural network models - ONNX.
     ### Dashboard
     The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained for the tasks
     and datasets presented in the [DIANNA Tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials#datasets-and-tasks).
-    The dashboard shows the visual explanation of a models' decision on a selected data item by a selected XAI method (explainer). 
+    The dashboard shows the visual explanation of a models' decision on a selected data item by a selected XAI method (explainer).
     It allows you to compare the results of different explainers, as well as explanations of the top ranked predicted labels.
     The dashboard was created using [streamlit](https://streamlit.io/).
     This dashboard has separate interfaces to the different data modalities supported by DIANNA: Image, Text, Tabular, and Time series data.
     It primarily illustrates the examples from the DIANNA tutorials.
     It is also possible to upload own trained (onnx) model, a data item for which you would like the model's decision explanation
     and other data required by the specific explainer. You can then select the explainer you want to use and set its hyperparameters.
-     
-
+    
     ### More information
 
     - [Source code](https://github.com/dianna-ai/dianna)
