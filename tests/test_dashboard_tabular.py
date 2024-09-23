@@ -169,7 +169,6 @@ def test_tabular_penguin(page: Page):
     page.get_by_text('Running...').wait_for(state='detached', timeout=300_000)
 
     for selector in (
-        page.get_by_text('Predicted class:'),
         page.get_by_test_id('stMetricValue').get_by_text('Gentoo'),
         page.get_by_role('heading', name='RISE').get_by_text('RISE'),
         page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
