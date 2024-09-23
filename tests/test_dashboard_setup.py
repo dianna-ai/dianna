@@ -79,7 +79,7 @@ def test_page_load(page: Page):
 
     for selector in (
             page.get_by_role('img', name='0'),
-            page.get_by_text('More information'),
+            page.get_by_text('Dashboard'),
     ):
         expect(selector).to_be_visible()
 
