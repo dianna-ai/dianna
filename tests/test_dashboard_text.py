@@ -98,7 +98,7 @@ def test_text_page(page: Page):
                              name='positive').get_by_text('positive'),
             page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
-            #            # Images for negative (RISE/LIME)
+            # Images for negative (RISE/LIME)
             page.get_by_role('heading',
                              name='negative').get_by_text('negative'),
             page.get_by_role('img', name='0').nth(2),
