@@ -1,8 +1,11 @@
 import numpy as np
+import seaborn as sns
 import streamlit as st
 from _model_utils import load_data
 from _model_utils import load_labels
 from _model_utils import load_model
+from _model_utils import load_penguins
+from _model_utils import load_sunshine
 from _model_utils import load_training_data
 from _models_tabular import explain_tabular_dispatcher
 from _models_tabular import predict
@@ -10,9 +13,11 @@ from _shared import _get_top_indices_and_labels
 from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import reset_example
+from _shared import reset_method
 from st_aggrid import AgGrid
 from st_aggrid import GridOptionsBuilder
 from st_aggrid import GridUpdateMode
+from dianna.utils.downloader import download
 from dianna.visualization import plot_tabular
 
 add_sidebar_logo()
@@ -31,14 +36,64 @@ input_type = st.sidebar.radio(
 
 # Use the examples
 if input_type == 'Use an example':
-    """load_example = st.sidebar.radio(
+    load_example = st.sidebar.radio(
         label='Use example',
-        options=(''),
+        options=('Sunshine hours prediction', 'Penguin identification'),
         index = None,
         on_change = reset_method,
-        key='Tabular_load_example')"""
-    st.info("No examples availble yet")
-    st.stop()
+        key='Tabular_load_example')
+
+    if load_example == "Sunshine hours prediction":
+        tabular_data_file = download('weather_prediction_dataset_light.csv', 'data')
+        tabular_model_file = download('sunshine_hours_regression_model.onnx', 'model')
+        tabular_training_data_file = tabular_data_file
+        tabular_label_file = None
+
+        training_data, data = load_sunshine(tabular_data_file)
+        labels =  None
+
+        mode = 'regression'
+        st.markdown(
+        """
+        This example demonstrates the use of DIANNA on a pre-trained regression
+        [model to predict tomorrow's sunshine hours](https://zenodo.org/records/10580833)
+        based on meteorological data from today.
+        The model is trained on the
+        [weather prediction dataset](https://zenodo.org/records/5071376).
+        The meteorological data includes for various European cities the
+        cloud coverage,humidity, air pressure, global radiation, precipitation, and
+        mean, min and max temeprature.
+
+        DIANNA's visualisation shows the top most important features contributing to the
+        sunshine hours prediction, where features contrinuting positively are indicated in red
+        and those who contribute negatively in blue.
+        """)
+    elif load_example == 'Penguin identification':
+        tabular_model_file = download('penguin_model.onnx', 'model')
+        data_penguins = sns.load_dataset('penguins')
+        labels = data_penguins['species'].unique()
+
+        training_data, data = load_penguins(data_penguins)
+
+        mode = 'classification'
+
+        st.markdown(
+        """
+        This example demonstrates the use of DIANNA on a pre-trained classification
+        [model to classify penguins in to three different species](https://zenodo.org/records/10580743)
+        based on a number of measurable physical characteristics.
+        The model is trained on the
+        [weather prediction dataset](https://zenodo.org/records/5071376). The data is obtained from
+        the Python seaborn package
+        The penguin characteristics include the bill length, bill depth, flipper length and body mass.
+
+        DIANNA's visualisation shows the top most important characteristics contributing to the
+        penguin species classification, where characteristics contributing positively are indicated in red
+        and those who contribute negatively in blue.
+        """)
+    else:
+        st.info('Select an example in the left panel to coninue')
+        st.stop()
 
 # Option to upload your own data
 if input_type == 'Use your own data':
@@ -47,29 +102,29 @@ if input_type == 'Use your own data':
     tabular_training_data_file = st.sidebar.file_uploader('Select training data', type='npy')
     tabular_label_file = st.sidebar.file_uploader('Select labels in case of classification model', type='txt')
 
+    if not (tabular_data_file and tabular_model_file and tabular_training_data_file):
+        st.info('Add your input data in the left panel to continue')
+        st.stop()
+
+    data = load_data(tabular_data_file)
+    model = load_model(tabular_model_file)
+    training_data = load_training_data(tabular_training_data_file)
+
+    if tabular_label_file:
+        labels = load_labels(tabular_label_file)
+        mode = 'classification'
+    else:
+        labels = None
+        mode = 'regression'
+
 if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
-if not (tabular_data_file and tabular_model_file and tabular_training_data_file):
-    st.info('Add your input data in the left panel to continue')
-    st.stop()
-
-data = load_data(tabular_data_file)
-
 model = load_model(tabular_model_file)
 serialized_model = model.SerializeToString()
 
-training_data = load_training_data(tabular_training_data_file)
-
-if tabular_label_file:
-    labels = load_labels(tabular_label_file)
-    mode = 'classification'
-else:
-    labels = None
-    mode = 'regression'
-
-choices = ('RISE', 'LIME')
+choices = ('RISE', 'LIME', 'KernelSHAP')
 
 st.text("")
 st.text("")
@@ -94,10 +149,10 @@ grid_response = AgGrid(
 )
 
 if grid_response['selected_rows'] is not None:
-    selected_row = grid_response['selected_rows']['Index'].iloc[0]
-    selected_data = data.iloc[selected_row, 1:].to_numpy(dtype=np.float32)
+    selected_row = int(grid_response['selected_rows'].index[0])
+    selected_data = data.iloc[selected_row].to_numpy()[1:]
     with st.spinner('Predicting class'):
-        predictions = predict(model=serialized_model, tabular_input=selected_data)
+        predictions = predict(model=serialized_model, tabular_input=selected_data.reshape(1,-1))
 
     with prediction_placeholder:
         top_indices, top_labels = _get_top_indices_and_labels(
@@ -125,17 +180,21 @@ for index, label in zip(top_indices, top_labels):
 
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
-        kwargs['labels'] = [index]
         kwargs['mode'] = mode
-        if method == 'LIME':
-            kwargs['_feature_names']=data[:1].columns.to_list()
+        kwargs['_feature_names']=data.columns.to_list()[1:]
 
         func = explain_tabular_dispatcher[method]
 
         with col:
             with st.spinner(f'Running {method}'):
                 relevances = func(serialized_model, selected_data, training_data, **kwargs)
-            fig, _ = plot_tabular(x=relevances, y=data[:1].columns, num_features=10, show_plot=False)
+            if mode == 'classification':
+                plot_relevances = relevances[np.argmax(predictions)]
+            else:
+                plot_relevances = relevances
+
+            fig, _ = plot_tabular(x=plot_relevances, y=kwargs['_feature_names'],
+                                  num_features=10, show_plot=False)
             st.pyplot(fig)
 
     # add some white space to separate rows

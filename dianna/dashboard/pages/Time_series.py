@@ -11,8 +11,8 @@ from _shared import reset_example
 from _shared import reset_method
 from _ts_utils import _convert_to_segments
 from _ts_utils import open_timeseries
+from matplotlib import pyplot as plt
 from dianna.utils.downloader import download
-from dianna.visualization import plot_image
 from dianna.visualization import plot_timeseries
 
 st.title('Time series explanation')
@@ -44,6 +44,8 @@ if input_type == 'Use an example':
                         'season_prediction_model_temp_max_binary.onnx', 'model')
         ts_label_file = download('weather_data_labels.txt', 'label')
 
+        param_key = 'Weather_TS_cb'
+
         st.markdown(
         """
         This example demonstrates the use of DIANNA
@@ -72,6 +74,8 @@ if input_type == 'Use an example':
         ts_data_explainer = ts_data.T[None, ...]
         ts_data_predictor = ts_data[None, ..., None]
 
+        param_key = 'FRB_TS_cb'
+
         st.markdown(
             """This example demonstrates the use of DIANNA
             on a pre-trained binary classification model trained to classify
@@ -97,6 +101,8 @@ if input_type == 'Use your own data':
 
     ts_label_file = st.sidebar.file_uploader('Select labels',
                                             type='txt')
+
+    param_key = 'TS_cb'
 
 if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
@@ -126,7 +132,7 @@ st.text("")
 
 with st.container(border=True):
     prediction_placeholder = st.empty()
-    methods, method_params = _methods_checkboxes(choices=choices, key='TS_cb')
+    methods, method_params = _methods_checkboxes(choices=choices, key=param_key)
 
     with st.spinner('Predicting class'):
         predictions = predict(model=serialized_model, ts_data=ts_data_predictor)
@@ -162,8 +168,21 @@ for index, label in zip(top_indices, top_labels):
                 explanation = func(serialized_model, ts_data=ts_data_explainer, **kwargs)
 
             if load_example == "Scientific case: FRB":
-                # FRB data: get rid of last dimension
-                fig, _ = plot_image(explanation[0, :, ::-1].T)
+                fig, axes = plt.subplots(ncols=2, figsize=(14, 5))
+                # FRB: plot original data
+                ax = axes[0]
+                ax.imshow(ts_data, aspect='auto', origin='lower')
+                ax.set_xlabel('Time step')
+                ax.set_ylabel('Channel index')
+                ax.set_title('Input data')
+                # FRB data explanation has to be transposed
+                ax = axes[1]
+                plot = ax.imshow(explanation[0].T, aspect='auto', origin='lower', cmap='bwr')
+                ax.set_xlabel('Time step')
+                ax.set_ylabel('Channel index')
+                ax.set_title('Explanation')
+                fig.colorbar(plot)
+
             else:
                 segments = _convert_to_segments(explanation)
 

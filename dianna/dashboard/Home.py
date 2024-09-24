@@ -46,14 +46,6 @@ if selected == "Home":
     with and for (academic) researchers and research software engineers working on machine
     learning projects.
 
-    ### Pages
-
-    - <a href="/Images" target="_parent">Image data</a>
-    - <a href="/Tabular" target="_parent">Tabular data</a>
-    - <a href="/Text" target="_parent">Text data</a>
-    - <a href="/Time_series" target="_parent">Time series data</a>
-
-
     ### More information
 
     - [Source code](https://github.com/dianna-ai/dianna)
