@@ -69,12 +69,15 @@ class TestLimeOnTextSpecialCharacters:
 
     def test_lime_text_special_chars_regression_test(self, text):
         """Just don't raise an error on this input with special characters."""
-        _ = dianna.explain_text(self.runner,
-                                text,
-                                tokenizer=self.runner.tokenizer,
-                                labels=[0],
-                                method='LIME',
-                                random_state=0)
+        _ = dianna.explain_text(
+            self.runner,
+            text,
+            tokenizer=self.runner.tokenizer,
+            labels=[0],
+            method='LIME',
+            random_state=0,
+            num_samples=10,
+        )
 
 
 @pytest.fixture
