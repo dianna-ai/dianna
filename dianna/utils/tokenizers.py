@@ -4,10 +4,10 @@ from abc import abstractmethod
 from typing import List
 
 try:
-    from torchtext.data import get_tokenizer
+    import spacy
 except ImportError as err:
     raise ImportError(
-        'Failed to import torchtext, please install manually or reinstall dianna with '
+        'Failed to import spacy, please install manually or reinstall dianna with '
         'text support: `pip install dianna[text]`') from err
 
 
@@ -76,3 +76,15 @@ class SpacyTokenizer(Tokenizer):
         sentence = self.MATCH_token_unk_white.sub(r'\1 \2\3', sentence)
         sentence = self.MATCH_white_unk_token.sub(r'\1\2 \3', sentence)
         return sentence
+
+
+def get_tokenizer(_spacy, name):
+    """Get tokenizer using spacy."""
+    nlp = spacy.load(name)
+
+    def spacy_tokenizer(text):
+        # tokenizes text
+        doc = nlp(text)
+        return [token.text for token in doc]
+
+    return spacy_tokenizer

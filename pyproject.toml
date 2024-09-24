@@ -29,8 +29,6 @@ extend-exclude = [
 target-version = "py310"
 line-length = 120
 
-
-[tool.ruff.lint]
 # Enable Pyflakes `E` and `F` codes by default.
 select = [
     "F",  # Pyflakes
@@ -44,7 +42,6 @@ select = [
     # "PLE",  # Error
     # "PLR",  # Refactor
     # "PLW",  # Warning
-
 ]
 ignore = [
     'D100',  # Missing module docstring
@@ -69,11 +66,10 @@ unfixable = []
 
 per-file-ignores = {}
 
-
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-[tool.ruff.lint.isort]
+[tool.ruff.isort]
 known-first-party = ["dianna"]
 force-single-line = true
 no-lines-before = ["future","standard-library","third-party","first-party","local-folder"]

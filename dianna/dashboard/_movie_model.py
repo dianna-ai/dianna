@@ -1,8 +1,7 @@
-import os
 import numpy as np
+import pandas as pd
 from _shared import data_directory
 from scipy.special import expit as sigmoid
-from torchtext.vocab import Vectors
 from dianna import utils
 from dianna.utils.tokenizers import SpacyTokenizer
 
@@ -10,13 +9,14 @@ from dianna.utils.tokenizers import SpacyTokenizer
 class MovieReviewsModelRunner:
     """Creates runner for movie review model."""
 
-    def __init__(self, model, word_vectors=None, max_filter_size=5):
+    def __init__(self, model, word_vector_path=None, max_filter_size=5):
         """Initializes the class."""
-        if word_vectors is None:
-            word_vectors = data_directory / 'movie_reviews_word_vectors.txt'
+        if word_vector_path is None:
+            word_vector_path = data_directory / 'movie_reviews_word_vectors.txt'
 
         self.run_model = utils.get_function(model)
-        self.vocab = Vectors(word_vectors, cache=os.path.dirname(word_vectors))
+        self.keys = list(
+            pd.read_csv(word_vector_path, header=None, delimiter=' ')[0])
         self.max_filter_size = max_filter_size
         self.tokenizer = SpacyTokenizer()
 
@@ -35,8 +35,8 @@ class MovieReviewsModelRunner:
 
             # numericalize the tokens
             tokens_numerical = [
-                self.vocab.stoi[token]
-                if token in self.vocab.stoi else self.vocab.stoi['<unk>']
+                self.keys.index(token)
+                if token in self.keys else self.keys.index('<unk>')
                 for token in tokens
             ]
 

@@ -1,8 +1,8 @@
 import numpy as np
 import onnxruntime as ort
+import pandas as pd
 import spacy
 from scipy.special import expit as sigmoid
-from torchtext.vocab import Vectors
 from dianna.utils.tokenizers import SpacyTokenizer
 
 _mnist_1_data = """
@@ -72,12 +72,12 @@ def get_dummy_model_function(n_outputs):
 class ModelRunner:
     """Example model runner for text models used for automated testing."""
 
-    def __init__(self, model_path, word_vector_file, max_filter_size):
+    def __init__(self, model_path, word_vector_path, max_filter_size):
         """Initializes the model runner.
 
         Args:
             model_path: path to the model file
-            word_vector_file: path to the vector file
+            word_vector_path: path to the vector file
             max_filter_size: maximum filter size of the model
         """
         self.filename = model_path
@@ -86,8 +86,8 @@ class ModelRunner:
         if not spacy.util.is_package(model):
             spacy.cli.download(model)
         self.tokenizer = SpacyTokenizer()
-        self.vocab = Vectors(word_vector_file, cache='.')
-
+        self.keys = list(
+            pd.read_csv(word_vector_path, header=None, delimiter=' ')[0])
         self.max_filter_size = max_filter_size
 
     def __call__(self, sentences):
@@ -103,16 +103,7 @@ class ModelRunner:
         output = []
         for sentence in sentences:
             # tokenize and pad to minimum length
-            tokens = self.tokenizer.tokenize(sentence.lower())
-            if len(tokens) < self.max_filter_size:
-                tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
-
-            # numericalize the tokens
-            tokens_numerical = [
-                self.vocab.stoi[token]
-                if token in self.vocab.stoi else self.vocab.stoi['<unk>']
-                for token in tokens
-            ]
+            tokens_numerical = self.tokenize(sentence)
 
             # run the model, applying a sigmoid because the model outputs logits, remove any remaining batch axis
             onnx_input = {input_name: [tokens_numerical]}
@@ -128,16 +119,17 @@ class ModelRunner:
     def tokenize(self, sentence: str):
         """Tokenize sentence."""
         # tokenize and pad to minimum length
-        tokens = self.tokenizer.tokenize(sentence)
+        tokens = self.tokenizer.tokenize(sentence.lower())
         if len(tokens) < self.max_filter_size:
             tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
 
         # numericalize the tokens
         tokens_numerical = [
-            self.vocab.stoi[token]
-            if token in self.vocab.stoi else self.vocab.stoi['<unk>']
+            self.keys.index(token)
+            if token in self.keys else self.keys.index('<unk>')
             for token in tokens
         ]
+
         return tokens_numerical
 
 
