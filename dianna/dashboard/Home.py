@@ -89,7 +89,7 @@ if selected == "Home":
         The dashboard _primarily_ illustrates the examples from the DIANNA tutorials.
 
         It is also possible to upload _own_ trained (ONNX) model, the task-specific class labels,
-        and data item for which you would like the model's decision explanation.<br>
+        and the data instance for which you would like the model's decision explanation.<br>
         You can then select the explainer you want to use and set its hyperparameters.
 
         ### More information
