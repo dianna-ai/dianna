@@ -1,5 +1,5 @@
-import streamlit as st
 import sys
+import streamlit as st
 from _image_utils import open_image
 from _model_utils import load_labels
 from _model_utils import load_model
