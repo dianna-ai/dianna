@@ -50,6 +50,9 @@ if selected == "Home":
         **DIANNA** (Deep Insight And Neural Network Analysis) is a Python package that brings explainable AI (XAI)
         to your research project. <br>
         It wraps _systematically_ selected XAI methods (**explainers**) in a simple, uniform interface.<br>
+        The currently supported explainers are [RISE](http://bmvc2018.org/contents/papers/1064.pdf),
+        [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) and
+        [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf).<br>
         It's built by, with and for academic researchers and research software engineers
         who use AI, but users not need to be XAI experts! <br>
         DIANNA supports the de-facto standard format of neural network models - [ONNX](https://onnx.ai/:).
@@ -69,10 +72,11 @@ if selected == "Home":
         :gray-background[**Tabular**], and :gray-background[**Time series**] data. <br>
         The visual explanation is an overlaid on the data instance :rainbow-background[**heatmap**]
         highlighting the relevance (attribution) of each data instance _element_ to a selected model's outcome.<br>
-        The data element for images is a (super)pixel, for text - a word, for tabular data - an attribute,
-        and for time-series -  a time interval. Attributions can be positive, negative or irrelevant.<br>
-        To interpret heatmaps, note that attributions are bound between -1 and 1.
-        The maximum (positive) value is set to 1 and the minimum (negative)  value to -1.<br>
+        The data element for images is a (super)pixel, for text a word, for tabular data an attribute,
+        and for time-series a time interval. Attributions can be positive, negative or irrelevant.<br>
+        To interpret heatmaps, note that attributions for LIME and KernelSHAP are bound between -1 and 1 and
+        for RISE between 0 and 1.
+        The maximum (positive) value is set to 1 and the minimum (negative)  value to -1 (1 and 0 for RISE).<br>
         The dashboard uses the _bwr  (blue white red)_ colormap assigning :blue[**blue**] color to negative
         relevances, **white** color to near-zero values, and :red[**red**] color to positive values.
 
@@ -84,8 +88,8 @@ if selected == "Home":
         st.markdown("""
         The dashboard _primarily_ illustrates the examples from the DIANNA tutorials.
 
-        It is also possible to upload _own_ trained (ONNX) model and data item for which you would like
-        the model's decision explanation.<br>
+        It is also possible to upload _own_ trained (ONNX) model, the task-specific class labels,
+        and data item for which you would like the model's decision explanation.<br>
         You can then select the explainer you want to use and set its hyperparameters.
 
         ### More information
