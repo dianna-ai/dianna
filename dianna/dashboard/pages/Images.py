@@ -36,9 +36,9 @@ st.markdown(
             assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
             and :red[**red**] color to positive values.
             """,
-			unsafe_allow_html=True
-
+            unsafe_allow_html=True
            )
+
 st.image(str(data_directory / 'colormap.png'), width = 660)
 
 st.sidebar.header('Input data')
@@ -76,7 +76,7 @@ if input_type == 'Use an example':
             the hand-written digits 0 and 1. <br>
             The model classifies an image of a hand-written digit as displaying 0 or 1.
             """,
-			unsafe_allow_html=True
+            unsafe_allow_html=True
         )
 
     else:
