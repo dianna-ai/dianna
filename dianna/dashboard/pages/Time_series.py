@@ -15,7 +15,7 @@ from matplotlib import pyplot as plt
 from dianna.utils.downloader import download
 from dianna.visualization import plot_timeseries
 
-st.title('Time series explanation')
+st.title('Explaining Time series data classification')
 
 add_sidebar_logo()
 st.sidebar.header('Input data')

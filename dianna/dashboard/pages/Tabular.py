@@ -22,7 +22,7 @@ from dianna.visualization import plot_tabular
 
 add_sidebar_logo()
 
-st.title('Tabular data explanation')
+st.title('Explaining Tabular data classification/regression')
 
 st.sidebar.header('Input data')
 

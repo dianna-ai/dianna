@@ -14,7 +14,7 @@ from dianna.visualization.text import highlight_text
 
 add_sidebar_logo()
 
-st.title('Text explanation')
+st.title('Explaining Textual data classification')
 
 st.sidebar.header('Input data')
 

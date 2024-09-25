@@ -14,7 +14,7 @@ from dianna.visualization import plot_image
 
 add_sidebar_logo()
 
-st.title('Image explanation')
+st.title('Explaining Image data classification')
 
 st.sidebar.header('Input data')
 
