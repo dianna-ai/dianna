@@ -1,4 +1,5 @@
 import streamlit as st
+import sys
 from _image_utils import open_image
 from _model_utils import load_labels
 from _model_utils import load_model
@@ -12,9 +13,33 @@ from _shared import reset_method
 from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 
+if sys.version_info < (3, 10):
+    from importlib_resources import files
+else:
+    from importlib.resources import files
+data_directory = files('dianna.data')
+
 add_sidebar_logo()
 
 st.title('Explaining Image data classification')
+
+st.markdown(
+            """
+            The explanation is visualised as a **relevance heatmap** overlayed on top of the input image. <br>
+            The heatmap consists of the relevance _attributions_ of all individual pixels/super-pixels of the image
+            to a **pretrained model**'s classification. <br>
+            The attribution heatmap can be computed for any class.
+
+            To interpret heatmaps, note that the attributions for the LIME and KernelSHAP explainers are bound between
+            -1 and 1 and for the RISE explainer between 0 and 1. <br>
+            The _bwr (blue white red)_ attribution colormap
+            assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
+            and :red[**red**] color to positive values.
+            """,
+			unsafe_allow_html=True
+
+           )
+st.image(str(data_directory / 'colormap.png'), width = 660)
 
 st.sidebar.header('Input data')
 
@@ -45,14 +70,15 @@ if input_type == 'Use an example':
 
         st.markdown(
             """
-            This example demonstrates the use of DIANNA on a pretrained binary
-            [MNIST](https://yann.lecun.com/exdb/mnist/) model using a hand-written digit images.
-            The model predict for an image of a hand-written 0 or 1, which of the two it most
-            likely is.
-            This example visualizes the relevance attributions for each pixel/super-pixel by
-            displaying them on top of the input image.
-            """
+            ************************************************************************************
+            This example demonstrates the use of DIANNA on explaining a
+            [**binary MNIST model**](https://zenodo.org/records/5907177) pretrained on **only** images of
+            the hand-written digits 0 and 1. <br>
+            The model classifies an image of a hand-written digit as displaying 0 or 1.
+            """,
+			unsafe_allow_html=True
         )
+
     else:
         st.info('Select an example in the left panel to coninue')
         st.stop()
