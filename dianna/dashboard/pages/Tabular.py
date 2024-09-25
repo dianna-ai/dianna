@@ -24,6 +24,23 @@ add_sidebar_logo()
 
 st.title('Explaining Tabular data classification/regression')
 
+st.markdown(
+            """
+            The explanation is visualised as a **relevance bar-chart** for top up to 10 most
+            relevant _attributes (features)_. <br>
+            The chart displays the relevance _attributions_ of the individual features of the tabular data
+            to a **pretrained model**'s classification or regresson prediciton. <br>
+            The attribution chart can be computed for any predicted outcome.
+
+            To interpret the chart, note that the attributions for the LIME and KernelSHAP explainers are bound between
+            -1 and 1 and for the RISE explainer between 0 and 1. <br>
+            The attribution colormap
+            assigns :blue[**blue**] color to negative relevances,
+            and :red[**red**] color to positive values.
+            """,
+            unsafe_allow_html=True
+           )
+
 st.sidebar.header('Input data')
 
 input_type = st.sidebar.radio(
@@ -38,12 +55,12 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Use example',
-        options=('Sunshine hours prediction', 'Penguin identification'),
+        options=('Sunshine hours prediction (regression)', 'Penguin identification (classification)'),
         index = None,
         on_change = reset_method,
         key='Tabular_load_example')
 
-    if load_example == "Sunshine hours prediction":
+    if load_example == "Sunshine hours prediction (regression)":
         tabular_data_file = download('weather_prediction_dataset_light.csv', 'data')
         tabular_model_file = download('sunshine_hours_regression_model.onnx', 'model')
         tabular_training_data_file = tabular_data_file
@@ -55,20 +72,23 @@ if input_type == 'Use an example':
         mode = 'regression'
         st.markdown(
         """
-        This example demonstrates the use of DIANNA on a pre-trained regression
-        [model to predict tomorrow's sunshine hours](https://zenodo.org/records/10580833)
+        **********************************************************************************
+        This example demonstrates the use of DIANNA on a pre-trained [regression
+        model](https://zenodo.org/records/10580833) to predict tomorrow's sunshine hours
         based on meteorological data from today.
         The model is trained on the
-        [weather prediction dataset](https://zenodo.org/records/5071376).
-        The meteorological data includes for various European cities the
-        cloud coverage,humidity, air pressure, global radiation, precipitation, and
-        mean, min and max temeprature.
+        [weather prediction dataset](https://zenodo.org/records/5071376). <br>
+        The meteorological data includes measurements (features) of
+        _cloud coverage, humidity, air pressure, global radiation, precipitation_, and
+        _mean, min_ and _max temeprature_
+        for variuos European cities.
 
         DIANNA's visualisation shows the top most important features contributing to the
-        sunshine hours prediction, where features contrinuting positively are indicated in red
-        and those who contribute negatively in blue.
-        """)
-    elif load_example == 'Penguin identification':
+        sunshine hours prediction (positive attributions are indicated in :red[red], negative in :blue[blue]).
+        """,
+        unsafe_allow_html=True )
+
+    elif load_example == 'Penguin identification (classification)':
         tabular_model_file = download('penguin_model.onnx', 'model')
         data_penguins = sns.load_dataset('penguins')
         labels = data_penguins['species'].unique()
@@ -79,18 +99,18 @@ if input_type == 'Use an example':
 
         st.markdown(
         """
-        This example demonstrates the use of DIANNA on a pre-trained classification
-        [model to classify penguins in to three different species](https://zenodo.org/records/10580743)
-        based on a number of measurable physical characteristics.
+        *********************************************************************************
+        This example demonstrates the use of DIANNA on a pre-trained [classification
+        model](https://zenodo.org/records/10580743) to identify is a penguin belongs to one of three different species
+        based on a number of measurable physical characteristics. <br>
         The model is trained on the
-        [weather prediction dataset](https://zenodo.org/records/5071376). The data is obtained from
-        the Python seaborn package
-        The penguin characteristics include the bill length, bill depth, flipper length and body mass.
+        [penguin dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris).
+        The penguin characteristics include the _bill length, _bill depth_, _flipper length_, and _body mass_.
 
         DIANNA's visualisation shows the top most important characteristics contributing to the
-        penguin species classification, where characteristics contributing positively are indicated in red
-        and those who contribute negatively in blue.
-        """)
+        penguin species identification (positive attributions are indicated in :red[red], negative in :blue[blue]).
+        """,
+        unsafe_allow_html=True)
     else:
         st.info('Select an example in the left panel to coninue')
         st.stop()
