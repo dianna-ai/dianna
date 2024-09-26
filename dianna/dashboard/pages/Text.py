@@ -1,3 +1,4 @@
+import sys
 import streamlit as st
 from _model_utils import load_labels
 from _model_utils import load_model
@@ -12,10 +13,33 @@ from _shared import reset_method
 from dianna.utils.downloader import download
 from dianna.visualization.text import highlight_text
 
+if sys.version_info < (3, 10):
+    from importlib_resources import files
+else:
+    from importlib.resources import files
+data_directory = files('dianna.data')
+
 add_sidebar_logo()
 
 st.title('Explaining Textual data classification')
 
+st.markdown(
+            """
+            The explanation is visualised as a **relevance heatmap** overlayed on top of the input text. <br>
+            The heatmap consists of the relevance _attributions_ of all individual words of the text
+            to a **pretrained model**'s classification. <br>
+            The attribution heatmap can be computed for any class.
+
+            To interpret heatmaps, note that the attributions for the LIME and KernelSHAP explainers are bound between
+            -1 and 1 and for the RISE explainer between 0 and 1. <br>
+            The _bwr (blue white red)_ attribution colormap
+            assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
+            and :red[**red**] color to positive values.
+            """,
+            unsafe_allow_html=True
+           )
+
+st.image(str(data_directory / 'colormap.png'), width = 660)
 st.sidebar.header('Input data')
 
 input_type = st.sidebar.radio(
@@ -30,27 +54,31 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Use example',
-        options=('Movie sentiment',),
+        options=('Movie sentiment classification',),
         index = None,
         on_change = reset_method,
         key='Text_load_example')
 
-    if load_example == 'Movie sentiment':
+    if load_example == 'Movie sentiment classification':
         text_input = st.sidebar.text_input(
-            'Input string',
+            'Input text',
             value='The movie started out great but the ending was disappointing')
         text_model_file = download('movie_review_model.onnx', 'model')
         text_label_file = download('labels_text.txt', 'label')
 
         st.markdown(
         """
+        ***********************************************************************
         This example demonstrates the use of DIANNA on the [Stanford Sentiment
         Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which
-        contains one-sentence movie reviews. A pre-trained neural network
-        classifier is used, which identifies whether a movie review is positive
-        or negative. The input string to which the model is applied can be modified
-        in the left menu.
-        """)
+        contains one-sentence movie reviews. <br> A pre-trained [neural network
+        classifier](https://zenodo.org/record/5910598) is used, which classifies a movie review
+        as positive or negative. <br>
+        :blue-background[The input sentence which the model will classify can be modified in
+        the editable Input text field in the left panel.]
+        """,
+        unsafe_allow_html=True
+        )
     else:
         st.info('Select an example in the left panel to coninue')
         st.stop()
