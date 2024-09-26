@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import streamlit as st
 from _model_utils import load_labels
@@ -15,8 +16,31 @@ from matplotlib import pyplot as plt
 from dianna.utils.downloader import download
 from dianna.visualization import plot_timeseries
 
+if sys.version_info < (3, 10):
+    from importlib_resources import files
+else:
+    from importlib.resources import files
+data_directory = files('dianna.data')
+
 st.title('Explaining Time series data classification')
 
+st.markdown(
+            """
+            The explanation is visualised as a **relevance heatmap** overlayed on top of the time series. <br>
+            The heatmap consists of the relevance _attributions_ of all individual data points per time moment
+            of the series to a **pretrained model**'s classification. <br>
+            The attribution heatmap can be computed for any class.
+
+            To interpret heatmaps, note that the attributions for the LIME and KernelSHAP explainers are bound between
+            -1 and 1 and for the RISE explainer between 0 and 1. <br>
+            The _bwr (blue white red)_ attribution colormap
+            assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
+            and :red[**red**] color to positive values.
+            """,
+            unsafe_allow_html=True
+           )
+
+st.image(str(data_directory / 'colormap.png'), width = 660)
 add_sidebar_logo()
 st.sidebar.header('Input data')
 
@@ -32,13 +56,13 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Select example',
-        options = ('Weather', 'Scientific case: FRB'),
+        options = ('Summer or winter?', 'Scientific use-case (astronomy): Fast Radio Burst detection'),
         index = None,
         on_change = reset_method,
         key = 'TS_load_example'
     )
 
-    if load_example == "Weather":
+    if load_example == "Summer or winter?":
         ts_data_file = download('weather_data.npy', 'data')
         ts_model_file = download(
                         'season_prediction_model_temp_max_binary.onnx', 'model')
@@ -48,6 +72,7 @@ if input_type == 'Use an example':
 
         st.markdown(
         """
+        ******************************************************************
         This example demonstrates the use of DIANNA
         on a pre-trained binary classification model for season prediction. The
         input data is the [weather prediction
@@ -57,8 +82,10 @@ if input_type == 'Use an example':
         relevance scores are displayed on top of the timeseries. The days
         contributing positively towards the classification decision are
         indicated in red and those who contribute negatively in blue.
-        """)
-    elif load_example == "Scientific case: FRB":
+        """,
+        unsafe_allow_html=True
+        )
+    elif load_example == "Scientific use-case (astronomy): Fast Radio Burst detection":
         ts_model_file = download('apertif_frb_dynamic_spectrum_model.onnx', 'model')
         ts_label_file = download('apertif_frb_classes.txt', 'label')
         ts_data_file = download('FRB211024.npy', 'data')
@@ -77,13 +104,17 @@ if input_type == 'Use an example':
         param_key = 'FRB_TS_cb'
 
         st.markdown(
-            """This example demonstrates the use of DIANNA
+            """
+            ************************************************************
+            This example demonstrates the use of DIANNA
             on a pre-trained binary classification model trained to classify
             Fast Radio Burst (FRB) timeseries data.
             The goal of the pre-trained convolutional neural network is to
             determine whether or not the input data contains an
             FRB-like signal, whereby the two classes are noise and FRB.
-            """)
+            """,
+            unsafe_allow_html=True
+            )
     else:
         st.info('Select an example in the left panel to coninue')
         st.stop()
