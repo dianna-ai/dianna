@@ -56,13 +56,14 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Select example',
-        options = ('Summer or winter?', 'Scientific use-case (astronomy): Fast Radio Burst detection'),
+        options = ('Season prediction from temperature: warm or cold?',
+                   'Scientific case - radio astronomy: Fast Radio Burst (FRB) detection'),
         index = None,
         on_change = reset_method,
         key = 'TS_load_example'
     )
 
-    if load_example == "Summer or winter?":
+    if load_example == "Season prediction from temperature: warm or cold?":
         ts_data_file = download('weather_data.npy', 'data')
         ts_model_file = download(
                         'season_prediction_model_temp_max_binary.onnx', 'model')
@@ -74,18 +75,16 @@ if input_type == 'Use an example':
         """
         ******************************************************************
         This example demonstrates the use of DIANNA
-        on a pre-trained binary classification model for season prediction. The
-        input data is the [weather prediction
-        dataset](https://zenodo.org/records/5071376). This classification model
-        uses time (days) as function of mean temperature to predict if the whole
-        time series is either summer or winter. Using a chosen XAI method the
-        relevance scores are displayed on top of the timeseries. The days
-        contributing positively towards the classification decision are
-        indicated in red and those who contribute negatively in blue.
+        on a pre-trained binary [classification model](https://zenodo.org/records/7543883)
+        for season prediction. <br> The input data is the
+        [weather prediction dataset](https://zenodo.org/records/5071376).
+        The binary classification is simplified to warm or cold (conditionally labelled _summer_ or _winter_) <br>
+        The model uses _mean temperature_ as function of time (in days) to predict if the whole
+        time series is either from a warm (_summer_) or a cold (_winter_) season.
         """,
         unsafe_allow_html=True
         )
-    elif load_example == "Scientific use-case (astronomy): Fast Radio Burst detection":
+    elif load_example == "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
         ts_model_file = download('apertif_frb_dynamic_spectrum_model.onnx', 'model')
         ts_label_file = download('apertif_frb_classes.txt', 'label')
         ts_data_file = download('FRB211024.npy', 'data')
