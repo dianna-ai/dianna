@@ -189,7 +189,7 @@ for index, label in zip(top_indices, top_labels):
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
         kwargs['labels'] = [index]
-        if load_example == "Scientific case: FRB":
+        if load_example == "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
             kwargs['_preprocess_function'] = preprocess
 
         func = explain_ts_dispatcher[method]
@@ -198,7 +198,7 @@ for index, label in zip(top_indices, top_labels):
             with st.spinner(f'Running {method}'):
                 explanation = func(serialized_model, ts_data=ts_data_explainer, **kwargs)
 
-            if load_example == "Scientific case: FRB":
+            if load_example == "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
                 fig, axes = plt.subplots(ncols=2, figsize=(14, 5))
                 # FRB: plot original data
                 ax = axes[0]
