@@ -143,7 +143,7 @@ if not (ts_data_file and ts_model_file and ts_label_file):
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
-if load_example != "Scientific case: FRB":
+if load_example != "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
     # For normal cases, the input data does not need transformation for either the
     # model explainer nor the model predictor
     ts_data_explainer = ts_data_predictor = open_timeseries(ts_data_file)
@@ -153,7 +153,7 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(ts_label_file)
 
-if load_example == "Scientific case: FRB":
+if load_example == "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
     choices = ('RISE',)
 else:
     choices = ('RISE', 'LIME')
