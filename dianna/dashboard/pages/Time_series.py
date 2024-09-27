@@ -106,11 +106,12 @@ if input_type == 'Use an example':
             """
             ************************************************************
             This example demonstrates the use of DIANNA
-            on a pre-trained binary classification model trained to classify
-            Fast Radio Burst (FRB) timeseries data.
-            The goal of the pre-trained convolutional neural network is to
-            determine whether or not the input data contains an
-            FRB-like signal, whereby the two classes are noise and FRB.
+            on a pre-trained [binary model](https://zenodo.org/records/10656614) for classification of
+            radio astronomical dynamic spectra, also known as frequency-time data. <br>
+            The scientifically relevant goal is to
+            determine whether the input data contains a
+            Fast Radio Burst (FRB)- like signal. <br>
+            The output of the clasisfier is a label for each data point - either noise or FRB.
             """,
             unsafe_allow_html=True
             )
