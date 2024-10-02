@@ -258,9 +258,10 @@ And here are links to notebooks showing how we created our models on the benchma
 
 ### Text
 
-| Models                                                | Generation                                                                                                                                                              |
-| :---------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Movie reviews model](https://zenodo.org/record/5910598) | [Stanford sentiment treebank model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/movie_reviews/generate_model.ipynb) |
+| Models                                                               | Generation                                                                                                                                                                 |
+|:---------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Movie reviews model](https://zenodo.org/record/5910598)             | [Stanford sentiment treebank model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/movie_reviews/generate_model.ipynb) |
+| [Regalatory statement classifier](https://zenodo.org/record/8200001) | [EU-law regulatory-statement-classification](https://github.com/nature-of-eu-rules/regulatory-statement-classification)                                                    |
 
 ### Time series
 
@@ -304,13 +305,13 @@ Also [GradCAM](https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_
 Our goal is that the scientific community embrases XAI as a source for novel and unexplored perspectives on scientific problems.
 Here, we offer [tutorials](./tutorials) on specific scientific use-cases of uisng XAI:
 
-| Use-case (data) \ XAI                                            | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
-| :----------------------------------------------------------------| :----------------------------------------------------| :---------------------------------------------------------------------| :-------------------------------------------------------------------------------------------------------|
-| Biology (Phytomorphology): Tree Leaves classification (images)   |                                                      |            ✅                                                        |                                                                                                         |
-| Astronomy: Fast Radio Burst detection (timeseries)               | ✅                                                  |                                                                       |                                                                                                         |
-| Land-atmosphere modeling: Latent heat flux prediction (tabular)                                        |                                               |                                                                    | ✅                                                                                                     |
-| Social sciences (text)                                           | work in progress                                     |  ...                                                                  |...                                                                                                     |
-| Climate                                                          | planned                                              |   ...                                                                 |       ...                                                                                              |
+| Use-case (data) \ XAI                                              | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf) |
+|:-------------------------------------------------------------------|:-----------------------------------------------------| :---------------------------------------------------------------------| :-------------------------------------------------------------------------------------------------------|
+| Biology (Phytomorphology): Tree Leaves classification (images)     |                                                      |            ✅                                                        |                                                                                                         |
+| Astronomy: Fast Radio Burst detection (timeseries)                 | ✅                                                    |                                                                       |                                                                                                         |
+| Land-atmosphere modeling: Latent heat flux prediction (tabular)    |                                                      |                                                                    | ✅                                                                                                     |
+| Social sciences: EU-law regulatory statement classification (text) |                                                      |  ✅                                                                  |                                                                                                     |
+| Climate                                                            | planned                                              |   ...                                                                 |       ...                                                                                              |
 
 ## Reference documentation
 
