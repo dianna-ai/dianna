@@ -81,7 +81,7 @@ if input_type == 'Use an example':
         The meteorological data includes measurements (features) of
         _cloud coverage, humidity, air pressure, global radiation, precipitation_, and
         _mean, min_ and _max temeprature_
-        for variuos European cities.
+        for various European cities.
 
         DIANNA's visualisation shows the top most important features contributing to the
         sunshine hours prediction (positive attributions are indicated in :red[red], negative in :blue[blue]).
