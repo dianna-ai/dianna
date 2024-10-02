@@ -26,7 +26,7 @@ st.title('Explaining Tabular data classification/regression')
 
 st.markdown(
             """
-            The explanation is visualised as a **relevance bar-chart** for top up to 10 most
+            The explanation is visualised as a **relevance bar-chart** for the top (up to 10) most
             relevant _attributes (features)_. <br>
             The chart displays the relevance _attributions_ of the individual features of the tabular data
             to a **pretrained model**'s classification or regresson prediciton. <br>
