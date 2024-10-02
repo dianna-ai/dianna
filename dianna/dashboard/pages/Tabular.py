@@ -101,7 +101,7 @@ if input_type == 'Use an example':
         """
         *********************************************************************************
         This example demonstrates the use of DIANNA on a pre-trained [classification
-        model](https://zenodo.org/records/10580743) to identify is a penguin belongs to one of three different species
+        model](https://zenodo.org/records/10580743) to identify if a penguin belongs to one of three different species
         based on a number of measurable physical characteristics. <br>
         The model is trained on the
         [penguin dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris).
