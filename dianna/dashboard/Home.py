@@ -58,7 +58,7 @@ if selected == "Home":
         DIANNA supports the de-facto standard format of neural network models - [ONNX](https://onnx.ai/:).
 
         ### Dashboard
-        The DIANNA dashboard can be used for explanation of the outcomes of several ONNX models trained for the tasks
+        The DIANNA dashboard can be used to visualise the explanation of the outcomes of several ONNX models trained for the tasks
         and datasets presented
         in the [DIANNA Tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials#datasets-and-tasks).
 
