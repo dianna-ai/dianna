@@ -1,4 +1,3 @@
-import base64
 import numpy as np
 import seaborn as sns
 import streamlit as st
