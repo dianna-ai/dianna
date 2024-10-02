@@ -1,3 +1,4 @@
+import base64
 import sys
 import streamlit as st
 from _image_utils import open_image
@@ -17,27 +18,40 @@ if sys.version_info < (3, 10):
     from importlib_resources import files
 else:
     from importlib.resources import files
+    
 data_directory = files('dianna.data')
+colormap_path = str(data_directory / 'colormap.png')
+with open(colormap_path, "rb") as img_file:
+    colormap = base64.b64encode(img_file.read()).decode()
+
+def description_explainer(open='open'):
+    """Expandable text section with image."""
+    return (st.markdown(
+            f"""
+            <details {open}>
+            <summary><b>Description of the explanation</b></summary>
+
+            The explanation is visualised as a **relevance heatmap** overlayed on top of the time series. <br>
+            The heatmap consists of the relevance _attributions_ of all individual pixels/super-pixels of the image
+            to a **pretrained model**'s classification. <br>
+            The attribution heatmap can be computed for any class. <br><br>
+
+            The _bwr (blue white red)_ attribution colormap
+            assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
+            and :red[**red**] color to positive values. <br><br>
+
+            <center><img src="data:image/png;base64,{colormap}" alt="Colormap" width="600" ></center><br>
+            </details>
+            """,
+            unsafe_allow_html=True
+           ),
+           st.text("")
+           )
+
 
 add_sidebar_logo()
 
 st.title('Explaining Image data classification')
-
-st.markdown(
-            """
-            The explanation is visualised as a **relevance heatmap** overlayed on top of the input image. <br>
-            The heatmap consists of the relevance _attributions_ of all individual pixels/super-pixels of the image
-            to a **pretrained model**'s classification. <br>
-            The attribution heatmap can be computed for any class.
-
-            The _bwr (blue white red)_ attribution colormap
-            assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
-            and :red[**red**] color to positive values.
-            """,
-            unsafe_allow_html=True
-           )
-
-st.image(str(data_directory / 'colormap.png'), width = 660)
 
 st.sidebar.header('Input data')
 
@@ -68,7 +82,6 @@ if input_type == 'Use an example':
 
         st.markdown(
             """
-            ************************************************************************************
             This example demonstrates the use of DIANNA on explaining a
             [**binary MNIST model**](https://zenodo.org/records/5907177) pretrained on **only** images of
             the hand-written digits 0 and 1. <br>
@@ -78,6 +91,7 @@ if input_type == 'Use an example':
         )
 
     else:
+        description_explainer()
         st.info('Select an example in the left panel to coninue')
         st.stop()
 
@@ -100,12 +114,16 @@ if input_type == 'Use your own data':
     imagekey = 'Image_cb'
 
 if input_type is None:
+    description_explainer()
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
 if not (image_file and image_model_file and image_label_file):
+    description_explainer()
     st.info('Add your input data in the left panel to continue')
     st.stop()
+
+description_explainer("")
 
 image, _ = open_image(image_file)
 

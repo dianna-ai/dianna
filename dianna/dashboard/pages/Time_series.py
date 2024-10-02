@@ -1,3 +1,4 @@
+import base64
 import sys
 import numpy as np
 import streamlit as st
@@ -20,12 +21,19 @@ if sys.version_info < (3, 10):
     from importlib_resources import files
 else:
     from importlib.resources import files
+
 data_directory = files('dianna.data')
+colormap_path = str(data_directory / 'colormap.png')
+with open(colormap_path, "rb") as img_file:
+    colormap = base64.b64encode(img_file.read()).decode()
 
-st.title('Explaining Time series data classification')
+def description_explainer(open='open'):
+    """Expandable text section with image."""
+    return (st.markdown(
+            f"""
+            <details {open}>
+            <summary><b>Description of the explanation</b></summary>
 
-st.markdown(
-            """
             The explanation is visualised as a **relevance heatmap** overlayed on top of the time series. <br>
             The heatmap consists of the relevance _attributions_ of all individual data points per time moment
             of the series to a **pretrained model**'s classification. <br>
@@ -34,12 +42,19 @@ st.markdown(
             The _bwr (blue white red)_ attribution colormap
             assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
             and :red[**red**] color to positive values.
+
+            <center><img src="data:image/png;base64,{colormap}" alt="Colormap" width="600" ></center><br>
+            </details>
             """,
             unsafe_allow_html=True
+           ),
+           st.text("")
            )
 
-st.image(str(data_directory / 'colormap.png'), width = 660)
+st.title('Explaining Time series data classification')
+
 add_sidebar_logo()
+
 st.sidebar.header('Input data')
 
 input_type = st.sidebar.radio(
@@ -71,7 +86,6 @@ if input_type == 'Use an example':
 
         st.markdown(
         """
-        ******************************************************************
         This example demonstrates the use of DIANNA
         on a pre-trained binary [classification model](https://zenodo.org/records/7543883)
         for season prediction. <br> The input data is the
@@ -102,7 +116,6 @@ if input_type == 'Use an example':
 
         st.markdown(
             """
-            ************************************************************
             This example demonstrates the use of DIANNA
             on a pre-trained [binary model](https://zenodo.org/records/10656614) for classification of
             radio astronomical dynamic spectra, also known as frequency-time data. <br>
@@ -114,6 +127,7 @@ if input_type == 'Use an example':
             unsafe_allow_html=True
             )
     else:
+        description_explainer()
         st.info('Select an example in the left panel to coninue')
         st.stop()
 
@@ -134,10 +148,12 @@ if input_type == 'Use your own data':
     param_key = 'TS_cb'
 
 if input_type is None:
+    description_explainer()
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
 if not (ts_data_file and ts_model_file and ts_label_file):
+    description_explainer()
     st.info('Add your input data in the left panel to continue')
     st.stop()
 
@@ -145,6 +161,8 @@ if load_example != "Scientific case - radio astronomy: Fast Radio Burst (FRB) de
     # For normal cases, the input data does not need transformation for either the
     # model explainer nor the model predictor
     ts_data_explainer = ts_data_predictor = open_timeseries(ts_data_file)
+
+description_explainer("")
 
 model = load_model(ts_model_file)
 serialized_model = model.SerializeToString()

@@ -1,3 +1,4 @@
+import base64
 import sys
 import streamlit as st
 from _model_utils import load_labels
@@ -17,14 +18,19 @@ if sys.version_info < (3, 10):
     from importlib_resources import files
 else:
     from importlib.resources import files
+
 data_directory = files('dianna.data')
+colormap_path = str(data_directory / 'colormap.png')
+with open(colormap_path, "rb") as img_file:
+    colormap = base64.b64encode(img_file.read()).decode()
 
-add_sidebar_logo()
+def description_explainer(open='open'):
+    """Expandable text section with image."""
+    return (st.markdown(
+            f"""
+            <details {open}>
+            <summary><b>Description of the explanation</b></summary>
 
-st.title('Explaining Textual data classification')
-
-st.markdown(
-            """
             The explanation is visualised as a **relevance heatmap** overlayed on top of the input text. <br>
             The heatmap consists of the relevance _attributions_ of all individual words of the text
             to a **pretrained model**'s classification. <br>
@@ -33,11 +39,19 @@ st.markdown(
             The _bwr (blue white red)_ attribution colormap
             assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
             and :red[**red**] color to positive values.
+
+            <center><img src="data:image/png;base64,{colormap}" alt="Colormap" width="600" ></center><br>
+            </details>
             """,
             unsafe_allow_html=True
+           ),
+           st.text("")
            )
 
-st.image(str(data_directory / 'colormap.png'), width = 660)
+add_sidebar_logo()
+
+st.title('Explaining Textual data classification')
+
 st.sidebar.header('Input data')
 
 input_type = st.sidebar.radio(
@@ -66,18 +80,19 @@ if input_type == 'Use an example':
 
         st.markdown(
         """
-        ***********************************************************************
         This example demonstrates the use of DIANNA on the [Stanford Sentiment
         Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which
         contains one-sentence movie reviews. <br> A pre-trained [neural network
         classifier](https://zenodo.org/record/5910598) is used, which classifies a movie review
         as positive or negative. <br>
+        <br>
         :blue-background[The input sentence which the model will classify can be modified in
         the editable Input text field in the left panel.]
         """,
         unsafe_allow_html=True
         )
     else:
+        description_explainer()
         st.info('Select an example in the left panel to coninue')
         st.stop()
 
@@ -95,12 +110,16 @@ if input_type == 'Use your own data':
                                             type='txt')
 
 if input_type is None:
+    description_explainer()
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
 if not (text_input and text_model_file and text_label_file):
+    description_explainer()
     st.info('Add your input data in the left panel to continue')
     st.stop()
+
+description_explainer("")
 
 model = load_model(text_model_file)
 serialized_model = model.SerializeToString()
@@ -109,7 +128,6 @@ labels = load_labels(text_label_file)
 
 choices = ('RISE', 'LIME')
 
-st.text("")
 st.text("")
 
 with st.container(border=True):

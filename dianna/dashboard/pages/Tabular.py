@@ -1,3 +1,4 @@
+import base64
 import numpy as np
 import seaborn as sns
 import streamlit as st
@@ -22,10 +23,13 @@ from dianna.visualization import plot_tabular
 
 add_sidebar_logo()
 
-st.title('Explaining Tabular data classification/regression')
+def description_explainer(open='open'):
+    """Expandable text section with image."""
+    return (st.markdown(
+            f"""
+            <details {open}>
+            <summary><b>Description of the explanation</b></summary>
 
-st.markdown(
-            """
             The explanation is visualised as a **relevance bar-chart** for the top (up to 10) most
             relevant _attributes (features)_. <br>
             The chart displays the relevance _attributions_ of the individual features of the tabular data
@@ -35,9 +39,14 @@ st.markdown(
             The attribution colormap
             assigns :blue[**blue**] color to negative relevances,
             and :red[**red**] color to positive values.
+            </details>
             """,
             unsafe_allow_html=True
+           ),
+           st.text("")
            )
+
+st.title('Explaining Tabular data classification/regression')
 
 st.sidebar.header('Input data')
 
@@ -70,7 +79,6 @@ if input_type == 'Use an example':
         mode = 'regression'
         st.markdown(
         """
-        **********************************************************************************
         This example demonstrates the use of DIANNA on a pre-trained [regression
         model](https://zenodo.org/records/10580833) to predict tomorrow's sunshine hours
         based on meteorological data from today.
@@ -94,7 +102,6 @@ if input_type == 'Use an example':
 
         st.markdown(
         """
-        *********************************************************************************
         This example demonstrates the use of DIANNA on a pre-trained [classification
         model](https://zenodo.org/records/10580743) to identify if a penguin belongs to one of three different species
         based on a number of measurable physical characteristics. <br>
@@ -104,6 +111,7 @@ if input_type == 'Use an example':
         """,
         unsafe_allow_html=True)
     else:
+        description_explainer()
         st.info('Select an example in the left panel to coninue')
         st.stop()
 
@@ -115,6 +123,7 @@ if input_type == 'Use your own data':
     tabular_label_file = st.sidebar.file_uploader('Select labels in case of classification model', type='txt')
 
     if not (tabular_data_file and tabular_model_file and tabular_training_data_file):
+        description_explainer()
         st.info('Add your input data in the left panel to continue')
         st.stop()
 
@@ -130,15 +139,17 @@ if input_type == 'Use your own data':
         mode = 'regression'
 
 if input_type is None:
+    description_explainer()
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
+
+description_explainer("")
 
 model = load_model(tabular_model_file)
 serialized_model = model.SerializeToString()
 
 choices = ('RISE', 'LIME', 'KernelSHAP')
 
-st.text("")
 st.text("")
 
 # Get predictions and create parameter box
