@@ -32,8 +32,6 @@ st.markdown(
             to a **pretrained model**'s classification or regression prediciton.
             The attribution chart can be computed for any predicted outcome.
 
-            To interpret the chart, note that the attributions for the LIME and KernelSHAP explainers are bound between
-            -1 and 1 and for the RISE explainer between 0 and 1. <br>
             The attribution colormap
             assigns :blue[**blue**] color to negative relevances,
             and :red[**red**] color to positive values.

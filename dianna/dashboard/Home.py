@@ -74,9 +74,6 @@ if selected == "Home":
         highlighting the relevance (attribution) of each data instance _element_ to a selected model's outcome.<br>
         The data element for images is a (super)pixel, for text a word, for tabular data an attribute,
         and for time-series a time interval. Attributions can be positive, negative or irrelevant.<br>
-        To interpret heatmaps, note that attributions for LIME and KernelSHAP are bound between -1 and 1 and
-        for RISE between 0 and 1.
-        The maximum (positive) value is set to 1 and the minimum (negative)  value to -1 (1 and 0 for RISE).<br>
         The dashboard uses the _bwr  (blue white red)_ colormap assigning :blue[**blue**] color to negative
         relevances, **white** color to near-zero values, and :red[**red**] color to positive values.
 

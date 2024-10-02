@@ -31,8 +31,6 @@ st.markdown(
             of the series to a **pretrained model**'s classification. <br>
             The attribution heatmap can be computed for any class.
 
-            To interpret heatmaps, note that the attributions for the LIME and KernelSHAP explainers are bound between
-            -1 and 1 and for the RISE explainer between 0 and 1. <br>
             The _bwr (blue white red)_ attribution colormap
             assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
             and :red[**red**] color to positive values.
