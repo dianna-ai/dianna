@@ -29,7 +29,7 @@ st.markdown(
             The explanation is visualised as a **relevance bar-chart** for the top (up to 10) most
             relevant _attributes (features)_. <br>
             The chart displays the relevance _attributions_ of the individual features of the tabular data
-            to a **pretrained model**'s classification or regresson prediciton. <br>
+            to a **pretrained model**'s classification or regression prediciton.
             The attribution chart can be computed for any predicted outcome.
 
             To interpret the chart, note that the attributions for the LIME and KernelSHAP explainers are bound between
