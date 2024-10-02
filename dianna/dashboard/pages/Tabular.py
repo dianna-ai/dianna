@@ -82,9 +82,6 @@ if input_type == 'Use an example':
         _cloud coverage, humidity, air pressure, global radiation, precipitation_, and
         _mean, min_ and _max temeprature_
         for various European cities.
-
-        DIANNA's visualisation shows the top most important features contributing to the
-        sunshine hours prediction (positive attributions are indicated in :red[red], negative in :blue[blue]).
         """,
         unsafe_allow_html=True )
 
@@ -106,9 +103,6 @@ if input_type == 'Use an example':
         The model is trained on the
         [penguin dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris).
         The penguin characteristics include the _bill length_, _bill depth_, _flipper length_, and _body mass_.
-
-        DIANNA's visualisation shows the top most important characteristics contributing to the
-        penguin species identification (positive attributions are indicated in :red[red], negative in :blue[blue]).
         """,
         unsafe_allow_html=True)
     else:
