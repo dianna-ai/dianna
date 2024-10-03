@@ -79,6 +79,7 @@ if input_type == 'Use an example':
         description_explainer("")
         st.markdown(
         """
+        *****************************************************************************
         This example demonstrates the use of DIANNA on a pre-trained [regression
         model](https://zenodo.org/records/10580833) to predict tomorrow's sunshine hours
         based on meteorological data from today.
