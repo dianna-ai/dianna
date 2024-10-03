@@ -83,6 +83,7 @@ if input_type == 'Use an example':
         description_explainer("")
         st.markdown(
             """
+            *********************************************************************************************
             This example demonstrates the use of DIANNA on explaining a
             [**binary MNIST model**](https://zenodo.org/records/5907177) pretrained on **only** images of
             the hand-written digits 0 and 1. <br>
