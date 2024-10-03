@@ -86,6 +86,7 @@ if input_type == 'Use an example':
         description_explainer("")
         st.markdown(
         """
+        *******************************************************************************************
         This example demonstrates the use of DIANNA
         on a pre-trained binary [classification model](https://zenodo.org/records/7543883)
         for season prediction. <br> The input data is the
@@ -116,6 +117,7 @@ if input_type == 'Use an example':
         description_explainer("")
         st.markdown(
             """
+            ************************************************************************************************
             This example demonstrates the use of DIANNA
             on a pre-trained [binary model](https://zenodo.org/records/10656614) for classification of
             radio astronomical dynamic spectra, also known as frequency-time data. <br>
