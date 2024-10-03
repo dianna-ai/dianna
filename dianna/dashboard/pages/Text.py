@@ -1,3 +1,5 @@
+import base64
+import sys
 import streamlit as st
 from _model_utils import load_labels
 from _model_utils import load_model
@@ -12,9 +14,43 @@ from _shared import reset_method
 from dianna.utils.downloader import download
 from dianna.visualization.text import highlight_text
 
+if sys.version_info < (3, 10):
+    from importlib_resources import files
+else:
+    from importlib.resources import files
+
+data_directory = files('dianna.data')
+colormap_path = str(data_directory / 'colormap.png')
+with open(colormap_path, "rb") as img_file:
+    colormap = base64.b64encode(img_file.read()).decode()
+
+def description_explainer(open='open'):
+    """Expandable text section with image."""
+    return (st.markdown(
+            f"""
+            <details {open}>
+            <summary><b>Description of the explanation</b></summary>
+
+            The explanation is visualised as a **relevance heatmap** overlayed on top of the input text. <br>
+            The heatmap consists of the relevance _attributions_ of all individual words of the text
+            to a **pretrained model**'s classification. <br>
+            The attribution heatmap can be computed for any class.
+
+            The _bwr (blue white red)_ attribution colormap
+            assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
+            and :red[**red**] color to positive values.
+
+            <img src="data:image/png;base64,{colormap}" alt="Colormap" width="600" ><br>
+            </details>
+            """,
+            unsafe_allow_html=True
+           ),
+           st.text("")
+           )
+
 add_sidebar_logo()
 
-st.title('Text explanation')
+st.title('Explaining Textual data classification')
 
 st.sidebar.header('Input data')
 
@@ -30,28 +66,35 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Use example',
-        options=('Movie sentiment',),
+        options=('Movie sentiment classification',),
         index = None,
         on_change = reset_method,
         key='Text_load_example')
 
-    if load_example == 'Movie sentiment':
+    if load_example == 'Movie sentiment classification':
         text_input = st.sidebar.text_input(
-            'Input string',
+            'Input text',
             value='The movie started out great but the ending was disappointing')
         text_model_file = download('movie_review_model.onnx', 'model')
         text_label_file = download('labels_text.txt', 'label')
 
+        description_explainer("")
         st.markdown(
         """
+        **********************************************************************
         This example demonstrates the use of DIANNA on the [Stanford Sentiment
         Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which
-        contains one-sentence movie reviews. A pre-trained neural network
-        classifier is used, which identifies whether a movie review is positive
-        or negative. The input string to which the model is applied can be modified
-        in the left menu.
-        """)
+        contains one-sentence movie reviews. <br> A pre-trained [neural network
+        classifier](https://zenodo.org/record/5910598) is used, which classifies a movie review
+        as positive or negative. <br>
+        <br>
+        :blue-background[The input sentence which the model will classify can be modified in
+        the editable Input text field in the left panel.]
+        """,
+        unsafe_allow_html=True
+        )
     else:
+        description_explainer()
         st.info('Select an example in the left panel to coninue')
         st.stop()
 
@@ -67,13 +110,16 @@ if input_type == 'Use your own data':
 
     text_label_file = st.sidebar.file_uploader('Select labels',
                                             type='txt')
+    if not (text_input and text_model_file and text_label_file):
+        description_explainer()
+        st.info('Add your input data in the left panel to continue')
+        st.stop()
+    else:
+        description_explainer("")
 
 if input_type is None:
+    description_explainer()
     st.info('Select which input type to use in the left panel to continue')
-    st.stop()
-
-if not (text_input and text_model_file and text_label_file):
-    st.info('Add your input data in the left panel to continue')
     st.stop()
 
 model = load_model(text_model_file)
@@ -83,7 +129,6 @@ labels = load_labels(text_label_file)
 
 choices = ('RISE', 'LIME')
 
-st.text("")
 st.text("")
 
 with st.container(border=True):

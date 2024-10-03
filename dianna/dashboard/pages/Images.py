@@ -1,3 +1,5 @@
+import base64
+import sys
 import streamlit as st
 from _image_utils import open_image
 from _model_utils import load_labels
@@ -12,9 +14,44 @@ from _shared import reset_method
 from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 
+if sys.version_info < (3, 10):
+    from importlib_resources import files
+else:
+    from importlib.resources import files
+
+data_directory = files('dianna.data')
+colormap_path = str(data_directory / 'colormap.png')
+with open(colormap_path, "rb") as img_file:
+    colormap = base64.b64encode(img_file.read()).decode()
+
+def description_explainer(open='open'):
+    """Expandable text section with image."""
+    return (st.markdown(
+            f"""
+            <details {open}>
+            <summary><b>Description of the explanation</b></summary>
+
+            The explanation is visualised as a **relevance heatmap** overlayed on top of the time series. <br>
+            The heatmap consists of the relevance _attributions_ of all individual pixels/super-pixels of the image
+            to a **pretrained model**'s classification. <br>
+            The attribution heatmap can be computed for any class. <br><br>
+
+            The _bwr (blue white red)_ attribution colormap
+            assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
+            and :red[**red**] color to positive values. <br><br>
+
+            <img src="data:image/png;base64,{colormap}" alt="Colormap" width="600" ><br>
+            </details>
+            """,
+            unsafe_allow_html=True
+           ),
+           st.text("")
+           )
+
+
 add_sidebar_logo()
 
-st.title('Image explanation')
+st.title('Explaining Image data classification')
 
 st.sidebar.header('Input data')
 
@@ -43,17 +80,20 @@ if input_type == 'Use an example':
 
         imagekey = 'Digits_Image_cb'
 
+        description_explainer("")
         st.markdown(
             """
-            This example demonstrates the use of DIANNA on a pretrained binary
-            [MNIST](https://yann.lecun.com/exdb/mnist/) model using a hand-written digit images.
-            The model predict for an image of a hand-written 0 or 1, which of the two it most
-            likely is.
-            This example visualizes the relevance attributions for each pixel/super-pixel by
-            displaying them on top of the input image.
-            """
+            *********************************************************************************************
+            This example demonstrates the use of DIANNA on explaining a
+            [**binary MNIST model**](https://zenodo.org/records/5907177) pretrained on **only** images of
+            the hand-written digits 0 and 1. <br>
+            The model classifies an image of a hand-written digit as displaying 0 or 1.
+            """,
+            unsafe_allow_html=True
         )
+
     else:
+        description_explainer()
         st.info('Select an example in the left panel to coninue')
         st.stop()
 
@@ -75,12 +115,16 @@ if input_type == 'Use your own data':
 
     imagekey = 'Image_cb'
 
-if input_type is None:
-    st.info('Select which input type to use in the left panel to continue')
-    st.stop()
+    if not (image_file and image_model_file and image_label_file):
+        description_explainer()
+        st.info('Add your input data in the left panel to continue')
+        st.stop()
+    else:
+        description_explainer("")
 
-if not (image_file and image_model_file and image_label_file):
-    st.info('Add your input data in the left panel to continue')
+if input_type is None:
+    description_explainer()
+    st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
 image, _ = open_image(image_file)
