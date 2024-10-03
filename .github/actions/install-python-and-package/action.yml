@@ -43,13 +43,12 @@ runs:
         python -m pip install --index-url https://download.pytorch.org/whl/cpu
         python -m pip install tensorflow-cpu
 
-    # temporary: explicitly install numpy to avoid version issues on macOS, see #861
-    - name: Install numpy
+    # temporary: explicitly install wheel to avoid numpy install issues on macOS, see #861
+    - name: Install wheel
       if: runner.os == 'macOS'
       shell: bash {0}
       run: |
-        # the grep oneliner extracts the numpy version requirement from setup.cfg
-        python -m pip install "$(grep numpy setup.cfg | head -n 1)"
+        python -m pip install wheel
 
     - name: Install DIANNA
       shell: bash {0}
