@@ -18,7 +18,7 @@ if sys.version_info < (3, 10):
     from importlib_resources import files
 else:
     from importlib.resources import files
-    
+
 data_directory = files('dianna.data')
 colormap_path = str(data_directory / 'colormap.png')
 with open(colormap_path, "rb") as img_file:
