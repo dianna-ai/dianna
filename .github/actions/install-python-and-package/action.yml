@@ -49,7 +49,7 @@ runs:
       shell: bash {0}
       run: |
         # the grep oneliner extracts the numpy version requirement from setup.cfg
-        python -m pip install $(grep numpy setup.cfg | head -n 1 | cut -d = -f 2)
+        python -m pip install "$(grep numpy setup.cfg | head -n 1)"
 
     - name: Install DIANNA
       shell: bash {0}
