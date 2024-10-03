@@ -81,6 +81,7 @@ if input_type == 'Use an example':
         description_explainer("")
         st.markdown(
         """
+        **********************************************************************
         This example demonstrates the use of DIANNA on the [Stanford Sentiment
         Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which
         contains one-sentence movie reviews. <br> A pre-trained [neural network
