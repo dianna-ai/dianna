@@ -76,6 +76,7 @@ if input_type == 'Use an example':
         labels =  None
 
         mode = 'regression'
+        description_explainer("")
         st.markdown(
         """
         This example demonstrates the use of DIANNA on a pre-trained [regression
@@ -98,7 +99,7 @@ if input_type == 'Use an example':
         training_data, data = load_penguins(data_penguins)
 
         mode = 'classification'
-
+        description_explainer("")
         st.markdown(
         """
         This example demonstrates the use of DIANNA on a pre-trained [classification
@@ -125,6 +126,8 @@ if input_type == 'Use your own data':
         description_explainer()
         st.info('Add your input data in the left panel to continue')
         st.stop()
+    else:
+        description_explainer("")
 
     data = load_data(tabular_data_file)
     model = load_model(tabular_model_file)
@@ -141,8 +144,6 @@ if input_type is None:
     description_explainer()
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
-
-description_explainer("")
 
 model = load_model(tabular_model_file)
 serialized_model = model.SerializeToString()

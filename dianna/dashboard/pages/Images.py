@@ -80,6 +80,7 @@ if input_type == 'Use an example':
 
         imagekey = 'Digits_Image_cb'
 
+        description_explainer("")
         st.markdown(
             """
             This example demonstrates the use of DIANNA on explaining a
@@ -113,17 +114,17 @@ if input_type == 'Use your own data':
 
     imagekey = 'Image_cb'
 
+    if not (image_file and image_model_file and image_label_file):
+        description_explainer()
+        st.info('Add your input data in the left panel to continue')
+        st.stop()
+    else:
+        description_explainer("")
+
 if input_type is None:
     description_explainer()
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
-
-if not (image_file and image_model_file and image_label_file):
-    description_explainer()
-    st.info('Add your input data in the left panel to continue')
-    st.stop()
-
-description_explainer("")
 
 image, _ = open_image(image_file)
 

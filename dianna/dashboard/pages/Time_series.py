@@ -83,7 +83,7 @@ if input_type == 'Use an example':
         ts_label_file = download('weather_data_labels.txt', 'label')
 
         param_key = 'Weather_TS_cb'
-
+        description_explainer("")
         st.markdown(
         """
         This example demonstrates the use of DIANNA
@@ -113,7 +113,7 @@ if input_type == 'Use an example':
         ts_data_predictor = ts_data[None, ..., None]
 
         param_key = 'FRB_TS_cb'
-
+        description_explainer("")
         st.markdown(
             """
             This example demonstrates the use of DIANNA
@@ -147,22 +147,22 @@ if input_type == 'Use your own data':
 
     param_key = 'TS_cb'
 
+    if not (ts_data_file and ts_model_file and ts_label_file):
+        description_explainer()
+        st.info('Add your input data in the left panel to continue')
+        st.stop()
+    else:
+        description_explainer("")
+
 if input_type is None:
     description_explainer()
     st.info('Select which input type to use in the left panel to continue')
-    st.stop()
-
-if not (ts_data_file and ts_model_file and ts_label_file):
-    description_explainer()
-    st.info('Add your input data in the left panel to continue')
     st.stop()
 
 if load_example != "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
     # For normal cases, the input data does not need transformation for either the
     # model explainer nor the model predictor
     ts_data_explainer = ts_data_predictor = open_timeseries(ts_data_file)
-
-description_explainer("")
 
 model = load_model(ts_model_file)
 serialized_model = model.SerializeToString()

@@ -78,6 +78,7 @@ if input_type == 'Use an example':
         text_model_file = download('movie_review_model.onnx', 'model')
         text_label_file = download('labels_text.txt', 'label')
 
+        description_explainer("")
         st.markdown(
         """
         This example demonstrates the use of DIANNA on the [Stanford Sentiment
@@ -108,18 +109,17 @@ if input_type == 'Use your own data':
 
     text_label_file = st.sidebar.file_uploader('Select labels',
                                             type='txt')
+    if not (text_input and text_model_file and text_label_file):
+        description_explainer()
+        st.info('Add your input data in the left panel to continue')
+        st.stop()
+    else:
+        description_explainer("")
 
 if input_type is None:
     description_explainer()
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
-
-if not (text_input and text_model_file and text_label_file):
-    description_explainer()
-    st.info('Add your input data in the left panel to continue')
-    st.stop()
-
-description_explainer("")
 
 model = load_model(text_model_file)
 serialized_model = model.SerializeToString()
