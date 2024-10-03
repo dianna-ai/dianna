@@ -40,7 +40,7 @@ def description_explainer(open='open'):
             assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
             and :red[**red**] color to positive values.
 
-            <center><img src="data:image/png;base64,{colormap}" alt="Colormap" width="600" ></center><br>
+            <img src="data:image/png;base64,{colormap}" alt="Colormap" width="600" ><br>
             </details>
             """,
             unsafe_allow_html=True
