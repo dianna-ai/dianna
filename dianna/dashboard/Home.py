@@ -38,20 +38,64 @@ selected = option_menu(
 
 # Display the content of the selected page
 if selected == "Home":
-    st.image(str(data_directory / 'logo.png'))
 
-    st.markdown("""
-    DIANNA is a Python package that brings explainable AI (XAI) to your research project.
-    It wraps carefully selected XAI methods in a simple, uniform interface. It's built by,
-    with and for (academic) researchers and research software engineers working on machine
-    learning projects.
+    _, col, _ = st.columns([1, 3, 1])
+    with col:
+        st.markdown("""#""")
 
-    ### More information
 
-    - [Source code](https://github.com/dianna-ai/dianna)
-    - [Documentation](https://dianna.readthedocs.io/)
-    """,
-                unsafe_allow_html=True)
+        st.image(str(data_directory / 'logo.png'), width = 360)
+
+        st.markdown("""
+        **DIANNA** (Deep Insight And Neural Network Analysis) is a Python package that brings explainable AI (XAI)
+        to your research project. <br>
+        It wraps _systematically_ selected XAI methods (**explainers**) in a simple, uniform interface.<br>
+        The currently supported explainers are [RISE](http://bmvc2018.org/contents/papers/1064.pdf),
+        [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) and
+        [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf).<br>
+        It's built by, with, and for academic researchers and research software engineers
+        who use AI, but users not need to be XAI experts! <br>
+        DIANNA supports the de-facto standard format of neural network models - [ONNX](https://onnx.ai/:).
+
+        ### Dashboard
+        The DIANNA dashboard can be used to visualise the explanation of the outcomes of several ONNX models
+        trained for the tasks and datasets presented
+        in the [DIANNA Tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials#datasets-and-tasks).
+
+        The dashboard shows the visual explanation of a models' outcome
+        on a selected data _instance_ by one or more selected explainers. <br>
+        It allows you to compare the results of different explainers, as well as explanations
+        of the top ranked predicted model outcomes.
+
+        There are separate sections for each of the different _data modalities_ supported by DIANNA:
+        :gray-background[**Image**], :gray-background[**Text**],
+        :gray-background[**Tabular**], and :gray-background[**Time series**] data. <br>
+        The visual explanation is an overlaid on the data instance :rainbow-background[**heatmap**]
+        highlighting the relevance (attribution) of each data instance _element_ to a selected model's outcome.<br>
+        The data element for images is a (super)pixel, for text a word, for tabular data an attribute,
+        and for time-series a time interval. Attributions can be positive, negative or irrelevant.<br>
+        The dashboard uses the _bwr  (blue white red)_ colormap assigning :blue[**blue**] color to negative
+        relevances, **white** color to near-zero values, and :red[**red**] color to positive values.
+
+        """,
+                    unsafe_allow_html=True)
+
+        st.image(str(data_directory / 'colormap.png'), width = 660)
+
+        st.markdown("""
+        The dashboard _primarily_ illustrates the examples from the DIANNA tutorials.
+
+        It is also possible to upload _own_ trained (ONNX) model, the task-specific class labels,
+        and the data instance for which you would like the model's decision explanation.<br>
+        You can then select the explainer you want to use and set its hyperparameters.
+
+        ### More information
+
+        - [Source code](https://github.com/dianna-ai/dianna)
+        - [Documentation](https://dianna.readthedocs.io/)
+        - [XAI choice](https://blog.esciencecenter.nl/how-to-find-your-artificial-intelligence-explainer-dbb1ac608009)
+        """,
+                    unsafe_allow_html=True)
 
 else:
     # Dynamically import and execute the page

@@ -82,12 +82,12 @@ def test_timeseries_page(page: Page):
 
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     expect(page.get_by_text("Select an example in the left")).to_be_visible(timeout=200_000)
-    expect(page.get_by_text("Weather")).to_be_visible()
+    expect(page.get_by_text("Season")).to_be_visible()
     expect(page.get_by_text("FRB")).to_be_visible()
 
     # Test weather example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
-    page.locator("label").filter(has_text="Weather").locator("div").nth(1).click()
+    page.locator("label").filter(has_text="Season").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
     time.sleep(2)

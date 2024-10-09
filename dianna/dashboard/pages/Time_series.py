@@ -1,3 +1,5 @@
+import base64
+import sys
 import numpy as np
 import streamlit as st
 from _model_utils import load_labels
@@ -15,9 +17,44 @@ from matplotlib import pyplot as plt
 from dianna.utils.downloader import download
 from dianna.visualization import plot_timeseries
 
-st.title('Time series explanation')
+if sys.version_info < (3, 10):
+    from importlib_resources import files
+else:
+    from importlib.resources import files
+
+data_directory = files('dianna.data')
+colormap_path = str(data_directory / 'colormap.png')
+with open(colormap_path, "rb") as img_file:
+    colormap = base64.b64encode(img_file.read()).decode()
+
+def description_explainer(open='open'):
+    """Expandable text section with image."""
+    return (st.markdown(
+            f"""
+            <details {open}>
+            <summary><b>Description of the explanation</b></summary>
+
+            The explanation is visualised as a **relevance heatmap** overlayed on top of the time series. <br>
+            The heatmap consists of the relevance _attributions_ of all individual data points per time moment
+            of the series to a **pretrained model**'s classification. <br>
+            The attribution heatmap can be computed for any class.
+
+            The _bwr (blue white red)_ attribution colormap
+            assigns :blue[**blue**] color to negative relevances, **white** color to near-zero values,
+            and :red[**red**] color to positive values.
+
+            <img src="data:image/png;base64,{colormap}" alt="Colormap" width="600" ><br>
+            </details>
+            """,
+            unsafe_allow_html=True
+           ),
+           st.text("")
+           )
+
+st.title('Explaining Time series data classification')
 
 add_sidebar_logo()
+
 st.sidebar.header('Input data')
 
 input_type = st.sidebar.radio(
@@ -32,33 +69,35 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Select example',
-        options = ('Weather', 'Scientific case: FRB'),
+        options = ('Season prediction from temperature: warm or cold?',
+                   'Scientific case - radio astronomy: Fast Radio Burst (FRB) detection'),
         index = None,
         on_change = reset_method,
         key = 'TS_load_example'
     )
 
-    if load_example == "Weather":
+    if load_example == "Season prediction from temperature: warm or cold?":
         ts_data_file = download('weather_data.npy', 'data')
         ts_model_file = download(
                         'season_prediction_model_temp_max_binary.onnx', 'model')
         ts_label_file = download('weather_data_labels.txt', 'label')
 
         param_key = 'Weather_TS_cb'
-
+        description_explainer("")
         st.markdown(
         """
+        *******************************************************************************************
         This example demonstrates the use of DIANNA
-        on a pre-trained binary classification model for season prediction. The
-        input data is the [weather prediction
-        dataset](https://zenodo.org/records/5071376). This classification model
-        uses time (days) as function of mean temperature to predict if the whole
-        time series is either summer or winter. Using a chosen XAI method the
-        relevance scores are displayed on top of the timeseries. The days
-        contributing positively towards the classification decision are
-        indicated in red and those who contribute negatively in blue.
-        """)
-    elif load_example == "Scientific case: FRB":
+        on a pre-trained binary [classification model](https://zenodo.org/records/7543883)
+        for season prediction. <br> The input data is the
+        [weather prediction dataset](https://zenodo.org/records/5071376).
+        The binary classification is simplified to warm or cold (conditionally labelled _summer_ or _winter_) <br>
+        The model uses _mean temperature_ as function of time (in days) to predict if the whole
+        time series is either from a warm (_summer_) or a cold (_winter_) season.
+        """,
+        unsafe_allow_html=True
+        )
+    elif load_example == "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
         ts_model_file = download('apertif_frb_dynamic_spectrum_model.onnx', 'model')
         ts_label_file = download('apertif_frb_classes.txt', 'label')
         ts_data_file = download('FRB211024.npy', 'data')
@@ -75,16 +114,22 @@ if input_type == 'Use an example':
         ts_data_predictor = ts_data[None, ..., None]
 
         param_key = 'FRB_TS_cb'
-
+        description_explainer("")
         st.markdown(
-            """This example demonstrates the use of DIANNA
-            on a pre-trained binary classification model trained to classify
-            Fast Radio Burst (FRB) timeseries data.
-            The goal of the pre-trained convolutional neural network is to
-            determine whether or not the input data contains an
-            FRB-like signal, whereby the two classes are noise and FRB.
-            """)
+            """
+            ************************************************************************************************
+            This example demonstrates the use of DIANNA
+            on a pre-trained [binary model](https://zenodo.org/records/10656614) for classification of
+            radio astronomical dynamic spectra, also known as frequency-time data. <br>
+            The scientifically relevant goal is to
+            determine whether the input data contains a
+            Fast Radio Burst (FRB)- like signal. <br>
+            The output of the clasisfier is a label for each data point - either noise or FRB.
+            """,
+            unsafe_allow_html=True
+            )
     else:
+        description_explainer()
         st.info('Select an example in the left panel to coninue')
         st.stop()
 
@@ -104,15 +149,19 @@ if input_type == 'Use your own data':
 
     param_key = 'TS_cb'
 
+    if not (ts_data_file and ts_model_file and ts_label_file):
+        description_explainer()
+        st.info('Add your input data in the left panel to continue')
+        st.stop()
+    else:
+        description_explainer("")
+
 if input_type is None:
+    description_explainer()
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
-if not (ts_data_file and ts_model_file and ts_label_file):
-    st.info('Add your input data in the left panel to continue')
-    st.stop()
-
-if load_example != "Scientific case: FRB":
+if load_example != "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
     # For normal cases, the input data does not need transformation for either the
     # model explainer nor the model predictor
     ts_data_explainer = ts_data_predictor = open_timeseries(ts_data_file)
@@ -122,7 +171,7 @@ serialized_model = model.SerializeToString()
 
 labels = load_labels(ts_label_file)
 
-if load_example == "Scientific case: FRB":
+if load_example == "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
     choices = ('RISE',)
 else:
     choices = ('RISE', 'LIME')
@@ -158,7 +207,7 @@ for index, label in zip(top_indices, top_labels):
     for col, method in zip(columns, methods):
         kwargs = method_params[method].copy()
         kwargs['labels'] = [index]
-        if load_example == "Scientific case: FRB":
+        if load_example == "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
             kwargs['_preprocess_function'] = preprocess
 
         func = explain_ts_dispatcher[method]
@@ -167,7 +216,7 @@ for index, label in zip(top_indices, top_labels):
             with st.spinner(f'Running {method}'):
                 explanation = func(serialized_model, ts_data=ts_data_explainer, **kwargs)
 
-            if load_example == "Scientific case: FRB":
+            if load_example == "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
                 fig, axes = plt.subplots(ncols=2, figsize=(14, 5))
                 # FRB: plot original data
                 ax = axes[0]
