@@ -59,6 +59,10 @@ models = {
         "doi:10.5281/zenodo.10656613/apertif_frb_dynamic_spectrum_model.onnx",
         "sha256:3c87db3c6257d7f251a7bdceb3197d5bb482b8edc19870219fb7ca7c204dd257"
     ],
+    "inlegal_bert_xgboost_classifier.json": [
+        "doi:10.5281/zenodo.8200001/inlegal_bert_xgboost_classifier.json",
+        "68a672f29aac4a19c404c24f4c5da82a1ce7f704ccce701b0a1073c63730e127"
+    ],
     "stemmus_scope_emulator_model_LEtot.onnx": [
         "doi:10.5281/zenodo.12623256/stemmus_scope_emulator_model_LEtot.onnx",
         "sha256:8c8f34ad5a2c519b1f3c67a4eb0c645c96cac1de166277bfb24e7887c2ce83be"
