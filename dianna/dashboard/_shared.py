@@ -46,7 +46,7 @@ def build_markup_for_logo(
 def add_sidebar_logo():
     """Upload DIANNA logo to sidebar element."""
     st.sidebar.image(str(data_directory / 'logo.png'))
-    
+
 def add_sidebar_goddess_logo():
     """Upload DIANNA goddess logo to sidebar element."""
     st.sidebar.image(str(data_directory / 'Diana_goddess.png'))
