@@ -191,16 +191,13 @@ plt.show()
 ### Overview tutorial
 There are **full working examples** on how to use the supported explainers and how to use dianna for **all supported data modalities** in our [overview tutorial](./tutorials/overview.ipynb).
 
-#### Demo movie (update planned):
-[![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
-
 ### IMPORTANT: Sensitivity to hyperparameters
 The explainers are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity to hyperparameters is researched and useful conclusions are drawn.
 The default hyperparameters used in DIANNA for each explainer as well as the values for our tutorial examples are given in the Tutorials [README](./tutorials/README.md#important-hyperparameters).
 
 ## Dashboard
 
-Explore the explanations of your trained model using the DIANNA dashboard (for now images, text and time series classification is supported).
+Explore the explanations of your trained model using the DIANNA dashboard.
 [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
 
 _Dianna dashboard screenshot here_
@@ -208,6 +205,9 @@ _Dianna dashboard screenshot here_
    <img width="1000" align="center" alt="Dianna dashboard screenshot" src="https://raw.githubusercontent.com/dianna-ai/dianna/main/dianna/dashboard/dashboard-screenshot.png">
 </a>
 -->
+
+#### Dashboard/demo movie (update planned):
+[![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
 
 ## Datasets
 
