@@ -197,14 +197,10 @@ The default hyperparameters used in DIANNA for each explainer as well as the val
 
 ## Dashboard
 
+![image](https://github.com/user-attachments/assets/dab22e89-88f7-40ef-8ad3-09418012379f)
+
 Explore the explanations of your trained model using the DIANNA dashboard.
 [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
-
-_Dianna dashboard screenshot here_
-<!-- <a href="https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard" target="_blank">
-   <img width="1000" align="center" alt="Dianna dashboard screenshot" src="https://raw.githubusercontent.com/dianna-ai/dianna/main/dianna/dashboard/dashboard-screenshot.png">
-</a>
--->
 
 #### Dashboard/demo movie (update planned):
 [![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
