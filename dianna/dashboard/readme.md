@@ -1,7 +1,7 @@
 # DIANNA dashboard
 
-<!-- ![Dianna dashboard screenshot](./dashboard-screenshot.png) -->  
-_Dianna dashboard screenshot here_
+![image](https://github.com/user-attachments/assets/1a98920e-f75e-468c-bf1f-f6e8bd2273ad)
+
 
 The DIANNA dashboard can be used for simple exploration of your trained model explained by DIANNA. The dashboard produces the visual explanation of your selected XAI method. Additionally it allows you to compare the results of different XAI methods, as well as explanations of the top ranked predicted labels. The dashboard was created using [streamlit](https://streamlit.io/).
 
