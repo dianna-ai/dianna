@@ -1,6 +1,7 @@
 import importlib
 import streamlit as st
 from _shared import data_directory
+from _shared import add_sidebar_goddess_logo
 from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="Dianna's dashboard",
@@ -38,7 +39,7 @@ selected = option_menu(
 
 # Display the content of the selected page
 if selected == "Home":
-
+    add_sidebar_goddess_logo()
     _, col, _ = st.columns([1, 3, 1])
     with col:
         st.markdown("""#""")
