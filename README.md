@@ -195,6 +195,9 @@ There are **full working examples** on how to use the supported explainers and h
 The explainers are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity to hyperparameters is researched and useful conclusions are drawn.
 The default hyperparameters used in DIANNA for each explainer as well as the values for our tutorial examples are given in the Tutorials [README](./tutorials/README.md#important-hyperparameters).
 
+### Introductory video
+[![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
+
 ## Dashboard
 
 ![image](https://github.com/user-attachments/assets/dab22e89-88f7-40ef-8ad3-09418012379f)
@@ -202,8 +205,7 @@ The default hyperparameters used in DIANNA for each explainer as well as the val
 Explore the explanations of your trained model using the DIANNA dashboard.
 [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
 
-#### Dashboard/demo movie (update planned):
-[![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
+
 
 ## Datasets
 
