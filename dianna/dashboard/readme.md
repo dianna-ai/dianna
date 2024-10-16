@@ -1,9 +1,8 @@
 # DIANNA dashboard
 
-![image](https://github.com/user-attachments/assets/1a98920e-f75e-468c-bf1f-f6e8bd2273ad)
-
-
-The DIANNA dashboard can be used for simple exploration of your trained model explained by DIANNA. The dashboard produces the visual explanation of your selected XAI method. Additionally it allows you to compare the results of different XAI methods, as well as explanations of the top ranked predicted labels. The dashboard was created using [streamlit](https://streamlit.io/).
+The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained for the tasks and datasets presented in the DIANNA [tutorials](./tutorials). 
+The dashboard shows the visual explanation of a models' decision on a selected data item by a selected XAI method (explainer). I
+t allows you to compare the results of different explainers, as well as explanations of the top ranked predicted labels. The dashboard was created using streamlit.
 
 To open the dashboard, you can install dianna via `pip install -e '.[dashboard]'` and run:
 
@@ -21,26 +20,6 @@ Open the link on which the app is running. Note that you are running the dashboa
 
 ## How to use the dashboard
 
-The dashboard will automatically open in the welcome page tab. In the sidebar you can open the image or text pages.
+This video shows you how to use the DIANNA dashboard for some of the DIANNA tutorials. Similarly, you can use it with your own data, models and lables.
 
-### Images
-
-- Click on select image and select an image saved on your computer for which you want the DIANNA explanation.
-- Click on select model and select your trained model used for the prediction and explanation.
-- Click on select labels and select a text file containing the labels of your trained model. Labels should be separated by line breaks in the file, no other separators should be used. Make sure that both the <ins>labels</ins> and <ins>ordering of the labels</ins> is correct in correspondence to your trained model.
-- Check the XAI methods you want to use, multiple methods can be used at the same time for comparison.
-- Your image explanation will start loading.
-
-Additionally, you can:
-- Select the number of top results you which to show the explanation for, i.e. if you use 2, the dashboard will show not only the explanation for the main prediction for the selected image, but also for the second most likely prediction.
-- Set the method specific settings to the selected XAI methods. If you don't change these, the default values are used.
-
-### Text
-
-- Input the text you want to use in the "Input string" box. Press enter to update the explanation.
-- Click on select model and select your trained model used for the prediction and explanation.
-- Click on select labels and select a text file containing the labels of your trained model. Labels should be separated by line breaks in the file, no other separators should be used. Make sure that both the <ins>labels</ins> and <ins>ordering of the labels</ins> is correct in correspondence to your trained model.
-- Check the XAI methods you want to use, multiple methods can be used at the same time for comparison.
-- Your image explanation will start loading.
-
-Additionally, you can set the method specific settings to the selected XAI methods. If you don't change these, the default values are used.
+![image](https://github.com/user-attachments/assets/1a98920e-f75e-468c-bf1f-f6e8bd2273ad)
