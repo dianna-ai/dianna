@@ -97,12 +97,13 @@ if input_type == 'Use an example':
     elif load_example == 'Nature of EU laws':
         text_input = st.sidebar.selectbox(
             'Select EU law statement',
-            ("The purchase, import or transport from Syria of crude oil and petroleum products shall be prohibited.",
+            (
+             "The relevant Member State shall inform the other Member States of any authorisation granted under this Article.",
+             "The purchase, import or transport from Syria of crude oil and petroleum products shall be prohibited.",
              "This Decision shall enter into force on the twentieth day following that of its publication in the Official "
              "Journal of the European Union.",
              "Where observations are submitted, or where substantial new evidence is presented, the Council shall review its "
              "decision and inform the person or entity concerned accordingly.",
-             "The relevant Member State shall inform the other Member States of any authorisation granted under this Article.",
              "Member States shall cooperate, in accordance with their national legislation, with inspections and disposals "
              "undertaken pursuant to paragraphs 1 and 2.")
         )
