@@ -47,6 +47,9 @@ def add_sidebar_logo():
     """Upload DIANNA logo to sidebar element."""
     st.sidebar.image(str(data_directory / 'logo.png'))
 
+def add_sidebar_goddess_logo():
+    """Upload DIANNA goddess logo to sidebar element."""
+    st.sidebar.image(str(data_directory / 'Diana_goddess.png'))
 
 def _methods_checkboxes(*, choices: Sequence, key):
     """Get methods from a horizontal row of checkboxes and the corresponding parameters."""
