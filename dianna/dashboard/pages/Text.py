@@ -98,14 +98,15 @@ if input_type == 'Use an example':
         text_input = st.sidebar.selectbox(
             'Select EU law statement',
             (
-             "The relevant Member State shall inform the other Member States of any authorisation granted under this Article.",
+             "The relevant Member State shall inform the other Member States of any authorisation granted under "
+             "this Article.",
              "The purchase, import or transport from Syria of crude oil and petroleum products shall be prohibited.",
-             "This Decision shall enter into force on the twentieth day following that of its publication in the Official "
-             "Journal of the European Union.",
-             "Where observations are submitted, or where substantial new evidence is presented, the Council shall review its "
-             "decision and inform the person or entity concerned accordingly.",
-             "Member States shall cooperate, in accordance with their national legislation, with inspections and disposals "
-             "undertaken pursuant to paragraphs 1 and 2.")
+             "This Decision shall enter into force on the twentieth day following that of its publication in the "
+             "Official Journal of the European Union.",
+             "Where observations are submitted, or where substantial new evidence is presented, the Council shall "
+             "review its decision and inform the person or entity concerned accordingly.",
+             "Member States shall cooperate, in accordance with their national legislation, with inspections and "
+             "disposals undertaken pursuant to paragraphs 1 and 2.")
         )
         text_model_file = download('inlegal_bert_xgboost_classifier.json', 'model')
 
@@ -116,9 +117,9 @@ if input_type == 'Use an example':
         This notebook demonstrates how to use the LIME explainable-AI method in [DIANNA](https://github.com/dianna-ai/dianna)
         to explain a text classification model created as part of the [Nature of EU Rules project
         ](https://research-software-directory.org/projects/the-nature-of-eu-rules-strict-and-detailed-or-lacking-bite).
-        The model is used to perform binary classification of individual sentences from EU legislation to determine whether
-        they specify a regulation or not (i.e., whether they specify a legal obligation or prohibition that some legal entity
-        should comply with).
+        The model is used to perform binary classification of individual sentences from EU legislation to determine
+        whether they specify a regulation or not (i.e., whether they specify a legal obligation or prohibition that some
+        legal entity should comply with).
         [Here's an example](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32012R1215&qid=1724343987254)
         of what an EU legislative document looks like.
         """,
