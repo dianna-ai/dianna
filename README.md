@@ -196,7 +196,9 @@ The explainers are sensitive to the choice of their hyperparameters! In this [wo
 The default hyperparameters used in DIANNA for each explainer as well as the values for our tutorial examples are given in the Tutorials [README](./tutorials/README.md#important-hyperparameters).
 
 ### Introductory video
-[![Watch the video on YouTube](https://img.youtube.com/vi/u9_c5DJewLU/default.jpg)](https://youtu.be/u9_c5DJewLU)
+This video shows the main functionality of DIANNA and shows you how to use DIANNA also from its dashboard.
+
+![Watch the video on YouTube](https://youtu.be/9VM5acip2s8)
 
 ## Dashboard
 
