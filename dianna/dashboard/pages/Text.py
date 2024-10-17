@@ -3,6 +3,7 @@ import sys
 import streamlit as st
 from _model_utils import load_labels
 from _model_utils import load_model
+from _model_utils import StatementClassifierEUlaw
 from _models_text import explain_text_dispatcher
 from _models_text import predict
 from _movie_model import MovieReviewsModelRunner
@@ -66,7 +67,7 @@ input_type = st.sidebar.radio(
 if input_type == 'Use an example':
     load_example = st.sidebar.radio(
         label='Use example',
-        options=('Movie sentiment classification',),
+        options=('Movie sentiment classification', 'Nature of EU laws'),
         index = None,
         on_change = reset_method,
         key='Text_load_example')
@@ -90,6 +91,35 @@ if input_type == 'Use an example':
         <br>
         :blue-background[The input sentence which the model will classify can be modified in
         the editable Input text field in the left panel.]
+        """,
+        unsafe_allow_html=True
+        )
+    elif load_example == 'Nature of EU laws':
+        text_input = st.sidebar.selectbox(
+            'Select EU law statement',
+            ("The purchase, import or transport from Syria of crude oil and petroleum products shall be prohibited.",
+             "This Decision shall enter into force on the twentieth day following that of its publication in the Official "
+             "Journal of the European Union.",
+             "Where observations are submitted, or where substantial new evidence is presented, the Council shall review its "
+             "decision and inform the person or entity concerned accordingly.",
+             "The relevant Member State shall inform the other Member States of any authorisation granted under this Article.",
+             "Member States shall cooperate, in accordance with their national legislation, with inspections and disposals "
+             "undertaken pursuant to paragraphs 1 and 2.")
+        )
+        text_model_file = download('inlegal_bert_xgboost_classifier.json', 'model')
+
+        description_explainer("")
+        st.markdown(
+        """
+        **********************************************************************
+        This notebook demonstrates how to use the LIME explainable-AI method in [DIANNA](https://github.com/dianna-ai/dianna)
+        to explain a text classification model created as part of the [Nature of EU Rules project
+        ](https://research-software-directory.org/projects/the-nature-of-eu-rules-strict-and-detailed-or-lacking-bite).
+        The model is used to perform binary classification of individual sentences from EU legislation to determine whether
+        they specify a regulation or not (i.e., whether they specify a legal obligation or prohibition that some legal entity
+        should comply with).
+        [Here's an example](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32012R1215&qid=1724343987254)
+        of what an EU legislative document looks like.
         """,
         unsafe_allow_html=True
         )
@@ -122,12 +152,15 @@ if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
-model = load_model(text_model_file)
-serialized_model = model.SerializeToString()
+if load_example == 'Nature of EU laws':
+    labels = ['constitutive', 'regulatory']
+    choices = ('LIME',)
 
-labels = load_labels(text_label_file)
-
-choices = ('RISE', 'LIME')
+else:
+    labels = load_labels(text_label_file)
+    choices = ('RISE', 'LIME')
+    model = load_model(text_model_file)
+    serialized_model = model.SerializeToString()
 
 st.text("")
 
@@ -135,10 +168,13 @@ with st.container(border=True):
     prediction_placeholder = st.empty()
     methods, method_params = _methods_checkboxes(choices=choices, key='Text_cb')
 
-    model_runner = MovieReviewsModelRunner(serialized_model)
-
     with st.spinner('Predicting class'):
-        predictions = predict(model=serialized_model, text_input=text_input)
+        if load_example == 'Nature of EU laws':
+            model_runner = StatementClassifierEUlaw(text_model_file)
+            predictions = model_runner([text_input])
+        else:
+            model_runner = MovieReviewsModelRunner(serialized_model)
+            predictions = predict(model=serialized_model, text_input=text_input)
 
     with prediction_placeholder:
         top_indices, top_labels = _get_top_indices_and_labels(
