@@ -1,15 +1,15 @@
 from pathlib import Path
+from typing import Iterable
 import numpy as np
 import onnx
 import pandas as pd
-from sklearn.model_selection import train_test_split
 import torch
+import xgboost
+from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from transformers import AutoTokenizer, AutoModel
-from typing import Iterable
-import xgboost
-
+from transformers import AutoModel
+from transformers import AutoTokenizer
 from dianna.utils.tokenizers import SpacyTokenizer
 
 

@@ -1,9 +1,9 @@
 import base64
 import sys
 import streamlit as st
+from _model_utils import StatementClassifierEUlaw
 from _model_utils import load_labels
 from _model_utils import load_model
-from _model_utils import StatementClassifierEUlaw
 from _models_text import explain_text_dispatcher
 from _models_text import predict
 from _movie_model import MovieReviewsModelRunner
