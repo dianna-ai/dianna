@@ -1,6 +1,6 @@
 # DIANNA dashboard
 
-The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained for the tasks and datasets presented in the DIANNA [tutorials](./tutorials). 
+The DIANNA dashboard can be used for explanation of the behaviour of several ONNX models trained for the tasks and datasets presented in the DIANNA [tutorials](../../tutorials). 
 The dashboard shows the visual explanation of a models' decision on a selected data item by a selected XAI method (explainer). I
 t allows you to compare the results of different explainers, as well as explanations of the top ranked predicted labels. The dashboard was created using streamlit.
 
