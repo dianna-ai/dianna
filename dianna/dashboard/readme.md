@@ -20,6 +20,7 @@ Open the link on which the app is running. Note that you are running the dashboa
 
 ## How to use the dashboard
 
-This video shows you how to use the DIANNA dashboard for some of the DIANNA tutorials. Similarly, you can use it with your own data, models and lables.
+This [video](https://youtu.be/9VM5acip2s8) shows you how to use the DIANNA dashboard for some of the DIANNA tutorials. Similarly, you can use it with your own data, models and lables.
 
+--------------------------------------------------------------------------
 ![image](https://github.com/user-attachments/assets/1a98920e-f75e-468c-bf1f-f6e8bd2273ad)
