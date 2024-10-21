@@ -111,8 +111,9 @@ def _get_params(method: str, key):
     elif method == 'LIME':
         if 'Tabular' in key:
             return {
-            'random_state': st.number_input('Random state', value=0, key=f'{key}_{method}_rs'),
-        }
+                'random_state': st.number_input('Random state', value=2, key=f'{key}_{method}_rs'),
+                'num_samples': st.number_input('Number of samples', value=2000, key=f'{key}_{method}_ns')
+            }
         else:
             return {
                 'random_state': st.number_input('Random state', value=2, key=f'{key}_{method}_rs'),
