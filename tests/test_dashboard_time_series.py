@@ -107,7 +107,7 @@ def test_timeseries_page(page: Page):
             page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
             # Second image
-            # page.get_by_role('heading', name='summer').get_by_text('summer'),
+            page.get_by_role('heading', name='summer').get_by_text('summer'),
             page.get_by_role('img', name='0').nth(2),
             page.get_by_role('img', name='0').nth(3),
     ):
