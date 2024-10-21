@@ -27,7 +27,8 @@ def _run_rise_text(_model, text, **kwargs):
 
 @st.cache_data
 def _run_lime_text(_model, text, **kwargs):
-    relevances = explain_text(_model, text, tokenizer, method='LIME', **kwargs)
+    relevances = explain_text(_model, text, tokenizer, method='LIME',
+                              **kwargs)
     return relevances
 
 
