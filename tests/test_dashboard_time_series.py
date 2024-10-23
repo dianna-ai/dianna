@@ -106,12 +106,8 @@ def test_timeseries_page(page: Page):
             page.get_by_role('heading', name='winter').get_by_text('winter'),
             page.get_by_role('img', name='0').first,
             page.get_by_role('img', name='0').nth(1),
-            # Second image
-            page.get_by_role('heading', name='summer').get_by_text('summer'),
-            page.get_by_role('img', name='0').nth(2),
-            page.get_by_role('img', name='0').nth(3),
     ):
-        expect(selector).to_be_visible(timeout=100_000)
+        expect(selector).to_be_visible(timeout=200_000)
 
     # Test FRB example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()

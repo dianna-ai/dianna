@@ -55,7 +55,6 @@ def _run_lime_timeseries(_model, ts_data, **kwargs):
         method='LIME',
         num_features=len(ts_data[0]),
         num_slices=len(ts_data[0]),
-        num_samples=100,
         distance_method='dtw',
         **kwargs,
     )
