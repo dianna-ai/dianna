@@ -47,7 +47,7 @@ The ONNX models used in the tutorials are available at [dianna/models](https://g
 ### Summary of all Tutorials
 All tutorials can be accessed by clicking on the dataset & task logo in the tables below.
 
-The explainers' output for the models trained on the datasets & tasks which are included in the dashboard are marked with <img width="25" alt="Streamlit Logo" src="https://github.com/user-attachments/assets/2cac7d5d-c11a-48fe-b58e-71b15baaa163">.
+The explainers' output for the models trained on the datasets & tasks which are included in the [dashboard](../dianna/dashboard/readme.md) are marked with <img width="25" alt="Streamlit Logo" src="https://github.com/user-attachments/assets/2cac7d5d-c11a-48fe-b58e-71b15baaa163">.
 
 <details><summary>Illustrative (Simple)</summary>
   
