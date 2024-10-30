@@ -1,5 +1,6 @@
 import importlib
 import streamlit as st
+from _shared import add_sidebar_goddess_logo
 from _shared import data_directory
 from streamlit_option_menu import option_menu
 
@@ -38,7 +39,7 @@ selected = option_menu(
 
 # Display the content of the selected page
 if selected == "Home":
-
+    add_sidebar_goddess_logo()
     _, col, _ = st.columns([1, 3, 1])
     with col:
         st.markdown("""#""")
@@ -90,10 +91,8 @@ if selected == "Home":
         You can then select the explainer you want to use and set its hyperparameters.
 
         ### More information
-
-        - [Source code](https://github.com/dianna-ai/dianna)
+        - [Research Software directory page](https://research-software-directory.org/software/dianna)
         - [Documentation](https://dianna.readthedocs.io/)
-        - [XAI choice](https://blog.esciencecenter.nl/how-to-find-your-artificial-intelligence-explainer-dbb1ac608009)
         """,
                     unsafe_allow_html=True)
 
