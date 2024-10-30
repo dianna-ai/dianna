@@ -32,7 +32,7 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = 'DIANNA Team'
 __email__ = 'dianna-ai@esciencecenter.nl'
-__version__ = '1.6.0'
+__version__ = '1.7.0'
 
 
 def explain_timeseries(model_or_function: Union[Callable, str],
