@@ -19,7 +19,7 @@ Open the link on which the app is running. Note that you are running the dashboa
 
 ## How to use the dashboard
 
-This [video](https://youtu.be/9VM5acip2s8) shows you how to use the DIANNA dashboard for some of the <img width="25" alt="Streamlit Logo" src="https://github.com/user-attachments/assets/2cac7d5d-c11a-48fe-b58e-71b15baaa163"> [tutorials](../../tutorials/README.md#summary-of-all-tutorials) accessible interactively in the input-output ends. 
+This [video](https://youtu.be/9VM5acip2s8) shows you how to use the DIANNA dashboard for some of the <img width="25" alt="Streamlit Logo" src="https://github.com/user-attachments/assets/2cac7d5d-c11a-48fe-b58e-71b15baaa163"> [tutorials](../../tutorials/README.md#summary-of-all-tutorials) to interactively explore the use cases from some of DIANNA's . 
 Similarly, you can use it with your own data, models and lables.
 
 --------------------------------------------------------------------------
