@@ -70,6 +70,7 @@ The key points of DIANNA:
 
  *   Provides an easy-to-use interface for non (X)AI experts
  *   Implements well-known XAI methods LIME, RISE and KernelSHAP, chosen by systematic and objective evaluation criteria
+ *   Comes with a dashboard where  results of different explainers can be compared for all data types
  *   Supports the de-facto standard of neural network models - ONNX
  *   Supports images, text, time series, and tabular data modalities, embeddings are currently being developed
  *   Comes with simple intuitive image, text, time series, and tabular benchmarks, so can help you with your XAI research
