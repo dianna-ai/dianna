@@ -49,7 +49,10 @@ affiliations:
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.04493/status.svg)](https://doi.org/10.21105/joss.04493)
 
+
 <img width="300" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
+
+[Introducing DIANNA video](https://youtu.be/9VM5acip2s8)
 
 <img align="left" src="https://user-images.githubusercontent.com/55382553/153408200-36c4de2e-7865-4934-956d-09eefd893e6a.png">
 
