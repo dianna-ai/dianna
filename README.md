@@ -199,7 +199,7 @@ The default hyperparameters used in DIANNA for each explainer as well as the val
 ### Introductory video
 This video shows the main functionality of DIANNA and shows you how to use DIANNA also from its dashboard.
 
-![Watch the video on YouTube](https://youtu.be/9VM5acip2s8)
+[Watch the video on YouTube](https://youtu.be/9VM5acip2s8)
 
 ## Dashboard
 
