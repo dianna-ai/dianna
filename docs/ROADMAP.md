@@ -1,4 +1,4 @@
-# Current and planned DIANNA developments
+# Planned DIANNA developments
 
 - Other data modalities: we plan to develop support for graphs.
 
