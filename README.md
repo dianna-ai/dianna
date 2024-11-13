@@ -75,7 +75,7 @@ The key points of DIANNA:
  *   Implements well-known XAI methods LIME, RISE and KernelSHAP, chosen by systematic and objective evaluation criteria
  *   Comes with a dashboard where  results of different explainers can be compared for all data types
  *   Supports the de-facto standard of neural network models - ONNX
- *   Supports images, text, time series, and tabular data modalities, embeddings are currently being developed
+ *   Supports images, text, time series, tabular data modalities and embeddings (in a related [package](https://github.com/dianna-ai/explainable_embedding))
  *   Comes with simple intuitive image, text, time series, and tabular benchmarks, so can help you with your XAI research
  *   Includes scientific use-cases tutorials
  *   Easily extendable to other XAI methods
@@ -322,7 +322,7 @@ DIANNA supports different data modalities and XAI methods (explainers). We have 
 | Text       | ✅                                                | ✅                                                                 |                                                                                                     |
 | Timeseries | ✅                                                | ✅                                                                 |                                                                                                     |
 | Tabular    | planned                                           | ✅                                                                 | ✅                                                                                                  |
-| Embedding  | work in progress                                  |                                                                     |                                                                                                     |
+| Embedding  | *inspired by RISE in [distance_explainer](https://github.com/dianna-ai/distance_explainer)  |                                                                     |                                                                                                     |
 | Graphs*    | next steps                                        |    ...                                                              |     ...                                                                                             |
 
 [LRP](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130140&type=printable) and [PatternAttribution](https://arxiv.org/pdf/1705.05598.pdf) also feature in the top 5 of our thoroughly evaluated explainers.
