@@ -103,11 +103,13 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 If you get an error related to OpenMP when importing dianna, have a look at [this issue](https://github.com/dianna-ai/dianna/issues/376) for possible workarounds.
 
 <details><summary>Pre-requisites only for Macbook Pro with M1 Pro chip users</summary>
-<p>
+  
+<p> 
   
 - To install TensorFlow you can follow this [tutorial](https://betterdatascience.com/install-tensorflow-2-7-on-macbook-pro-m1-pro/).
 - To install TensorFlow Addons you can follow these [steps](https://github.com/tensorflow/addons/pull/2504). For further reading see this [issue](https://github.com/tensorflow/addons/issues/2503). Note that this temporary solution works only for macOS versions >= 12.0. Note that this step may have changed already, see https://github.com/dianna-ai/dianna/issues/245.
 - Before installing DIANNA, comment `tensorflow` requirement in `setup.cfg` file (tensorflow package for M1 is called `tensorflow-macos`).
+  
 </details>
 
 ## Getting started
@@ -149,7 +151,9 @@ dianna.visualization.<visualization_function>(explanation[explained_class_index]
 
 ### Text and image usage 
 <details><summary>Examples</summary>
+  
 <p>
+  
 Lets illustrate the template above with *textual* data. The data item of interest is a sentence being (a part of) a movie review and the model has been trained to classify reviews into positive and negative sentiment classes.
 We are intersted which words are contributing positively (red) and which - negatively (blue) towards the model's desicion to classify the review as positive and we would like to use the *LIME* explainer:
 
@@ -229,15 +233,18 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 </details>
 
 <details><summary>Text</summary>
+  
 <p>
 
 | Dataset                                                                                                                                                                                                                            | Description                                                                   | Examples                                                         | Generation                                                          |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- | :--------------------------------------------------------------- | :------------------------------------------------------------------ |
 | [Stanford sentiment treebank](https://nlp.stanford.edu/sentiment/index.html) <img width="20" alt="nlp-logo_half_size" src="https://user-images.githubusercontent.com/3244249/152355020-908c04f3-aa99-489d-b87a-7e6b1f586118.png"> | Dataset for predicting the sentiment, positive or negative, of movie reviews. | _This movie was actually neither that funny, nor super witty._ | [Sentiment treebank](https://nlp.stanford.edu/sentiment/treebank.html) |
 | [EU-law statements](https://zenodo.org/records/8200000)  <img width="25" alt="nlp-logo_half_size" src="https://avatars.githubusercontent.com/u/133206807?s=48&v=4"> | Reproducibility data for a quantitative study on EU legislation. | _A Member State wishing to grant exemptions referred to in paragraph 6 shall notify the Council in writing_ | [EU legislation strictness analysis](https://github.com/nature-of-eu-rules/eu-legislation-strictness-analysis) |
+
 </details>
 
 <details><summary>Time series</summary>
+  
 <p>
 
 | Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
@@ -248,6 +255,7 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 </details>
 
 <details><summary>Tabular</summary>
+  
 <p>
 
 | Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
@@ -255,7 +263,9 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 | [Pengiun dataset](https://www.kaggle.com/code/parulpandey/penguin-dataset-the-new-iris) <img width="75" alt="Penguins Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/c7716ad3-f992-4557-80d9-1d8178c7ed57"> | Palmer Archipelago (Antarctica) penguin dataset is a great intro dataset for data exploration & visualization similar to the famous Iris dataset.                                         | <img width="500" alt="example image" src="https://github.com/allisonhorst/palmerpenguins/blob/main/man/figures/README-mass-flipper-1.png"> | [data source](https://github.com/allisonhorst/palmerpenguins) |
 | [Weather dataset](https://zenodo.org/record/7525955) <img width="25" alt="Weather Logo" src="https://github.com/dianna-ai/dianna/assets/3244249/3ff3d639-ed2f-4a38-b7ac-957c984bce9f">                                | The light version of the weather prediciton dataset, which contains daily observations (89 features) for 11 European locations through the years 2000 to 2010. | <img width="500" alt="example image" src="https://github.com/dianna-ai/dianna/assets/3244249/b0a505ac-8a6c-4e1c-b6ad-35e31e52f46d"> | [data source](https://github.com/florian-huber/weather_prediction_dataset)   |
 | [Land atmosphere dataset](https://zenodo.org/records/12623257) <img width="25" alt="Atmosphere Logo" src="https://github.com/user-attachments/assets/bee353dd-c19a-4aec-a778-4ca3574765f0"> | It contains land-atmosphere variables and latent heat flux (LEtot) simulated by STEMMUS-SCOPE (soil-plant model), version 1.5.0,  over 19 Fluxnet sites and for the year 2014 with hourly intervals. | <img width="500" alt="example image" src="https://github.com/user-attachments/assets/a6e10b08-08d8-4e57-887a-cd4fca9f2ff0"> | [data source](https://zenodo.org/records/12623257)   |
+
 </details>
+
 
 ## Models
 
@@ -277,6 +287,7 @@ And here are links to notebooks showing how we created our models on the benchma
 | [Binary MNIST model](https://zenodo.org/record/5907177)      | [Binary MNIST model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/MNIST/generate_model_binary.ipynb)                |
 | [Simple Geometric model](https://zenodo.org/deposit/5907059) | [Simple geometric shapes model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/geometric_shapes/generate_model.ipynb) |
 | [Simple Scientific model](https://zenodo.org/record/5907196) | [LeafSnap30 model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/LeafSnap/generate_model.ipynb)                      |
+
 </details>
 
 <details><summary>Text</summary>
