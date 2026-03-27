@@ -82,7 +82,7 @@ def explain_image(model_or_function: Union[Callable,
     """
     if method.upper() == 'KERNELSHAP':
         # To avoid Access Violation on Windows with SHAP:
-        from onnx_tf.backend import prepare  # noqa: F401
+        import onnxruntime  # noqa: F401
     explainer = _get_explainer(method, kwargs, modality='Image')
     explain_image_kwargs = utils.get_kwargs_applicable_to_function(
         explainer.explain, kwargs)

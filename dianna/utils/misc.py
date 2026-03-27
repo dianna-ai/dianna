@@ -113,24 +113,23 @@ def move_axis(data, label, new_position):
 def onnx_model_node_loader(model_path):
     """Onnx model and node labels loader.
 
-    Load onnx model and return the label of its output node and the data type of input node.
+    Load onnx model and return the label of its input/output nodes and the data type of input node.
 
     Args:
         model_path (str): The path to a ONNX model on disk.
 
     Returns:
-        loaded onnx model and the label of output node.
+        loaded onnx model, input node label, numpy dtype of input node, and output node label.
     """
     # these imports are done in the function because they are slow
     import onnx
-    from onnx_tf.backend import prepare
     onnx_model = onnx.load(model_path)  # load onnx model
-    tf_model_rep = prepare(onnx_model, gen_tensor_dict=True)
-    label_input_node = tf_model_rep.inputs[0]
-    label_output_node = tf_model_rep.outputs[0]
-    dtype_input_node = tf_model_rep.tensor_dict[f'{label_input_node}'].dtype
+    label_input_node = onnx_model.graph.input[0].name
+    label_output_node = onnx_model.graph.output[0].name
+    elem_type = onnx_model.graph.input[0].type.tensor_type.elem_type
+    dtype_input_node = onnx.helper.tensor_dtype_to_np_dtype(elem_type)
 
-    return onnx_model, dtype_input_node, label_output_node
+    return onnx_model, label_input_node, dtype_input_node, label_output_node
 
 
 def locate_channels_axis(data_shape):
