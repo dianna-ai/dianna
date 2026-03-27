@@ -113,13 +113,17 @@ def move_axis(data, label, new_position):
 def onnx_model_node_loader(model_path):
     """Onnx model and node labels loader.
 
-    Load onnx model and return the label of its input/output nodes and the data type of input node.
+    Load onnx model and return the labels of its input/output nodes and the data type of input node.
 
     Args:
         model_path (str): The path to a ONNX model on disk.
 
     Returns:
-        loaded onnx model, input node label, numpy dtype of input node, and output node label.
+        tuple: A 4-tuple of:
+            - onnx_model (onnx.ModelProto): The loaded ONNX model.
+            - label_input_node (str): Name of the first input node.
+            - dtype_input_node (numpy.dtype): Numpy dtype of the first input node.
+            - label_output_node (str): Name of the first output node.
     """
     # these imports are done in the function because they are slow
     import onnx

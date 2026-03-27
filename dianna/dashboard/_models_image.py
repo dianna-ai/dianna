@@ -7,8 +7,7 @@ from dianna import explain_image
 
 @st.cache_data
 def predict(*, model, image):
-    model_bytes = model.SerializeToString() if hasattr(model, 'SerializeToString') else model
-    session = rt.InferenceSession(model_bytes)
+    session = rt.InferenceSession(model.SerializeToString())
     output_node = session.get_outputs()[0].name
     input_node = session.get_inputs()[0].name
     predictions = session.run([output_node], {input_node: image[None, ...]})[0]
