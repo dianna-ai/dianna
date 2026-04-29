@@ -1,4 +1,4 @@
-name: sonarcloud
+name: coverage
 
 on:
   workflow_dispatch:
@@ -16,25 +16,44 @@ on:
 
 jobs:
 
-  sonarcloud:
-    name: SonarCloud
+  coverage:
+    name: Coverage report
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - uses: ./.github/actions/install-python-and-package
+        with:
+          python-version: '3.12'
 
       - name: Run unit tests with coverage
-        run: pytest --cov --cov-report term --cov-report xml --cov-report html --junitxml=xunit-result.xml tests/ -m "not dashboard"
+        run: pytest --cov --cov-report xml --cov-report html tests/ -m "not dashboard"
 
-      - name: Correct coverage paths
-        run: sed -i "s+$PWD/++g" coverage.xml
+      - name: Write coverage summary
+        run: |
+          {
+            echo "## Coverage Report"
+            echo ""
+            python -m coverage report --format=markdown
+          } >> $GITHUB_STEP_SUMMARY
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{secrets.SONAR_TOKEN }}
+      - name: Generate coverage badge
+        run: |
+          pip install genbadge[coverage]
+          genbadge coverage -i coverage.xml -o coverage.svg
+
+      - name: Upload HTML coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html-report
+          path: htmlcov/
+
+      - name: Commit coverage badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add coverage.svg
+          git diff --staged --quiet || git commit -m "Update coverage badge [skip ci]"
+          git push
