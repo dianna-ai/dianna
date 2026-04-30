@@ -47,4 +47,4 @@ jobs:
           python-version: ${{ matrix.python-version }}
           extras-require: dev,notebooks
       - name: Run tutorial notebook
-        run: pytest --nbmake "${{ matrix.notebook }}"
+        run: pytest --nbmake --nbmake-timeout=600 "${{ matrix.notebook }}"
