@@ -1,6 +1,6 @@
 import tempfile
-import streamlit as st
 import onnxruntime as rt
+import streamlit as st
 from _model_utils import preprocess_function
 from dianna import explain_image
 
