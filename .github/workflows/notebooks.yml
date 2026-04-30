@@ -15,21 +15,36 @@ on:
       - ready_for_review
 
 jobs:
+  list_notebooks:
+    name: List notebooks
+    runs-on: 'ubuntu-latest'
+    outputs:
+      notebooks: ${{ steps.list_notebooks.outputs.notebooks }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: List notebooks
+        id: list_notebooks
+        run: |
+          NOTEBOOKS_JSON=$(find tutorials -type f -name "*.ipynb" | python -c 'import json,sys; print(json.dumps([line.strip() for line in sys.stdin if line.strip()]))')
+          echo "Found notebooks: $NOTEBOOKS_JSON"
+          echo "notebooks=$NOTEBOOKS_JSON" >> "$GITHUB_OUTPUT"
 
-  notebooks:
-    name: Run notebooks on (${{ matrix.python-version }}, ${{ matrix.os }})
+  run_notebook:
+    name: Run notebook on (${{ matrix.python-version }}, ${{ matrix.os }})
     if: github.event.pull_request.draft == false
+    needs: list_notebooks
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         python-version: ['3.10']
+        notebook: ${{ fromJson(needs.list_notebooks.outputs.notebooks) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/install-python-and-package
         with:
           python-version: ${{ matrix.python-version }}
           extras-require: dev,notebooks
-      - name: Run tutorial notebooks
-        run: pytest --nbmake tutorials
+      - name: Run tutorial notebook
+        run: pytest --nbmake "${{ matrix.notebook }}"
