@@ -49,11 +49,17 @@ jobs:
           name: coverage-html-report
           path: htmlcov/
 
-      - name: Commit coverage badge
+      - name: Publish coverage badge to badges branch
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin badges || true
+          git worktree add /tmp/badges-branch badges 2>/dev/null || \
+            git worktree add -b badges /tmp/badges-branch origin/badges 2>/dev/null || \
+            git worktree add --orphan -b badges /tmp/badges-branch
+          cp coverage.svg /tmp/badges-branch/coverage.svg
+          cd /tmp/badges-branch
           git add coverage.svg
           git diff --staged --quiet || git commit -m "Update coverage badge [skip ci]"
-          git push
+          git push origin badges
