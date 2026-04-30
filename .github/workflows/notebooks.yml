@@ -30,7 +30,7 @@ jobs:
           echo "notebooks=$NOTEBOOKS_JSON" >> "$GITHUB_OUTPUT"
 
   run_notebook:
-    name: Run notebook on (${{ matrix.python-version }}, ${{ matrix.os }})
+    name: Run notebook ${{ matrix.notebook }} on (${{ matrix.python-version }}, ${{ matrix.os }})
     if: github.event.pull_request.draft == false
     needs: list_notebooks
     runs-on: ${{ matrix.os }}
