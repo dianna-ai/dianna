@@ -3,8 +3,8 @@ description: "Installs Python, updates pip and installs DIANNA together with its
 inputs:
   python-version:
     required: false
-    description: "The Python version to use. Specify major and minor version, e.g. '3.10'."
-    default: "3.10"
+    description: "The Python version to use. Specify major and minor version, e.g. '3.11'."
+    default: "3.11"
   extras-require:
     required: false
     description: "The extras dependencies packages to be installed, for instance 'docs' or 'publishing,notebooks'."
@@ -13,11 +13,11 @@ runs:
   using: "composite"
   steps:
     - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ inputs.python-version }}
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v5
       id: cache-python-env
       with:
         path: ${{ env.pythonLocation }}
