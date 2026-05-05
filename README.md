@@ -103,13 +103,11 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 If you get an error related to OpenMP when importing dianna, have a look at [this issue](https://github.com/dianna-ai/dianna/issues/376) for possible workarounds.
 
 <details><summary>Pre-requisites only for Macbook Pro with M1 Pro chip users</summary>
-  
-<p> 
-  
+
 - To install TensorFlow you can follow this [tutorial](https://betterdatascience.com/install-tensorflow-2-7-on-macbook-pro-m1-pro/).
 - To install TensorFlow Addons you can follow these [steps](https://github.com/tensorflow/addons/pull/2504). For further reading see this [issue](https://github.com/tensorflow/addons/issues/2503). Note that this temporary solution works only for macOS versions >= 12.0. Note that this step may have changed already, see https://github.com/dianna-ai/dianna/issues/245.
 - Before installing DIANNA, comment `tensorflow` requirement in `setup.cfg` file (tensorflow package for M1 is called `tensorflow-macos`).
-  
+
 </details>
 
 ## Getting started
@@ -151,9 +149,7 @@ dianna.visualization.<visualization_function>(explanation[explained_class_index]
 
 ### Text and image usage 
 <details><summary>Examples</summary>
-  
-<p>
-  
+
 Lets illustrate the template above with *textual* data. The data item of interest is a sentence being (a part of) a movie review and the model has been trained to classify reviews into positive and negative sentiment classes.
 We are intersted which words are contributing positively (red) and which - negatively (blue) towards the model's desicion to classify the review as positive and we would like to use the *LIME* explainer:
 
@@ -233,8 +229,6 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 </details>
 
 <details><summary>Text</summary>
-  
-<p>
 
 | Dataset                                                                                                                                                                                                                            | Description                                                                   | Examples                                                         | Generation                                                          |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- | :--------------------------------------------------------------- | :------------------------------------------------------------------ |
@@ -244,8 +238,6 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 </details>
 
 <details><summary>Time series</summary>
-  
-<p>
 
 | Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
@@ -255,8 +247,6 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 </details>
 
 <details><summary>Tabular</summary>
-  
-<p>
 
 | Dataset                                                                                                                                                                                                                | Description                                                                                                                                                    | Examples                                                                                                                                 | Generation                                                                |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
