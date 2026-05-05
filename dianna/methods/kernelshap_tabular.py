@@ -79,11 +79,13 @@ class KERNELSHAPTabular:
         saliency = np.array(self.explainer.shap_values(input_tabular, silent=self.silent, **explain_instance_kwargs))
 
         if self.mode == 'regression':
+            # shap 0.46+ returns (n_features,) for single-output regression or
+            # (n_features, n_outputs) for multi-output regression.
+            # We take the first output's feature importances in the multi-output case.
             if saliency.ndim == 2:
-                # shap 0.46+ returns (n_features, n_outputs); take first output
                 saliency = saliency[:, 0]
-            # else: single-output regression already returns (n_features,)
             return saliency
 
-        # classification: shap 0.46+ returns (n_features, n_classes); transpose to (n_classes, n_features)
+        # Classification: shap 0.46+ returns (n_features, n_classes).
+        # Transpose to (n_classes, n_features) to match dianna's convention.
         return saliency.T
