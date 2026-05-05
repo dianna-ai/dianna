@@ -99,10 +99,10 @@ def test_image_page(page: Page):
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
-            # first image
-            page.get_by_text('0', exact=True).first,
-            # second image
-            page.get_by_text('1', exact=True).first,
+            # first class label
+            page.get_by_text('Class: 0'),
+            # second class label
+            page.get_by_text('Class: 1'),
     ):
         expect(selector).to_be_visible(timeout=200_000)
 

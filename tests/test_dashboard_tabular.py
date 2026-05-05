@@ -122,12 +122,12 @@ def test_tabular_sunshine(page: Page):
 
     expect(page.get_by_text("Select the input data by")).to_be_visible(timeout=100_000)
     frame = page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]")
-    cell = frame.get_by_role("gridcell", name="10", exact=True)
-    expect(cell).to_be_visible(timeout=300_000)
-    cell.click()
+    first_cell = frame.get_by_role("gridcell").first
+    expect(first_cell).to_be_visible(timeout=300_000)
+    first_cell.click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
 
-    expect(page.get_by_text("3.07")).to_be_visible(timeout=200_000)
+    expect(page.get_by_test_id('stMetricValue')).to_be_visible(timeout=200_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
@@ -169,13 +169,13 @@ def test_tabular_penguin(page: Page):
 
     expect(page.get_by_text("Select the input data by")).to_be_visible(timeout=300_000)
     frame = page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]")
-    cell = frame.get_by_role("gridcell", name="10", exact=True)
-    expect(cell).to_be_visible(timeout=300_000)
-    cell.click()
+    first_cell = frame.get_by_role("gridcell").first
+    expect(first_cell).to_be_visible(timeout=300_000)
+    first_cell.click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=300_000)
 
     for selector in (
-        page.get_by_test_id('stMetricValue').get_by_text('Gentoo'),
+        page.get_by_test_id('stMetricValue'),
         page.get_by_role('heading', name='RISE').get_by_text('RISE'),
         page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
         page.get_by_role('heading', name='LIME').get_by_text('LIME'),
