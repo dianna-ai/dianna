@@ -39,7 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.9', '3.12']
+        python-version: ['3.10', '3.12']
         exclude:
           # already tested in build_single job
           - python-version: 3.12
