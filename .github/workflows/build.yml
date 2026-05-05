@@ -16,8 +16,7 @@ on:
 
 jobs:
   build_single:
-    name: Build
-    if: github.event.pull_request.draft == true
+    name: Build for Python 3.12, ubuntu-latest
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v6
