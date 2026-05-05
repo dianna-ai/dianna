@@ -44,7 +44,7 @@ affiliations:
 
 [![build](https://github.com/dianna-ai/dianna/actions/workflows/build.yml/badge.svg)](https://github.com/dianna-ai/dianna/actions/workflows/build.yml)
 [![Documentation Status](https://readthedocs.org/projects/dianna/badge/?version=latest)](https://dianna.readthedocs.io/en/latest/?badge=latest)
-[![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=dianna-ai_dianna&metric=coverage)](https://sonarcloud.io/dashboard?id=dianna-ai_dianna)
+[![coverage](https://raw.githubusercontent.com/dianna-ai/dianna/badges/coverage.svg)](https://github.com/dianna-ai/dianna/actions/workflows/sonarcloud.yml)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5542/badge)](https://bestpractices.coreinfrastructure.org/projects/5542)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.04493/status.svg)](https://doi.org/10.21105/joss.04493)
@@ -261,7 +261,7 @@ DIANNA comes with simple datasets. Their main goal is to provide intuitive insig
 
 **We work with ONNX!** ONNX is a great unified neural network standard which can be used to boost reproducible science. Using ONNX for your model also gives you a boost in performance! In case your models are still in another popular DNN (deep neural network) format, here are some simple recipes to convert them:
 
-* [pytorch and pytorch-lightning](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/pytorch2onnx.ipynb) - use the built-in [`torch.onnx.export`](https://pytorch.org/docs/stable/onnx.html) function to convert pytorch models to onnx, or call the built-in [`to_onnx`](https://pytorch-lightning.readthedocs.io/en/latest/deploy/production_advanced.html) function on your [`LightningModule`](https://lightning.ai/docs/pytorch/latest/api/lightning.pytorch.core.LightningModule.html#lightning.pytorch.core.LightningModule) to export pytorch-lightning models to onnx.
+* [pytorch and PyTorch Lightning](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/pytorch2onnx.ipynb) - use the built-in [`torch.onnx.export`](https://pytorch.org/docs/stable/onnx.html) function to convert pytorch models to onnx, or call the built-in [`to_onnx`](https://lightning.ai/docs/pytorch/latest/deploy/production_advanced.html) function on your [`LightningModule`](https://lightning.ai/docs/pytorch/latest/api/lightning.pytorch.core.LightningModule.html#lightning.pytorch.core.LightningModule) to export pytorch-lightning models to onnx.
 * [tensorflow](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/tensorflow2onnx.ipynb) - use the [`tf2onnx`](https://github.com/onnx/tensorflow-onnx) package to convert tensorflow models to onnx.
 * [keras](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/keras2onnx.ipynb) - same as the conversion from tensorflow to onnx, the [`tf2onnx`](https://github.com/onnx/tensorflow-onnx) package also supports keras.
 * [scikit-learn](https://github.com/dianna-ai/dianna/blob/main/tutorials/conversion_onnx/skl2onnx.ipynb) - use the [`skl2onnx`](https://github.com/onnx/sklearn-onnx) package to scikit-learn models to onnx.

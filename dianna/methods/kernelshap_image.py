@@ -20,9 +20,6 @@ class KERNELSHAPImage:
         """
         self.preprocess_function = preprocess_function
         self.axis_labels = axis_labels if axis_labels is not None else []
-        # import here because it's slow
-        from onnx_tf.backend import prepare
-        self.onnx_to_tf = prepare
 
     @staticmethod
     def _segment_image(image, n_segments, compactness, sigma, **kwargs):
@@ -106,11 +103,16 @@ class KERNELSHAPImage:
         Returns:
             Explanation heatmap of Shapley values for each class (np.ndarray).
         """
-        self.onnx_model, self.input_node_dtype,\
+        self.onnx_model, self.input_node_name, self.input_node_dtype,\
             self.output_node = utils.onnx_model_node_loader(model_or_function)
         self.labels = labels
         self.input_data = self._prepare_image_data(input_data)
         self.background = background
+
+        # create onnxruntime session once for efficient repeated inference
+        import onnxruntime as rt  # pylint: disable=import-outside-toplevel
+        self.onnx_session = rt.InferenceSession(
+            self.onnx_model.SerializeToString())
 
         # other keyword arguments for the method segment_image
         slic_kwargs = utils.get_kwargs_applicable_to_function(
@@ -217,11 +219,12 @@ class KERNELSHAPImage:
         model_input = self._mask_image(features, self.image_segments,
                                        self.input_data, self.background,
                                        self.channels_axis_index,
-                                       self.input_node_dtype.as_numpy_dtype)
+                                       self.input_node_dtype)
         if self.preprocess_function is not None:
             model_input = self.preprocess_function(model_input)
-        return self.onnx_to_tf(
-            self.onnx_model).run(model_input)[f'{self.output_node}']
+        return self.onnx_session.run(
+            [self.output_node],
+            {self.input_node_name: model_input})[0]
 
 
 def _create_heatemaps(shap_values_list, image_segments):

@@ -1,14 +1,16 @@
 import tempfile
+import onnxruntime as rt
 import streamlit as st
 from _model_utils import preprocess_function
-from onnx_tf.backend import prepare
 from dianna import explain_image
 
 
 @st.cache_data
 def predict(*, model, image):
-    output_node = prepare(model, gen_tensor_dict=True).outputs[0]
-    predictions = (prepare(model).run(image[None, ...])[str(output_node)])
+    session = rt.InferenceSession(model.SerializeToString())
+    output_node = session.get_outputs()[0].name
+    input_node = session.get_inputs()[0].name
+    predictions = session.run([output_node], {input_node: image[None, ...]})[0]
     return predictions[0]
 
 
