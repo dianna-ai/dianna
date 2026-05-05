@@ -100,17 +100,14 @@ def test_image_page(page: Page):
             page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
             # first image
-            page.get_by_role('heading', name='0').get_by_text('0'),
-            page.get_by_role('img', name='0').first,
-            page.get_by_role('img', name='0').nth(1),
-            page.get_by_role('img', name='0').nth(2),
+            page.get_by_text('0', exact=True).first,
             # second image
-            page.get_by_role('heading', name='1').get_by_text('1'),
-            page.get_by_role('img', name='0').nth(3),
-            page.get_by_role('img', name='0').nth(4),
-            page.get_by_role('img', name='0').nth(5),
+            page.get_by_text('1', exact=True).first,
     ):
         expect(selector).to_be_visible(timeout=200_000)
+
+    imgs = page.get_by_role('img')
+    expect(imgs).to_have_count(6, timeout=200_000)
 
     # Own data
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
