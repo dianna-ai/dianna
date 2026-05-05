@@ -121,10 +121,11 @@ def test_tabular_sunshine(page: Page):
     expander.click()
 
     expect(page.get_by_text("Select the input data by")).to_be_visible(timeout=100_000)
-    frame = page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]")
-    first_cell = frame.get_by_role("gridcell").first
-    expect(first_cell).to_be_visible(timeout=300_000)
-    first_cell.click()
+    page.locator("iframe[title*='agGrid']").scroll_into_view_if_needed()
+    frame = page.frame_locator("iframe[title*='agGrid']")
+    first_row = frame.locator(".ag-row").first
+    expect(first_row).to_be_visible(timeout=300_000)
+    first_row.click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
 
     expect(page.get_by_test_id('stMetricValue')).to_be_visible(timeout=200_000)
@@ -168,10 +169,11 @@ def test_tabular_penguin(page: Page):
     page.locator("label").filter(has_text="KernelSHAP").locator("span").click(timeout=300_000)
 
     expect(page.get_by_text("Select the input data by")).to_be_visible(timeout=300_000)
-    frame = page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]")
-    first_cell = frame.get_by_role("gridcell").first
-    expect(first_cell).to_be_visible(timeout=300_000)
-    first_cell.click()
+    page.locator("iframe[title*='agGrid']").scroll_into_view_if_needed()
+    frame = page.frame_locator("iframe[title*='agGrid']")
+    first_row = frame.locator(".ag-row").first
+    expect(first_row).to_be_visible(timeout=300_000)
+    first_row.click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=300_000)
 
     for selector in (
