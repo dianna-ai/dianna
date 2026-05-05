@@ -76,9 +76,14 @@ class KERNELSHAPTabular:
         explain_instance_kwargs = utils.get_kwargs_applicable_to_function(
             self.explainer.shap_values, kwargs)
 
-        saliency = self.explainer.shap_values(input_tabular, silent=self.silent, **explain_instance_kwargs)
+        saliency = np.array(self.explainer.shap_values(input_tabular, silent=self.silent, **explain_instance_kwargs))
 
         if self.mode == 'regression':
-            saliency = saliency[0]
+            if saliency.ndim == 2:
+                # shap 0.46+ returns (n_features, n_outputs); take first output
+                saliency = saliency[:, 0]
+            # else: single-output regression already returns (n_features,)
+            return saliency
 
-        return np.array(saliency)
+        # classification: shap 0.46+ returns (n_features, n_classes); transpose to (n_classes, n_features)
+        return saliency.T

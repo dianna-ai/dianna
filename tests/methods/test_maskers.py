@@ -97,7 +97,7 @@ def test_timeseries_mask_contains_correct_parts_are_mean_masked():
     result = _call_timeseries_masking_function(input_data, mask_type='mean')
 
     masked_parts = result[(result != input_data)]
-    assert np.alltrue(
+    assert np.all(
         masked_parts ==
         mean), f'All elements in {masked_parts} should have value {mean}'
 
