@@ -41,7 +41,7 @@ class MovieReviewsModelRunner:
             ]
 
             # run the model, applying a sigmoid because the model outputs logits, remove any remaining batch axis
-            pred = float(sigmoid(self.run_model([tokens_numerical])))
+            pred = float(sigmoid(self.run_model([tokens_numerical])).flat[0])
             output.append(pred)
 
         # output two classes

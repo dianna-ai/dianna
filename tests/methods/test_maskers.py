@@ -85,7 +85,7 @@ def test_timeseries_mask_contains_correct_number_of_unmasked_parts(
 
     result = _call_timeseries_masking_function(input_data, p_keep=p_keep)
 
-    assert np.sum(result == input_data) / np.product(
+    assert np.sum(result == input_data) / np.prod(
         result.shape) == expected_rate
 
 
@@ -168,7 +168,7 @@ def test_channel_mask_masks_correct_number_of_cells():
 
     result = generate_channel_masks(input_data.shape, number_of_masks, p_keep)
 
-    assert result.sum() / np.product(result.shape) == p_keep
+    assert result.sum() / np.prod(result.shape) == p_keep
 
 
 def test_timeseries_masking_has_correct_shape_multivariate():
@@ -356,7 +356,7 @@ def test_tabular_mask_has_correct_number_masked(p_keep_and_n_unmasked):
                 p_keep=p_keep,
             )))
 
-    mean_element = masks.sum() / (np.product(input_data_shape) *
+    mean_element = masks.sum() / (np.prod(input_data_shape) *
                                   number_of_masks)
     assert np.isclose(mean_element, n_unmasked, atol=0.03)
 
