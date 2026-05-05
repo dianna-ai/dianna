@@ -76,7 +76,7 @@ def test_timeseries_page(page: Page):
 
     page.get_by_text('Running...').wait_for(state='detached')
 
-    expect(page).to_have_title('Time_series')
+    expect(page).to_have_title('Time series')
 
     expect(page.get_by_text("Select which input type to")).to_be_visible(timeout=100_000)
 
