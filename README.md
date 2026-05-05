@@ -101,6 +101,7 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 ```
 
 If you get an error related to OpenMP when importing dianna, have a look at [this issue](https://github.com/dianna-ai/dianna/issues/376) for possible workarounds.
+For some usecases (e.g. on Intel Macs), you may need to install OpenMP separately, e.g. with `brew install libomp`.
 
 <details><summary>Pre-requisites only for Macbook Pro with M1 Pro chip users</summary>
 
