@@ -93,7 +93,13 @@ def test_image_page(page: Page):
 
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
-    page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
+
+    # Wait for all images to appear: 2 classes × 3 methods = 6 images.
+    # This is the definitive signal that both class rows are fully computed.
+    # Avoid relying on 'Running...' which may briefly disappear between
+    # Streamlit re-runs, causing a premature return before class 1 is rendered.
+    imgs = page.get_by_role('img')
+    expect(imgs).to_have_count(6, timeout=600_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
@@ -104,10 +110,7 @@ def test_image_page(page: Page):
             # second class label
             page.get_by_text('Class: 1'),
     ):
-        expect(selector).to_be_visible(timeout=200_000)
-
-    imgs = page.get_by_role('img')
-    expect(imgs).to_have_count(6, timeout=200_000)
+        expect(selector).to_be_visible(timeout=30_000)
 
     # Own data
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
