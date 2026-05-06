@@ -166,8 +166,10 @@ gb.configure_selection('single')
 grid_options = gb.build()
 
 # Display the grid with the DataFrame
+# Pass a copy of data to prevent st_aggrid from mutating it
+# (st_aggrid 1.x adds a '::auto_unique_id::' column in-place)
 grid_response = AgGrid(
-    data,
+    data.copy(),
     gridOptions=grid_options,
     update_mode=GridUpdateMode.SELECTION_CHANGED,
     theme='streamlit'
