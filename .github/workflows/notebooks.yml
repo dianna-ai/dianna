@@ -49,5 +49,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           extras-require: dev,notebooks
+      # Workaround for xgboost OpenMP issue on macOS (see https://github.com/dmlc/xgboost/pull/12108).
+      # Once that PR is included in a released version of xgboost, this step can be removed.
+      - name: Install OpenMP runtime (macOS)
+        if: runner.os == 'macOS'
+        run: brew install libomp
       - name: Run tutorial notebook
         run: pytest --nbmake "${{ matrix.notebook }}"

@@ -101,7 +101,9 @@ python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 ```
 
 If you get an error related to OpenMP when importing dianna, have a look at [this issue](https://github.com/dianna-ai/dianna/issues/376) for possible workarounds.
-For some usecases (e.g. on Intel Macs), you may need to install OpenMP separately, e.g. with `brew install libomp`.
+For some usecases on macOS, you may need to install OpenMP separately, e.g. with `brew install libomp`.
+Note: xgboost OpenMP support on macOS is actively being worked on upstream; see [xgboost#12108](https://github.com/dmlc/xgboost/pull/12108) for the latest status.
+Once this is resolved in a released version of xgboost, the `brew install` workaround should no longer be necessary.
 
 <details><summary>Pre-requisites only for Macbook Pro with M1 Pro chip users</summary>
 
