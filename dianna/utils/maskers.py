@@ -23,7 +23,7 @@ def generate_tabular_masks(
     Returns:
     Single array containing all masks where the first dimension represents the batch.
     """
-    instance_length = np.product(input_data_shape)
+    instance_length = np.prod(input_data_shape)
 
     for i in range(number_of_masks):
         n_masked = _determine_number_masked(p_keep, instance_length)

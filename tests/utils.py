@@ -108,7 +108,7 @@ class ModelRunner:
             # run the model, applying a sigmoid because the model outputs logits, remove any remaining batch axis
             onnx_input = {input_name: [tokens_numerical]}
             logits = sess.run([output_name], onnx_input)[0]
-            pred = float(sigmoid(logits))
+            pred = float(sigmoid(logits).flat[0])
             output.append(pred)
 
         # output two classes

@@ -129,8 +129,7 @@ class KERNELSHAPImage:
             self._runner, np.zeros((len(self.labels), n_segments)))
 
         # Temporarily hide warnings, because shap is very spammy
-        # `shap_values_list` is a list of arrays, each array contains the shapley
-        # values for each model output
+        # `shap_values_list` has shape (n_samples, n_features, n_classes) in shap 0.46+
         with LoggingContext(level=logging.CRITICAL):
             shap_values_list = explainer.shap_values(np.ones(
                 (len(self.labels), n_segments)),
@@ -232,14 +231,18 @@ def _create_heatemaps(shap_values_list, image_segments):
 
     The final heatmaps has a shape of (n_classes, *image_segments.shape).
     """
-    n_classes = len(shap_values_list)  # number of classes
+    # shap 0.46+ returns an array of shape (n_samples, n_features, n_classes).
+    # Take sample 0 and transpose to (n_classes, n_features/n_segments).
+    shap_array = np.asarray(shap_values_list)
+    per_class_values = shap_array[0].T  # (n_classes, n_segments)
+    n_classes = per_class_values.shape[0]
     heat_maps = np.zeros((n_classes, *image_segments.shape))
 
     # fill the heat_maps with shap values for each class and segment
-    for i, shap_value in enumerate(shap_values_list):
+    for i, shap_values_for_class in enumerate(per_class_values):
         class_heat_map = heat_maps[i]
         for index in image_segments.flat:
-            class_heat_map[image_segments == index] = shap_value[0][index - 1]
+            class_heat_map[image_segments == index] = shap_values_for_class[index - 1]
         heat_maps[i] = class_heat_map
 
     return heat_maps
