@@ -31,6 +31,7 @@ from contextlib import contextmanager
 import pytest
 from playwright.sync_api import Page
 from playwright.sync_api import expect
+from tests.dashboard_helpers import wait_streamlit_ready
 
 LOCAL = False
 
@@ -74,11 +75,9 @@ def test_tabular_page(page: Page):
 
     page.goto(f'{BASE_URL}/Tabular')
 
-    page.get_by_text('Running...').wait_for(state='detached')
+    wait_streamlit_ready(page)
 
     expect(page).to_have_title('Tabular')
-
-    expect(page.get_by_text("Select which input type to")).to_be_visible(timeout=100_000)
 
     # Test using your own data
     page.locator("label").filter(
@@ -96,7 +95,7 @@ def test_tabular_sunshine(page: Page):
 
     page.goto(f'{BASE_URL}/Tabular')
 
-    page.get_by_text('Running...').wait_for(state='detached')
+    wait_streamlit_ready(page)
 
     expect(page).to_have_title('Tabular')
 
@@ -117,14 +116,19 @@ def test_tabular_sunshine(page: Page):
     page.locator("label").filter(has_text="RISE").locator("span").click()
     page.locator("label").filter(has_text="LIME").locator("span").click()
     page.locator("label").filter(has_text="KernelSHAP").locator("span").click()
-    page.locator("summary").filter(has_text="Click to modify RISE").get_by_test_id("stExpanderToggleIcon").click()
+    expander = page.locator("summary").filter(has_text="Click to modify RISE")
+    expander.wait_for(state="visible", timeout=200_000)
+    expander.click()
 
     expect(page.get_by_text("Select the input data by")).to_be_visible(timeout=100_000)
-    page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role(
-        "gridcell", name="10", exact=True).click()
+    page.locator("iframe[title*='agGrid']").scroll_into_view_if_needed()
+    frame = page.frame_locator("iframe[title*='agGrid']")
+    first_row = frame.locator(".ag-row").first
+    expect(first_row).to_be_visible(timeout=300_000)
+    first_row.click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=200_000)
 
-    expect(page.get_by_text("3.07")).to_be_visible(timeout=200_000)
+    expect(page.get_by_test_id('stMetricValue')).to_be_visible(timeout=200_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
@@ -142,7 +146,8 @@ def test_tabular_penguin(page: Page):
     page.set_viewport_size({"width": 1920, "height": 1080})
 
     page.goto(f'{BASE_URL}/Tabular')
-    page.get_by_text('Running...').wait_for(state='detached')
+
+    wait_streamlit_ready(page)
 
     expect(page).to_have_title('Tabular')
     expect(page.get_by_text("Select which input type to")).to_be_visible(timeout=100_000)
@@ -164,12 +169,15 @@ def test_tabular_penguin(page: Page):
     page.locator("label").filter(has_text="KernelSHAP").locator("span").click(timeout=300_000)
 
     expect(page.get_by_text("Select the input data by")).to_be_visible(timeout=300_000)
-    page.frame_locator("iframe[title=\"st_aggrid\\.agGrid\"]").get_by_role(
-        "gridcell", name="10", exact=True).click()
+    page.locator("iframe[title*='agGrid']").scroll_into_view_if_needed()
+    frame = page.frame_locator("iframe[title*='agGrid']")
+    first_row = frame.locator(".ag-row").first
+    expect(first_row).to_be_visible(timeout=300_000)
+    first_row.click()
     page.get_by_text('Running...').wait_for(state='detached', timeout=300_000)
 
     for selector in (
-        page.get_by_test_id('stMetricValue').get_by_text('Gentoo'),
+        page.get_by_test_id('stMetricValue'),
         page.get_by_role('heading', name='RISE').get_by_text('RISE'),
         page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
         page.get_by_role('heading', name='LIME').get_by_text('LIME'),

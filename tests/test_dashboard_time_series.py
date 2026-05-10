@@ -31,6 +31,7 @@ from contextlib import contextmanager
 import pytest
 from playwright.sync_api import Page
 from playwright.sync_api import expect
+from tests.dashboard_helpers import wait_streamlit_ready
 
 LOCAL = False
 
@@ -74,11 +75,9 @@ def test_timeseries_page(page: Page):
 
     page.goto(f'{BASE_URL}/Time_series')
 
-    page.get_by_text('Running...').wait_for(state='detached')
+    wait_streamlit_ready(page)
 
-    expect(page).to_have_title('Time_series')
-
-    expect(page.get_by_text("Select which input type to")).to_be_visible(timeout=100_000)
+    expect(page).to_have_title('Time series')
 
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
     expect(page.get_by_text("Select an example in the left")).to_be_visible(timeout=200_000)

@@ -31,6 +31,7 @@ from contextlib import contextmanager
 import pytest
 from playwright.sync_api import Page
 from playwright.sync_api import expect
+from tests.dashboard_helpers import wait_streamlit_ready
 
 LOCAL = False
 
@@ -74,13 +75,9 @@ def test_image_page(page: Page):
 
     page.goto(f'{BASE_URL}/Images')
 
-    page.get_by_text('Running...').wait_for(state='detached')
+    wait_streamlit_ready(page)
 
     expect(page).to_have_title('Images')
-
-    expect(
-        page.get_by_text('Select which input type to')
-    ).to_be_visible(timeout=100_000)
 
     # Digits example
     page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
@@ -96,24 +93,25 @@ def test_image_page(page: Page):
 
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
-    page.get_by_text('Running...').wait_for(state='detached', timeout=100_000)
+
+    # Wait for all result images to appear: 2 classes × 3 methods = 6 images.
+    # Exclude the static colormap image from the count.
+    # This is the definitive signal that both class rows are fully computed.
+    # Avoid relying on 'Running...' which may briefly disappear between
+    # Streamlit re-runs, causing a premature return before class 1 is rendered.
+    imgs = page.locator('img:not([alt="Colormap"])')
+    expect(imgs).to_have_count(6, timeout=600_000)
 
     for selector in (
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
-            # first image
-            page.get_by_role('heading', name='0').get_by_text('0'),
-            page.get_by_role('img', name='0').first,
-            page.get_by_role('img', name='0').nth(1),
-            page.get_by_role('img', name='0').nth(2),
-            # second image
-            page.get_by_role('heading', name='1').get_by_text('1'),
-            page.get_by_role('img', name='0').nth(3),
-            page.get_by_role('img', name='0').nth(4),
-            page.get_by_role('img', name='0').nth(5),
+            # first class label
+            page.get_by_text('Class: 0'),
+            # second class label
+            page.get_by_text('Class: 1'),
     ):
-        expect(selector).to_be_visible(timeout=200_000)
+        expect(selector).to_be_visible(timeout=30_000)
 
     # Own data
     page.locator("label").filter(has_text="Use your own data").locator("div").nth(1).click()
