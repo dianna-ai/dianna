@@ -100,7 +100,13 @@ To install the most recent development version directly from the GitHub reposito
 python3 -m pip install git+https://github.com/dianna-ai/dianna.git
 ```
 
+<details><summary>OpenMP issues on macOS</summary>
 If you get an error related to OpenMP when importing dianna, have a look at [this issue](https://github.com/dianna-ai/dianna/issues/376) for possible workarounds.
+In some cases on macOS, you may need to install OpenMP separately, e.g. with `brew install libomp`.
+Note: xgboost OpenMP support on macOS is actively being worked on upstream; see [xgboost#12108](https://github.com/dmlc/xgboost/pull/12108) for the latest status.
+Once this is resolved in a released version of xgboost, the `brew install` workaround should no longer be necessary.
+Sometimes, this can still lead to hanging processes on macOS, e.g. when using the LIME explainer. In that case, you can set the environment variables `OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1` and `TOKENIZERS_PARALLELISM=false` to limit the number of threads used by all libraries to 1, which should prevent hanging.
+</details>
 
 <details><summary>Pre-requisites only for Macbook Pro with M1 Pro chip users</summary>
 

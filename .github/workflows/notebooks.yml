@@ -49,5 +49,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           extras-require: dev,notebooks
+      # Workaround for xgboost OpenMP issue on macOS (see https://github.com/dmlc/xgboost/pull/12108).
+      # Once that PR is included in a released version of xgboost, this step can be removed.
+      - name: Install OpenMP runtime (macOS)
+        if: runner.os == 'macOS'
+        run: brew install libomp
       - name: Run tutorial notebook
-        run: pytest --nbmake "${{ matrix.notebook }}"
+        # Workaround for OpenMP/threading deadlock issues in buggy xgboost + torch setups.
+        # Limiting threads prevents the deadlock that causes hangs during LIME inference.
+        env:
+          OMP_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+          TOKENIZERS_PARALLELISM: "false"
+        run: pytest --nbmake --nbmake-timeout=3600 "${{ matrix.notebook }}"
