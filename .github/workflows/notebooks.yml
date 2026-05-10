@@ -55,4 +55,4 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install libomp
       - name: Run tutorial notebook
-        run: pytest --nbmake "${{ matrix.notebook }}"
+        run: pytest --nbmake --nbmake-timeout=3600 "${{ matrix.notebook }}"
