@@ -55,4 +55,10 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install libomp
       - name: Run tutorial notebook
+        # Workaround for OpenMP/threading deadlock issues in buggy xgboost + torch setups.
+        # Limiting threads prevents the deadlock that causes hangs during LIME inference.
+        env:
+          OMP_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+          TOKENIZERS_PARALLELISM: "false"
         run: pytest --nbmake --nbmake-timeout=3600 "${{ matrix.notebook }}"
