@@ -110,7 +110,7 @@ def _get_univariate_time_series(num_steps=10) -> np.array:
 
 def _get_multivariate_time_series(number_of_channels: int = 6) -> np.array:
     """Get some multivariate test data."""
-    return np.row_stack([
+    return np.vstack([
         np.zeros((10, number_of_channels)),
         np.ones((10, number_of_channels))
     ])
