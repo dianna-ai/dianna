@@ -24,28 +24,31 @@ jobs:
   upload_test_pypi:
     needs: [build]
     runs-on: ubuntu-latest
+    environment: testpypi_release
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+      id-token: write
     if: github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/download-artifact@v8
         with:
           name: artifact
           path: dist
-      - uses: pypa/gh-action-pypi-publish@v1
+      - uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
+          repository-url: https://test.pypi.org/legacy/
 
   upload_pypi:
     needs: [build]
     runs-on: ubuntu-latest
+    environment: pypi_release
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+      id-token: write
     if: github.event_name == 'release' && github.event.action == 'published'
     steps:
       - uses: actions/download-artifact@v8
         with:
           name: artifact
           path: dist
-      - uses: pypa/gh-action-pypi-publish@v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
+      - uses: pypa/gh-action-pypi-publish@release/v1
