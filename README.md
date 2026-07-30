@@ -291,7 +291,7 @@ And here are links to notebooks showing how we created our models on the benchma
 | Models                                                               | Generation                                                                                                                                                                 |
 |:---------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [Movie reviews model](https://zenodo.org/record/5910598)             | [Stanford sentiment treebank model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/movie_reviews/generate_model.ipynb) |
-| [Regalatory statement classifier](https://zenodo.org/record/8200001) | [EU-law regulatory-statement-classification](https://github.com/nature-of-eu-rules/regulatory-statement-classification)                                                    |
+| [Regulatory statement classifier](https://zenodo.org/record/8200001) | [EU-law regulatory-statement-classification](https://github.com/nature-of-eu-rules/regulatory-statement-classification)                                                    |
 
 </details>
 
