@@ -87,9 +87,9 @@ def test_image_page(page: Page):
 
     time.sleep(2)
 
-    page.locator('label').filter(has_text='RISE').locator('span').click()
-    page.locator('label').filter(has_text='KernelSHAP').locator('span').click()
-    page.locator('label').filter(has_text='LIME').locator('span').click()
+    page.locator('label').filter(has_text='RISE').click()
+    page.locator('label').filter(has_text='KernelSHAP').click()
+    page.locator('label').filter(has_text='LIME').click()
 
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
