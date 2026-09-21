@@ -1,9 +1,122 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "dianna"
+version = "1.8.1"
+description = "Deep Insight And Neural Network Analysis"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{ name = "DIANNA Team", email = "dianna-ai@esciencecenter.nl" }]
+keywords = ["XAI", "machine learning"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "fastdtw",
+    "ipython",
+    "lime",
+    "matplotlib",
+    "numpy>=1.20",
+    "onnx",
+    "onnxruntime",
+    "pooch",
+    "shap>=0.46",
+    "scikit-image>=0.19.3",
+    "scikit-learn",
+    "tqdm",
+    "xarray",
+    "pandas",
+    "torch",
+]
+
+[project.optional-dependencies]
+dev = [
+    "bump2version",
+    "click",  # workaround for https://github.com/explosion/spaCy/issues/13971, should be removed when fixed in spacy
+    "pre-commit",
+    "scipy",
+    "spacy",
+    "coverage[toml]",
+    "pytest",
+    "pytest-cov",
+    "pytest-playwright",
+]
+docs = [
+    "myst-parser",
+    "nbmake",
+    "nbsphinx",
+    "nbsphinx_link",
+    "pandoc",
+    "sphinx",
+    "sphinx-autoapi",
+    "sphinx_rtd_theme",
+]
+publishing = [
+    "build",
+    "twine",
+]
+text = [
+    "spacy",
+]
+dashboard = [
+    "keras",
+    "Pillow",
+    "plotly",
+    "scipy",
+    "seaborn",
+    "spacy",
+    "streamlit-aggrid",
+    "streamlit",
+    "streamlit_option_menu",
+    "transformers",
+    "xgboost",
+]
+notebooks = [
+    "keras",
+    "nbmake",
+    "notebook",
+    "onnxscript",
+    "Pillow",
+    "lightning",
+    "scipy",
+    "skl2onnx",
+    "spacy",
+    "seaborn",
+    "tensorflow",
+    "tf2onnx",
+    "torch",
+    "torchvision",
+    "ipywidgets",
+    "freetype-py",
+    "transformers<4.46.0",
+    "xgboost",
+]
+
+[project.urls]
+Homepage = "https://github.com/dianna-ai/dianna"
+"Bug Tracker" = "https://github.com/dianna-ai/dianna/issues"
+
+[project.scripts]
+dianna-dashboard = "dianna.cli:dashboard"
+
+[tool.setuptools.packages.find]
+include = ["dianna", "dianna.*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "dashboard: Test dashboard user workflow, requires playwright with browser installed (`playwright install chromium`)",
+]
 
 [tool.coverage.run]
 branch = true
@@ -13,7 +126,7 @@ command_line = "-m pytest"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py38,py39,py310,py311
+envlist = py311,py312,py313,py314
 skip_missing_interpreters = true
 
 [testenv]
@@ -26,7 +139,7 @@ extend-exclude = [
     "scripts",
 ]
 
-target-version = "py310"
+target-version = "py311"
 line-length = 120
 
 [tool.ruff.lint]

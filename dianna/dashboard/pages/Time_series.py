@@ -1,5 +1,5 @@
 import base64
-import sys
+from importlib.resources import files
 import numpy as np
 import streamlit as st
 from _model_utils import load_labels
@@ -16,11 +16,6 @@ from _ts_utils import open_timeseries
 from matplotlib import pyplot as plt
 from dianna.utils.downloader import download
 from dianna.visualization import plot_timeseries
-
-if sys.version_info < (3, 10):
-    from importlib_resources import files
-else:
-    from importlib.resources import files
 
 data_directory = files('dianna.data')
 colormap_path = str(data_directory / 'colormap.png')
