@@ -43,10 +43,10 @@ for more information about Python versions.
 
 When adding new dependencies, make sure to do so as follows:
 
--  Runtime dependencies should be added to ``setup.cfg`` in the
-   ``install_requires`` list under ``[options]``.
--  Development dependencies should be added to ``setup.cfg`` in one of
-   the lists under ``[options.extras_require]``.
+-  Runtime dependencies should be added to ``pyproject.toml`` in the
+   ``dependencies`` list under ``[project]``.
+-  Development dependencies should be added to ``pyproject.toml`` in one of
+   the lists under ``[project.optional-dependencies]``.
 
 Testing and code coverage
 -------------------------
