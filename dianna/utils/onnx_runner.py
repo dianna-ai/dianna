@@ -20,12 +20,15 @@ class SimpleModelRunner:
         """
         self.filename = filename
         self.preprocess_function = preprocess_function
+        self._session = None
 
     def __call__(self, input_data):
         """Get ONNX predictions."""
-        sess_options = ort.SessionOptions()
-        sess_options.enable_cpu_mem_arena = False  # disables pre-allocation of memory
-        sess = ort.InferenceSession(self.filename, sess_options=sess_options)
+        if self._session is None:
+            sess_options = ort.SessionOptions()
+            sess_options.enable_cpu_mem_arena = False  # disables pre-allocation of memory
+            self._session = ort.InferenceSession(self.filename, sess_options=sess_options)
+        sess = self._session
         input_name = sess.get_inputs()[0].name
         output_name = sess.get_outputs()[0].name
 
