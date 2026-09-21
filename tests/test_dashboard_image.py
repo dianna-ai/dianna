@@ -107,9 +107,9 @@ def test_image_page(page: Page):
             page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
             # first class label
-            page.get_by_text('Class: 0'),
+            page.get_by_role('heading', name='Class: 0'),
             # second class label
-            page.get_by_text('Class: 1'),
+            page.get_by_role('heading', name='Class: 1'),
     ):
         expect(selector).to_be_visible(timeout=30_000)
 
