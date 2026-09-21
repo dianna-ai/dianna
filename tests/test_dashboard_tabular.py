@@ -113,9 +113,9 @@ def test_tabular_sunshine(page: Page):
 
     time.sleep(2)
 
-    page.locator("label").filter(has_text="RISE").locator("span").click()
-    page.locator("label").filter(has_text="LIME").locator("span").click()
-    page.locator("label").filter(has_text="KernelSHAP").locator("span").click()
+    page.locator("label").filter(has_text="RISE").click()
+    page.locator("label").filter(has_text="LIME").click()
+    page.locator("label").filter(has_text="KernelSHAP").click()
     expander = page.locator("summary").filter(has_text="Click to modify RISE")
     expander.wait_for(state="visible", timeout=200_000)
     expander.click()
@@ -164,9 +164,9 @@ def test_tabular_penguin(page: Page):
 
     time.sleep(2)
 
-    page.locator("label").filter(has_text="RISE").locator("span").click(timeout=300_000)
-    page.locator("label").filter(has_text="LIME").locator("span").click(timeout=300_000)
-    page.locator("label").filter(has_text="KernelSHAP").locator("span").click(timeout=300_000)
+    page.locator("label").filter(has_text="RISE").click(timeout=300_000)
+    page.locator("label").filter(has_text="LIME").click(timeout=300_000)
+    page.locator("label").filter(has_text="KernelSHAP").click(timeout=300_000)
 
     expect(page.get_by_text("Select the input data by")).to_be_visible(timeout=300_000)
     page.locator("iframe[title*='agGrid']").scroll_into_view_if_needed()

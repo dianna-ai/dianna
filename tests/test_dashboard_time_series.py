@@ -91,8 +91,8 @@ def test_timeseries_page(page: Page):
 
     time.sleep(2)
 
-    page.locator('label').filter(has_text='LIME').locator('span').click(timeout=200_000)
-    page.locator('label').filter(has_text='RISE').locator('span').click(timeout=200_000)
+    page.locator('label').filter(has_text='LIME').click(timeout=200_000)
+    page.locator('label').filter(has_text='RISE').click(timeout=200_000)
 
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
@@ -115,7 +115,7 @@ def test_timeseries_page(page: Page):
 
     time.sleep(2)
 
-    page.locator('label').filter(has_text='RISE').locator('span').click()
+    page.locator('label').filter(has_text='RISE').click()
 
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
