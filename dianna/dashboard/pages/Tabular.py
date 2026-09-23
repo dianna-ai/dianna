@@ -220,8 +220,8 @@ for index, label in zip(top_indices, top_labels):
             else:
                 plot_relevances = relevances
 
-            fig, _ = plot_tabular(x=plot_relevances, y=kwargs['_feature_names'],
-                                  num_features=10, show_plot=False)
+            fig, _ax = plot_tabular(x=plot_relevances, y=kwargs['_feature_names'],
+                                    num_features=10, show_plot=False)
             st.pyplot(fig)
 
     # add some white space to separate rows

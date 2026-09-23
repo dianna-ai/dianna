@@ -1,6 +1,6 @@
 import heapq
 import warnings
-from typing import Iterable
+from typing import Sequence
 from typing import Union
 import numpy as np
 from numpy import ndarray
@@ -9,7 +9,7 @@ from sklearn.impute import SimpleImputer
 
 
 def generate_tabular_masks(
-    input_data_shape: tuple[int],
+    input_data_shape: tuple[int, ...],
     number_of_masks: int,
     p_keep: float = 0.5,
 ):
@@ -23,7 +23,7 @@ def generate_tabular_masks(
     Returns:
     Single array containing all masks where the first dimension represents the batch.
     """
-    instance_length = np.prod(input_data_shape)
+    instance_length = int(np.prod(input_data_shape))
 
     for i in range(number_of_masks):
         n_masked = _determine_number_masked(p_keep, instance_length)
@@ -38,7 +38,7 @@ def generate_tabular_masks(
 
 
 def generate_time_series_masks(
-    input_data_shape: tuple[int],
+    input_data_shape: tuple[int, ...],
     number_of_masks: int,
     feature_res: int = 8,
     p_keep: float = 0.5,
@@ -92,7 +92,7 @@ def generate_time_series_masks(
                           axis=0)
 
 
-def generate_channel_masks(input_data_shape: tuple[int], number_of_masks: int,
+def generate_channel_masks(input_data_shape: tuple[int, ...], number_of_masks: int,
                            p_keep: float):
     """Generate masks that mask one or multiple channels independently at a time."""
     number_of_channels = input_data_shape[1]
@@ -107,8 +107,8 @@ def generate_channel_masks(input_data_shape: tuple[int], number_of_masks: int,
     return masks
 
 
-def mask_data_tabular(data: np.array, masks: np.array, training_data: np.array,
-                      mask_type: Union[object, str]) -> np.array:
+def mask_data_tabular(data: np.ndarray, masks: np.ndarray, training_data: np.ndarray,
+                      mask_type: Union[object, str]) -> np.ndarray:
     """Mask tabular data given using a set of masks.
 
     Args:
@@ -144,7 +144,7 @@ def mask_data_tabular(data: np.array, masks: np.array, training_data: np.array,
     return strategy(data, masks, training_data)
 
 
-def mask_data(data: np.array, masks: np.array, mask_type: Union[object, str]):
+def mask_data(data: np.ndarray, masks: np.ndarray, mask_type: Union[object, str]):
     """Mask data given using a set of masks.
 
     Args:
@@ -165,7 +165,7 @@ def mask_data(data: np.array, masks: np.array, mask_type: Union[object, str]):
     return result
 
 
-def _get_mask_value(data: np.array, mask_type: object) -> int:
+def _get_mask_value(data: np.ndarray, mask_type: object) -> int:
     """Calculates a masking value of the given type for the data."""
     if callable(mask_type):
         return mask_type(data)
@@ -201,7 +201,7 @@ def _determine_number_masked(p_keep: float,
     return user_requested_steps
 
 
-def generate_time_step_masks(input_data_shape: tuple[int],
+def generate_time_step_masks(input_data_shape: tuple[int, ...],
                              number_of_masks: int, p_keep: float,
                              number_of_features: int):
     """Generate masks that mask all channels simultaneously for clusters of time steps.
@@ -248,7 +248,7 @@ def _mask_bottom_ratio(float_mask: np.ndarray, p_keep: float) -> np.ndarray:
     return flat_mask.reshape(float_mask.shape)
 
 
-def generate_interpolated_float_masks_for_image(image_shape: Iterable[int],
+def generate_interpolated_float_masks_for_image(image_shape: Sequence[int],
                                                 p_keep: float,
                                                 number_of_masks: int,
                                                 number_of_features: int):
@@ -283,7 +283,7 @@ def generate_interpolated_float_masks_for_image(image_shape: Iterable[int],
 
 
 def generate_interpolated_float_masks_for_timeseries(
-        time_series_shape: Iterable[int], number_of_masks: int,
+        time_series_shape: Sequence[int], number_of_masks: int,
         number_of_features: int) -> ndarray:
     """Generates a set of random masks to mask time-series data.
 

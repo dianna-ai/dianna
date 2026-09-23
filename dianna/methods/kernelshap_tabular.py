@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import List
 from typing import Optional
 from typing import Union
@@ -12,9 +13,9 @@ class KERNELSHAPTabular:
 
     def __init__(
         self,
-        training_data: np.array,
+        training_data: np.ndarray,
         mode: str = "classification",
-        feature_names: List[int] = None,
+        feature_names: Optional[List[str]] = None,
         training_data_kmeans: Optional[int] = None,
         silent: bool = False,
     ) -> None:
@@ -47,11 +48,11 @@ class KERNELSHAPTabular:
 
     def explain(
         self,
-        model_or_function: Union[str, callable],
-        input_tabular: np.array,
+        model_or_function: Union[str, Callable],
+        input_tabular: np.ndarray,
         link: str = "identity",
         **kwargs,
-    ) -> np.array:
+    ) -> np.ndarray:
         """Run the KernelSHAP explainer.
 
         Args:
