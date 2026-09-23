@@ -28,17 +28,7 @@ class MovieReviewsModelRunner:
 
         output = []
         for sentence in sentences:
-            # tokenize and pad to minimum length
-            tokens = self.tokenizer.tokenize(sentence.lower())
-            if len(tokens) < self.max_filter_size:
-                tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
-
-            # numericalize the tokens
-            tokens_numerical = [
-                self.keys.index(token)
-                if token in self.keys else self.keys.index('<unk>')
-                for token in tokens
-            ]
+            tokens_numerical = self.tokenize(sentence)
 
             # run the model, applying a sigmoid because the model outputs logits, remove any remaining batch axis
             pred = float(sigmoid(self.run_model([tokens_numerical])).flat[0])
@@ -52,14 +42,14 @@ class MovieReviewsModelRunner:
     def tokenize(self, sentence: str):
         """Tokenize sentence."""
         # tokenize and pad to minimum length
-        tokens = self.tokenizer.tokenize(sentence)
+        tokens = self.tokenizer.tokenize(sentence.lower())
         if len(tokens) < self.max_filter_size:
             tokens += ['<pad>'] * (self.max_filter_size - len(tokens))
 
         # numericalize the tokens
         tokens_numerical = [
-            self.vocab.stoi[token]
-            if token in self.vocab.stoi else self.vocab.stoi['<unk>']
+            self.keys.index(token)
+            if token in self.keys else self.keys.index('<unk>')
             for token in tokens
         ]
         return tokens_numerical

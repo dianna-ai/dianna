@@ -167,7 +167,7 @@ serialized_model = model.SerializeToString()
 labels = load_labels(ts_label_file)
 
 if load_example == "Scientific case - radio astronomy: Fast Radio Burst (FRB) detection":
-    choices = ('RISE',)
+    choices: tuple[str, ...] = ('RISE',)
 else:
     choices = ('RISE', 'LIME')
 
@@ -230,7 +230,7 @@ for index, label in zip(top_indices, top_labels):
             else:
                 segments = _convert_to_segments(explanation)
 
-                fig, _ = plot_timeseries(range(len(ts_data_explainer[0])), ts_data_explainer[0], segments)
+                fig = plot_timeseries(range(len(ts_data_explainer[0])), ts_data_explainer[0], segments)[0]
 
             st.pyplot(fig)
 
