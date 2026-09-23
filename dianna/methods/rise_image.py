@@ -60,22 +60,39 @@ class RISEImage:
 
         # data shape without batch axis and channel axis
         img_shape = input_data.shape[1:3]
-        # Expose masks for to make user inspection possible
-        if self.n_masks is None:
-            self.masks, self.predictions = self._generate_masks_until_converged(
-                input_data, runner, active_p_keep, batch_size)
-        else:
-            self.masks = generate_interpolated_float_masks_for_image(
-                img_shape, active_p_keep, self.n_masks, self.feature_res)
+        # A fixed n_masks is a single step, otherwise add masks until the heatmap converges
+        # (https://github.com/dianna-ai/dianna/issues/25)
+        n_masks_step = self.n_masks or 500
+        max_masks = self.n_masks or 10000
+        masks, predictions = [], []
+        saliency = 0
+        previous = None
+        for n_masks in range(n_masks_step, max_masks + 1, n_masks_step):
+            step_masks = generate_interpolated_float_masks_for_image(
+                img_shape, active_p_keep, n_masks_step, self.feature_res)
             # Make sure multiplication is being done for correct axes
-            self.predictions = make_predictions(input_data * self.masks,
+            step_predictions = make_predictions(input_data * step_masks,
                                                 runner, batch_size)
-        n_masks = len(self.masks)
+            masks.append(step_masks)
+            predictions.append(step_predictions)
+            saliency += step_predictions.T.dot(
+                step_masks.reshape(n_masks_step, -1))
+            current = saliency / n_masks
+            if previous is not None and np.linalg.norm(
+                    current - previous) <= 0.01 * np.linalg.norm(current):
+                break
+            previous = current
+        if self.n_masks is None:
+            print(
+                f'Rise parameter n_masks was automatically determined at {n_masks}'
+            )
+        # Expose masks for to make user inspection possible
+        self.masks = np.concatenate(masks)
+        self.predictions = np.concatenate(predictions)
 
         # Reshape to (n_classes, *img_shape)
-        saliency = self.predictions.T.dot(self.masks.reshape(
-            n_masks, -1)).reshape(-1, *img_shape)
-        result = normalize(saliency, n_masks, active_p_keep)
+        result = normalize(saliency.reshape(-1, *img_shape), n_masks,
+                           active_p_keep)
         if labels is not None:
             result = result[list(labels)]
         return result
@@ -102,43 +119,6 @@ class RISEImage:
             raise ValueError(
                 'When providing axis_labels it is required to provide the location'
                 ' of the channels axis')
-
-    def _generate_masks_until_converged(self,
-                                        input_data,
-                                        runner,
-                                        p_keep,
-                                        batch_size,
-                                        n_masks_step=500,
-                                        tolerance=0.01,
-                                        max_masks=10000):
-        """Adds masks in steps until the relative change of the saliency drops below tolerance.
-
-        See https://github.com/dianna-ai/dianna/issues/25.
-        """
-        img_shape = input_data.shape[1:3]
-        masks, predictions = [], []
-        saliency_sum = 0
-        previous = None
-        n_masks = 0
-        while n_masks < max_masks:
-            step_masks = generate_interpolated_float_masks_for_image(
-                img_shape, p_keep, n_masks_step, self.feature_res)
-            step_predictions = make_predictions(input_data * step_masks,
-                                                runner, batch_size)
-            masks.append(step_masks)
-            predictions.append(step_predictions)
-            saliency_sum = saliency_sum + step_predictions.T.dot(
-                step_masks.reshape(n_masks_step, -1))
-            n_masks += n_masks_step
-            current = saliency_sum / n_masks
-            if previous is not None and np.linalg.norm(
-                    current - previous) <= tolerance * np.linalg.norm(current):
-                break
-            previous = current
-        print(
-            f'Rise parameter n_masks was automatically determined at {n_masks}'
-        )
-        return np.concatenate(masks), np.concatenate(predictions)
 
     def _determine_p_keep(self, input_data, runner, n_masks=100):
         """See n_mask default value https://github.com/dianna-ai/dianna/issues/24#issuecomment-1000152233."""
