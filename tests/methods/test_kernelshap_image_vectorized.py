@@ -3,11 +3,11 @@ import numpy as np
 import pytest
 import skimage.segmentation
 from dianna.methods.kernelshap_image import KERNELSHAPImage
-from dianna.methods.kernelshap_image import _create_heatemaps
+from dianna.methods.kernelshap_image import _create_heatmaps
 
 
-def _create_heatemaps_loop(shap_values_list, image_segments):
-    """Original (non-vectorized) implementation of _create_heatemaps."""
+def _create_heatmaps_loop(shap_values_list, image_segments):
+    """Original (non-vectorized) implementation of _create_heatmaps."""
     per_class_values = np.asarray(shap_values_list)[0].T
     heat_maps = np.zeros((per_class_values.shape[0], *image_segments.shape))
     for i, shap_values_for_class in enumerate(per_class_values):
@@ -56,8 +56,8 @@ def test_create_heatmaps_matches_loop(shape, n_segments, n_classes):
     shap_values = rng.normal(size=(1, np.unique(segments).size, n_classes))
 
     np.testing.assert_array_equal(
-        _create_heatemaps(shap_values, segments),
-        _create_heatemaps_loop(shap_values, segments))
+        _create_heatmaps(shap_values, segments),
+        _create_heatmaps_loop(shap_values, segments))
 
 
 @pytest.mark.parametrize('shape', [(28, 28, 1), (64, 48, 3)])
