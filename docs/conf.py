@@ -15,6 +15,22 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+# -- Tutorials ---------------------------------------------------------------
+
+# Generate an nblink file in docs/tutorials for every tutorial notebook, so
+# adding a notebook to tutorials/ is enough to have it show up in the docs.
+import json  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+_docs = Path(__file__).parent
+(_docs / 'tutorials').mkdir(exist_ok=True)
+for _nb in (_docs.parent / 'tutorials').rglob('*.ipynb'):
+    if '.ipynb_checkpoints' in _nb.parts:
+        continue
+    _name = '0-overview' if _nb.stem == 'overview' else _nb.stem
+    (_docs / 'tutorials' / f'{_name}.nblink').write_text(
+        json.dumps({'path': f'../../{_nb.relative_to(_docs.parent).as_posix()}'}, indent=4))
+
 # -- Project information -----------------------------------------------------
 
 project = u'dianna'
