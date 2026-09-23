@@ -1,5 +1,6 @@
 """LIME tabular explainer."""
 import sys
+from typing import Callable
 from typing import Iterable
 from typing import List
 from typing import Optional
@@ -14,16 +15,16 @@ class LIMETabular:
 
     def __init__(
         self,
-        training_data: np.array,
+        training_data: np.ndarray,
         mode: str = "classification",
-        feature_names: List[int] = None,
-        categorical_features: List[int] = None,
+        feature_names: Optional[List[str]] = None,
+        categorical_features: Optional[List[int]] = None,
         kernel_width: int = 25,
-        kernel: callable = None,
+        kernel: Optional[Callable] = None,
         verbose: bool = False,
-        class_names: List[str] = None,
+        class_names: Optional[List[str]] = None,
         feature_selection: str = "auto",
-        random_state: int = None,
+        random_state: Optional[int] = None,
         **kwargs,
     ) -> None:
         """Initializes Lime explainer.
@@ -64,7 +65,7 @@ class LIMETabular:
 
         # temporary solution for setting num_features and top_labels
         # when fixed, also fix in dashboard Tabular.py -> _feature_names
-        self.num_features = len(feature_names)
+        self.num_features = len(feature_names) if feature_names else training_data.shape[1]
 
         self.explainer = LimeTabularExplainer(
             training_data,
@@ -82,12 +83,12 @@ class LIMETabular:
 
     def explain(
         self,
-        model_or_function: Union[str, callable],
-        input_tabular: np.array,
+        model_or_function: Union[str, Callable],
+        input_tabular: np.ndarray,
         labels: Optional[Iterable[int]] = None,
         num_samples: int = 5000,
         **kwargs,
-    ) -> np.array:
+    ) -> np.ndarray:
         """Run the LIME explainer.
 
         Args:
