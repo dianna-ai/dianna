@@ -25,7 +25,7 @@ def _mask_image_loop(features,
                      background=None,
                      channels_axis_index=2,
                      datatype=np.float32):
-    """Original (non-vectorized) implementation of KERNELSHAPImage._mask_image."""
+    """Original (non-vectorized) implementation of KERNELSHAPImage._mask_image, with the segment offset fixed."""
     if background is None:
         background = image.mean(axis=(0, 1))
     out = np.zeros(
@@ -34,7 +34,7 @@ def _mask_image_loop(features,
         out[i] = image
         for j in range(features.shape[1]):
             if features[i, j] == 0:
-                out[i][segmentation == j, :] = background
+                out[i][segmentation == j + 1, :] = background
     if channels_axis_index != 2:
         out = np.transpose(out, (0, 3, 1, 2))
     return out.astype(datatype)
@@ -55,9 +55,8 @@ def test_create_heatmaps_matches_loop(shape, n_segments, n_classes):
     segments = _segments(rng.random(shape), n_segments)
     shap_values = rng.normal(size=(1, np.unique(segments).size, n_classes))
 
-    np.testing.assert_array_equal(
-        _create_heatmaps(shap_values, segments),
-        _create_heatmaps_loop(shap_values, segments))
+    np.testing.assert_array_equal(_create_heatmaps(shap_values, segments),
+                                  _create_heatmaps_loop(shap_values, segments))
 
 
 @pytest.mark.parametrize('shape', [(28, 28, 1), (64, 48, 3)])
@@ -75,3 +74,14 @@ def test_mask_image_matches_loop(shape, background, channels_axis_index):
                                       channels_axis_index),
         _mask_image_loop(features, segments, image, background,
                          channels_axis_index))
+
+
+def test_mask_image_feature_masks_matching_segment():
+    """Feature j masks segment label j + 1, the same mapping _create_heatmaps uses."""
+    segments = np.array([[1, 1, 2, 2], [3, 3, 4, 4]])
+    features = np.ones(
+        (4, 4)) - np.eye(4)  # sample j switches off only feature j
+    masked = KERNELSHAPImage()._mask_image(features, segments,
+                                           np.ones((2, 4, 1)), 0)[..., 0]
+    for j in range(4):
+        np.testing.assert_array_equal(masked[j] == 0, segments == j + 1)

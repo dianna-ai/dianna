@@ -193,13 +193,10 @@ class KERNELSHAPImage:
         if background is None:
             background = image.mean(axis=(0, 1))
 
-        # hidden[i, label] is True when feature `label` is off in sample i;
-        # labels beyond the feature count are never hidden
-        n_labels = max(segmentation.max() + 1, features.shape[1])
-        hidden = np.zeros((features.shape[0], n_labels), dtype=bool)
-        hidden[:, :features.shape[1]] = features == 0
+        # segment labels start at 1, so label k is hidden when feature k - 1 is off
+        hidden = features == 0
         # cast before selecting so the (large) output is allocated once, in the target dtype
-        out = np.where(hidden[:, segmentation, np.newaxis],
+        out = np.where(hidden[:, segmentation - 1, np.newaxis],
                        np.asarray(background).astype(datatype),
                        image.astype(datatype))
 
