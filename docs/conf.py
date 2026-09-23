@@ -38,10 +38,25 @@ _tutorial_order = [
     'explainers/LIME/lime_text_eulaw.ipynb',
     'explainers/RISE/rise_tabular_penguin.ipynb',
 ]
+# Notebooks that are left out of the docs.
+_tutorial_exclude = [
+    'conversion_onnx/keras2onnx.ipynb',
+    'conversion_onnx/pytorch2onnx.ipynb',
+    'conversion_onnx/skl2onnx.ipynb',
+    'conversion_onnx/tensorflow2onnx.ipynb',
+    'explainers/KernelSHAP/kernelshap_tabular_land_atmosphere.ipynb',
+    'explainers/KernelSHAP/kernelshap_tabular_penguin.ipynb',
+    'explainers/LIME/lime_tabular_weather.ipynb',
+    'explainers/LIME/lime_text.ipynb',
+    'explainers/LIME/lime_timeseries_coffee.ipynb',
+    'explainers/RISE/rise_mnist.ipynb',
+    'explainers/RISE/rise_timeseries_weather.ipynb',
+]
 _docs = Path(__file__).parent
 _tutorials = _docs.parent / 'tutorials'
 _notebooks = sorted(nb.relative_to(_tutorials).as_posix() for nb in _tutorials.rglob('*.ipynb')
                     if '.ipynb_checkpoints' not in nb.parts)
+_notebooks = [nb for nb in _notebooks if nb not in _tutorial_exclude]
 _notebooks = [nb for nb in _tutorial_order if nb in _notebooks] + [nb for nb in _notebooks if nb not in _tutorial_order]
 (_docs / 'tutorials').mkdir(exist_ok=True)
 for _nblink in (_docs / 'tutorials').glob('*.nblink'):
