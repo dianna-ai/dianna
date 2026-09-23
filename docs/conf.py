@@ -19,17 +19,36 @@
 
 # Generate an nblink file in docs/tutorials for every tutorial notebook, so
 # adding a notebook to tutorials/ is enough to have it show up in the docs.
+# Notebooks listed in _tutorial_order come first, in that order; any others
+# follow alphabetically. The number prefix sets the order in the toctree.
 import json  # noqa: E402
 from pathlib import Path  # noqa: E402
 
+_tutorial_order = [
+    'overview.ipynb',
+    'explainers/LIME/lime_images.ipynb',
+    'explainers/LIME/lime_tabular_penguin.ipynb',
+    'explainers/LIME/lime_timeseries_weather.ipynb',
+    'explainers/KernelSHAP/kernelshap_mnist.ipynb',
+    'explainers/KernelSHAP/kernelshap_geometric_shapes.ipynb',
+    'explainers/KernelSHAP/kernelshap_tabular_weather.ipynb',
+    'explainers/RISE/rise_text.ipynb',
+    'explainers/RISE/rise_imagenet.ipynb',
+    'explainers/RISE/rise_timeseries_frb.ipynb',
+    'explainers/LIME/lime_text_eulaw.ipynb',
+    'explainers/RISE/rise_tabular_penguin.ipynb',
+]
 _docs = Path(__file__).parent
+_tutorials = _docs.parent / 'tutorials'
+_notebooks = sorted(nb.relative_to(_tutorials).as_posix() for nb in _tutorials.rglob('*.ipynb')
+                    if '.ipynb_checkpoints' not in nb.parts)
+_notebooks = [nb for nb in _tutorial_order if nb in _notebooks] + [nb for nb in _notebooks if nb not in _tutorial_order]
 (_docs / 'tutorials').mkdir(exist_ok=True)
-for _nb in (_docs.parent / 'tutorials').rglob('*.ipynb'):
-    if '.ipynb_checkpoints' in _nb.parts:
-        continue
-    _name = '0-overview' if _nb.stem == 'overview' else _nb.stem
-    (_docs / 'tutorials' / f'{_name}.nblink').write_text(
-        json.dumps({'path': f'../../{_nb.relative_to(_docs.parent).as_posix()}'}, indent=4))
+for _nblink in (_docs / 'tutorials').glob('*.nblink'):
+    _nblink.unlink()  # drop links to renamed/removed notebooks
+for _i, _nb in enumerate(_notebooks):
+    (_docs / 'tutorials' / f'{_i:02d}-{Path(_nb).stem}.nblink').write_text(
+        json.dumps({'path': f'../../tutorials/{_nb}'}, indent=4))
 
 # -- Project information -----------------------------------------------------
 
