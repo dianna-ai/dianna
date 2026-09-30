@@ -80,9 +80,6 @@ def explain_image(model_or_function: Union[Callable,
         np.ndarray: An array containing the heat maps for each class.
 
     """
-    if method.upper() == 'KERNELSHAP':
-        # To avoid Access Violation on Windows with SHAP:
-        import onnxruntime  # noqa: F401
     explainer = _get_explainer(method, kwargs, modality='Image')
     explain_image_kwargs = utils.get_kwargs_applicable_to_function(
         explainer.explain, kwargs)
