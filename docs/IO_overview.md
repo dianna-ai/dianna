@@ -39,7 +39,7 @@ Each view provides links to related parts in the documentation API.
 | [rise_image]         |  input_image       | np.ndarray         |  RGB          |
 | [lime_image]         |  input_data        | np.ndarray         |  RGB          |
 | [kernelshap_image]   |  image             | np.ndarray         |  RGB          |
-| [visualization.image]|  heatmap           |      -             |               |
+| [visualization.image]|  relevances        |      -             |               |
 
 
 | Output               | Name                 | Type                     | value range           |
@@ -162,7 +162,7 @@ numbers and strings that should be returned.
 | Input                     | Name               | Type                  | Dims/shape |
 | :-------------------      | :----------------: | :------------------:  | :----:     |
 | [visualization.timeseries]|  x,y               | np.ndarray            | x shape (number of time_steps), y shape (number_of_time_steps, number_of_channels) |
-| [visualization.image]     |  heatmap           |                       |            |
+| [visualization.image]     |  relevances        |                       |            |
 | [visualization.text]      |  explanation       | list of tuples        |            |
 | [visualization.tabular]   |  x,y               | np.ndarray, List(str) |            |
 

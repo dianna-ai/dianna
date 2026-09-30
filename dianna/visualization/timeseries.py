@@ -7,8 +7,10 @@ from typing import Union
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
+from dianna.utils.misc import renamed_kwargs
 
 
+@renamed_kwargs(heatmap_range='relevances_range')
 def plot_timeseries(
         x: np.ndarray,
         y: np.ndarray,
@@ -18,7 +20,7 @@ def plot_timeseries(
         cmap: Optional[str] = 'bwr',
         show_plot: Optional[bool] = True,
         output_filename: Optional[str] = None,
-        heatmap_range=(-1, 1),
+        relevances_range=(-1, 1),
 ) -> plt.Figure:
     """Plot timeseries with segments highlighted.
 
@@ -37,7 +39,7 @@ def plot_timeseries(
             plots to disk instead).
         output_filename (str, optional): Name of the file to save
             the plot to (optional).
-        heatmap_range (tuple, optional): a tuple (vmin, vmax) to set the range of the heatmap.
+        relevances_range (tuple, optional): a tuple (vmin, vmax) to set the range of the relevance scores.
 
     Returns:
         plt.Figure
@@ -51,7 +53,7 @@ def plot_timeseries(
         current_ax.set_ylabel(y_label_current)
         current_ax.label_outer()
 
-    _draw_segments(axs, cmap, segments, heatmap_range)
+    _draw_segments(axs, cmap, segments, relevances_range)
 
     if not show_plot:
         plt.close()
@@ -62,8 +64,8 @@ def plot_timeseries(
     return fig, axs
 
 
-def _draw_segments(axs, cmap, segments, heatmap_range):
-    vmin, vmax = heatmap_range
+def _draw_segments(axs, cmap, segments, relevances_range):
+    vmin, vmax = relevances_range
     cmap = plt.get_cmap(cmap)
     norm = plt.Normalize(vmin, vmax)
     for segment in segments:

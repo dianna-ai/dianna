@@ -127,11 +127,11 @@ class TestHighlightText:
         assert ax.texts[4].get_text() == "!"
 
     def test_highlight_text_with_range(self):
-        """Test highlight text with heatmap range."""
+        """Test highlight text with relevances range."""
         explanation = [("Hello", 0, 0.5), ("world", 1, -0.5)]
 
         fig, ax = highlight_text(explanation=explanation,
-                                heatmap_range=(0, 1))
+                                relevances_range=(0, 1))
 
         assert fig is not None
         assert ax is not None
@@ -164,3 +164,13 @@ class TestHighlightText:
 
         assert fig is not None
         assert ax is not None
+
+
+def test_deprecated_heatmap_kwargs():
+    """Old heatmap_* keyword names still work, with a FutureWarning."""
+    from dianna.visualization import plot_image
+    with pytest.warns(FutureWarning, match='relevances_range'):
+        fig, _ = plot_image(heatmap=np.zeros((2, 2)), heatmap_range=(0, 1), show_plot=False)
+    assert fig.axes[-1].get_ylim() == (0, 1)
+    with pytest.raises(TypeError):
+        plot_image(np.zeros((2, 2)), heatmap_range=(0, 1), relevances_range=(0, 1), show_plot=False)

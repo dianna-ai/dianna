@@ -10,13 +10,13 @@ def test_common_RISE_image_pipeline():  # noqa: N802 ignore case
     axis_labels = {-1: 'channels'}
     labels = [0, 1]
 
-    heatmap = dianna.explain_image(get_dummy_model_function(n_outputs=2),
+    relevances = dianna.explain_image(get_dummy_model_function(n_outputs=2),
                                    input_image,
                                    'RISE',
                                    labels,
                                    axis_labels=axis_labels)[0]
-    dianna.visualization.plot_image(heatmap, show_plot=False)
-    dianna.visualization.plot_image(heatmap,
+    dianna.visualization.plot_image(relevances, show_plot=False)
+    dianna.visualization.plot_image(relevances,
                                     original_data=input_image[0],
                                     show_plot=False)
 
@@ -26,20 +26,20 @@ def test_common_RISE_timeseries_pipeline():  # noqa: N802 ignore case
     input_timeseries = np.random.random((31, 1))
     labels = [0]
 
-    heatmap = dianna.explain_timeseries(get_dummy_model_function(n_outputs=2),
+    relevances = dianna.explain_timeseries(get_dummy_model_function(n_outputs=2),
                                         input_timeseries, 'RISE', labels)[0]
     segments = []
-    for channel_number in range(heatmap.shape[1]):
-        heatmap_channel = heatmap[:, channel_number]
-        for i in range(len(heatmap_channel) - 1):
+    for channel_number in range(relevances.shape[1]):
+        relevances_channel = relevances[:, channel_number]
+        for i in range(len(relevances_channel) - 1):
             segments.append({
                 'index': i,
                 'start': i,
                 'stop': i + 1,
-                'weight': heatmap_channel[i],
+                'weight': relevances_channel[i],
                 'channel': channel_number
             })
-    r = range(len(heatmap_channel))
+    r = range(len(relevances_channel))
 
     dianna.visualization.plot_timeseries(r,
                                          input_timeseries,

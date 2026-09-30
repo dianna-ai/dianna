@@ -1,6 +1,7 @@
 from typing import Optional
 import matplotlib.pyplot as plt
 import numpy as np
+from dianna.utils.misc import renamed_kwargs
 
 
 def _determine_vmax(max_data_value):
@@ -12,30 +13,30 @@ def _determine_vmax(max_data_value):
     return vmax
 
 
-def plot_image(heatmap: np.ndarray,
+@renamed_kwargs(heatmap='relevances', heatmap_cmap='relevances_cmap', heatmap_range='relevances_range')
+def plot_image(relevances: np.ndarray,
                original_data: Optional[np.ndarray] = None,
-               heatmap_cmap='bwr',
-               heatmap_range=(None, None),  # (vmin, vmax)
+               relevances_cmap='bwr',
+               relevances_range=(None, None),  # (vmin, vmax)
                data_cmap=None,
                show_plot: bool = True,
                output_filename=None,
                ax: Optional[plt.Axes] = None,
 ) -> plt.Figure:
-    """Plots a heatmap image.
+    """Plots the relevance scores of an image explanation as a heatmap.
 
-    Optionally, the heatmap (typically a saliency map of an explainer) can be
-    plotted on top of the original data. In that case both images are plotted
+    Optionally, the heatmap can be plotted on top of the original data. In that case both images are plotted
     transparantly with alpha = 0.5.
 
     Args:
-        heatmap: the saliency map or other heatmap to be plotted.
-        original_data: the data to plot together with the heatmap, both with
+        relevances: the relevance scores (e.g. the output of an explainer) to be plotted.
+        original_data: the data to plot together with the relevances, both with
                        alpha = 0.5 (optional).
-        heatmap_cmap: color map for the heatmap plot (see mpl.Axes.imshow
-                      documentation for options).
-        heatmap_range: a tuple (vmin, vmax) to set the range of the heatmap.
-                    By default, the colormap covers the complete value range of
-                    the supplied heatmap.
+        relevances_cmap: color map for the heatmap plot (see mpl.Axes.imshow
+                         documentation for options).
+        relevances_range: a tuple (vmin, vmax) to set the range of the heatmap.
+                          By default, the colormap covers the complete value range of
+                          the supplied relevances.
         data_cmap: color map for the (optional) data image (see mpl.Axes.imshow
                    documentation for options). By default, if the image is two
                    dimensional, the color map is set to 'gray'.
@@ -66,11 +67,11 @@ def plot_image(heatmap: np.ndarray,
                   vmax=_determine_vmax(original_data.max()))
         alpha = .5
 
-    vmin, vmax = heatmap_range
-    cax = ax.imshow(heatmap,
+    vmin, vmax = relevances_range
+    cax = ax.imshow(relevances,
                     vmin=vmin,
                     vmax=vmax,
-                    cmap=heatmap_cmap,
+                    cmap=relevances_cmap,
                     alpha=alpha)
     fig.colorbar(cax)
     ax.tick_params(bottom=False,

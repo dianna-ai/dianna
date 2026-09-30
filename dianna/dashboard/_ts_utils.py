@@ -15,9 +15,9 @@ def _convert_to_segments(explanation):
         zero_to_one = (data - np.min(data)) / (np.max(data) - np.min(data))
         return 2 * zero_to_one - 1
 
-    heatmap_channel = normalize(explanation[0])
+    relevances_channel = normalize(explanation[0])
     segments = []
-    for i, val in enumerate(heatmap_channel):
+    for i, val in enumerate(relevances_channel):
         segments.append({
             'index': i,
             'start': i - 0.5,

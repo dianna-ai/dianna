@@ -177,11 +177,11 @@ for index, label in zip(top_indices, top_labels):
 
         with col:
             with st.spinner(f'Running {method}'):
-                heatmap = func(serialized_model, image, index, **kwargs)
+                relevances = func(serialized_model, image, index, **kwargs)
 
-            fig, _ = plot_image(heatmap,
+            fig, _ = plot_image(relevances,
                                 original_data=original_data,
-                                heatmap_cmap='bwr',
+                                relevances_cmap='bwr',
                                 show_plot=False)
 
             st.pyplot(fig)
