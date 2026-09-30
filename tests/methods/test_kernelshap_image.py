@@ -75,3 +75,14 @@ class ShapOnImages(TestCase):
         assert heatmaps[0].shape[0] == input_data.shape[1]
         assert heatmaps[0].shape[1] == input_data.shape[2]
         assert heatmaps.shape[0] == len(labels)
+
+    def test_shap_explain_image_with_function(self):
+        """Tests Kernelshap accepts a model runner function instead of an ONNX path."""
+        from dianna.utils.onnx_runner import SimpleModelRunner
+        input_data = np.random.random((1, 28, 28))
+        runner = SimpleModelRunner("./tests/test_data/mnist_model.onnx")
+        labels = [0]
+
+        heatmaps = KERNELSHAPImage().explain(runner, input_data, labels, nsamples=100, background=0, n_segments=50)
+
+        assert heatmaps.shape == (len(labels), *input_data.shape[1:])

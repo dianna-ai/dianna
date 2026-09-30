@@ -70,7 +70,8 @@ class KERNELSHAPImage:
         The model will be called with the function of image segmentation.
 
         Args:
-            model_or_function (str): The path to a ONNX model on disk.
+            model_or_function (callable or str): The function that runs the model to be explained _or_
+                                                 the path to a ONNX model on disk.
             input_data (np.ndarray): Data to be explained. It is mandatory to only
                                      provide a single example as input. This is because
                                      KernelShap is generally used for sample-based
@@ -103,16 +104,19 @@ class KERNELSHAPImage:
         Returns:
             Explanation heatmap of Shapley values for each class (np.ndarray).
         """
-        self.onnx_model, self.input_node_name, self.input_node_dtype,\
-            self.output_node = utils.onnx_model_node_loader(model_or_function)
+        if callable(model_or_function):
+            self.input_node_dtype = np.float32
+            self.model = model_or_function
+        else:
+            onnx_model, input_node_name, self.input_node_dtype, \
+                output_node = utils.onnx_model_node_loader(model_or_function)
+            # create onnxruntime session once for efficient repeated inference
+            import onnxruntime as rt  # pylint: disable=import-outside-toplevel
+            onnx_session = rt.InferenceSession(onnx_model.SerializeToString())
+            self.model = lambda x: onnx_session.run([output_node], {input_node_name: x})[0]
         self.labels = labels
         self.input_data = self._prepare_image_data(input_data)
         self.background = background
-
-        # create onnxruntime session once for efficient repeated inference
-        import onnxruntime as rt  # pylint: disable=import-outside-toplevel
-        self.onnx_session = rt.InferenceSession(
-            self.onnx_model.SerializeToString())
 
         # other keyword arguments for the method segment_image
         slic_kwargs = utils.get_kwargs_applicable_to_function(
@@ -221,9 +225,7 @@ class KERNELSHAPImage:
                                        self.input_node_dtype)
         if self.preprocess_function is not None:
             model_input = self.preprocess_function(model_input)
-        return self.onnx_session.run(
-            [self.output_node],
-            {self.input_node_name: model_input})[0]
+        return self.model(model_input)
 
 
 def _create_heatemaps(shap_values_list, image_segments):
