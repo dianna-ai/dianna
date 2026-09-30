@@ -1,4 +1,6 @@
 from typing import Optional
+from typing import Tuple
+from typing import cast
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -20,7 +22,7 @@ def plot_image(heatmap: np.ndarray,
                show_plot: bool = True,
                output_filename=None,
                ax: Optional[plt.Axes] = None,
-) -> plt.Figure:
+) -> Tuple[plt.Figure, plt.Axes]:
     """Plots a heatmap image.
 
     Optionally, the heatmap (typically a saliency map of an explainer) can be
@@ -45,16 +47,16 @@ def plot_image(heatmap: np.ndarray,
         ax: matplotlib.Axes object to plot on (optional).
 
     Returns:
-        None
+        The figure and axes that were plotted on.
     """
     # default cmap depends on shape: grayscale or colour
 
     if ax is None:
         fig, ax = plt.subplots()
     else:
-        fig = ax.get_figure()
+        fig = cast(plt.Figure, ax.figure)  # a SubFigure only if the caller plots into one
 
-    alpha = 1
+    alpha = 1.0
     if original_data is not None:
         if len(original_data.shape) == 2 and data_cmap is None:
             # 2D array, grayscale

@@ -6,7 +6,6 @@ import pandas as pd
 import torch
 import xgboost
 from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import AutoModel
 from transformers import AutoTokenizer
@@ -107,8 +106,8 @@ def features_eulaw(texts: list[str], model_tag="law-ai/InLegalBERT"):
         sentence_features = last_hidden_states.mean(dim=1)
         return sentence_features
 
-    dataloader = DataLoader(texts, batch_size=1)  # batch size of 1 was quickest for my development
-    features = [process_batch(batch) for batch in tqdm(dataloader, desc='Creating features')]
+    # batch size of 1 was quickest for my development
+    features = [process_batch([text]) for text in tqdm(texts, desc='Creating features')]
     return np.array(torch.cat(features, dim=0))
 
 

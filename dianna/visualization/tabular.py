@@ -1,6 +1,8 @@
 """Visualization module for tabular data."""
 from typing import List
 from typing import Optional
+from typing import Tuple
+from typing import cast
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -14,7 +16,7 @@ def plot_tabular(
     show_plot: Optional[bool] = True,
     output_filename: Optional[str] = None,
     ax: Optional[plt.Axes] = None,
-) -> plt.Figure:
+) -> Tuple[plt.Figure, plt.Axes]:
     """Plot feature importance with segments highlighted.
 
     Args:
@@ -30,7 +32,7 @@ def plot_tabular(
         ax (matplotlib.Axes, optional): externally created canvas to plot on.
 
     Returns:
-        plt.Figure
+        The figure and axes that were plotted on.
     """
     # check type and shape of x should be 1D array
     if not isinstance(x, np.ndarray):
@@ -49,7 +51,7 @@ def plot_tabular(
     if ax is None:
         fig, ax = plt.subplots()
     else:
-        fig = ax.get_figure()
+        fig = cast(plt.Figure, ax.figure)  # a SubFigure only if the caller plots into one
     colors = ["r" if x >= 0 else "b" for x in top_values]
     ax.barh(top_features, top_values, color=colors)
     ax.set_xlabel(x_label)

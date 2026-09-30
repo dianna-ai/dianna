@@ -1,4 +1,5 @@
 """RISE tabular explainer."""
+from typing import Callable
 from typing import Iterable
 from typing import List
 from typing import Optional
@@ -16,19 +17,19 @@ class RISETabular:
 
     def __init__(
         self,
-        training_data: np.array,
+        training_data: np.ndarray,
         mode: str = "classification",
-        feature_names: List[str] = None,
-        categorical_features: List[int] = None,
+        feature_names: Optional[List[str]] = None,
+        categorical_features: Optional[List[int]] = None,
         n_masks: int = 1000,
         feature_res: int = 8,
         p_keep: float = 0.5,
-        preprocess_function: Optional[callable] = None,
+        preprocess_function: Optional[Callable] = None,
         class_names=None,
         keep_masks: bool = False,
         keep_masked: bool = False,
         keep_predictions: bool = False,
-    ) -> np.ndarray:
+    ) -> None:
         """RISE initializer.
 
         Args:
@@ -50,9 +51,9 @@ class RISETabular:
         self.feature_res = feature_res
         self.p_keep = p_keep
         self.preprocess_function = preprocess_function
-        self.masks = None
-        self.masked = None
-        self.predictions = None
+        self.masks: Optional[np.ndarray] = None
+        self.masked: Optional[np.ndarray] = None
+        self.predictions: Optional[np.ndarray] = None
         self.keep_masks = keep_masks
         self.keep_masked = keep_masked
         self.keep_predictions = keep_predictions
@@ -60,12 +61,12 @@ class RISETabular:
 
     def explain(
         self,
-        model_or_function: Union[str, callable],
-        input_tabular: np.array,
+        model_or_function: Union[str, Callable],
+        input_tabular: np.ndarray,
         labels: Optional[Iterable[int]] = None,
-        mask_type: Optional[Union[str, callable]] = 'most_frequent',
+        mask_type: Optional[Union[str, Callable]] = 'most_frequent',
         batch_size: Optional[int] = 100,
-    ) -> np.array:
+    ) -> np.ndarray:
         """Run the RISE explainer.
 
         Args:

@@ -156,7 +156,7 @@ if input_type is None:
 
 if load_example == 'Nature of EU laws':
     labels = ['constitutive', 'regulatory']
-    choices = ('LIME',)
+    choices: tuple[str, ...] = ('LIME',)
 
 else:
     labels = load_labels(text_label_file)

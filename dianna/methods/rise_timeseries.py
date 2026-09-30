@@ -1,5 +1,5 @@
+from typing import Callable
 from typing import Optional
-import numpy as np
 from dianna import utils
 from dianna.utils.maskers import generate_time_series_masks
 from dianna.utils.maskers import mask_data
@@ -15,11 +15,11 @@ class RISETimeseries:
         n_masks: int = 1000,
         feature_res: int = 8,
         p_keep: float = 0.5,
-        preprocess_function: Optional[callable] = None,
+        preprocess_function: Optional[Callable] = None,
         keep_masks: bool = False,
         keep_masked_data: bool = False,
         keep_predictions: bool = False,
-    ) -> np.ndarray:
+    ) -> None:
         """RISE initializer.
 
         Args:

@@ -74,3 +74,8 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 known-first-party = ["dianna"]
 force-single-line = true
 no-lines-before = ["future","standard-library","third-party","first-party","local-folder"]
+
+[tool.mypy]
+files = ["dianna", "tests"]
+# most dependencies (lime, shap, onnxruntime, ...) ship without type stubs
+ignore_missing_imports = true

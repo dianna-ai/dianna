@@ -102,18 +102,18 @@ else:
     # Make sure that all variables are reset when switching page
     if selected != 'Images':
         for k in st.session_state.keys():
-            if 'Image' in k:
+            if 'Image' in str(k):
                 st.session_state.pop(k, None)
     if selected != 'Tabular':
         for k in st.session_state.keys():
-            if 'Tabular' in k:
+            if 'Tabular' in str(k):
                 st.session_state.pop(k, None)
     if selected != 'Text':
         for k in st.session_state.keys():
-            if 'Text' in k:
+            if 'Text' in str(k):
                 st.session_state.pop(k, None)
     if selected != 'Time series':
         for k in st.session_state.keys():
-            if 'TS' in k:
+            if 'TS' in str(k):
                 st.session_state.pop(k, None)
     page = importlib.import_module(page_module)

@@ -173,7 +173,7 @@ class LIMEImage:
             return moveaxis_function
         return lambda data: self.preprocess_function(moveaxis_function(data))
 
-    def _get_explanation_values(self, label: int, explanation: ImageExplanation) -> np.array:
+    def _get_explanation_values(self, label: int, explanation: ImageExplanation) -> np.ndarray:
         """Get the importance scores from LIME in a salience map.
 
         Leverages the `ImageExplanation` class from LIME to generate salience maps.

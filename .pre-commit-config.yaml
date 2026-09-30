@@ -22,12 +22,18 @@ repos:
       - id: yapf
         additional_dependencies:
           - toml
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.0.264'
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: 'v0.16.8'
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: [--fix]
-  # - repo: https://github.com/pre-commit/mirrors-mypy
-  #   rev: 'v1.1.1'
-  #   hooks:
-  #     - id: mypy
+        types_or: [python, pyi]  # skip notebooks, like CI
+  # mypy runs from the dev environment (`pip install -e .[dev]`) so it sees the real dependencies
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        types: [python]
+        pass_filenames: false
