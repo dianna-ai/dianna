@@ -66,3 +66,17 @@ class RiseOnImages(TestCase):
                                                get_function(model_filename))
 
         assert np.isclose(p_keep, expected_p_exact_keep)
+
+    @staticmethod
+    def test_rise_determine_n_masks_for_images():
+        """Tests that the default n_masks adds masks until converged and stops before the cap."""
+        np.random.seed(0)
+        model_filename = "tests/test_data/mnist_model.onnx"
+        data = get_mnist_1_data().astype(np.float32)[0]
+        explainer = RISEImage(p_keep=0.5)
+
+        heatmaps = explainer.explain(model_filename, data, labels=[1])
+
+        assert heatmaps[0].shape == data.shape[1:]
+        assert 1000 <= len(explainer.masks) < 10000
+        assert len(explainer.predictions) == len(explainer.masks)
