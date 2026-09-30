@@ -1,3 +1,4 @@
+import functools
 import inspect
 import warnings
 from pathlib import Path
@@ -182,3 +183,27 @@ def locate_channels_axis(data_shape):
         f' to be {channels_axis_index}. Use the axis_labels to manually specify the index of'
         f' the channels axis if this is incorrect.')
     return channels_axis_index
+
+
+def renamed_kwargs(**renames):
+    """Decorator that keeps accepting deprecated keyword argument names.
+
+    Args:
+        renames: mapping of old keyword name to new keyword name.
+    """
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for old, new in renames.items():
+                if old in kwargs:
+                    if new in kwargs:
+                        raise TypeError(f'{func.__name__}() got both {old!r} and {new!r}')
+                    warnings.warn(f'{func.__name__}(): {old!r} is deprecated, use {new!r} instead.',
+                                  FutureWarning,
+                                  stacklevel=2)
+                    kwargs[new] = kwargs.pop(old)
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator

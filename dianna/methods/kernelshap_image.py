@@ -101,7 +101,7 @@ class KERNELSHAPImage:
         https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.slic
 
         Returns:
-            Explanation heatmap of Shapley values for each class (np.ndarray).
+            Relevance scores (Shapley values) for each class (np.ndarray).
         """
         self.onnx_model, self.input_node_name, self.input_node_dtype,\
             self.output_node = utils.onnx_model_node_loader(model_or_function)
@@ -135,13 +135,13 @@ class KERNELSHAPImage:
                 (len(self.labels), n_segments)),
                                                      nsamples=nsamples)
 
-        # create heat_maps where shape is (n_classes, *image_segments.shape)
-        heat_maps = _create_heatmaps(shap_values_list, self.image_segments)
+        # create relevances where shape is (n_classes, *image_segments.shape)
+        relevances = _create_relevances(shap_values_list, self.image_segments)
 
         if labels is not None:
-            heat_maps = heat_maps[list(labels)]
+            relevances = relevances[list(labels)]
 
-        return heat_maps
+        return relevances
 
     def _prepare_image_data(self, input_data):
         """Transforms the data to be of the shape and type KernelSHAP expects.
@@ -223,10 +223,10 @@ class KERNELSHAPImage:
                                      {self.input_node_name: model_input})[0]
 
 
-def _create_heatmaps(shap_values_list, image_segments):
-    """Create heatmaps from the shap values and the image segments.
+def _create_relevances(shap_values_list, image_segments):
+    """Create relevance scores from the shap values and the image segments.
 
-    The final heatmaps has a shape of (n_classes, *image_segments.shape).
+    The result has a shape of (n_classes, *image_segments.shape).
     """
     # shap 0.46+ returns an array of shape (n_samples, n_features, n_classes).
     # Take sample 0 and transpose to (n_classes, n_features/n_segments).
