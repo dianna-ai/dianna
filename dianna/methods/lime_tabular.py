@@ -65,7 +65,7 @@ class LIMETabular:
 
         # temporary solution for setting num_features and top_labels
         # when fixed, also fix in dashboard Tabular.py -> _feature_names
-        self.num_features = len(feature_names) if feature_names else training_data.shape[1]
+        self.num_features = len(feature_names) if feature_names is not None else training_data.shape[1]
 
         self.explainer = LimeTabularExplainer(
             training_data,
