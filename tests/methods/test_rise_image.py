@@ -18,10 +18,10 @@ class RiseOnImages(TestCase):
         input_data = np.random.random((224, 224, 3))
         axis_labels = ["y", "x", "channels"]
         labels = [1]
-        heatmaps_expected = np.load(
+        relevances_expected = np.load(
             "tests/test_data/heatmap_rise_function.npy")
 
-        heatmaps = dianna.explain_image(
+        relevances = dianna.explain_image(
             get_dummy_model_function(n_outputs=2),
             input_data,
             "RISE",
@@ -31,28 +31,28 @@ class RiseOnImages(TestCase):
             p_keep=0.5,
         )
 
-        assert heatmaps[0].shape == input_data.shape[:2]
-        assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
+        assert relevances[0].shape == input_data.shape[:2]
+        assert np.allclose(relevances, relevances_expected, atol=1e-5)
 
     @staticmethod
     def test_rise_filename():
         """Test if rise runs and outputs the correct shape given some data and a model file."""
         model_filename = "tests/test_data/mnist_model.onnx"
         input_data = generate_data(batch_size=1).astype(np.float32)[0]
-        heatmaps_expected = np.load(
+        relevances_expected = np.load(
             "tests/test_data/heatmap_rise_filename.npy")
         labels = [1]
 
-        heatmaps = dianna.explain_image(model_filename,
+        relevances = dianna.explain_image(model_filename,
                                         input_data,
                                         "RISE",
                                         labels,
                                         n_masks=200,
                                         p_keep=0.5)
 
-        assert heatmaps[0].shape == input_data.shape[1:]
-        print(heatmaps_expected.shape)
-        assert np.allclose(heatmaps, heatmaps_expected, atol=1e-5)
+        assert relevances[0].shape == input_data.shape[1:]
+        print(relevances_expected.shape)
+        assert np.allclose(relevances, relevances_expected, atol=1e-5)
 
     @staticmethod
     def test_rise_determine_p_keep_for_images():

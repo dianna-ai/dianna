@@ -61,7 +61,7 @@ class ShapOnImages(TestCase):
 
         # mnist_model has two outputs
         # so, shap_values is a list of two arrays
-        heatmaps = explainer.explain(
+        relevances = explainer.explain(
             onnx_model_path,
             input_data,
             labels,
@@ -71,7 +71,7 @@ class ShapOnImages(TestCase):
             compactness=10.0,
             sigma=0,
         )
-        # Check if shape of heatmaps is correct
-        assert heatmaps[0].shape[0] == input_data.shape[1]
-        assert heatmaps[0].shape[1] == input_data.shape[2]
-        assert heatmaps.shape[0] == len(labels)
+        # Check if shape of relevances is correct
+        assert relevances[0].shape[0] == input_data.shape[1]
+        assert relevances[0].shape[1] == input_data.shape[2]
+        assert relevances.shape[0] == len(labels)
