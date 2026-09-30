@@ -3,20 +3,20 @@ import numpy as np
 import pytest
 import skimage.segmentation
 from dianna.methods.kernelshap_image import KERNELSHAPImage
-from dianna.methods.kernelshap_image import _create_heatmaps
+from dianna.methods.kernelshap_image import _create_relevances
 
 
-def _create_heatmaps_loop(shap_values_list, image_segments):
-    """Original (non-vectorized) implementation of _create_heatmaps."""
+def _create_relevances_loop(shap_values_list, image_segments):
+    """Original (non-vectorized) implementation of _create_relevances."""
     per_class_values = np.asarray(shap_values_list)[0].T
-    heat_maps = np.zeros((per_class_values.shape[0], *image_segments.shape))
+    relevances = np.zeros((per_class_values.shape[0], *image_segments.shape))
     for i, shap_values_for_class in enumerate(per_class_values):
-        class_heat_map = heat_maps[i]
+        class_relevances = relevances[i]
         for index in image_segments.flat:
-            class_heat_map[image_segments == index] = shap_values_for_class[
+            class_relevances[image_segments == index] = shap_values_for_class[
                 index - 1]
-        heat_maps[i] = class_heat_map
-    return heat_maps
+        relevances[i] = class_relevances
+    return relevances
 
 
 def _mask_image_loop(features,
@@ -49,14 +49,14 @@ def _segments(image, n_segments):
 
 @pytest.mark.parametrize('shape, n_segments, n_classes',
                          [((28, 28, 1), 50, 2), ((64, 48, 3), 100, 5)])
-def test_create_heatmaps_matches_loop(shape, n_segments, n_classes):
+def test_create_relevances_matches_loop(shape, n_segments, n_classes):
     """Vectorized heatmaps equal the loop version."""
     rng = np.random.default_rng(0)
     segments = _segments(rng.random(shape), n_segments)
     shap_values = rng.normal(size=(1, np.unique(segments).size, n_classes))
 
-    np.testing.assert_array_equal(_create_heatmaps(shap_values, segments),
-                                  _create_heatmaps_loop(shap_values, segments))
+    np.testing.assert_array_equal(_create_relevances(shap_values, segments),
+                                  _create_relevances_loop(shap_values, segments))
 
 
 @pytest.mark.parametrize('shape', [(28, 28, 1), (64, 48, 3)])
@@ -77,7 +77,7 @@ def test_mask_image_matches_loop(shape, background, channels_axis_index):
 
 
 def test_mask_image_feature_masks_matching_segment():
-    """Feature j masks segment label j + 1, the same mapping _create_heatmaps uses."""
+    """Feature j masks segment label j + 1, the same mapping _create_relevances uses."""
     segments = np.array([[1, 1, 2, 2], [3, 3, 4, 4]])
     features = np.ones(
         (4, 4)) - np.eye(4)  # sample j switches off only feature j
