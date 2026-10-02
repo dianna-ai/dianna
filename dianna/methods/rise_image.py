@@ -2,7 +2,7 @@ import numpy as np
 from dianna import utils
 from dianna.utils.maskers import generate_interpolated_float_masks_for_image
 from dianna.utils.predict import make_predictions
-from dianna.utils.rise_utils import normalize
+from dianna.utils.rise_utils import saliency
 
 
 class RISEImage:
@@ -78,7 +78,7 @@ class RISEImage:
         n_masks_step = self.n_masks or 500
         max_masks = self.n_masks or 10000
         masks, predictions = [], []
-        saliency = 0
+        weighted_sum = 0
         previous = None
         for n_masks in range(n_masks_step, max_masks + 1, n_masks_step):
             step_masks = generate_interpolated_float_masks_for_image(
@@ -87,9 +87,9 @@ class RISEImage:
                                                 runner, batch_size)
             masks.append(step_masks)
             predictions.append(step_predictions)
-            saliency += step_predictions.T.dot(
+            weighted_sum += step_predictions.T.dot(
                 step_masks.reshape(n_masks_step, -1))
-            current = saliency / n_masks
+            current = weighted_sum / n_masks
             if previous is not None and np.linalg.norm(
                     current - previous) <= 0.01 * np.linalg.norm(current):
                 break
@@ -103,8 +103,8 @@ class RISEImage:
         self.predictions = np.concatenate(predictions)
 
         # Reshape to (n_classes, *img_shape)
-        result = normalize(saliency.reshape(-1, *img_shape), n_masks,
-                           active_p_keep)
+        result = saliency(self.predictions, self.masks,
+                          active_p_keep).reshape(-1, *img_shape)
         if labels is not None:
             result = result[list(labels)]
         return result

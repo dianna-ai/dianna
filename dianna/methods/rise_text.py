@@ -1,7 +1,7 @@
 import numpy as np
 from dianna import utils
 from dianna.utils.predict import make_predictions
-from dianna.utils.rise_utils import normalize
+from dianna.utils.rise_utils import saliency
 
 
 class RISEText:
@@ -102,9 +102,8 @@ class RISEText:
     def _get_saliencies(self, runner, sentences, num_tokens, batch_size,
                         p_keep):
         self.predictions = make_predictions(sentences, runner, batch_size)
-        unnormalized_saliency = self.predictions.T.dot(
-            self.masks.reshape(self.n_masks, -1)).reshape(-1, num_tokens)
-        return normalize(unnormalized_saliency, self.n_masks, p_keep)
+        return saliency(self.predictions, self.masks,
+                        p_keep).reshape(-1, num_tokens)
 
     @staticmethod
     def _reshape_result(input_tokens, labels, saliencies):
