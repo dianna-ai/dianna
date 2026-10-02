@@ -21,11 +21,6 @@ def load_data(file):
     return df
 
 
-def preprocess_function(image):
-    """For LIME: we divided the input data by 256 for the model (binary mnist) and LIME needs RGB values."""
-    return (image / 256).astype(np.float32)
-
-
 def fill_segmentation(values, segmentation):
     """For KernelSHAP: fill each pixel with SHAP values."""
     out = np.zeros(segmentation.shape)

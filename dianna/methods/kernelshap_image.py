@@ -4,6 +4,7 @@ import shap
 import skimage.segmentation
 from dianna import utils
 from dianna._logging_utils import LoggingContext
+from dianna.utils.predict import make_predictions
 
 
 class KERNELSHAPImage:
@@ -63,6 +64,8 @@ class KERNELSHAPImage:
         n_segments=100,
         compactness=10.0,
         sigma=0,
+        l1_reg=False,
+        batch_size=100,
         **kwargs,
     ):
         """Run the KernelSHAP explainer.
@@ -92,6 +95,10 @@ class KERNELSHAPImage:
                                square/cubic.
             sigma (float): Width of Gaussian smoothing kernel for pre-processing for
                            each dimension of the image. Zero means no smoothing.
+            l1_reg (str, float or bool): Feature selection of the SHAP regression, see shap's
+                                         KernelExplainer.shap_values. False (default) gives every
+                                         segment a value, e.g. "num_features(10)" keeps only the top 10.
+            batch_size (int): Number of masked images to create and run through the model at once.
             kwargs: These keyword parameters are passed on
 
         Other keyword arguments: see the documentation of kernel explainer of SHAP
@@ -108,6 +115,7 @@ class KERNELSHAPImage:
         self.labels = labels
         self.input_data = self._prepare_image_data(input_data)
         self.background = background
+        self.batch_size = batch_size
 
         # create onnxruntime session once for efficient repeated inference
         import onnxruntime as rt  # pylint: disable=import-outside-toplevel
@@ -133,10 +141,11 @@ class KERNELSHAPImage:
         with LoggingContext(level=logging.CRITICAL):
             shap_values_list = explainer.shap_values(np.ones(
                 (len(self.labels), n_segments)),
-                                                nsamples=nsamples)
+                                                     nsamples=nsamples,
+                                                     l1_reg=l1_reg)
 
         # create heat_maps where shape is (n_classes, *image_segments.shape)
-        heat_maps = _create_heatemaps(shap_values_list, self.image_segments)
+        heat_maps = _create_heatmaps(shap_values_list, self.image_segments)
 
         if labels is not None:
             heat_maps = heat_maps[list(labels)]
@@ -188,45 +197,48 @@ class KERNELSHAPImage:
             channels_axis_index (int): See the function _prepare_image_data
             datatype (np.dtype): Datatype for the returned value
         """
+        image = np.asarray(image)
         # check the background color
         if background is None:
             background = image.mean(axis=(0, 1))
 
-        # Create an empty 4D array
-        out = np.zeros((features.shape[0], image.shape[0], image.shape[1],
-                        image.shape[2]))
-
-        for i in range(features.shape[0]):
-            out[i] = image
-            for j in range(features.shape[1]):
-                if features[i, j] == 0:
-                    out[i][segmentation == j, :] = background
+        # segment labels start at 1, so label k is hidden when feature k - 1 is off
+        hidden = features == 0
+        # cast before selecting so the (large) output is allocated once, in the target dtype
+        out = np.where(hidden[:, segmentation - 1, np.newaxis],
+                       np.asarray(background).astype(datatype),
+                       image.astype(datatype))
 
         # the output shape should satisfy the requirement from onnx model input shape
         if channels_axis_index != 2:
             out = np.transpose(out, (0, 3, 1, 2))
 
-        return out.astype(datatype)
+        return out
 
     def _runner(self, features):
         """Define a runner/wrapper to load models and values.
+
+        Masks and runs the samples in batches, so memory does not grow with the number of samples.
 
         Args:
             features (np.ndarray): A matrix of samples (# samples x # features)
                                    on which to explain the model's output.
         """
+        return make_predictions(features, self._run_batch, self.batch_size)
+
+    def _run_batch(self, features):
+        """Mask the image for a batch of samples and run the model on it."""
         model_input = self._mask_image(features, self.image_segments,
                                        self.input_data, self.background,
                                        self.channels_axis_index,
                                        self.input_node_dtype)
         if self.preprocess_function is not None:
             model_input = self.preprocess_function(model_input)
-        return self.onnx_session.run(
-            [self.output_node],
-            {self.input_node_name: model_input})[0]
+        return self.onnx_session.run([self.output_node],
+                                     {self.input_node_name: model_input})[0]
 
 
-def _create_heatemaps(shap_values_list, image_segments):
+def _create_heatmaps(shap_values_list, image_segments):
     """Create heatmaps from the shap values and the image segments.
 
     The final heatmaps has a shape of (n_classes, *image_segments.shape).
@@ -234,15 +246,7 @@ def _create_heatemaps(shap_values_list, image_segments):
     # shap 0.46+ returns an array of shape (n_samples, n_features, n_classes).
     # Take sample 0 and transpose to (n_classes, n_features/n_segments).
     shap_array = np.asarray(shap_values_list)
-    per_class_values = shap_array[0].T  # (n_classes, n_segments)
-    n_classes = per_class_values.shape[0]
-    heat_maps = np.zeros((n_classes, *image_segments.shape))
-
-    # fill the heat_maps with shap values for each class and segment
-    for i, shap_values_for_class in enumerate(per_class_values):
-        class_heat_map = heat_maps[i]
-        for index in image_segments.flat:
-            class_heat_map[image_segments == index] = shap_values_for_class[index - 1]
-        heat_maps[i] = class_heat_map
-
-    return heat_maps
+    per_class_values = shap_array[0].T.astype(
+        np.float64)  # (n_classes, n_segments)
+    # segment labels start at 1, so label k maps to shap value k - 1
+    return per_class_values[:, image_segments - 1]

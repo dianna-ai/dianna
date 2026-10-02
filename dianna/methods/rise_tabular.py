@@ -8,7 +8,7 @@ from dianna import utils
 from dianna.utils.maskers import generate_tabular_masks
 from dianna.utils.maskers import mask_data_tabular
 from dianna.utils.predict import make_predictions
-from dianna.utils.rise_utils import normalize
+from dianna.utils.rise_utils import saliency
 
 
 class RISETabular:
@@ -99,13 +99,8 @@ class RISETabular:
         self.predictions = predictions if self.keep_predictions else None
         n_labels = predictions.shape[1]
 
-        masks_reshaped = masks.reshape(self.n_masks, -1)
-
-        saliency = predictions.T.dot(masks_reshaped).reshape(
-            n_labels, *input_tabular.shape)
-
+        result = saliency(predictions, masks,
+                          self.p_keep).reshape(n_labels, *input_tabular.shape)
         if self.mode == 'regression':
-            return saliency[0]
-
-        selected_saliency = saliency if labels is None else saliency[labels]
-        return normalize(selected_saliency, self.n_masks, self.p_keep)
+            return result[0]
+        return result if labels is None else result[labels]

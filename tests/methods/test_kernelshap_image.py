@@ -2,6 +2,7 @@
 from unittest import TestCase
 import numpy as np
 from dianna.methods.kernelshap_image import KERNELSHAPImage
+from dianna.methods.kernelshap_image import _create_heatmaps
 
 
 class ShapOnImages(TestCase):
@@ -75,3 +76,33 @@ class ShapOnImages(TestCase):
         assert heatmaps[0].shape[0] == input_data.shape[1]
         assert heatmaps[0].shape[1] == input_data.shape[2]
         assert heatmaps.shape[0] == len(labels)
+
+    def test_shap_explain_image_all_segments(self):
+        """Every segment gets a shap value by default, not only the top 10 (shap's own default)."""
+        input_data = np.random.random((1, 28, 28))
+        explainer = KERNELSHAPImage()
+        heatmap = explainer.explain("./tests/test_data/mnist_model.onnx", input_data, [0],
+                                    nsamples=1000, background=0, n_segments=50)[0]
+        assert np.count_nonzero(np.unique(heatmap)) > 10
+
+    def test_shap_explain_image_batch_size(self):
+        """Running the model in batches gives the same heatmap as running all samples at once."""
+        input_data = np.random.random((1, 28, 28))
+        heatmaps = []
+        for batch_size in (7, 10000):
+            np.random.seed(0)
+            heatmaps.append(KERNELSHAPImage().explain("./tests/test_data/mnist_model.onnx", input_data, [0],
+                                                      nsamples=100, background=0, n_segments=20,
+                                                      batch_size=batch_size))
+        np.testing.assert_allclose(heatmaps[0], heatmaps[1], atol=1e-6)
+
+
+def test_feature_maps_to_matching_segment():
+    """Feature j masks segment label j + 1, and its shap value lands on that segment in the heatmap."""
+    segments = np.array([[1, 1, 2, 2], [3, 3, 4, 4]])
+    features = np.ones((4, 4)) - np.eye(4)  # sample j switches off only feature j
+    masked = KERNELSHAPImage()._mask_image(features, segments, np.ones((2, 4, 1)), 0)[..., 0]
+    for j in range(4):
+        np.testing.assert_array_equal(masked[j] == 0, segments == j + 1)
+    shap_values = np.arange(4)[None, :, None]  # (n_samples, n_features, n_classes)
+    np.testing.assert_array_equal(_create_heatmaps(shap_values, segments)[0], segments - 1)

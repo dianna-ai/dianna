@@ -75,6 +75,11 @@ def _methods_checkboxes(*, choices: Sequence, key):
     return methods, method_params
 
 
+def _background_select(key):
+    """Colour that hidden image segments are filled with: None = the image's mean colour, 0 = black."""
+    return {'mean colour': None, 'black': 0}[st.selectbox('Background', ('mean colour', 'black'), key=key)]
+
+
 def _get_params(method: str, key):
     if method == 'RISE':
         n_masks = 1000
@@ -106,8 +111,8 @@ def _get_params(method: str, key):
         else:
             return {
                 'nsamples': st.number_input('Number of samples', value=1000, key=f'{key}_{method}_nsamp'),
-                'background': st.number_input('Background', value=0, key=f'{key}_{method}_background'),
-                'n_segments': st.number_input('Number of segments', value=200, key=f'{key}_{method}_nseg'),
+                'background': _background_select(key=f'{key}_{method}_background'),
+                'n_segments': st.number_input('Number of segments', value=50, key=f'{key}_{method}_nseg'),
                 'sigma': st.number_input('σ', value=0, key=f'{key}_{method}_sigma'),
             }
 
@@ -118,11 +123,14 @@ def _get_params(method: str, key):
                 'num_samples': st.number_input('Number of samples', value=2000, key=f'{key}_{method}_ns')
             }
         else:
-            return {
+            params = {
                 'random_state': st.number_input('Random state', value=2, key=f'{key}_{method}_rs'),
                 'num_features': st.number_input('Number of features', 999, key=f'{key}_{method}_rf'),
                 'num_samples': st.number_input('Number of samples', value=2000, key=f'{key}_{method}_ns')
             }
+            if 'Image' in key:
+                params['background'] = _background_select(key=f'{key}_{method}_background')
+            return params
 
     else:
         raise ValueError(f'No such method: {method}')

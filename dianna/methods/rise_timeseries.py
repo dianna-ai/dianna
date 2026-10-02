@@ -4,7 +4,7 @@ from dianna import utils
 from dianna.utils.maskers import generate_time_series_masks
 from dianna.utils.maskers import mask_data
 from dianna.utils.predict import make_predictions
-from dianna.utils.rise_utils import normalize
+from dianna.utils.rise_utils import saliency
 
 
 class RISETimeseries:
@@ -77,9 +77,5 @@ class RISETimeseries:
         self.masked = masked if self.keep_masked_data else None
         predictions = make_predictions(masked, runner, batch_size)
         self.predictions = predictions if self.keep_predictions else None
-        n_labels = predictions.shape[1]
-
-        saliency = predictions.T.dot(masks.reshape(self.n_masks, -1)).reshape(
-            n_labels, *input_timeseries.shape)
-        selected_saliency = saliency[labels]
-        return normalize(selected_saliency, self.n_masks, self.p_keep)
+        return saliency(predictions, masks, self.p_keep).reshape(
+            -1, *input_timeseries.shape)[labels]

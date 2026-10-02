@@ -1,6 +1,8 @@
 import base64
 import sys
 import streamlit as st
+from _image_utils import add_softmax
+from _image_utils import input_layout
 from _image_utils import open_image
 from _model_utils import load_labels
 from _model_utils import load_model
@@ -127,9 +129,25 @@ if input_type is None:
     st.info('Select which input type to use in the left panel to continue')
     st.stop()
 
-image, _ = open_image(image_file)
-
 model = load_model(image_model_file)
+
+channels, _, _, channels_first = input_layout(model)
+image, display_image = open_image(image_file, model)
+axis_labels = {0 if channels_first else 2: 'channels'}
+
+normalize = input_type == 'Use your own data' and channels == 3 and st.sidebar.checkbox(
+    'ImageNet normalisation',
+    help='Normalise the image with the ImageNet mean and standard deviation, '
+    'as expected by e.g. ResNet models trained on ImageNet.',
+    key='Image_normalize')
+
+logits = input_type == 'Use your own data' and st.sidebar.checkbox(
+    'Model outputs logits',
+    help='Apply a softmax to the model output, so the explainers work with probabilities. '
+    'Tick this if the model outputs are not probabilities, e.g. negative or not summing to 1.',
+    key='Image_logits')
+if logits:
+    model = add_softmax(model)
 serialized_model = model.SerializeToString()
 
 labels = load_labels(image_label_file)
@@ -144,7 +162,7 @@ with st.container(border=True):
     methods, method_params = _methods_checkboxes(choices=choices, key=imagekey)
 
     with st.spinner('Predicting class'):
-        predictions = predict(model=model, image=image)
+        predictions = predict(model=model, image=image, normalize=normalize, axis_labels=axis_labels)
 
     with prediction_placeholder:
         top_indices, top_labels = _get_top_indices_and_labels(
@@ -152,10 +170,6 @@ with st.container(border=True):
 
 st.text("")
 st.text("")
-
-# check which axis is color channel
-original_data = image[:, :, 0] if image.shape[2] <= 3 else image[1, :, :]
-axis_labels = {2: 'channels'} if image.shape[2] <= 3 else {0: 'channels'}
 
 weight = 0.9 / len(methods)
 column_spec = [0.1, *[weight for _ in methods]]
@@ -177,10 +191,10 @@ for index, label in zip(top_indices, top_labels):
 
         with col:
             with st.spinner(f'Running {method}'):
-                heatmap = func(serialized_model, image, index, **kwargs)
+                heatmap = func(serialized_model, image, index, normalize, **kwargs)
 
             fig, _ = plot_image(heatmap,
-                                original_data=original_data,
+                                original_data=display_image,
                                 heatmap_cmap='bwr',
                                 show_plot=False)
 

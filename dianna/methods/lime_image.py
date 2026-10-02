@@ -55,6 +55,7 @@ class LIMEImage:
                 return_masks=True,
                 positive_only=False,
                 hide_rest=True,
+                background=None,
                 **kwargs,
                 ):
         """Run the LIME explainer.
@@ -71,6 +72,8 @@ class LIMEImage:
             return_masks (bool): If true, return discretized masks. Otherwise, return LIME scores
             positive_only (bool): Positive only
             hide_rest (bool): Hide rest
+            background: Colour that hidden superpixels are filled with, in the range of input_data.
+                        None (default) uses the mean colour of the image.
             kwargs: These parameters are passed on
 
         Other keyword arguments: see the LIME documentation for LimeImageExplainer.explain_instance and
@@ -83,6 +86,7 @@ class LIMEImage:
             np.ndarray: An array (np.ndarray) containing the LIME explanations for each class.
         """
         input_data, full_preprocess_function = self._prepare_image_data(input_data)
+        hide_color = input_data.mean(axis=(0, 1)) if background is None else background
         runner = utils.get_function(model_or_function, preprocess_function=full_preprocess_function)
 
         # run the explanation.
@@ -93,6 +97,7 @@ class LIMEImage:
                                                       top_labels=top_labels,
                                                       num_features=num_features,
                                                       num_samples=num_samples,
+                                                      hide_color=hide_color,
                                                       **explain_instance_kwargs,
                                                       )
         if return_masks:
