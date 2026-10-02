@@ -52,3 +52,17 @@ def imagenet_normalize(data, channels_axis):
     shape[channels_axis] = 3
     return ((data - IMAGENET_MEAN.reshape(shape)) /
             IMAGENET_STD.reshape(shape)).astype(np.float32)
+
+
+def add_softmax(model):
+    """Return a copy of the ONNX model with a softmax on its first output, turning logits into probabilities."""
+    import onnx
+    model_copy = onnx.ModelProto()
+    model_copy.CopyFrom(model)
+    output = model_copy.graph.output[0].name
+    logits = f'{output}_logits'
+    for node in model_copy.graph.node:
+        node.input[:] = [logits if name == output else name for name in node.input]
+        node.output[:] = [logits if name == output else name for name in node.output]
+    model_copy.graph.node.append(onnx.helper.make_node('Softmax', [logits], [output], axis=-1))
+    return model_copy
