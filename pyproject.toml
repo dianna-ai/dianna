@@ -78,6 +78,7 @@ dashboard = [
     "spacy",
     "streamlit-aggrid",
     "streamlit>=1.50",
+    "streamlit-drawable-canvas>=0.13",
     "streamlit_option_menu",
     "transformers",
     "xgboost",
