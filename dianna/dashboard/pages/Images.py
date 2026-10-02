@@ -1,4 +1,5 @@
 import base64
+import io
 import sys
 import streamlit as st
 from _image_utils import open_image
@@ -11,6 +12,8 @@ from _shared import _methods_checkboxes
 from _shared import add_sidebar_logo
 from _shared import reset_example
 from _shared import reset_method
+from PIL import Image
+from streamlit_drawable_canvas import st_canvas
 from dianna.utils.downloader import download
 from dianna.visualization import plot_image
 
@@ -74,7 +77,26 @@ if input_type == 'Use an example':
         )
 
     if load_example == 'Hand-written digit recognition':
-        image_file = download('digit0.jpg', 'data')
+        digit_source = st.sidebar.radio(label='Select digit',
+                                        options=('Use example digit', 'Draw your own digit'),
+                                        key='Image_digit_source')
+        if digit_source == 'Draw your own digit':
+            with st.sidebar:
+                drawing = st_canvas(stroke_width=16,
+                                    stroke_color='#fff',
+                                    background_color='#000',
+                                    height=224,
+                                    width=224,
+                                    return_image_data=True,
+                                    key='Image_digit_canvas')
+            if drawing.image_data is None or not drawing.image_data[..., :3].any():
+                st.info('Draw a 0 or 1 in the left panel to continue')
+                st.stop()
+            # downscale to the 28x28 grayscale input the MNIST model expects
+            image_file = io.BytesIO()
+            Image.fromarray(drawing.image_data).convert('L').resize((28, 28)).save(image_file, 'png')
+        else:
+            image_file = download('digit0.jpg', 'data')
         image_model_file = download('mnist_model_tf.onnx', 'model')
         image_label_file = download('labels_mnist.txt', 'label')
 

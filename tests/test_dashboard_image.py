@@ -119,3 +119,32 @@ def test_image_page(page: Page):
     page.get_by_label("Select image").click()
     page.get_by_label("Select model").click()
     page.get_by_label("Select labels").click()
+
+
+def test_image_page_draw_digit(page: Page):
+    """Test drawing a digit on the canvas of the MNIST example."""
+    page.set_viewport_size({"width": 1920, "height": 1080})
+
+    page.goto(f'{BASE_URL}/Images')
+
+    wait_streamlit_ready(page)
+
+    page.locator("label").filter(has_text="Use an example").locator("div").nth(1).click()
+    page.get_by_text("Hand-written digit recognition").click()
+    page.get_by_text("Draw your own digit").click()
+
+    expect(page.get_by_text('Draw a 0 or 1 in the left panel to continue')).to_be_visible(timeout=30_000)
+
+    # draw a vertical stroke (a "1"); stay clear of the toolbar hovering over the top of the canvas
+    box = page.locator('canvas.upper-canvas').bounding_box()
+    x = box['x'] + box['width'] / 2
+    page.mouse.move(x, box['y'] + 0.25 * box['height'])
+    page.mouse.down()
+    page.mouse.move(x, box['y'] + 0.85 * box['height'], steps=20)
+    page.mouse.up()
+
+    expect(page.get_by_text('Select a method to continue')).to_be_visible(timeout=100_000)
+    page.get_by_text('RISE', exact=True).click()
+
+    expect(page.get_by_text('Class: 1')).to_be_visible(timeout=100_000)
+    expect(page.locator('img:not([alt="Colormap"])')).to_have_count(1, timeout=300_000)
