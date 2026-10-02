@@ -1,6 +1,7 @@
 """Unit tests for RISE image."""
 from unittest import TestCase
 import numpy as np
+import pytest
 import dianna
 from dianna.methods.rise_image import RISEImage
 from dianna.utils import get_function
@@ -66,3 +67,28 @@ class RiseOnImages(TestCase):
                                                get_function(model_filename))
 
         assert np.isclose(p_keep, expected_p_exact_keep)
+
+
+def test_rise_mask_types():
+    """Masked pixels get the requested fill value; mask value 1 keeps the input."""
+    image = np.random.random((28, 28, 3))
+    explainer = RISEImage(feature_res=4)
+    masks = np.zeros((1, 28, 28, 1))
+    masks[0, :14] = 1
+    for mask_type, fill in [('black', 0), ('white', image.max()),
+                            ('mean', image.mean(axis=(0, 1))),
+                            ('blur', None),
+                            (lambda img: np.ones_like(img), 1)]:
+        explainer.fill = explainer._get_fill(image, mask_type)
+        masked = np.asarray(explainer._mask(image[None], masks))
+        assert np.allclose(masked[0, :14], image[:14])
+        if fill is not None:
+            assert np.allclose(masked[0, 14:], fill)
+        else:
+            assert masked[0,
+                          14:].std() < image[14:].std()  # blurred = smoother
+    explainer.fill = explainer._get_fill(image, 'noise')
+    masked = np.asarray(explainer._mask(image[None], masks))
+    assert np.isin(masked[0, 14:], image).all()  # fill colors come from the image
+    with pytest.raises(ValueError):
+        explainer._get_fill(image, 'nope')

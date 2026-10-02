@@ -33,9 +33,15 @@ class RISEImage:
         self.preprocess_function = preprocess_function
         self.masks = None
         self.predictions = None
+        self.fill = 0
         self.axis_labels = axis_labels if axis_labels is not None else []
 
-    def explain(self, model_or_function, input_data, labels, batch_size=100):
+    def explain(self,
+                model_or_function,
+                input_data,
+                labels,
+                batch_size=100,
+                mask_type='mean'):
         """Runs the RISE explainer on images.
 
            The model will be called with masked images,
@@ -47,12 +53,19 @@ class RISEImage:
             input_data (np.ndarray): Image to be explained
             batch_size (int): Batch size to use for running the model.
             labels (Iterable(int)): Labels to be explained
+            mask_type (str or callable): What masked pixels are replaced with. 'mean' (default: mean
+                                         color per channel), 'black' (zeros), 'white' (the image's
+                                         maximum value), 'blur' (Gaussian blurred image), 'noise' (the
+                                         image's own pixels shuffled, so fill colors follow its color
+                                         distribution) or a callable(image) returning a fill array
+                                         broadcastable to the channels-last image.
 
         Returns:
             Explanation heatmap for each class (np.ndarray).
         """
         input_data, runner = self._prepare_input_data_and_model(
             input_data, model_or_function)
+        self.fill = self._get_fill(input_data.values[0], mask_type)
 
         active_p_keep = (self._determine_p_keep(input_data, runner)
                          if self.p_keep is None else self.p_keep)
@@ -63,8 +76,7 @@ class RISEImage:
         self.masks = generate_interpolated_float_masks_for_image(
             img_shape, active_p_keep, self.n_masks, self.feature_res)
 
-        # Make sure multiplication is being done for correct axes
-        masked = input_data * self.masks
+        masked = self._mask(input_data, self.masks)
 
         self.predictions = make_predictions(masked, runner, batch_size)
 
@@ -75,6 +87,34 @@ class RISEImage:
         if labels is not None:
             result = result[list(labels)]
         return result
+
+    def _mask(self, input_data, masks):
+        """Blend input with the fill value: fill where mask is 0, input where mask is 1."""
+        return self.fill + (input_data - self.fill) * masks
+
+    def _get_fill(self, image, mask_type):
+        """Replacement values for masked pixels, for a channels-last image."""
+        if callable(mask_type):
+            return mask_type(image)
+        if mask_type == 'black':
+            return 0
+        if mask_type == 'white':
+            # ponytail: brightest value in the image, so it works for both 0-1 and 0-255 ranges
+            return image.max()
+        if mask_type == 'mean':
+            return image.mean(axis=(0, 1))
+        if mask_type == 'blur':
+            from skimage.filters import gaussian
+            # ponytail: sigma fixed at one mask cell; pass a callable for other blur strengths
+            sigma = max(image.shape[:2]) / self.feature_res
+            return gaussian(image,
+                            sigma=sigma,
+                            channel_axis=-1,
+                            preserve_range=True)
+        if mask_type == 'noise':
+            # ponytail: one noise sample shared by all masks; per-mask noise if heatmaps show its pattern
+            return np.random.permutation(image.reshape(-1, image.shape[-1])).reshape(image.shape)
+        raise ValueError(f'Unknown mask_type selected: {mask_type}')
 
     def _prepare_input_data_and_model(self, input_data, model_or_function):
         """Prepares the input data as an xarray with an added batch dimension and creates a preprocessing function."""
@@ -120,7 +160,7 @@ class RISEImage:
         img_shape = input_data.shape[1:3]
         masks = generate_interpolated_float_masks_for_image(
             img_shape, p_keep, n_masks, self.feature_res)
-        masked = input_data * masks
+        masked = self._mask(input_data, masks)
         predictions = make_predictions(masked, runner, batch_size=50)
         std_per_class = predictions.std(axis=0)
         return np.max(std_per_class)
