@@ -221,9 +221,11 @@ class KERNELSHAPImage:
                                        self.input_node_dtype)
         if self.preprocess_function is not None:
             model_input = self.preprocess_function(model_input)
-        return self.onnx_session.run(
-            [self.output_node],
-            {self.input_node_name: model_input})[0]
+        if not isinstance(model_input, (list, tuple)):
+            model_input = [model_input]
+        input_names = [node.name for node in self.onnx_session.get_inputs()]
+        onnx_input = dict(zip(input_names, model_input, strict=True))
+        return self.onnx_session.run([self.output_node], onnx_input)[0]
 
 
 def _create_heatemaps(shap_values_list, image_segments):

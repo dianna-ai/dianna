@@ -151,3 +151,23 @@ def load_movie_review_model():
     model_path = 'tests/test_data/movie_review_model.onnx'
     word_vector_file = 'tests/test_data/word_vectors.txt'
     return ModelRunner(model_path, word_vector_file, max_filter_size=5)
+
+
+def save_two_input_model(filename):
+    """Save an ONNX model with inputs image (N, 28, 28, 1) and extra (N, 2) that returns mean(image) + extra."""
+    from onnx import TensorProto
+    from onnx import helper
+    from onnx import save
+    graph = helper.make_graph([
+        helper.make_node(
+            'ReduceMean', ['image'], ['mean'], axes=[1, 2], keepdims=0),
+        helper.make_node('Add', ['mean', 'extra'], ['out']),
+    ], 'two_inputs', [
+        helper.make_tensor_value_info('image', TensorProto.FLOAT,
+                                      [None, 28, 28, 1]),
+        helper.make_tensor_value_info('extra', TensorProto.FLOAT, [None, 2]),
+    ], [helper.make_tensor_value_info('out', TensorProto.FLOAT, [None, 2])])
+    save(
+        helper.make_model(graph,
+                          opset_imports=[helper.make_opsetid('', 13)],
+                          ir_version=8), filename)
