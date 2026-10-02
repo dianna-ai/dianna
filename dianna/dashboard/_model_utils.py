@@ -20,11 +20,6 @@ def load_data(file):
     return df
 
 
-def preprocess_function(image):
-    """For LIME: we divided the input data by 256 for the model (binary mnist) and LIME needs RGB values."""
-    return (image / 256).astype(np.float32)
-
-
 def fill_segmentation(values, segmentation):
     """For KernelSHAP: fill each pixel with SHAP values."""
     out = np.zeros(segmentation.shape)
@@ -36,6 +31,19 @@ def fill_segmentation(values, segmentation):
 def load_model(file):
     onnx_model = onnx.load(file)
     return onnx_model
+
+
+def add_softmax(model):
+    """Return a copy of the ONNX model with a softmax on its first output, turning logits into probabilities."""
+    model_copy = onnx.ModelProto()
+    model_copy.CopyFrom(model)
+    output = model_copy.graph.output[0].name
+    logits = f'{output}_logits'
+    for node in model_copy.graph.node:
+        node.input[:] = [logits if name == output else name for name in node.input]
+        node.output[:] = [logits if name == output else name for name in node.output]
+    model_copy.graph.node.append(onnx.helper.make_node('Softmax', [logits], [output], axis=-1))
+    return model_copy
 
 
 def load_labels(file):
