@@ -8,6 +8,7 @@ from onnx import helper
 from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).parents[1] / 'dianna' / 'dashboard'))
+from _image_utils import add_softmax  # noqa: E402
 from _image_utils import imagenet_normalize  # noqa: E402
 from _image_utils import open_image  # noqa: E402
 
@@ -71,7 +72,6 @@ def test_imagenet_normalize():
 def test_add_softmax():
     """The model with softmax added outputs probabilities of the original logits."""
     import onnxruntime as rt
-    from _model_utils import add_softmax
     x = np.array([[1., -2., 3.], [0., 0., 0.]], dtype=np.float32)
     model = add_softmax(_model(['N', 3]))
     out = rt.InferenceSession(model.SerializeToString()).run(None, {'x': x})[0]
