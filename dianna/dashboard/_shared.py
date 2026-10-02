@@ -2,6 +2,7 @@ import base64
 import sys
 from typing import Sequence
 import numpy as np
+import pandas as pd
 import streamlit as st
 
 if sys.version_info < (3, 10):
@@ -136,7 +137,9 @@ def _get_top_indices(predictions, n_top):
 
 
 def _get_top_indices_and_labels(*, predictions, labels):
-    cols = st.columns(4)
+    # single container so it fits in the callers' st.empty() placeholder
+    box = st.container()
+    cols = box.columns(4)
 
     if labels is not None:
         with cols[-1]:
@@ -150,6 +153,17 @@ def _get_top_indices_and_labels(*, predictions, labels):
 
         with cols[0]:
             st.metric('Predicted class:', top_labels[0])
+
+        chart_indices = _get_top_indices(predictions, min(10, len(labels)))
+        with box.expander('Model output per class (top 10)', expanded=True):
+            st.bar_chart(pd.DataFrame({
+                'class': [labels[i] for i in chart_indices],
+                'model output': predictions[chart_indices]
+            }),
+                         x='class',
+                         y='model output',
+                         horizontal=True,
+                         sort=False)
     else:
         # If not a classifier, only return the predicted value
         top_indices = top_labels = " "
