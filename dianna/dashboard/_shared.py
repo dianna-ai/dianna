@@ -150,7 +150,7 @@ def _get_top_indices_and_labels(*, predictions, labels):
             st.metric('Predicted class:', top_labels[0])
 
         chart_indices = _get_top_indices(predictions, min(10, len(labels)))
-        with box.expander('Model output per class (top 10)'):
+        with box.expander('Model output per class (top 10)', expanded=True):
             st.bar_chart(pd.DataFrame({
                 'class': [labels[i] for i in chart_indices],
                 'model output': predictions[chart_indices]
