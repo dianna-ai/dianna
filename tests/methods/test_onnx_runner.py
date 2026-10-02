@@ -2,6 +2,7 @@ from unittest import mock
 import numpy as np
 import onnxruntime as ort
 from dianna.utils.onnx_runner import SimpleModelRunner
+from tests.utils import save_two_input_model
 
 
 def generate_data(batch_size):
@@ -42,3 +43,16 @@ def test_onnx_runner_creates_session_once():
         for batch in batches:
             runner(batch)
     assert m.call_count == 1
+
+
+def test_onnx_runner_multiple_inputs(tmp_path):
+    """Tests if the onnx runner feeds all inputs of a model with multiple inputs."""
+    filename = str(tmp_path / 'two_inputs.onnx')
+    save_two_input_model(filename)
+    image = np.ones((2, 28, 28, 1), dtype=np.float32)
+    extra = np.array([[1, 2], [3, 4]], dtype=np.float32)
+
+    pred = SimpleModelRunner(filename,
+                             preprocess_function=lambda x: [x, extra])(image)
+
+    assert np.array_equal(pred, 1 + extra)
