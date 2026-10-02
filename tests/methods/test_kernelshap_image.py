@@ -110,3 +110,14 @@ class ShapOnImages(TestCase):
         relevances = explainer.explain("./tests/test_data/mnist_model.onnx", input_data, [0],
                                     nsamples=1000, background=0, n_segments=50)[0]
         assert np.count_nonzero(np.unique(relevances)) > 10
+
+    def test_shap_explain_image_batch_size(self):
+        """Running the model in batches gives the same heatmap as running all samples at once."""
+        input_data = np.random.random((1, 28, 28))
+        relevances = []
+        for batch_size in (7, 10000):
+            np.random.seed(0)
+            relevances.append(KERNELSHAPImage().explain("./tests/test_data/mnist_model.onnx", input_data, [0],
+                                                      nsamples=100, background=0, n_segments=20,
+                                                      batch_size=batch_size))
+        np.testing.assert_allclose(relevances[0], relevances[1], atol=1e-6)
