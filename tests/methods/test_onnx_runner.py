@@ -1,4 +1,6 @@
+from unittest import mock
 import numpy as np
+import onnxruntime as ort
 from dianna.utils.onnx_runner import SimpleModelRunner
 
 
@@ -28,3 +30,15 @@ def test_onnx_runner_reused_session_matches_fresh():
     runner = SimpleModelRunner(filename)
     for batch in batches:
         np.testing.assert_array_equal(runner(batch), SimpleModelRunner(filename)(batch))
+
+
+def test_onnx_runner_creates_session_once():
+    """Tests that a runner creates its ONNX session once and reuses it."""
+    filename = 'tests/test_data/mnist_model.onnx'
+    batches = [generate_data(n).astype(np.float32) for n in (3, 1, 5)]
+
+    with mock.patch.object(ort, 'InferenceSession', wraps=ort.InferenceSession) as m:
+        runner = SimpleModelRunner(filename)
+        for batch in batches:
+            runner(batch)
+    assert m.call_count == 1
