@@ -134,9 +134,9 @@ def test_tabular_sunshine(page: Page):
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
             page.get_by_role('heading', name='LIME').get_by_text('LIME'),
-            page.get_by_role('img', name='0').first,
-            page.get_by_role('img', name='0').nth(1),
-            page.get_by_role('img', name='0').nth(2),
+            page.get_by_role('img').first,
+            page.get_by_role('img').nth(1),
+            page.get_by_role('img').nth(2),
     ):
         expect(selector).to_be_visible(timeout=100_000)
 
@@ -181,8 +181,8 @@ def test_tabular_penguin(page: Page):
         page.get_by_role('heading', name='RISE').get_by_text('RISE'),
         page.get_by_role('heading', name='KernelSHAP').get_by_text('KernelSHAP'),
         page.get_by_role('heading', name='LIME').get_by_text('LIME'),
-        page.get_by_role('img', name='0').first,
-        page.get_by_role('img', name='0').nth(1),
-        page.get_by_role('img', name='0').nth(2),
+        page.get_by_role('img').first,
+        page.get_by_role('img').nth(1),
+        page.get_by_role('img').nth(2),
     ):
         expect(selector).to_be_visible(timeout=200_000)
