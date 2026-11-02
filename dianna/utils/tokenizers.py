@@ -83,8 +83,8 @@ def get_tokenizer(_spacy, name):
     nlp = spacy.load(name)
 
     def spacy_tokenizer(text):
-        # tokenizes text
-        doc = nlp(text)
+        # tokenizer only: the full pipeline (tagger, parser, NER) gives the same tokens and is ~400x slower
+        doc = nlp.tokenizer(text)
         return [token.text for token in doc]
 
     return spacy_tokenizer
