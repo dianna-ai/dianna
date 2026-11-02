@@ -46,7 +46,8 @@ jobs:
           # already tested in build_single job
           - python-version: 3.12
             os: ubuntu-latest
-          # macOS: only the oldest and newest Python, ubuntu covers the versions in between
+          - python-version: 3.11
+            os: macos-latest
           - python-version: 3.12
             os: macos-latest
           - python-version: 3.13
