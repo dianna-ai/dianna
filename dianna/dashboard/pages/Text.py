@@ -84,7 +84,7 @@ if input_type == 'Use an example':
         """
         **********************************************************************
         This example demonstrates the use of DIANNA on the [Stanford Sentiment
-        Treebank dataset](https://nlp.stanford.edu/sentiment/index.html) which
+        Treebank dataset](https://huggingface.co/datasets/stanfordnlp/sst2) which
         contains one-sentence movie reviews. <br> A pre-trained [neural network
         classifier](https://zenodo.org/record/5910598) is used, which classifies a movie review
         as positive or negative. <br>
