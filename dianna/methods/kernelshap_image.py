@@ -108,12 +108,19 @@ class KERNELSHAPImage:
             self.input_node_dtype = np.float32
             self.model = model_or_function
         else:
-            onnx_model, input_node_name, self.input_node_dtype, \
+            onnx_model, _, self.input_node_dtype, \
                 output_node = utils.onnx_model_node_loader(model_or_function)
             # create onnxruntime session once for efficient repeated inference
             import onnxruntime as rt  # pylint: disable=import-outside-toplevel
             onnx_session = rt.InferenceSession(onnx_model.SerializeToString())
-            self.model = lambda x: onnx_session.run([output_node], {input_node_name: x})[0]
+            input_names = [node.name for node in onnx_session.get_inputs()]
+
+            def run_onnx(model_input):
+                if not isinstance(model_input, (list, tuple)):
+                    model_input = [model_input]
+                return onnx_session.run([output_node], dict(zip(input_names, model_input, strict=True)))[0]
+
+            self.model = run_onnx
         self.labels = labels
         self.input_data = self._prepare_image_data(input_data)
         self.background = background
