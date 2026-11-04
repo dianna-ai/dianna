@@ -171,6 +171,11 @@ class KERNELSHAPImage:
         Returns:
             transformed input data
         """
+        # a greyscale image without channels axis gets one, which is removed again before running the model
+        self.no_channels = np.ndim(input_data) == 2
+        if self.no_channels:
+            input_data = np.asarray(input_data)[..., np.newaxis]
+            self.axis_labels = {2: 'channels'}
         # automatically determine the location of the channels axis if no axis_labels were provided
         axis_label_names = self.axis_labels.values() if isinstance(
             self.axis_labels, dict) else self.axis_labels
@@ -243,6 +248,8 @@ class KERNELSHAPImage:
                                        self.input_data, self.background,
                                        self.channels_axis_index,
                                        self.input_node_dtype)
+        if self.no_channels:
+            model_input = model_input[..., 0]
         if self.preprocess_function is not None:
             model_input = self.preprocess_function(model_input)
         return self.model(model_input)
