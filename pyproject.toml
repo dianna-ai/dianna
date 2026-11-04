@@ -70,7 +70,6 @@ text = [
     "spacy",
 ]
 dashboard = [
-    "keras",
     "Pillow",
     "plotly",
     "scipy",
