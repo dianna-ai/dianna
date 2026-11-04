@@ -1,5 +1,5 @@
 import base64
-import sys
+from importlib.resources import files
 import streamlit as st
 from _image_utils import open_image
 from _model_utils import load_labels
@@ -13,11 +13,6 @@ from _shared import reset_example
 from _shared import reset_method
 from dianna.utils.downloader import download
 from dianna.visualization import plot_image
-
-if sys.version_info < (3, 10):
-    from importlib_resources import files
-else:
-    from importlib.resources import files
 
 data_directory = files('dianna.data')
 colormap_path = str(data_directory / 'colormap.png')
