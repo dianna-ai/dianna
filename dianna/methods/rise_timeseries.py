@@ -63,7 +63,7 @@ class RISETimeseries:
 
 
         Returns:
-            Explanation heatmap for each class (np.ndarray).
+            Relevance scores for each class (np.ndarray).
         """
         runner = utils.get_function(
             model_or_function, preprocess_function=self.preprocess_function)

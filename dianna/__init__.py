@@ -49,7 +49,7 @@ def explain_timeseries(model_or_function: Union[Callable, str],
         kwargs: key word arguments
 
     Returns:
-        np.ndarray: One heatmap per class.
+        np.ndarray: Relevance scores per class.
 
     """
     explainer = _get_explainer(method, kwargs, modality='Timeseries')

@@ -1,14 +1,16 @@
 import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
+from dianna.utils.misc import renamed_kwargs
 
 
+@renamed_kwargs(heatmap_range='relevances_range')
 def highlight_text(explanation,
                    input_tokens=None,
                    show_plot=True,
                    output_filename=None,
                    colormap="bwr",
                    alpha=1.0,
-                   heatmap_range=(-1, 1)):
+                   relevances_range=(-1, 1)):
     """Highlights a given text based on values in a given explanation object.
 
     Args:
@@ -16,9 +18,9 @@ def highlight_text(explanation,
         input_tokens: list of all tokens (including those without importance)
         show_plot: Shows plot if true (for testing or writing plots to disk instead)
         output_filename: Name of the file to save the plot to (optional).
-        colormap: color map for the heatmap plot (see mpl.Axes.imshow documentation for options).
-        alpha: alpha value for the heatmap plot.
-        heatmap_range: a tuple (vmin, vmax) to set the range of the heatmap.
+        colormap: color map for the relevance scores (see mpl.Axes.imshow documentation for options).
+        alpha: alpha value for the highlights.
+        relevances_range: a tuple (vmin, vmax) to set the range of the relevance scores.
 
     Returns:
         None
@@ -36,7 +38,7 @@ def highlight_text(explanation,
             for i, token in enumerate(input_tokens)
         ]
 
-    vmin, vmax = heatmap_range
+    vmin, vmax = relevances_range
 
     x, y = (0, 0) # the initial position of the text
     space_token = ' '
@@ -98,7 +100,7 @@ def _get_text_color(importance, vmin, vmax, colormap, alpha):
         importance (float): The importance of the text (between vmin and vmax)
         vmin (float): The minimum value of the importance range
         vmax (float): The maximum value of the importance range
-        colormap (str): color map for the heatmap plot (see mpl.Axes.imshow
+        colormap (str): color map for the relevance scores (see mpl.Axes.imshow
             documentation for options).
         alpha (float): alpha value for the color.
 
