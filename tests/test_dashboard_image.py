@@ -91,15 +91,20 @@ def test_image_page(page: Page):
     page.locator('label').filter(has_text='KernelSHAP').click()
     page.locator('label').filter(has_text='LIME').click()
 
-    page.get_by_label("Number of top classes to show").fill("2")
-    page.get_by_label("Number of top classes to show").press("Enter")
+    # Let the reruns triggered by the checkboxes finish first: input typed while
+    # they are still running can be dropped, leaving only class 0 rendered.
+    page.wait_for_timeout(500)
+    expect(page.get_by_test_id('stStatusWidget')).to_be_hidden(timeout=600_000)
+
+    n_top = page.get_by_label("Number of top classes to show")
+    n_top.fill("2")
+    n_top.press("Enter")
+    expect(n_top).to_have_value("2")
 
     # Wait for all result images to appear: 2 classes × 3 methods = 6 images.
-    # Exclude the static colormap image from the count.
-    # This is the definitive signal that both class rows are fully computed.
-    # Avoid relying on 'Running...' which may briefly disappear between
-    # Streamlit re-runs, causing a premature return before class 1 is rendered.
-    imgs = page.locator('img:not([alt="Colormap"])')
+    # Count only the main area (the sidebar logo is an img too) and exclude the
+    # static colormap image. This is the signal that both class rows are fully computed.
+    imgs = page.get_by_test_id('stMain').locator('img:not([alt="Colormap"])')
     expect(imgs).to_have_count(6, timeout=600_000)
 
     for selector in (
