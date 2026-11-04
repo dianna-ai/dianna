@@ -91,8 +91,8 @@ def test_timeseries_page(page: Page):
 
     time.sleep(2)
 
-    page.locator('label').filter(has_text='LIME').locator('span').click(timeout=200_000)
-    page.locator('label').filter(has_text='RISE').locator('span').click(timeout=200_000)
+    page.locator('label').filter(has_text='LIME').click(timeout=200_000)
+    page.locator('label').filter(has_text='RISE').click(timeout=200_000)
 
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
@@ -103,8 +103,8 @@ def test_timeseries_page(page: Page):
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             # First image
             page.get_by_role('heading', name='winter').get_by_text('winter'),
-            page.get_by_role('img', name='0').first,
-            page.get_by_role('img', name='0').nth(1),
+            page.get_by_role('img').first,
+            page.get_by_role('img').nth(1),
     ):
         expect(selector).to_be_visible(timeout=200_000)
 
@@ -115,7 +115,7 @@ def test_timeseries_page(page: Page):
 
     time.sleep(2)
 
-    page.locator('label').filter(has_text='RISE').locator('span').click()
+    page.locator('label').filter(has_text='RISE').click()
 
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
@@ -126,10 +126,10 @@ def test_timeseries_page(page: Page):
             page.get_by_role('heading', name='RISE').get_by_text('RISE'),
             # First image
             page.get_by_role('heading', name='FRB').get_by_text('FRB'),
-            page.get_by_role('img', name='0').nth(1),
+            page.get_by_role('img').nth(1),
             # Second image
             page.get_by_role('heading', name='Noise').get_by_text('Noise'),
-            page.get_by_role('img', name='0').nth(2),
+            page.get_by_role('img').nth(2),
     ):
         expect(selector).to_be_visible(timeout=300_000)
 

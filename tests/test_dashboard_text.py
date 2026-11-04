@@ -83,8 +83,8 @@ def test_text_page(page: Page):
         timeout=50_000)
 
     time.sleep(2)
-    page.locator('label').filter(has_text='RISE').locator('span').click()
-    page.locator('label').filter(has_text='LIME').locator('span').click()
+    page.locator('label').filter(has_text='RISE').click()
+    page.locator('label').filter(has_text='LIME').click()
 
     page.get_by_label("Number of top classes to show").fill("2")
     page.get_by_label("Number of top classes to show").press("Enter")
@@ -96,13 +96,13 @@ def test_text_page(page: Page):
             # Images for positive (RISE/LIME)
             page.get_by_role('heading',
                              name='positive').get_by_text('positive'),
-            page.get_by_role('img', name='0').first,
-            page.get_by_role('img', name='0').nth(1),
+            page.get_by_role('img').first,
+            page.get_by_role('img').nth(1),
             # Images for negative (RISE/LIME)
             page.get_by_role('heading',
                              name='negative').get_by_text('negative'),
-            page.get_by_role('img', name='0').nth(2),
-            page.get_by_role('img', name='0').nth(3),
+            page.get_by_role('img').nth(2),
+            page.get_by_role('img').nth(3),
     ):
         expect(selector).to_be_visible(timeout=100_000)
 
