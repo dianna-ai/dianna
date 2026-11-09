@@ -18,6 +18,12 @@
         },
         {
           "pattern": "^https://bestpractices.coreinfrastructure.org/projects/<replace-with-created-project-identifier>"
+        },
+        {
+          "pattern": "^https://doi.org/10.3390/make3030032"
+        },
+        {
+          "pattern": "^https://dianna.readthedocs.io"
         }
     ],
     "replacementPatterns": [
