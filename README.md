@@ -181,7 +181,7 @@ image = PIL.Image.open('your_bee_image.jpeg')
 axis_labels = {2: 'channels'}
 explained_class_index = labels.index('bee')
 explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
-dianna.visualization.plot_image(explanation[explained_class_index], utils.img_to_array(image)/255., heatmap_cmap='bwr')
+dianna.visualization.plot_image(explanation[explained_class_index], utils.img_to_array(image)/255.)
 plt.show()
 ```
 <img src="https://github.com/dianna-ai/dianna/assets/3244249/b03e4d4e-e3e8-4248-bf62-e3602b7f6d71" width="215" height="215">
@@ -190,7 +190,7 @@ And why would Imagenet think the same image would be a *garden spider*?
 ```python
 explained_class_index = labels.index('garden_spider') # interested in the image being classified as a garden spider
 explanation = dianna.explain_image(model_path, image, 'RISE', axis_labels=axis_labels, labels=labels)
-dianna.visualization.plot_image(explanation[explained_class_index], utils.img_to_array(image)/255., heatmap_cmap='bwr')
+dianna.visualization.plot_image(explanation[explained_class_index], utils.img_to_array(image)/255.)
 plt.show()
 ```
 
