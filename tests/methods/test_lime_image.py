@@ -65,3 +65,21 @@ class LimeOnImages(TestCase):
     def setUp(self) -> None:
         """Set seed."""
         np.random.seed(42)
+
+
+def test_lime_background():
+    """Hidden superpixels are filled with the image mean colour by default, or with the given background."""
+    input_data = np.random.uniform(0.5, 1, (32, 32, 3))
+    for background, expected_fill in [(None, input_data.mean(axis=(0, 1))), (0, np.zeros(3))]:
+        seen = []
+
+        def model(batch):
+            seen.append(batch.copy())
+            return np.ones((len(batch), 2)) / 2
+
+        LIMEImage(random_state=42, axis_labels={2: 'channels'}).explain(model, input_data, [1], num_samples=20,
+                                                                        background=background)
+        pixels = np.concatenate(seen).reshape(-1, 3)
+        hidden = ~np.isin(pixels, input_data).all(axis=1)
+        assert hidden.any()
+        assert np.allclose(pixels[hidden], expected_fill)

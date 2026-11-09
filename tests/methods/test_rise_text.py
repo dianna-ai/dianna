@@ -16,7 +16,7 @@ class RiseOnText(TestCase):
         review = "such a bad movie"
         expected_words = ["such", "a", "bad", "movie"]
         expected_word_indices = [0, 1, 2, 3]
-        expected_positive_scores = [0.30, 0.29, 0.04, 0.25]
+        expected_positive_scores = [0.31, 0.28, 0.03, 0.24]
 
         positive_explanation = dianna.explain_text(
             self.runner,

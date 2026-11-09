@@ -4,6 +4,7 @@ import shap
 import skimage.segmentation
 from dianna import utils
 from dianna._logging_utils import LoggingContext
+from dianna.utils.predict import make_predictions
 
 
 class KERNELSHAPImage:
@@ -63,6 +64,8 @@ class KERNELSHAPImage:
         n_segments=100,
         compactness=10.0,
         sigma=0,
+        l1_reg=False,
+        batch_size=100,
         **kwargs,
     ):
         """Run the KernelSHAP explainer.
@@ -93,6 +96,10 @@ class KERNELSHAPImage:
                                square/cubic.
             sigma (float): Width of Gaussian smoothing kernel for pre-processing for
                            each dimension of the image. Zero means no smoothing.
+            l1_reg (str, float or bool): Feature selection of the SHAP regression, see shap's
+                                         KernelExplainer.shap_values. False (default) gives every
+                                         segment a value, e.g. "num_features(10)" keeps only the top 10.
+            batch_size (int): Number of masked images to create and run through the model at once.
             kwargs: These keyword parameters are passed on
 
         Other keyword arguments: see the documentation of kernel explainer of SHAP
@@ -124,6 +131,7 @@ class KERNELSHAPImage:
         self.labels = labels
         self.input_data = self._prepare_image_data(input_data)
         self.background = background
+        self.batch_size = batch_size
 
         # other keyword arguments for the method segment_image
         slic_kwargs = utils.get_kwargs_applicable_to_function(
@@ -144,7 +152,8 @@ class KERNELSHAPImage:
         with LoggingContext(level=logging.CRITICAL):
             shap_values_list = explainer.shap_values(np.ones(
                 (len(self.labels), n_segments)),
-                                                     nsamples=nsamples)
+                                                     nsamples=nsamples,
+                                                     l1_reg=l1_reg)
 
         # create relevances where shape is (n_classes, *image_segments.shape)
         relevances = _create_relevances(shap_values_list, self.image_segments)
@@ -220,10 +229,16 @@ class KERNELSHAPImage:
     def _runner(self, features):
         """Define a runner/wrapper to load models and values.
 
+        Masks and runs the samples in batches, so memory does not grow with the number of samples.
+
         Args:
             features (np.ndarray): A matrix of samples (# samples x # features)
                                    on which to explain the model's output.
         """
+        return make_predictions(features, self._run_batch, self.batch_size)
+
+    def _run_batch(self, features):
+        """Mask the image for a batch of samples and run the model on it."""
         model_input = self._mask_image(features, self.image_segments,
                                        self.input_data, self.background,
                                        self.channels_axis_index,
