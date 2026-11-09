@@ -14,35 +14,21 @@ on:
       - synchronize
       - ready_for_review
 
-jobs:
-  list_notebooks:
-    name: List notebooks
-    runs-on: 'ubuntu-latest'
-    outputs:
-      notebooks: ${{ steps.list_notebooks.outputs.notebooks }}
-    steps:
-      - uses: actions/checkout@v6
-      - name: List notebooks
-        id: list_notebooks
-        run: |
-          NOTEBOOKS_JSON=$(find tutorials -type f -name "*.ipynb" | python -c 'import json,sys; print(json.dumps([line.strip() for line in sys.stdin if line.strip()]))')
-          echo "Found notebooks: $NOTEBOOKS_JSON"
-          echo "notebooks=$NOTEBOOKS_JSON" >> "$GITHUB_OUTPUT"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
-  run_notebook:
-    name: Run notebook ${{ matrix.notebook }} on (${{ matrix.python-version }}, ${{ matrix.os }})
+jobs:
+  run_notebooks:
+    name: Run notebooks on (${{ matrix.python-version }}, ${{ matrix.os }})
     if: github.event.pull_request.draft == false
-    needs: list_notebooks
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        # macOS notebooks only run on main/manual runs; unit tests in build.yml cover macOS on PRs
+        os: ${{ github.event_name == 'pull_request' && fromJson('["ubuntu-latest", "windows-latest"]') || fromJson('["ubuntu-latest", "macos-latest", "windows-latest"]') }}
         python-version: ['3.11']
-        notebook: ${{ fromJson(needs.list_notebooks.outputs.notebooks) }}
-        exclude:
-          - os: 'windows-latest'
-            notebook: 'tutorials/explainers/KernelSHAP/kernelshap_tabular_land_atmosphere.ipynb' # this one fails on Windows due to timeouts, not sure why, see #877
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install-python-and-package
@@ -54,11 +40,28 @@ jobs:
       - name: Install OpenMP runtime (macOS)
         if: runner.os == 'macOS'
         run: brew install libomp
-      - name: Run tutorial notebook
+      - name: Run tutorial notebooks
         # Workaround for OpenMP/threading deadlock issues in buggy xgboost + torch setups.
         # Limiting threads prevents the deadlock that causes hangs during LIME inference.
         env:
           OMP_NUM_THREADS: "1"
           MKL_NUM_THREADS: "1"
           TOKENIZERS_PARALLELISM: "false"
-        run: pytest --nbmake --nbmake-timeout=3600 "${{ matrix.notebook }}"
+        shell: bash
+        # One collapsible log group per notebook (Actions can't generate steps dynamically), plus a summary table
+        run: |
+          echo "| Notebook | Result |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          failed=0
+          for nb in $(find tutorials -name '*.ipynb' | sort); do
+            # fails on Windows due to timeouts, not sure why, see #877
+            if [[ "$RUNNER_OS" == Windows && "$nb" == *kernelshap_tabular_land_atmosphere* ]]; then
+              echo "| $nb | skipped |" >> "$GITHUB_STEP_SUMMARY"; continue
+            fi
+            echo "::group::$nb"
+            if pytest --nbmake --nbmake-timeout=3600 "$nb"; then result=passed; else result=failed; failed=1; fi
+            echo "::endgroup::"
+            [[ $result == failed ]] && echo "::error title=Notebook failed::$nb"
+            echo "| $nb | $result |" >> "$GITHUB_STEP_SUMMARY"
+          done
+          exit $failed
