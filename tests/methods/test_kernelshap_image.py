@@ -1,7 +1,9 @@
 """Unit tests for KernelSHAP image."""
+from tempfile import TemporaryDirectory
 from unittest import TestCase
 import numpy as np
 from dianna.methods.kernelshap_image import KERNELSHAPImage
+from tests.utils import save_two_input_model
 
 
 class ShapOnImages(TestCase):
@@ -86,3 +88,17 @@ class ShapOnImages(TestCase):
         relevances = KERNELSHAPImage().explain(runner, input_data, labels, nsamples=100, background=0, n_segments=50)
 
         assert relevances.shape == (len(labels), *input_data.shape[1:])
+
+    def test_shap_explain_image_multiple_inputs(self):
+        """Tests if Kernelshap feeds all inputs of a model with multiple inputs."""
+        with TemporaryDirectory() as tmpdir:
+            onnx_model_path = f'{tmpdir}/two_inputs.onnx'
+            save_two_input_model(onnx_model_path)
+            explainer = KERNELSHAPImage(
+                preprocess_function=lambda x:
+                [x, np.zeros((len(x), 2), dtype=np.float32)])
+            relevances = explainer.explain(onnx_model_path,
+                                         np.random.random((28, 28, 1)), [0],
+                                         nsamples=100,
+                                         n_segments=10)
+        assert relevances.shape == (1, 28, 28)
