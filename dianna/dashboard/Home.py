@@ -53,7 +53,7 @@ if selected == "Home":
         It wraps _systematically_ selected XAI methods (**explainers**) in a simple, uniform interface.<br>
         The currently supported explainers are [RISE](http://bmvc2018.org/contents/papers/1064.pdf),
         [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) and
-        [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf).<br>
+        [KernelSHAP](https://arxiv.org/abs/1705.07874).<br>
         It's built by, with, and for academic researchers and research software engineers
         who use AI, but users not need to be XAI experts! <br>
         DIANNA supports the de-facto standard format of neural network models - [ONNX](https://onnx.ai/:).
