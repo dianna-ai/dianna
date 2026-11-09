@@ -3,6 +3,8 @@ from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Optional
+from typing import Sequence
+from typing import Tuple
 from typing import Union
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,16 +12,16 @@ from matplotlib import cm
 
 
 def plot_timeseries(
-        x: np.ndarray,
+        x: Union[np.ndarray, Sequence[float]],
         y: np.ndarray,
         segments: List[Dict[str, Any]],
         x_label: str = 't',
-        y_label: Union[str, Iterable[str]] = None,
+        y_label: Optional[Union[str, Iterable[str]]] = None,
         cmap: Optional[str] = 'bwr',
         show_plot: Optional[bool] = True,
         output_filename: Optional[str] = None,
         heatmap_range=(-1, 1),
-) -> plt.Figure:
+) -> Tuple[plt.Figure, Sequence[plt.Axes]]:
     """Plot timeseries with segments highlighted.
 
     Args:
@@ -40,7 +42,7 @@ def plot_timeseries(
         heatmap_range (tuple, optional): a tuple (vmin, vmax) to set the range of the heatmap.
 
     Returns:
-        plt.Figure
+        The figure and the axes (one per channel).
     """
     fig, axs, y_labels, ys = _process_plotting_parameters(x, y, y_label)
 

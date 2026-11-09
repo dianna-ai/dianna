@@ -102,13 +102,13 @@ def test_timeseries_mask_contains_correct_parts_are_mean_masked():
         mean), f'All elements in {masked_parts} should have value {mean}'
 
 
-def _get_univariate_time_series(num_steps=10) -> np.array:
+def _get_univariate_time_series(num_steps=10) -> np.ndarray:
     """Get some univariate test data."""
     return np.zeros(
         (num_steps, 1)) + np.arange(num_steps).reshape(num_steps, 1)
 
 
-def _get_multivariate_time_series(number_of_channels: int = 6) -> np.array:
+def _get_multivariate_time_series(number_of_channels: int = 6) -> np.ndarray:
     """Get some multivariate test data."""
     return np.vstack([
         np.zeros((10, number_of_channels)),
