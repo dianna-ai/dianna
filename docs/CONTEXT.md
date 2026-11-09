@@ -51,7 +51,7 @@ DIANNA is designed to address the above challenges: **_the library is developed 
  
 *	**Systematically chosen generic explainers**
 
-DIANNA includes few XAI approaches which have been evaluated using [systematically defined criteria](https://arxiv.org/ftp/arxiv/papers/1912/1912.05100.pdf). Using a relevant subset of these criteria, we have included complementary state-of-the-art XAI methods: [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf), [RISE](http://bmvc2018.org/contents/papers/1064.pdf) and [KernelSHAP](https://proceedings.neurips.cc/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf). These methods are model architecture agnostic.
+DIANNA includes few XAI approaches which have been evaluated using [systematically defined criteria](https://arxiv.org/ftp/arxiv/papers/1912/1912.05100.pdf). Using a relevant subset of these criteria, we have included complementary state-of-the-art XAI methods: [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf), [RISE](http://bmvc2018.org/contents/papers/1064.pdf) and [KernelSHAP](https://arxiv.org/abs/1705.07874). These methods are model architecture agnostic.
 
 * **Simple unified interface**
   
