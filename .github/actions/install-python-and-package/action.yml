@@ -41,7 +41,7 @@ runs:
       shell: bash {0}
       run: |
         python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-        # no tensorflow wheels for python 3.14 yet
+        # no tensorflow wheels for python 3.14 yet https://github.com/dianna-ai/dianna/issues/940
         if [ "${{ inputs.python-version }}" != "3.14" ]; then python -m pip install tensorflow-cpu; fi
 
     - name: Install DIANNA
