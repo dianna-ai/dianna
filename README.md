@@ -52,6 +52,8 @@ affiliations:
 
 <img width="300" alt="Logo_ER10" src="https://user-images.githubusercontent.com/3244249/151994514-b584b984-a148-4ade-80ee-0f88b0aefa45.png">
 
+[Click here to use the interactive dashboard](https://dianna-ai.github.io/dianna/dashboard/)
+
 [Introducing DIANNA video](https://youtu.be/9VM5acip2s8)
 
 <img align="left" src="https://user-images.githubusercontent.com/55382553/153408200-36c4de2e-7865-4934-956d-09eefd893e6a.png">
@@ -217,7 +219,7 @@ This video shows the main functionality of DIANNA and shows you how to use DIANN
 
 Explore the explanations of your trained model using the DIANNA dashboard.
 [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
-You can also [try the dashboard in your browser](https://dianna.readthedocs.io/en/latest/dashboard/), without
+You can also [try the dashboard in your browser](https://dianna-ai.github.io/dianna/dashboard/), without
 installing anything.
 
 

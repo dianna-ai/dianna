@@ -20,7 +20,7 @@ Open the link on which the app is running. Note that you are running the dashboa
 ### Browser version
 
 The same dashboard code also runs entirely in the browser, without a Python server, using
-[stlite](https://github.com/whitphx/stlite): [try it](https://dianna.readthedocs.io/en/latest/dashboard/). `python web/build.py` packs it into a static site in `web/_site`; the
+[stlite](https://github.com/whitphx/stlite): [try it](https://dianna-ai.github.io/dianna/dashboard/). `python web/build.py` packs it into a static site in `web/_site`; the
 browser-only stand-ins (e.g. for `onnxruntime`, which runs in onnxruntime-web there) live in `web/shims`.
 Changes to the dashboard therefore reach the browser version without extra work. Check them with
 `pytest -v -m dashboard --dashboard --web` after running `python web/build.py`.
