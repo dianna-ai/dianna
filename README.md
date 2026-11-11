@@ -217,6 +217,8 @@ This video shows the main functionality of DIANNA and shows you how to use DIANN
 
 Explore the explanations of your trained model using the DIANNA dashboard.
 [Click here](https://github.com/dianna-ai/dianna/tree/main/dianna/dashboard) for more information.
+You can also [try the dashboard in your browser](https://dianna.readthedocs.io/en/latest/dashboard/), without
+installing anything.
 
 
 

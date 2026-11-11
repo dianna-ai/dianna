@@ -3,13 +3,8 @@ from typing import Iterable
 import numpy as np
 import onnx
 import pandas as pd
-import torch
-import xgboost
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
-from transformers import AutoModel
-from transformers import AutoTokenizer
-from dianna.utils.tokenizers import SpacyTokenizer
 
 
 def load_data(file):
@@ -87,6 +82,10 @@ def load_penguins(penguins):
 
 def features_eulaw(texts: list[str], model_tag="law-ai/InLegalBERT"):
     """Create features for a list of texts."""
+    # imported here: heavy, only needed for the EU law example, and not available in the browser (web/)
+    import torch
+    from transformers import AutoModel
+    from transformers import AutoTokenizer
     max_length = 512
     tokenizer = AutoTokenizer.from_pretrained(model_tag)
     model = AutoModel.from_pretrained(model_tag)
@@ -128,6 +127,7 @@ def classify_texts_eulaw(texts: list[str], model_path, return_proba: bool = Fals
         List of classifications, one for every text in the list
 
     """
+    import xgboost
     features = features_eulaw(texts)
     model = xgboost.XGBClassifier()
     model.load_model(model_path)
@@ -139,6 +139,7 @@ def classify_texts_eulaw(texts: list[str], model_path, return_proba: bool = Fals
 
 class StatementClassifierEUlaw():
     def __init__(self, model_path):
+        from dianna.utils.tokenizers import SpacyTokenizer
         self.tokenizer = SpacyTokenizer(name='en_core_web_sm')
         self.model_path = model_path
 

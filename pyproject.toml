@@ -58,6 +58,7 @@ docs = [
     "nbsphinx",
     "nbsphinx_link",
     "pandoc",
+    "seaborn",  # web/build.py, which .readthedocs.yaml runs to include the browser dashboard
     "sphinx",
     "sphinx-autoapi",
     "sphinx_rtd_theme",
@@ -109,6 +110,40 @@ Homepage = "https://github.com/dianna-ai/dianna"
 
 [project.scripts]
 dianna-dashboard = "dianna.cli:dashboard"
+
+[dependency-groups]
+# What the browser version of the dashboard (web/, built by web/build.py) installs in Pyodide. The rest of the
+# dashboard's dependencies are vendored or replaced by stand-ins in web/shims, as they have no Pyodide build.
+# Not meant for a regular environment: it conflicts with the dashboard extra on streamlit-drawable-canvas, because
+# stlite does not support the Custom Components v2 that 0.13+ uses.
+# Keep the custom components pinned: web/build.py serves their frontend files for exactly these versions.
+web = [
+    "cloudpickle",
+    "matplotlib",
+    "packaging",
+    "pandas",
+    "pillow",
+    "pooch",
+    "protobuf",
+    "scikit-image",
+    "scikit-learn",
+    "scipy",
+    "seaborn",
+    "slicer==0.0.8",
+    "streamlit-aggrid==1.2.1.post2",
+    "streamlit-drawable-canvas==0.9.3",
+    "streamlit-option-menu==0.4.0",
+    "toml",
+    "tqdm",
+    "xarray",
+]
+# Packages that micropip cannot install (only sdists, or only binary wheels): web/build.py unpacks their Python
+# sources into the browser version. shap's compiled parts are replaced by web/shims/shap_cutils.py and numba.
+web-vendored = [
+    "fastdtw==0.3.4",
+    "lime==0.2.0.1",
+    "shap==0.52.0",
+]
 
 [tool.setuptools.packages.find]
 include = ["dianna", "dianna.*"]
