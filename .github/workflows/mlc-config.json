@@ -24,6 +24,10 @@
         },
         {
           "pattern": "^https://dianna.readthedocs.io"
+        },
+        {
+          "_comment": "docs/web_dashboard.md: the browser dashboard, which .readthedocs.yaml builds next to the docs",
+          "pattern": "^dashboard/$"
         }
     ],
     "replacementPatterns": [
