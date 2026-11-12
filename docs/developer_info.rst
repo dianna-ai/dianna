@@ -60,7 +60,7 @@ Testing and code coverage
    run tests on GitHub infrastructure against multiple Python versions
 
    -  Workflows can be found in
-      `.github/workflows <https:://github.com/dianna-ai/dianna/.github/workflows/>`__
+      `.github/workflows <https://github.com/dianna-ai/dianna/tree/main/.github/workflows>`__
 
 -  `Relevant section in the
    guide <https://guide.esciencecenter.nl/#/best_practices/language_guides/python?id=testing>`__

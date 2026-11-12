@@ -1,7 +1,7 @@
 name: GitHub Pages
 
-# The site at https://dianna-ai.github.io/dianna/: the repository rendered by Jekyll (as before), plus the browser
-# dashboard (web/) at dashboard/
+# The site at https://dianna-ai.github.io/dianna/: the Sphinx documentation (the same build as Read the Docs, see
+# .readthedocs.yaml), plus the browser dashboard (web/) at dashboard/
 on:
   push:
     branches: [main, standalone_web]
@@ -25,20 +25,24 @@ jobs:
       - uses: ./.github/actions/install-python-and-package
         with:
           python-version: '3.12'
-          extras-require: dashboard
+          extras-require: docs
 
-      - uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
+      - name: Install pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Build documentation
+        run: make html
+        working-directory: docs
 
       - name: Build browser dashboard
         run: python web/build.py
 
       - name: Add the dashboard to the site
-        run: sudo cp -r web/_site _site/dashboard
+        run: cp -r web/_site docs/_build/html/dashboard
 
       - uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/_build/html
 
   deploy:
     needs: build
