@@ -9,7 +9,9 @@ Welcome to Dianna's documentation!
   :maxdepth: 2
   :caption: Contents:
 
-  usage.rst
+  readme.md
+  tutorials_overview.md
+  IO_overview.md
   web_dashboard.md
   CONTEXT.md
   ROADMAP.md

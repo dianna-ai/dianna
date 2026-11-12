@@ -201,11 +201,11 @@ plt.show()
 </details>
 
 ### Overview tutorial
-There are **full working examples** on how to use the supported explainers and how to use dianna for **all supported data modalities** in our [overview tutorial](./tutorials/overview.ipynb).
+There are **full working examples** on how to use the supported explainers and how to use dianna for **all supported data modalities** in our [overview tutorial](https://github.com/dianna-ai/dianna/blob/main/tutorials/overview.ipynb).
 
 ### IMPORTANT: Sensitivity to hyperparameters
 The explainers are sensitive to the choice of their hyperparameters! In this [work](https://staff.fnwi.uva.nl/a.s.z.belloum/MSctheses/MScthesis_Willem_van_der_Spec.pdf), this sensitivity to hyperparameters is researched and useful conclusions are drawn.
-The default hyperparameters used in DIANNA for each explainer as well as the values for our tutorial examples are given in the Tutorials [README](./tutorials/README.md#important-hyperparameters).
+The default hyperparameters used in DIANNA for each explainer as well as the values for our tutorial examples are given in the Tutorials [README](https://github.com/dianna-ai/dianna/blob/main/tutorials/README.md#important-hyperparameters).
 
 ### Introductory video
 This video shows the main functionality of DIANNA and shows you how to use DIANNA also from its dashboard.
@@ -315,7 +315,7 @@ And here are links to notebooks showing how we created our models on the benchma
 | :-------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Penguin model    (classification)](https://zenodo.org/records/10580743)                         | [Penguin model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/penguin_species/generate_model.ipynb)          |
 | [Sunshine hours prediction model (regression)](https://zenodo.org/records/10580833) | [Sunshine hours prediction model generation](https://github.com/dianna-ai/dianna-exploration/blob/main/example_data/model_generation/sunshine_prediction/generate_model.ipynb) |
-| [Latent heat flux prediction model (regression)](https://zenodo.org/records/12623257) | [Latent heat flux prediction model](doi:10.5281/zenodo.12623256/stemmus_scope_emulator_model_LEtot.onnx)   |
+| [Latent heat flux prediction model (regression)](https://zenodo.org/records/12623257) | [Latent heat flux prediction model](https://doi.org/10.5281/zenodo.12623256)   |
 
 </details>
 
@@ -323,7 +323,7 @@ And here are links to notebooks showing how we created our models on the benchma
 
 ## Tutorials
 
-DIANNA supports different data modalities and XAI methods (explainers). We have evaluated many explainers using objective criteria (see the [How to find your AI explainer](https://blog.esciencecenter.nl/how-to-find-your-artificial-intelligence-explainer-dbb1ac608009) blog-post). The table below contains links to the relevant XAI method's papers (for some explanatory videos on the methods, please see [tutorials](./tutorials)). The DIANNA [tutorials](./tutorials) cover each supported method and data modality on a least one dataset using the default or tuned [hyperparameters](./tutorials/README.md#important-hyperparameters). Our plans to expand DIANNA with more data modalities and explainers are given in the [ROADMAP](https://dianna.readthedocs.io/en/latest/ROADMAP.html).
+DIANNA supports different data modalities and XAI methods (explainers). We have evaluated many explainers using objective criteria (see the [How to find your AI explainer](https://blog.esciencecenter.nl/how-to-find-your-artificial-intelligence-explainer-dbb1ac608009) blog-post). The table below contains links to the relevant XAI method's papers (for some explanatory videos on the methods, please see [tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials)). The DIANNA [tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials) cover each supported method and data modality on a least one dataset using the default or tuned [hyperparameters](https://github.com/dianna-ai/dianna/blob/main/tutorials/README.md#important-hyperparameters). Our plans to expand DIANNA with more data modalities and explainers are given in the [ROADMAP](https://dianna.readthedocs.io/en/latest/ROADMAP.html).
 
 <!-- see issue: https://github.com/dianna-ai/dianna/issues/142, also related issue: https://github.com/dianna-ai/dianna/issues/148 -->
 
@@ -342,7 +342,7 @@ Also [GradCAM](https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_
 
 ### Scientific use-cases
 Our goal is that the scientific community embrases XAI as a source for novel and unexplored perspectives on scientific problems.
-Here, we offer [tutorials](./tutorials) on specific scientific use-cases of uisng XAI:
+Here, we offer [tutorials](https://github.com/dianna-ai/dianna/tree/main/tutorials) on specific scientific use-cases of uisng XAI:
 
 | Use-case (data) \ XAI                                              | [RISE](http://bmvc2018.org/contents/papers/1064.pdf) | [LIME](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf) | [KernelSHAP](https://arxiv.org/abs/1705.07874) |
 |:-------------------------------------------------------------------|:-----------------------------------------------------| :---------------------------------------------------------------------| :-------------------------------------------------------------------------------------------------------|
@@ -360,7 +360,7 @@ For detailed information on using specific DIANNA functions, please visit the [d
 
 If you want to contribute to the development of DIANNA,
 have a look at the [contribution guidelines](https://dianna.readthedocs.io/en/latest/CONTRIBUTING.html).
-See our [developer documentation](docs/developer_info.rst) for information on developer installation, running tests, generating documentation, versioning and making a release.
+See our [developer documentation](https://dianna.readthedocs.io/en/latest/developer_info.html) for information on developer installation, running tests, generating documentation, versioning and making a release.
 
 ## How to cite us
 
