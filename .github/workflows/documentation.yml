@@ -32,6 +32,8 @@ jobs:
         with:
           python-version: '3.12'
           extras-require: docs
+      - name: Update apt package lists
+        run: sudo apt-get update
       - name: Install pandoc using apt
         run: sudo apt install pandoc
       - name: Build documentation

@@ -1,0 +1,51 @@
+name: GitHub Pages
+
+# The site at https://dianna-ai.github.io/dianna/: the repository rendered by Jekyll (as before), plus the browser
+# dashboard (web/) at dashboard/
+on:
+  push:
+    branches: [main, standalone_web]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/install-python-and-package
+        with:
+          python-version: '3.12'
+          extras-require: dashboard
+
+      - uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - name: Build browser dashboard
+        run: python web/build.py
+
+      - name: Add the dashboard to the site
+        run: sudo cp -r web/_site _site/dashboard
+
+      - uses: actions/upload-pages-artifact@v4
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

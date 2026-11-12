@@ -1,4 +1,5 @@
 import base64
+import sys
 from importlib.resources import files
 import streamlit as st
 from _model_utils import StatementClassifierEUlaw
@@ -150,6 +151,10 @@ if input_type is None:
     st.stop()
 
 if load_example == 'Nature of EU laws':
+    if sys.platform == 'emscripten':  # the browser version (web/): no torch there for the InLegalBERT features
+        st.info('This example needs torch, which the browser version does not have. Run it in the local dashboard '
+                '(`pip install dianna[dashboard]`, then `dianna-dashboard`).')
+        st.stop()
     labels = ['constitutive', 'regulatory']
     choices: tuple[str, ...] = ('LIME',)
 

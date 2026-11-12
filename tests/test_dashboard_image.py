@@ -13,11 +13,15 @@ Make sure that the server is running by:
 cd dianna/dashboard
 streamlit run Home.py
 ```
-Then, set variable `LOCAL=True` (see below) to connect to local instance for
+Then, set `LOCAL = True` in tests/dashboard_helpers.py to connect to that instance for
 debugging. Then, you can run the tests with:
 
 ```bash
 pytest -v -m dashboard --dashboard
+```
+Add `--web` to test the browser version in web/_site instead (build it with `python web/build.py`):
+```bash
+pytest -v -m dashboard --dashboard --web
 ```
 See more documentation about dashboard in: dianna/dashboard/readme.md
 
@@ -26,54 +30,21 @@ For Code generation (https://playwright.dev/python/docs/codegen):
     playwright codegen http://localhost:8501
 """
 
-import time
-from contextlib import contextmanager
 import pytest
 from playwright.sync_api import Page
 from playwright.sync_api import expect
+from tests.dashboard_helpers import open_page
 from tests.dashboard_helpers import wait_streamlit_ready
+from tests.dashboard_helpers import wait_until_idle
 
-LOCAL = False
-
-PORT = '8501' if LOCAL else '8502'
-BASE_URL = f'localhost:{PORT}'
-
-pytestmark = pytest.mark.dashboard
-
-
-@pytest.fixture(scope='module', autouse=True)
-def before_module():
-    """Run dashboard in module scope."""
-    with run_streamlit():
-        yield
-
-
-@contextmanager
-def run_streamlit():
-    """Run the dashboard."""
-    import subprocess
-
-    if not LOCAL:
-        p = subprocess.Popen([
-            'dianna-dashboard',
-            '--server.port',
-            PORT,
-            '--server.headless',
-            'true',
-        ])
-        time.sleep(5)
-
-    yield
-
-    if not LOCAL:
-        p.kill()
+pytestmark = [pytest.mark.dashboard, pytest.mark.usefixtures('dashboard')]
 
 
 def test_image_page(page: Page):
     """Test performance of image page."""
     page.set_viewport_size({"width": 1920, "height": 1080})
 
-    page.goto(f'{BASE_URL}/Images')
+    open_page(page, '/Images')
 
     wait_streamlit_ready(page)
 
@@ -85,7 +56,7 @@ def test_image_page(page: Page):
 
     expect(page.get_by_text('Select a method to continue')).to_be_visible(timeout=100_000)
 
-    time.sleep(2)
+    wait_until_idle(page)
 
     page.locator('label').filter(has_text='RISE').click()
     page.locator('label').filter(has_text='KernelSHAP').click()
@@ -94,7 +65,7 @@ def test_image_page(page: Page):
     # Let the reruns triggered by the checkboxes finish first: input typed while
     # they are still running can be dropped, leaving only class 0 rendered.
     page.wait_for_timeout(500)
-    expect(page.get_by_test_id('stStatusWidget')).to_be_hidden(timeout=600_000)
+    wait_until_idle(page, timeout=600_000)
 
     n_top = page.get_by_label("Number of top classes to show")
     n_top.fill("2")
@@ -130,7 +101,7 @@ def test_image_page_draw_digit(page: Page):
     """Test drawing a digit on the canvas of the MNIST example."""
     page.set_viewport_size({"width": 1920, "height": 1080})
 
-    page.goto(f'{BASE_URL}/Images')
+    open_page(page, '/Images')
 
     wait_streamlit_ready(page)
 
@@ -141,7 +112,10 @@ def test_image_page_draw_digit(page: Page):
     expect(page.get_by_text('Draw a 0 or 1 in the left panel to continue')).to_be_visible(timeout=30_000)
 
     # draw a vertical stroke (a "1"); stay clear of the toolbar hovering over the top of the canvas
-    box = page.locator('canvas.upper-canvas').bounding_box()
+    # the browser version (--web) has streamlit-drawable-canvas 0.9.3, which draws inside an iframe
+    canvas = page.locator('canvas.upper-canvas:visible, iframe[title="streamlit_drawable_canvas.st_canvas"]:visible')
+    canvas.first.wait_for(timeout=30_000)
+    box = canvas.first.bounding_box()
     assert box is not None
     x = box['x'] + box['width'] / 2
     page.mouse.move(x, box['y'] + 0.25 * box['height'])
@@ -153,4 +127,4 @@ def test_image_page_draw_digit(page: Page):
     page.get_by_text('RISE', exact=True).click()
 
     expect(page.get_by_text('Class: 1')).to_be_visible(timeout=100_000)
-    expect(page.locator('img:not([alt="Colormap"])')).to_have_count(1, timeout=300_000)
+    expect(page.get_by_test_id('stMain').locator('img:not([alt="Colormap"])')).to_have_count(1, timeout=300_000)

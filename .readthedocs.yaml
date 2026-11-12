@@ -4,6 +4,11 @@ build:
   os: ubuntu-24.04
   tools:
     python: "3.12"
+  jobs:
+    # The dashboard, running in the browser (web/), served next to the docs at dashboard/ (see docs/web_dashboard.md)
+    post_build:
+      - python web/build.py
+      - cp -r web/_site "$READTHEDOCS_OUTPUT/html/dashboard"
 
 python:
   install:

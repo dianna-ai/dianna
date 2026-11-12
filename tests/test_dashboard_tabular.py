@@ -13,11 +13,15 @@ Make sure that the server is running by:
 cd dianna/dashboard
 streamlit run Home.py
 ```
-Then, set variable `LOCAL=True` (see below) to connect to local instance for
+Then, set `LOCAL = True` in tests/dashboard_helpers.py to connect to that instance for
 debugging. Then, you can run the tests with:
 
 ```bash
 pytest -v -m dashboard --dashboard
+```
+Add `--web` to test the browser version in web/_site instead (build it with `python web/build.py`):
+```bash
+pytest -v -m dashboard --dashboard --web
 ```
 See more documentation about dashboard in: dianna/dashboard/readme.md
 
@@ -26,54 +30,21 @@ For Code generation (https://playwright.dev/python/docs/codegen):
     playwright codegen http://localhost:8501
 """
 
-import time
-from contextlib import contextmanager
 import pytest
 from playwright.sync_api import Page
 from playwright.sync_api import expect
+from tests.dashboard_helpers import open_page
 from tests.dashboard_helpers import wait_streamlit_ready
+from tests.dashboard_helpers import wait_until_idle
 
-LOCAL = False
-
-PORT = '8501' if LOCAL else '8502'
-BASE_URL = f'localhost:{PORT}'
-
-pytestmark = pytest.mark.dashboard
-
-
-@pytest.fixture(scope='module', autouse=True)
-def before_module():
-    """Run dashboard in module scope."""
-    with run_streamlit():
-        yield
-
-
-@contextmanager
-def run_streamlit():
-    """Run the dashboard."""
-    import subprocess
-
-    if not LOCAL:
-        p = subprocess.Popen([
-            'dianna-dashboard',
-            '--server.port',
-            PORT,
-            '--server.headless',
-            'true',
-        ])
-        time.sleep(5)
-
-    yield
-
-    if not LOCAL:
-        p.kill()
+pytestmark = [pytest.mark.dashboard, pytest.mark.usefixtures('dashboard')]
 
 
 def test_tabular_page(page: Page):
     """Test performance of tabular page."""
     page.set_viewport_size({"width": 1920, "height": 1080})
 
-    page.goto(f'{BASE_URL}/Tabular')
+    open_page(page, '/Tabular')
 
     wait_streamlit_ready(page)
 
@@ -93,7 +64,7 @@ def test_tabular_sunshine(page: Page):
     """Test tabular sunshine example."""
     page.set_viewport_size({"width": 1920, "height": 1080})
 
-    page.goto(f'{BASE_URL}/Tabular')
+    open_page(page, '/Tabular')
 
     wait_streamlit_ready(page)
 
@@ -111,7 +82,7 @@ def test_tabular_sunshine(page: Page):
     page.locator("label").filter(has_text="Sunshine hours prediction").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
-    time.sleep(2)
+    wait_until_idle(page)
 
     page.locator("label").filter(has_text="RISE").click()
     page.locator("label").filter(has_text="LIME").click()
@@ -145,7 +116,7 @@ def test_tabular_penguin(page: Page):
     """Test performance of tabular penguin example."""
     page.set_viewport_size({"width": 1920, "height": 1080})
 
-    page.goto(f'{BASE_URL}/Tabular')
+    open_page(page, '/Tabular')
 
     wait_streamlit_ready(page)
 
@@ -162,7 +133,7 @@ def test_tabular_penguin(page: Page):
     page.locator("label").filter(has_text="Penguin identification").locator("div").nth(1).click()
     expect(page.get_by_text("Select a method to continue")).to_be_visible(timeout=100_000)
 
-    time.sleep(2)
+    wait_until_idle(page)
 
     page.locator("label").filter(has_text="RISE").click(timeout=300_000)
     page.locator("label").filter(has_text="LIME").click(timeout=300_000)

@@ -10,6 +10,7 @@ Welcome to Dianna's documentation!
   :caption: Contents:
 
   usage.rst
+  web_dashboard.md
   CONTEXT.md
   ROADMAP.md
   CONTRIBUTING.md

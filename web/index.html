@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dianna's dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/browser@1.12.2/build/stlite.css">
+</head>
+<body>
+<!-- The Streamlit dashboard (dianna/dashboard) running in the browser with stlite; build.py packs app.zip -->
+<div id="root"></div>
+<script type="module">
+import {mount} from 'https://cdn.jsdelivr.net/npm/@stlite/browser@1.12.2/build/stlite.js';
+
+if (typeof WebAssembly.Suspending !== 'function') {
+  document.body.prepend('This browser lacks JavaScript Promise Integration (JSPI), which the explainers need to call ' +
+                        'the model. Use e.g. a recent Chrome or Edge.');
+}
+const options = {
+  // A shared worker outlives the app, so remount() below starts a new app on the already loaded Python and packages.
+  // Each app then runs in its own directory, hence the absolute paths. stlite creates that directory when it mounts
+  // the app's files, so there has to be one.
+  sharedWorker: true,
+  entrypoint: '/home/pyodide/streamlit_app.py',
+  archives: [{url: 'app.zip', format: 'zip', options: {extractDir: '/home/pyodide'}}],
+  files: {'.keep': ''},
+  // the download caches that build.py pre-fills, independent of the app's home directory
+  env: {XDG_CACHE_HOME: '/home/pyodide/.cache', SEABORN_DATA: '/home/pyodide/seaborn-data'},
+  // the `web` dependency group in pyproject.toml, written by build.py
+  requirements: await (await fetch('requirements.json')).json(),
+};
+let app = mount(options, document.getElementById('root'));
+
+// Open another page (e.g. '/Images') in a fresh session within ~1 s, instead of the ~25 s of a reload.
+// Used by the dashboard tests (tests/dashboard_helpers.py: open_page).
+window.remount = (path) => {
+  history.pushState(null, '', path);
+  app.unmount();
+  app = mount(options, document.getElementById('root'));
+};
+</script>
+</body>
+</html>

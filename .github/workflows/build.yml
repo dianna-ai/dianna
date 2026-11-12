@@ -86,6 +86,7 @@ jobs:
     if: always()
       #github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install-python-and-package
@@ -98,3 +99,23 @@ jobs:
 
       - name: Test dashboard
         run: pytest -v -m dashboard --dashboard
+
+  test_web_dashboard:
+    name: Test browser dashboard (web/)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/install-python-and-package
+        with:
+          python-version: '3.12'
+          extras-require: dev,dashboard
+
+      - name: Ensure browser is installed
+        run: python -m playwright install chromium
+
+      - name: Build browser dashboard
+        run: python web/build.py
+
+      - name: Test browser dashboard
+        run: pytest -v -m dashboard --dashboard --web
